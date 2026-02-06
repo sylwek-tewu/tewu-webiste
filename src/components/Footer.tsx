@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Mail, Phone, MapPin, Facebook, Linkedin } from 'lucide-react';
 import { CONTACT_DETAILS, COMPANY_FULL_NAME, NAV_LINKS } from '../constants';
 
@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-4 text-sm">
               {NAV_LINKS.map(link => (
                 <li key={link.path}>
-                  <Link to={link.path} className="hover:text-white transition-colors">{link.label}</Link>
+                  <Link href={link.path} className="hover:text-white transition-colors">{link.label}</Link>
                 </li>
               ))}
             </ul>
@@ -37,10 +37,10 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">Usługi</h3>
             <ul className="space-y-4 text-sm">
-              <li><Link to="/uslugi" className="hover:text-white transition-colors">Pełna Księgowość</Link></li>
-              <li><Link to="/uslugi" className="hover:text-white transition-colors">Księga Przychodów</Link></li>
-              <li><Link to="/outsourcing" className="hover:text-white transition-colors">Outsourcing BPO</Link></li>
-              <li><Link to="/uslugi" className="hover:text-white transition-colors">Kadry i Płace</Link></li>
+              <li><Link href="/uslugi" className="hover:text-white transition-colors">Pełna Księgowość</Link></li>
+              <li><Link href="/uslugi" className="hover:text-white transition-colors">Księga Przychodów</Link></li>
+              <li><Link href="/outsourcing" className="hover:text-white transition-colors">Outsourcing BPO</Link></li>
+              <li><Link href="/uslugi" className="hover:text-white transition-colors">Kadry i Płace</Link></li>
             </ul>
           </div>
 
@@ -50,7 +50,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-4 text-sm">
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-blue-400 mt-1 flex-shrink-0" />
-                <a 
+                <a
                   href="https://www.google.com/maps/search/?api=1&query=Biuro%20Rachunkowe%20TEWU%20Sp.%20z%20o.o.%20aleja%20Powsta%C5%84c%C3%B3w%20Wielkopolskich%2C%20Szczecin"
                   target="_blank"
                   rel="noopener noreferrer"

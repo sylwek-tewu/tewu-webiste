@@ -15,6 +15,13 @@ View your app in AI Studio: https://ai.studio/apps/drive/1JY4SPDzvrlkRa6voD0UOTB
 
 1. Install dependencies:
    `pnpm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key (if applicable)
 3. Run the app:
-   `pnpm run dev`
+   `pnpm dev`
+
+## Deployment
+
+Deploy to Vercel:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fproject-repo)
+
