@@ -6,22 +6,130 @@
     letter-spacing: 0.05em;
 }
 
+/* Navigation link - includes base color */
 .navLink {
+    color: var(--mantine-color-slate-6);
     transition: color 0.2s ease;
+    cursor: pointer;
 }
 
 .navLink:hover {
     color: var(--mantine-color-brandBlue-6);
 }
 
+.navLinkActive {
+    color: var(--mantine-color-brandBlue-6);
+}
+
+/* Footer link */
 .footerLink {
+    color: var(--mantine-color-slate-4);
     transition: color 0.2s ease;
 }
 
 .footerLink:hover {
-    color: var(--mantine-color-brandBlue-4);
+    color: white;
 }
 
 .footerBorder {
     border-top: 1px solid var(--mantine-color-slate-8);
+}
+
+/* Hero Title variant - applies to nested span */
+.heroTitle span {
+    font-style: italic;
+    color: var(--mantine-color-brandBlue-6);
+}
+
+/* Service card - includes base styles */
+.serviceCard {
+    background-color: white;
+    border-color: var(--mantine-color-slate-1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.serviceCard:hover {
+    box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Icon that inverts on parent hover - includes base styles */
+.hoverIcon {
+    background-color: var(--mantine-color-brandBlue-0);
+    color: var(--mantine-color-brandBlue-6);
+    transition: all 0.3s ease;
+}
+
+.serviceCard:hover .hoverIcon {
+    background-color: var(--mantine-color-brandBlue-6);
+    color: white;
+}
+
+/* Primary button (dark) - includes base styles */
+.primaryButton {
+    background-color: var(--mantine-color-slate-9);
+    color: white;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.primaryButton:hover {
+    background-color: var(--mantine-color-slate-7);
+}
+
+/* Outline button - includes base styles */
+.outlineButton {
+    border-color: var(--mantine-color-slate-1);
+    color: var(--mantine-color-slate-9);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.outlineButton:hover {
+    border-color: var(--mantine-color-slate-3);
+}
+
+/* Text link hover - for "Zobacz pełną ofertę" style links */
+.textLink {
+    color: var(--mantine-color-slate-9);
+    transition: color 0.2s ease;
+    cursor: pointer;
+}
+
+.textLink:hover {
+    color: var(--mantine-color-brandBlue-6);
+}
+
+/* WhyUs reason row - hover on entire row triggers icon effect */
+.reasonRow {
+    cursor: pointer;
+}
+
+/* WhyUs reason icon - includes base styles */
+.reasonIcon {
+    background-color: var(--mantine-color-brandBlue-0);
+    color: var(--mantine-color-brandBlue-6);
+    transition: all 0.3s ease;
+}
+
+.reasonRow:hover .reasonIcon,
+.reasonIcon:hover {
+    background-color: var(--mantine-color-brandBlue-6);
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Service "Więcej" link hover - arrow slides right */
+.moreLink {
+    color: var(--mantine-color-brandBlue-6);
+    transition: gap 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.moreLink:hover {
+    gap: 8px;
 }

@@ -148,16 +148,16 @@ const CertificatesClient: React.FC = () => {
                 withCloseButton={false}
                 zIndex={100}
             >
-                <Paper p="md" radius={0} withBorder className="border-b-slate-200" style={{ zIndex: 10 }}>
+                <Paper p="md" radius={0} withBorder style={{ borderColor: 'var(--mantine-color-slate-2)', zIndex: 10 }}>
                     <Group justify="space-between">
                         <Group gap="xs">
-                            <FileText className="text-blue-600" size={24} />
+                            <FileText color="var(--mantine-color-brandBlue-6)" size={24} />
                             <Text fw={700} tt="uppercase" size="xs" visibleFrom="xs">Podgląd PDF</Text>
                         </Group>
 
                         <Group gap="md">
                             {numPages && numPages > 1 && (
-                                <Group gap={0} bg="white" className="border border-slate-200 rounded-full shadow-sm overflow-hidden">
+                                <Group gap={0} bg="white" style={{ border: '1px solid var(--mantine-color-slate-2)', borderRadius: '9999px', boxShadow: 'var(--mantine-shadow-sm)', overflow: 'hidden' }}>
                                     <ActionIcon
                                         variant="subtle"
                                         color="slate.7"
@@ -180,7 +180,7 @@ const CertificatesClient: React.FC = () => {
                                 </Group>
                             )}
 
-                            <Group gap={0} bg="white" className="border border-slate-200 rounded-full shadow-sm overflow-hidden p-1">
+                            <Group gap={0} bg="white" p={4} style={{ border: '1px solid var(--mantine-color-slate-2)', borderRadius: '9999px', boxShadow: 'var(--mantine-shadow-sm)', overflow: 'hidden' }}>
                                 <ActionIcon onClick={handleZoomOut} variant="subtle" color="slate.6">
                                     <ZoomOut size={18} />
                                 </ActionIcon>
@@ -254,7 +254,6 @@ const CertificatesClient: React.FC = () => {
                             <Page
                                 pageNumber={pageNumber}
                                 scale={scale}
-                                className="shadow-2xl bg-white"
                                 renderTextLayer={true}
                                 renderAnnotationLayer={true}
                                 loading={null}

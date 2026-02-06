@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import "./globals.css";
 import '@mantine/core/styles.css';
-import { ColorSchemeScript, MantineProvider } from '@mantine/core';
+import { ColorSchemeScript, Box, Stack } from '@mantine/core';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,11 +27,11 @@ export default function RootLayout({
             </head>
             <body className={inter.className}>
                 <ThemeProvider>
-                    <div className="flex flex-col min-h-screen">
+                    <Stack gap={0} mih="100vh">
                         <Navbar />
-                        <main className="flex-grow">{children}</main>
+                        <Box component="main" style={{ flex: 1 }}>{children}</Box>
                         <Footer />
-                    </div>
+                    </Stack>
                 </ThemeProvider>
             </body>
         </html>

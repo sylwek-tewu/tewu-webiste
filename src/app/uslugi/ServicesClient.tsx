@@ -14,10 +14,10 @@ export default function ServicesClient() {
             <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
                 <Container size="md" px="md">
                     <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', letterSpacing: '-0.025em' }}>
-                        Nasze Usługi
+                        Pełna oferta usług księgowych
                     </Title>
                     <Text size="xl" c="slate.4">
-                        Kompleksowe wsparcie księgowe i kadrowe dopasowane do specyfiki Twojego biznesu.
+                        Dostarczamy kompleksowe rozwiązania dla biznesu, od prostych ewidencji po zaawansowane doradztwo podatkowe.
                     </Text>
                 </Container>
             </Box>

@@ -47,9 +47,7 @@ const Navbar: React.FC = () => {
                 underline="never"
                 fw={600}
                 size="sm"
-                c={pathname === link.path ? 'brandBlue.6' : 'slate.6'}
-                className={classes.navLink}
-                data-active={pathname === link.path}
+                className={`${classes.navLink} ${pathname === link.path ? classes.navLinkActive : ''}`}
               >
                 {link.label}
               </Anchor>
@@ -57,10 +55,11 @@ const Navbar: React.FC = () => {
             <Button
               component={Link}
               href="/kontakt"
-              bg="slate.9"
-              c="white"
               size="md"
               fw={700}
+              radius="lg"
+              className={classes.primaryButton}
+              style={{ boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)' }}
             >
               Bezpłatna wycena
             </Button>
@@ -106,12 +105,11 @@ const Navbar: React.FC = () => {
             href="/kontakt"
             onClick={close}
             fullWidth
-            bg="slate.9"
-            c="white"
             size="lg"
             radius="md"
             fw={700}
             mt="md"
+            className={classes.primaryButton}
           >
             Bezpłatna wycena
           </Button>

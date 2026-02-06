@@ -40,6 +40,11 @@ export const theme = createTheme({
         fontWeight: "900",
         sizes: {
             h1: { fontSize: "72px", lineHeight: "1" },
+            h2: { fontSize: "36px", lineHeight: "1.2" },
+            h3: { fontSize: "30px", lineHeight: "1.25" },
+            h4: { fontSize: "24px", lineHeight: "1.3" },
+            h5: { fontSize: "20px", lineHeight: "1.4" },
+            h6: { fontSize: "16px", lineHeight: "1.5" },
         },
     },
     components: {
@@ -61,7 +66,7 @@ export const theme = createTheme({
         },
         Container: {
             defaultProps: {
-                size: "xl",
+                size: 1280, // 80rem = max-w-7xl
             },
         },
     },
@@ -71,9 +76,11 @@ export const resolver: CSSVariablesResolver = (theme) => ({
     variables: {
         "--mantine-hero-padding-top": "96px",
         "--mantine-hero-padding-bottom": "128px",
+        "--mantine-section-py": "96px",
         "--mantine-color-slate-900": theme.colors.slate[9],
         "--mantine-color-brand-blue": theme.colors.brandBlue[6],
     },
     light: {},
     dark: {},
 });
+

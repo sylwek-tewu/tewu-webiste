@@ -113,8 +113,8 @@ export default function ContactClient() {
                                 <Title order={2} fw={700} c="slate.9" size="h2">Dane rejestrowe i bankowe</Title>
                             </Group>
 
-                            <Paper p={32} radius="xl" withBorder className="border-slate-200 shadow-sm" style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                                <Box className="border-b border-slate-100" pb="md">
+                            <Paper p={32} radius="xl" withBorder style={{ borderColor: 'var(--mantine-color-slate-2)', flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                                <Box style={{ borderBottom: '1px solid var(--mantine-color-slate-1)' }} pb="md">
                                     <Text size="xs" fw={700} c="slate.4" tt="uppercase" mb={4}>Nazwa pełna</Text>
                                     <Text size="lg" fw={700} c="slate.9">Biuro Rachunkowe TEWU Sp z o.o.</Text>
                                 </Box>
