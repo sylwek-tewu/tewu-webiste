@@ -1,88 +1,124 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
-import { NAV_LINKS, COMPANY_NAME } from '../constants';
+import { NAV_LINKS } from '../constants';
+import { Box, Container, Group, Burger, Drawer, Stack, Button, Text, Anchor, Paper } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 
 const Navbar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [opened, { toggle, close }] = useDisclosure(false);
   const pathname = usePathname();
 
   return (
-    <nav className="bg-white border-b sticky top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20">
-          <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0 flex items-center gap-2">
-              <span className="text-3xl font-black tracking-tighter text-slate-800">
+    <Paper component="nav" pos="sticky" top={0} bg="white" shadow="sm" withBorder radius={0} style={{ zIndex: 50 }}>
+      <Container size="xl" px="md">
+        <Group justify="space-between" h={80}>
+          <Group gap="xs">
+            <Link href="/" onClick={close} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, textDecoration: 'none' }}>
+              <Text span fw={900} size="30px" lh={1} style={{ letterSpacing: '-0.05em' }} c="slate.8">
                 TEWU
-              </span>
-              <div className="hidden sm:block h-8 w-[2px] bg-slate-200 mx-2"></div>
-              <span className="hidden sm:block text-xs uppercase font-bold text-slate-500 leading-tight">
+              </Text>
+              <Box visibleFrom="sm" h={32} w={2} bg="slate.2" mx={8} />
+              <Text
+                span
+                visibleFrom="sm"
+                tt="uppercase"
+                fw="bold"
+                c="slate.5"
+                lh={1.25}
+                size="xs"
+              >
                 Biuro<br />Rachunkowe
-              </span>
+              </Text>
             </Link>
-          </div>
+          </Group>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <Group gap="xl" visibleFrom="md">
             {NAV_LINKS.map((link) => (
-              <Link
+              <Anchor
                 key={link.path}
+                component={Link}
                 href={link.path}
-                className={`text-sm font-semibold transition-colors hover:text-blue-600 ${pathname === link.path ? 'text-blue-600' : 'text-slate-600'
-                  }`}
+                underline="never"
+                fw={600}
+                size="sm"
+                c={pathname === link.path ? 'blue.6' : 'slate.6'}
+                style={{ transition: 'color 0.2s' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--mantine-color-blue-6)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = pathname === link.path ? 'var(--mantine-color-blue-6)' : 'var(--mantine-color-slate-6)'}
               >
                 {link.label}
-              </Link>
+              </Anchor>
             ))}
-            <Link
+            <Button
+              component={Link}
               href="/kontakt"
-              className="bg-slate-900 text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
+              bg="slate.9"
+              c="white"
+              size="md"
+              fw={700}
             >
               Bezpłatna wycena
-            </Link>
-          </div>
+            </Button>
+          </Group>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-slate-600 hover:text-slate-900 focus:outline-none"
-            >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
-          </div>
-        </div>
-      </div>
+          <Burger opened={opened} onClick={toggle} hiddenFrom="md" size="sm" />
+        </Group>
+      </Container>
 
       {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden bg-white border-t py-4 px-4 space-y-2">
+      <Drawer
+        opened={opened}
+        onClose={close}
+        size="100%"
+        padding="md"
+        title="Menu"
+        hiddenFrom="md"
+        zIndex={100}
+      >
+        <Stack gap="sm">
           {NAV_LINKS.map((link) => (
-            <Link
+            <Anchor
               key={link.path}
+              component={Link}
               href={link.path}
-              onClick={() => setIsOpen(false)}
-              className={`block px-3 py-3 rounded-md text-base font-medium ${pathname === link.path ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50'
-                }`}
+              onClick={close}
+              underline="never"
+              fw={500}
+              size="lg"
+              py="xs"
+              px="xs"
+              display="block"
+              style={{ borderRadius: 'var(--mantine-radius-md)' }}
+              bg={pathname === link.path ? 'blue.0' : 'transparent'}
+              c={pathname === link.path ? 'blue.6' : 'slate.6'}
             >
               {link.label}
-            </Link>
+            </Anchor>
           ))}
-          <Link
+          <Button
+            component={Link}
             href="/kontakt"
-            onClick={() => setIsOpen(false)}
-            className="block w-full text-center bg-slate-900 text-white px-3 py-4 rounded-md text-base font-bold"
+            onClick={close}
+            fullWidth
+            bg="slate.9"
+            c="white"
+            size="lg"
+            radius="md"
+            fw={700}
+            mt="md"
           >
             Bezpłatna wycena
-          </Link>
-        </div>
-      )}
-    </nav>
+          </Button>
+        </Stack>
+      </Drawer>
+    </Paper>
   );
 };
 

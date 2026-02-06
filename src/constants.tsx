@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { NavItem, Service, ContactInfo } from './types';
-import { 
-  Calculator, 
-  Users, 
-  FileText, 
-  Briefcase, 
-  TrendingUp, 
+import {
+  Calculator,
+  Users,
+  FileText,
+  Briefcase,
+  TrendingUp,
   ShieldCheck,
   Building2,
   ClipboardCheck,
@@ -35,49 +35,105 @@ export const SERVICES: Service[] = [
     id: 'pelna-ksiegowosc',
     title: 'Prowadzenie ksiąg rachunkowych',
     description: 'Kompleksowa obsługa spółek prawa handlowego, fundacji i stowarzyszeń zgodnie z ustawą o rachunkowości.',
-    icon: <Building2 className="w-6 h-6" />
+    icon: <Building2 size={24} />,
+    features: [
+      "Prowadzenie ksiąg rachunkowych (pełna księgowość)",
+      "Sporządzanie rocznych sprawozdań finansowych",
+      "Opracowanie Polityki Rachunkowości",
+      "Bieżące doradztwo księgowe",
+      "Nadzór nad księgowością"
+    ]
   },
   {
     id: 'kpir',
     title: 'Podatkowa księga przychodów i rozchodów',
     description: 'Ewidencja dla osób fizycznych prowadzących działalność gospodarczą oraz spółek cywilnych.',
-    icon: <Calculator className="w-6 h-6" />
+    icon: <Calculator size={24} />,
+    features: [
+      "Ewidencja przychodów i kosztów",
+      "Prowadzenie rejestrów VAT zakupu i sprzedaży",
+      "Ewidencja środków trwałych i wyposażenia",
+      "Rozliczenia roczne PIT-36, PIT-36L",
+      "Kontrola dokumentów pod względem formalnym"
+    ]
   },
   {
     id: 'ryczalt',
     title: 'Ryczałt ewidencjonowany',
     description: 'Obsługa uproszczonych form opodatkowania dla przedsiębiorców korzystających z ryczałtu.',
-    icon: <FileDigit className="w-6 h-6" />
+    icon: <FileDigit size={24} />,
+    features: [
+      "Ewidencja przychodów",
+      "Obliczanie zaliczek na podatek dochodowy",
+      "Sporządzanie zeznania rocznego PIT-28",
+      "Weryfikacja poprawności stawek ryczałtu",
+      "Obsługa JPK_EWP"
+    ]
   },
   {
     id: 'kadry-place',
     title: 'Księgowość kadrowo-płacowa',
     description: 'Pełna obsługa procesów zatrudnienia, naliczanie wynagrodzeń oraz prowadzenie akt osobowych.',
-    icon: <Users className="w-6 h-6" />
+    icon: <Users size={24} />,
+    features: [
+      "Sporządzanie list płac",
+      "Obsługa umów o pracę i cywilnoprawnych",
+      "Prowadzenie akt osobowych pracowników",
+      "Sporządzanie deklaracji ZUS i PIT",
+      "Wystawianie zaświadczeń dla pracowników"
+    ]
   },
   {
     id: 'zus-us',
     title: 'Rozliczenia z ZUS i US',
     description: 'Terminowe sporządzanie i przesyłanie rozliczeń do Zakładu Ubezpieczeń Społecznych i Urzędów Skarbowych.',
-    icon: <ClipboardCheck className="w-6 h-6" />
+    icon: <ClipboardCheck size={24} />,
+    features: [
+      "Deklaracje rozliczeniowe ZUS DRA",
+      "Zgłaszanie i wyrejestrowywanie z ubezpieczeń",
+      "Reprezentacja przed ZUS i US",
+      "Wnioski o niezaleganiu",
+      "Korekty deklaracji"
+    ]
   },
   {
     id: 'deklaracje',
     title: 'Sporządzanie deklaracji podatkowych',
     description: 'Przygotowanie deklaracji VAT, CIT, PIT, JPK oraz innych wymaganych prawem sprawozdań.',
-    icon: <FileText className="w-6 h-6" />
+    icon: <FileText size={24} />,
+    features: [
+      "Deklaracje VAT-7, VAT-UE",
+      "Pliki JPK_V7",
+      "Zeznania roczne CIT-8",
+      "Deklaracje PIT-11, PIT-4R, PIT-8AR",
+      "Sprawozdania GUS / NBP"
+    ]
   },
   {
     id: 'reprezentacja',
     title: 'Reprezentowanie przed organami',
     description: 'Zastępstwo i wsparcie podczas kontroli skarbowych oraz w bieżących kontaktach z urzędami.',
-    icon: <Scale className="w-6 h-6" />
+    icon: <Scale size={24} />,
+    features: [
+      "Udział w kontrolach podatkowych i ZUS",
+      "Sporządzanie wyjaśnień i pism procesowych",
+      "Odwołania od decyzji organów",
+      "Bieżący kontakt z urzędami",
+      "Pełnomocnictwo ogólne i szczególne"
+    ]
   },
   {
     id: 'doradztwo',
     title: 'Doradztwo podatkowe',
     description: 'Profesjonalne wsparcie w optymalizacji zobowościń podatkowych i interpretacji przepisów.',
-    icon: <TrendingUp className="w-6 h-6" />
+    icon: <TrendingUp size={24} />,
+    features: [
+      "Wybór optymalnej formy opodatkowania",
+      "Analiza umów pod kątem podatkowym",
+      "Konsultacje w zakresie bieżącej działalności",
+      "Audyty podatkowe",
+      "Wnioski o interpretacje indywidualne"
+    ]
   }
 ];
 
@@ -92,36 +148,36 @@ export const REASONS_TO_TRUST = [
   {
     title: "Wieloletnie doświadczenie i profesjonalizm",
     description: "Nasz zespół to wykwalifikowani eksperci z bogatym stażem w branży finansowej i podatkowej.",
-    icon: <Briefcase className="w-8 h-8" />
+    icon: <Briefcase size={32} />
   },
   {
     title: "Terminowość i rzetelność",
     description: "Gwarantujemy dotrzymanie wszystkich terminów ustawowych i najwyższą precyzję prowadzonych rozliczeń.",
-    icon: <Clock className="w-8 h-8" />
+    icon: <Clock size={32} />
   },
   {
     title: "Bezpieczeństwo",
     description: "Stosujemy rygorystyczne procedury ochrony danych i standardy gwarantujące bezpieczeństwo finansów.",
-    icon: <ShieldCheck className="w-8 h-8" />
+    icon: <ShieldCheck size={32} />
   },
   {
     title: "Atrakcyjne ceny",
     description: "Oferujemy wysoką jakość usług w konkurencyjnych stawkach, dostosowanych do skali Twojej działalności.",
-    icon: <Coins className="w-8 h-8" />
+    icon: <Coins size={32} />
   },
   {
     title: "Indywidualne podejście",
     description: "Każdy klient jest dla nas partnerem. Model współpracy dopasowujemy do specyfiki Twojej branży.",
-    icon: <Users className="w-8 h-8" />
+    icon: <Users size={32} />
   },
   {
     title: "Nowoczesne Rozwiązania",
     description: "Wykorzystujemy zaawansowane systemy IT, umożliwiając szybki i wygodny elektroniczny obieg dokumentów.",
-    icon: <Cpu className="w-8 h-8" />
+    icon: <Cpu size={32} />
   },
   {
     title: "Bezpieczeństwo i Polisa OC",
     description: "Posiadamy pełne ubezpieczenie odpowiedzialności cywilnej, co stanowi realną gwarancję ochrony interesów klienta.",
-    icon: <CheckSquare className="w-8 h-8" />
+    icon: <CheckSquare size={32} />
   }
 ];

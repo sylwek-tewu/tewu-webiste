@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { ShieldCheck, Clock, Award, Users, CheckCircle2 } from 'lucide-react';
 import { Metadata } from 'next';
+import { Box, Container, SimpleGrid, Stack, Title, Text, ThemeIcon, Paper, Image, Group } from '@mantine/core';
 
 export const metadata: Metadata = {
     title: "O nas - Biuro Rachunkowe TEWU",
@@ -8,128 +10,116 @@ export const metadata: Metadata = {
 
 export default function About() {
     return (
-        <div className="bg-white">
+        <Stack gap={0} bg="white">
             {/* Header Section */}
-            <section className="bg-slate-900 py-24 text-center">
-                <div className="max-w-4xl mx-auto px-4">
-                    <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
+            <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
+                <Container size="md" px="md">
+                    <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', letterSpacing: '-0.025em' }}>
                         Poznaj TEWU
-                    </h1>
-                    <p className="text-xl text-slate-400">
+                    </Title>
+                    <Text size="xl" c="slate.4">
                         Ponad 25 lat doświadczenia w budowaniu stabilnych fundamentów finansowych dla polskiego biznesu.
-                    </p>
-                </div>
-            </section>
+                    </Text>
+                </Container>
+            </Box>
 
             {/* Main Intro Section */}
-            <section className="py-24">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-2 gap-20 items-center">
-                        <div className="space-y-8">
-                            <h2 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight">
+            <Box component="section" py={96}>
+                <Container size="xl" px="md">
+                    <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={80}>
+                        <Stack gap="xl">
+                            <Title order={2} fw={900} c="slate.9" lh={1.2} style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)' }}>
                                 Szukasz rzetelnego i godnego zaufania biura rachunkowego, które kompleksowo zajmie się księgowością Twojej firmy?
-                            </h2>
-                            <div className="space-y-6 text-lg text-slate-600 leading-relaxed">
-                                <p>
-                                    <span className="font-bold text-slate-900">Biuro Rachunkowe TEWU Sp. z o.o.</span> to idealny wybór dla przedsiębiorców, którzy cenią profesjonalizm, terminowość i bezpieczeństwo.
-                                </p>
-                                <p>
+                            </Title>
+                            <Stack gap="md" c="slate.6" lh={1.6}>
+                                <Text>
+                                    <Text span fw={700} c="slate.9">Biuro Rachunkowe TEWU Sp. z o.o.</Text> to idealny wybór dla przedsiębiorców, którzy cenią profesjonalizm, terminowość i bezpieczeństwo.
+                                </Text>
+                                <Text>
                                     Posiadamy wieloletnie doświadczenie w prowadzeniu księgowości dla firm o różnym profilu działalności. Nasz zespół wykwalifikowanych księgowych stale dba o aktualizację swojej wiedzy i umiejętności, aby zapewnić naszym klientom usługi na najwyższym poziomie.
-                                </p>
-                            </div>
-                            <div className="pt-4 grid grid-cols-2 gap-6">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                                        <CheckCircle2 size={20} />
-                                    </div>
-                                    <span className="font-bold text-slate-900">Profesjonalizm</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                                        <CheckCircle2 size={20} />
-                                    </div>
-                                    <span className="font-bold text-slate-900">Terminowość</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                                        <CheckCircle2 size={20} />
-                                    </div>
-                                    <span className="font-bold text-slate-900">Bezpieczeństwo</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                                        <CheckCircle2 size={20} />
-                                    </div>
-                                    <span className="font-bold text-slate-900">Doświadczenie</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="relative">
-                            <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl">
-                                <img
+                                </Text>
+                            </Stack>
+                            <SimpleGrid cols={2} spacing="md" mt="sm">
+                                {[
+                                    "Profesjonalizm",
+                                    "Terminowość",
+                                    "Bezpieczeństwo",
+                                    "Doświadczenie"
+                                ].map((item, i) => (
+                                    <Group key={i} gap="xs" align="center">
+                                        <ThemeIcon radius="xl" size="lg" bg="blue.0" c="blue.6">
+                                            <CheckCircle2 size={20} />
+                                        </ThemeIcon>
+                                        <Text fw={700} c="slate.9">{item}</Text>
+                                    </Group>
+                                ))}
+                            </SimpleGrid>
+                        </Stack>
+                        <Box pos="relative">
+                            <Box style={{ aspectRatio: '4/5', borderRadius: 'var(--mantine-radius-xl)', overflow: 'hidden', boxShadow: 'var(--mantine-shadow-2xl)' }}>
+                                <Image
                                     src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80"
                                     alt="Zespół TEWU"
-                                    className="w-full h-full object-cover"
+                                    w="100%"
+                                    h="100%"
+                                    fit="cover"
                                 />
-                            </div>
-                            <div className="absolute -bottom-10 -left-10 bg-white p-8 rounded-2xl shadow-xl border border-slate-100 hidden md:block max-w-[280px]">
-                                <p className="text-blue-600 font-black text-4xl mb-1">25+</p>
-                                <p className="text-slate-900 font-bold text-lg mb-2">Lat na rynku</p>
-                                <p className="text-slate-500 text-sm">Znamy przepisy od podszewki i wiemy, jak chronić Twój biznes.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                            </Box>
+                            <Paper
+                                pos="absolute"
+                                bottom={-40}
+                                left={-40}
+                                visibleFrom="md"
+                                p="xl"
+                                radius="lg"
+                                shadow="xl"
+                                withBorder
+                                maw={280}
+                                style={{ borderColor: 'var(--mantine-color-slate-1)' }}
+                            >
+                                <Text c="blue.6" fw={900} style={{ fontSize: '2.25rem' }} lh={1} mb={4}>25+</Text>
+                                <Text c="slate.9" fw={700} size="lg" mb="xs">Lat na rynku</Text>
+                                <Text c="slate.5" size="sm">Znamy przepisy od podszewki i wiemy, jak chronić Twój biznes.</Text>
+                            </Paper>
+                        </Box>
+                    </SimpleGrid>
+                </Container>
+            </Box>
 
             {/* Values Section */}
-            <section className="py-24 bg-slate-50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-16">
-                        <h2 className="text-sm font-black text-blue-600 uppercase tracking-widest mb-4">Nasze wartości</h2>
-                        <h3 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Dlaczego my?</h3>
-                    </div>
-                    <div className="grid md:grid-cols-3 gap-8">
-                        <div className="bg-white p-10 rounded-3xl shadow-sm border border-slate-100">
-                            <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
-                                <ShieldCheck size={32} />
-                            </div>
-                            <h4 className="text-xl font-bold text-slate-900 mb-4">Bezpieczeństwo</h4>
-                            <p className="text-slate-600 leading-relaxed">
-                                Stosujemy najwyższe standardy ochrony danych i posiadamy pełne ubezpieczenie OC, dając Ci spokój ducha.
-                            </p>
-                        </div>
-                        <div className="bg-white p-10 rounded-3xl shadow-sm border border-slate-100">
-                            <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
-                                <Clock size={32} />
-                            </div>
-                            <h4 className="text-xl font-bold text-slate-900 mb-4">Terminowość</h4>
-                            <p className="text-slate-600 leading-relaxed">
-                                Szanujemy Twój czas. Gwarantujemy, że wszystkie rozliczenia i deklaracje zostaną złożone w ustawowych terminach.
-                            </p>
-                        </div>
-                        <div className="bg-white p-10 rounded-3xl shadow-sm border border-slate-100">
-                            <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
-                                <Award size={32} />
-                            </div>
-                            <h4 className="text-xl font-bold text-slate-900 mb-4">Ekspertyza</h4>
-                            <p className="text-slate-600 leading-relaxed">
-                                Nasz zespół to specjaliści, którzy nieustannie podnoszą swoje kwalifikacje, śledząc dynamiczne zmiany w prawie.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <Box component="section" py={96} bg="slate.0">
+                <Container size="xl" px="md">
+                    <Box ta="center" mb={64}>
+                        <Text fw={900} c="blue.6" tt="uppercase" style={{ letterSpacing: '0.1em' }} size="sm" mb="xs">Nasze wartości</Text>
+                        <Title order={3} fw={900} c="slate.9" style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)', letterSpacing: '-0.025em' }}>Dlaczego my?</Title>
+                    </Box>
+                    <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
+                        {[
+                            { title: "Bezpieczeństwo", icon: <ShieldCheck size={32} />, desc: "Stosujemy najwyższe standardy ochrony danych i posiadamy pełne ubezpieczenie OC, dając Ci spokój ducha." },
+                            { title: "Terminowość", icon: <Clock size={32} />, desc: "Szanujemy Twój czas. Gwarantujemy, że wszystkie rozliczenia i deklaracje zostaną złożone w ustawowych terminach." },
+                            { title: "Ekspertyza", icon: <Award size={32} />, desc: "Nasz zespół to specjaliści, którzy nieustannie podnoszą swoje kwalifikacje, śledząc dynamiczne zmiany w prawie." }
+                        ].map((item, i) => (
+                            <Paper key={i} p={40} radius="xl" shadow="sm" withBorder style={{ borderColor: 'var(--mantine-color-slate-1)' }}>
+                                <ThemeIcon size={56} radius="lg" bg="blue.0" c="blue.6" mb="lg">
+                                    {item.icon}
+                                </ThemeIcon>
+                                <Title order={4} fw={700} c="slate.9" mb="md" size="h4">{item.title}</Title>
+                                <Text c="slate.6" lh={1.6}>{item.desc}</Text>
+                            </Paper>
+                        ))}
+                    </SimpleGrid>
+                </Container>
+            </Box>
 
             {/* Mission Section */}
-            <section className="py-24">
-                <div className="max-w-4xl mx-auto px-4 text-center">
-                    <h2 className="text-3xl font-black text-slate-900 mb-8">Nasza misja</h2>
-                    <p className="text-2xl text-slate-600 italic leading-relaxed">
+            <Box component="section" py={96}>
+                <Container size="md" px="md" ta="center">
+                    <Title order={2} fw={900} c="slate.9" mb="xl" size="h2">Nasza misja</Title>
+                    <Text size="xl" c="slate.6" fs="italic" lh={1.6} style={{ fontSize: '1.5rem' }}>
                         "Naszym celem jest odciążenie przedsiębiorców z biurokracji, aby mogli w pełni skupić się na rozwoju swoich firm, mając pewność, że ich finanse są w najlepszych rękach."
-                    </p>
-                </div>
-            </section>
-        </div>
+                    </Text>
+                </Container>
+            </Box>
+        </Stack>
     );
 }

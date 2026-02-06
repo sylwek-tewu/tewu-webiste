@@ -11,6 +11,7 @@ export interface Service {
   title: string;
   description: string;
   icon: ReactNode;
+  features: string[];
 }
 
 export interface Testimonial {
