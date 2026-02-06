@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     description: "Twój zaufany partner w biznesie. Profesjonalna księgowość, kadry i płace oraz doradztwo dla firm każdej wielkości.",
 };
 
+import { ThemeProvider } from "@/components/ThemeProvider";
+
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -24,13 +26,13 @@ export default function RootLayout({
                 <ColorSchemeScript />
             </head>
             <body className={inter.className}>
-                <MantineProvider>
+                <ThemeProvider>
                     <div className="flex flex-col min-h-screen">
                         <Navbar />
                         <main className="flex-grow">{children}</main>
                         <Footer />
                     </div>
-                </MantineProvider>
+                </ThemeProvider>
             </body>
         </html>
     );

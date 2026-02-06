@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -8,6 +7,7 @@ import { Menu, X } from 'lucide-react';
 import { NAV_LINKS } from '../constants';
 import { Box, Container, Group, Burger, Drawer, Stack, Button, Text, Anchor, Paper } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import classes from './layout/Layout.module.css';
 
 const Navbar: React.FC = () => {
   const [opened, { toggle, close }] = useDisclosure(false);
@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
         <Group justify="space-between" h={80}>
           <Group gap="xs">
             <Link href="/" onClick={close} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, textDecoration: 'none' }}>
-              <Text span fw={900} size="30px" lh={1} style={{ letterSpacing: '-0.05em' }} c="slate.8">
+              <Text span fw={900} size="30px" lh={1} className={classes.logoText} c="slate.8">
                 TEWU
               </Text>
               <Box visibleFrom="sm" h={32} w={2} bg="slate.2" mx={8} />
@@ -47,10 +47,9 @@ const Navbar: React.FC = () => {
                 underline="never"
                 fw={600}
                 size="sm"
-                c={pathname === link.path ? 'blue.6' : 'slate.6'}
-                style={{ transition: 'color 0.2s' }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--mantine-color-blue-6)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = pathname === link.path ? 'var(--mantine-color-blue-6)' : 'var(--mantine-color-slate-6)'}
+                c={pathname === link.path ? 'brandBlue.6' : 'slate.6'}
+                className={classes.navLink}
+                data-active={pathname === link.path}
               >
                 {link.label}
               </Anchor>
@@ -96,8 +95,8 @@ const Navbar: React.FC = () => {
               px="xs"
               display="block"
               style={{ borderRadius: 'var(--mantine-radius-md)' }}
-              bg={pathname === link.path ? 'blue.0' : 'transparent'}
-              c={pathname === link.path ? 'blue.6' : 'slate.6'}
+              bg={pathname === link.path ? 'brandBlue.0' : 'transparent'}
+              c={pathname === link.path ? 'brandBlue.6' : 'slate.6'}
             >
               {link.label}
             </Anchor>

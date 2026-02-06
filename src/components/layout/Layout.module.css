@@ -1,0 +1,27 @@
+.logoText {
+    letter-spacing: -0.05em;
+}
+
+.logoSubtext {
+    letter-spacing: 0.05em;
+}
+
+.navLink {
+    transition: color 0.2s ease;
+}
+
+.navLink:hover {
+    color: var(--mantine-color-brandBlue-6);
+}
+
+.footerLink {
+    transition: color 0.2s ease;
+}
+
+.footerLink:hover {
+    color: var(--mantine-color-brandBlue-4);
+}
+
+.footerBorder {
+    border-top: 1px solid var(--mantine-color-slate-8);
+}
