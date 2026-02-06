@@ -1,0 +1,7 @@
+{
+  "name": "Biuro Rachunkowe TEWU",
+  "description": "Nowoczesna strona internetowa dla profesjonalnego biura rachunkowego TEWU, oferująca kompleksowe usługi księgowe i outsourcing biznesowy.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
