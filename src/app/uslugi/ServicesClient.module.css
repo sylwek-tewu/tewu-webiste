@@ -1,16 +1,18 @@
 .serviceCard {
+    border-color: var(--mantine-color-slate-1);
     transition: all 0.3s ease;
     cursor: default;
+    background-color: var(--mantine-color-slate-0);
 }
 
 .serviceCard:hover {
-    background-color: white !important;
+    background-color: var(--mantine-color-white);
     box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, var(--mantine-color-blue-1) 0px 25px 50px -12px;
 }
 
 .iconContainer {
     transition: all 0.3s ease;
-    background-color: white;
+    background-color: var(--mantine-color-white);
     border-radius: var(--mantine-radius-lg);
     display: flex;
     align-items: center;
@@ -21,17 +23,19 @@
 
 .serviceCard:hover .iconContainer {
     background-color: var(--mantine-color-brandBlue-6);
-    color: white;
+    color: var(--mantine-color-white);
 }
 
 /* CTA Button - white button with hover state */
 .ctaButton {
-    background-color: white;
+    background-color: var(--cta-button-bg);
     color: var(--mantine-color-brandBlue-6);
     transition: background-color 0.2s ease;
+    box-shadow: var(--mantine-shadow-xl);
 }
 
 .ctaButton:hover,
 .ctaButton:focus {
-    background-color: var(--mantine-color-blue-0);
+    color: var(--mantine-color-brandBlue-6);
+    background-color: var(--mantine-color-slate-1);
 }

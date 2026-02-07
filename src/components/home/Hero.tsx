@@ -1,5 +1,3 @@
-"use client";
-
 import React from 'react';
 import Link from 'next/link';
 import { Container, Title, Text, Button, Group, Badge, Grid, GridCol, Box, Stack, Image, SimpleGrid } from '@mantine/core';
@@ -34,29 +32,31 @@ export function Hero() {
                                 </Text>
 
                                 <Group gap="md" pt="md">
-                                    <Button
-                                        component={Link}
-                                        href="/kontakt"
-                                        size="xl"
-                                        radius={12}
-                                        fw={700}
-                                        rightSection={<ArrowRight size={20} />}
-                                        className={classes.primaryButton}
-                                        style={{ boxShadow: '0 25px 50px -12px var(--mantine-color-slate-2)' }}
-                                    >
-                                        Skontaktuj się z nami
-                                    </Button>
-                                    <Button
-                                        component={Link}
-                                        href="/uslugi"
-                                        size="xl"
-                                        radius={12}
-                                        variant="default"
-                                        fw={700}
-                                        className={classes.outlineButton}
-                                    >
-                                        Poznaj ofertę
-                                    </Button>
+                                    <Link href="/kontakt" style={{ textDecoration: 'none' }}>
+                                        <Button
+                                            component="span"
+                                            size="xl"
+                                            radius={12}
+                                            fw={700}
+                                            rightSection={<ArrowRight size={20} />}
+                                            className={classes.primaryButton}
+                                            style={{ boxShadow: '0 25px 50px -12px var(--mantine-color-slate-2)' }}
+                                        >
+                                            Skontaktuj się z nami
+                                        </Button>
+                                    </Link>
+                                    <Link href="/uslugi" style={{ textDecoration: 'none' }}>
+                                        <Button
+                                            component="span"
+                                            size="xl"
+                                            radius={12}
+                                            variant="default"
+                                            fw={700}
+                                            className={classes.outlineButton}
+                                        >
+                                            Poznaj ofertę
+                                        </Button>
+                                    </Link>
                                 </Group>
                             </Stack>
                         </GridCol>

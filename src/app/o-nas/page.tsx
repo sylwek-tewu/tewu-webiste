@@ -1,4 +1,4 @@
-"use client";
+
 
 import React from 'react';
 import { ShieldCheck, Clock, Award, Users, CheckCircle2 } from 'lucide-react';

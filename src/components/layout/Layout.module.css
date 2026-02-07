@@ -14,11 +14,11 @@
 }
 
 .navLink:hover {
-    --anchor-text-color: var(--mantine-color-brandBlue-6);
+    --anchor-text-color: var(--mantine-primary-color-6);
 }
 
 .navLinkActive {
-    --anchor-text-color: var(--mantine-color-brandBlue-6);
+    --anchor-text-color: var(--mantine-primary-color-6);
 }
 
 /* Footer link */
@@ -38,7 +38,7 @@
 /* Hero Title variant - applies to nested span */
 .heroTitle span {
     font-style: italic;
-    color: var(--mantine-color-brandBlue-6);
+    color: var(--mantine-primary-color-6);
 }
 
 /* Service card - includes base styles */
@@ -56,13 +56,13 @@
 
 /* Icon that inverts on parent hover - includes base styles */
 .hoverIcon {
-    background-color: var(--mantine-color-brandBlue-0);
-    color: var(--mantine-color-brandBlue-6);
+    background-color: var(--mantine-color-blue-0);
+    color: var(--mantine-primary-color-6);
     transition: all 0.3s ease;
 }
 
 .serviceCard:hover .hoverIcon {
-    background-color: var(--mantine-color-brandBlue-6);
+    background-color: var(--mantine-primary-color-6);
     color: white;
 }
 
@@ -96,13 +96,19 @@
 
 /* Text link hover - for "Zobacz pełną ofertę" style links */
 .textLink {
-    --anchor-text-color: var(--mantine-color-slate-9);
+    color: var(--mantine-color-slate-9);
     transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 900;
+    text-decoration: none;
     cursor: pointer;
 }
 
 .textLink:hover {
-    --anchor-text-color: var(--mantine-color-brandBlue-6);
+    color: var(--mantine-primary-color-6);
+    cursor: pointer;
 }
 
 /* WhyUs reason row - purely visual, not interactive */
@@ -110,14 +116,14 @@
 
 /* WhyUs reason icon - includes base styles */
 .reasonIcon {
-    background-color: var(--mantine-color-brandBlue-0);
-    color: var(--mantine-color-brandBlue-6);
+    background-color: var(--mantine-color-blue-0);
+    color: var(--mantine-primary-color-6);
     transition: all 0.3s ease;
 }
 
 .reasonRow:hover .reasonIcon,
 .reasonIcon:hover {
-    background-color: var(--mantine-color-brandBlue-6);
+    background-color: var(--mantine-primary-color-6);
     color: white;
     transform: scale(1.05);
 }
@@ -135,12 +141,15 @@
 
 /* Service "Więcej" link hover - arrow slides right */
 .moreLink {
-    color: var(--mantine-color-brandBlue-6);
+    color: var(--mantine-primary-color-6);
     transition: gap 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 4px;
     cursor: pointer;
+    font-weight: 700;
+    font-size: var(--mantine-font-size-sm);
+    text-decoration: none;
 }
 
 .moreLink:hover {

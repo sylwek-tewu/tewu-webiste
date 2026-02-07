@@ -99,6 +99,7 @@ export const resolver: CSSVariablesResolver = (theme) => ({
         "--mantine-section-py": "96px",
         "--mantine-color-slate-900": theme.colors.slate[9],
         "--mantine-color-brand-blue": theme.colors.brandBlue[6],
+        "--cta-button-bg": theme.white,
     },
     light: {},
     dark: {},

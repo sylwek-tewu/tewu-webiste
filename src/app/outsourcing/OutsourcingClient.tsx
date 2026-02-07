@@ -1,9 +1,7 @@
 
-"use client";
-
 import React from 'react';
 import { ShieldCheck, Zap, Crosshair, Lock } from 'lucide-react';
-import { Box, Container, SimpleGrid, Stack, Title, Text, ThemeIcon, List, Paper } from '@mantine/core';
+import { Box, Container, SimpleGrid, Stack, Title, Text, ThemeIcon, Paper, Group } from '@mantine/core';
 import classes from './OutsourcingClient.module.css';
 
 export default function OutsourcingClient() {
@@ -37,21 +35,21 @@ export default function OutsourcingClient() {
                                 </Text>
                             </Box>
 
-                            <List
-                                spacing="md"
-                                size="md"
-                                center
-                                icon={
-                                    <ThemeIcon variant="transparent" c="green.5" size={24}>
-                                        <ShieldCheck size={20} />
-                                    </ThemeIcon>
-                                }
-                            >
-                                <List.Item>Obniżenie kosztów operacyjnych nawet o 40%</List.Item>
-                                <List.Item>Dostęp do ekspertów bez konieczności rekrutacji</List.Item>
-                                <List.Item>Gwarancja ciągłości procesów (brak problemów z urlopami)</List.Item>
-                                <List.Item>Przeniesienie ryzyka prawnego i podatkowego na biuro</List.Item>
-                            </List>
+                            <Stack gap="md">
+                                {[
+                                    "Obniżenie kosztów operacyjnych nawet o 40%",
+                                    "Dostęp do ekspertów bez konieczności rekrutacji",
+                                    "Gwarancja ciągłości procesów (brak problemów z urlopami)",
+                                    "Przeniesienie ryzyka prawnego i podatkowego na biuro"
+                                ].map((item, index) => (
+                                    <Group key={index} gap="md" align="center" wrap="nowrap">
+                                        <ThemeIcon variant="transparent" c="green.5" size={24} style={{ flexShrink: 0 }}>
+                                            <ShieldCheck size={20} />
+                                        </ThemeIcon>
+                                        <Text size="md" c="slate.7" lh={1.5}>{item}</Text>
+                                    </Group>
+                                ))}
+                            </Stack>
                         </Stack>
 
                         <SimpleGrid cols={2} spacing="lg">

@@ -54,8 +54,8 @@ All previously reported accessibility issues have been resolved:
 - `page.tsx` converted to **Server Component**.
 - `HomeClient.tsx` wrapper removed.
 - `WhyUs.tsx` refactored to use flat `GridCol` syntax and remains a **Server Component**.
-- `Hero.tsx` and `Services.tsx` marked as `"use client"` to support polymorphic `component={Link}` props (which pass non-serializable functions).
-- **Result**: Hybrid architecture maximizing Server Components where possible while properly handling Mantine's client-side requirements.
+- `Hero.tsx` and `Services.tsx` refactored to remove `component={Link}` usage. Instead, `Link` components wrap the Mantine elements (e.g., `<Link><Button component="span" .../></Link>`). **These files are now pure Server Components.**
+- **Result**: Complete Server Component architecture for the homepage, minimizing client-side JavaScript.
 
 ---
 
@@ -139,7 +139,7 @@ Mixed export patterns across files:
 3. ✅ Full ARIA compliance for interactive elements
 4. ✅ Keyboard focus states for links
 5. ✅ Import organization fixed
-6. ✅ HomePage architecture optimized (Server + Client Components)
+6. ✅ HomePage architecture optimized (Pure Server Components)
 7. ✅ Type safety improved (PDFViewer)
 8. ✅ Styling standardized (CSS Modules + Theme)
 

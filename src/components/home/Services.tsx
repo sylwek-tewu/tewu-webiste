@@ -1,7 +1,5 @@
-"use client";
-
 import React from 'react';
-import { Box, Container, SimpleGrid, Paper, ThemeIcon, Text, Title, Anchor } from '@mantine/core';
+import { Box, Container, SimpleGrid, Paper, ThemeIcon, Text, Title } from '@mantine/core';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { SERVICES } from '@/constants';
@@ -47,30 +45,16 @@ export function Services() {
                             <Text size="sm" c="slate.6" lh={1.6} mb="lg" lineClamp={2}>
                                 {service.description}
                             </Text>
-                            <Anchor
-                                component={Link}
-                                href="/uslugi"
-                                fw={700}
-                                size="sm"
-                                underline="never"
-                                className={classes.moreLink}
-                            >
+                            <Link href="/uslugi" className={classes.moreLink}>
                                 Więcej <ArrowRight size={16} />
-                            </Anchor>
+                            </Link>
                         </Paper>
                     ))}
                 </SimpleGrid>
                 <Box mt={64} ta="center">
-                    <Anchor
-                        component={Link}
-                        href="/uslugi"
-                        fw={900}
-                        underline="never"
-                        className={classes.textLink}
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
-                    >
+                    <Link href="/uslugi" className={classes.textLink}>
                         Zobacz pełną ofertę ({SERVICES.length} pozycji) <ArrowRight size={20} />
-                    </Anchor>
+                    </Link>
                 </Box>
             </Container>
         </Box>

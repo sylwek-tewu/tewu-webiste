@@ -1,4 +1,4 @@
-"use client";
+
 
 import React from 'react';
 import { SERVICES } from '@/constants';
@@ -31,12 +31,8 @@ export default function ServicesClient() {
                                 key={service.id}
                                 p="xl"
                                 radius="xl"
-                                bg="slate.0"
                                 withBorder
                                 className={classes.serviceCard}
-                                style={{
-                                    borderColor: 'var(--mantine-color-slate-1)'
-                                }}
                             >
                                 {/* Service Icon Container */}
                                 <Box
@@ -68,20 +64,20 @@ export default function ServicesClient() {
                     <Text c="blue.1" size="lg" mb="xl" maw={600} mx="auto">
                         Skontaktuj się z nami. Przeanalizujemy Twoją sytuację i zaproponujemy optymalne rozwiązania podatkowe.
                     </Text>
-                    <Button
-                        component={Link}
-                        href="/kontakt"
-                        size="xl"
-                        radius="lg"
-                        fw={800}
-                        px={40}
-                        py={20}
-                        rightSection={<ArrowRight size={20} />}
-                        className={classes.ctaButton}
-                        style={{ boxShadow: 'var(--mantine-shadow-xl)' }}
-                    >
-                        Umów się na konsultację
-                    </Button>
+                    <Link href="/kontakt" style={{ textDecoration: 'none' }}>
+                        <Button
+                            component="span"
+                            size="xl"
+                            radius="lg"
+                            fw={800}
+                            px={40}
+                            py={20}
+                            rightSection={<ArrowRight size={20} />}
+                            className={classes.ctaButton}
+                        >
+                            Umów się na konsultację
+                        </Button>
+                    </Link>
                 </Container>
             </Box>
 
