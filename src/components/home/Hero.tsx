@@ -36,7 +36,7 @@ export function Hero() {
                                         component={Link}
                                         href="/kontakt"
                                         size="xl"
-                                        radius="xl"
+                                        radius={12}
                                         fw={700}
                                         rightSection={<ArrowRight size={20} />}
                                         className={classes.primaryButton}
@@ -48,8 +48,9 @@ export function Hero() {
                                         component={Link}
                                         href="/uslugi"
                                         size="xl"
-                                        radius="xl"
+                                        radius={12}
                                         variant="outline"
+                                        color="gray"
                                         fw={700}
                                         className={classes.outlineButton}
                                         style={{ borderWidth: 2 }}

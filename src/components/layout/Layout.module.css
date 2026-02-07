@@ -75,19 +75,20 @@
 }
 
 .primaryButton:hover {
-    background-color: var(--mantine-color-slate-7);
+    background-color: var(--mantine-color-slate-8);
 }
 
 /* Outline button - includes base styles */
 .outlineButton {
-    border-color: var(--mantine-color-slate-1);
-    color: var(--mantine-color-slate-9);
+    --button-bd: var(--mantine-color-slate-1);
+    --button-color: var(--mantine-color-slate-9);
+    --button-bg: transparent;
     transition: all 0.2s ease;
     cursor: pointer;
 }
 
 .outlineButton:hover {
-    border-color: var(--mantine-color-slate-3);
+    --button-bd: var(--mantine-color-slate-3);
 }
 
 /* Text link hover - for "Zobacz pełną ofertę" style links */

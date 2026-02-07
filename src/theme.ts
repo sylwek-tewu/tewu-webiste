@@ -63,6 +63,20 @@ export const theme = createTheme({
                 radius: "md",
                 fw: 500,
             },
+            styles: {
+                root: {
+                    '--button-bg': 'var(--mantine-color-slate-9)',
+                    '--button-hover': 'var(--mantine-color-slate-8)',
+                    '--button-color': 'white',
+                },
+            },
+        },
+        Anchor: {
+            defaultProps: {
+                underline: 'never',
+            },
+            // Removed global color - nav links use CSS module for gray color
+            // Content links can use c="brandBlue.6" prop if needed
         },
         Container: {
             defaultProps: {

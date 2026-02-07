@@ -47,6 +47,7 @@ const Navbar: React.FC = () => {
                 underline="never"
                 fw={600}
                 size="sm"
+                c={pathname === link.path ? 'brandBlue.6' : 'slate.6'}
                 className={`${classes.navLink} ${pathname === link.path ? classes.navLinkActive : ''}`}
               >
                 {link.label}
@@ -57,7 +58,7 @@ const Navbar: React.FC = () => {
               href="/kontakt"
               size="md"
               fw={700}
-              radius="lg"
+              radius={12}
               className={classes.primaryButton}
               style={{ boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)' }}
             >
