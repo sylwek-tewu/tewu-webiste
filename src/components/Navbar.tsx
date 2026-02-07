@@ -47,7 +47,6 @@ const Navbar: React.FC = () => {
                 underline="never"
                 fw={600}
                 size="sm"
-                c={pathname === link.path ? 'brandBlue.6' : 'slate.6'}
                 className={`${classes.navLink} ${pathname === link.path ? classes.navLinkActive : ''}`}
               >
                 {link.label}

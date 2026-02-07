@@ -49,11 +49,9 @@ export function Hero() {
                                         href="/uslugi"
                                         size="xl"
                                         radius={12}
-                                        variant="outline"
-                                        color="gray"
+                                        variant="default"
                                         fw={700}
                                         className={classes.outlineButton}
-                                        style={{ borderWidth: 2 }}
                                     >
                                         Poznaj ofertę
                                     </Button>

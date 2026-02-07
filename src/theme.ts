@@ -75,8 +75,12 @@ export const theme = createTheme({
             defaultProps: {
                 underline: 'never',
             },
-            // Removed global color - nav links use CSS module for gray color
-            // Content links can use c="brandBlue.6" prop if needed
+            styles: {
+                root: {
+                    // Use CSS variable that can be overridden by CSS modules
+                    color: 'var(--anchor-text-color, inherit)',
+                },
+            },
         },
         Container: {
             defaultProps: {

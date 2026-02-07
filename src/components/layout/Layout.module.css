@@ -6,19 +6,19 @@
     letter-spacing: 0.05em;
 }
 
-/* Navigation link - includes base color */
+/* Navigation link - color controlled via Mantine CSS variables */
 .navLink {
-    color: var(--mantine-color-slate-6);
+    --anchor-text-color: var(--mantine-color-slate-6);
     transition: color 0.2s ease;
     cursor: pointer;
 }
 
 .navLink:hover {
-    color: var(--mantine-color-brandBlue-6);
+    --anchor-text-color: var(--mantine-color-brandBlue-6);
 }
 
 .navLinkActive {
-    color: var(--mantine-color-brandBlue-6);
+    --anchor-text-color: var(--mantine-color-brandBlue-6);
 }
 
 /* Footer link */
@@ -78,28 +78,31 @@
     background-color: var(--mantine-color-slate-8);
 }
 
-/* Outline button - includes base styles */
+/* Outline button - exact prototype colors */
 .outlineButton {
-    --button-bd: var(--mantine-color-slate-1);
-    --button-color: var(--mantine-color-slate-9);
-    --button-bg: transparent;
+    /* Normal state: text slate-900, bg white, border slate-100 */
+    color: var(--mantine-color-slate-9);
+    background-color: white;
+    border: 2px solid var(--mantine-color-slate-1);
     transition: all 0.2s ease;
     cursor: pointer;
 }
 
 .outlineButton:hover {
-    --button-bd: var(--mantine-color-slate-3);
+    /* Hover state: border slate-300, keep same bg */
+    background-color: white;
+    border-color: var(--mantine-color-slate-3);
 }
 
 /* Text link hover - for "Zobacz pełną ofertę" style links */
 .textLink {
-    color: var(--mantine-color-slate-9);
+    --anchor-text-color: var(--mantine-color-slate-9);
     transition: color 0.2s ease;
     cursor: pointer;
 }
 
 .textLink:hover {
-    color: var(--mantine-color-brandBlue-6);
+    --anchor-text-color: var(--mantine-color-brandBlue-6);
 }
 
 /* WhyUs reason row - hover on entire row triggers icon effect */
