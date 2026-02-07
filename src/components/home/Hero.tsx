@@ -67,7 +67,7 @@ export function Hero() {
                                     right={-40}
                                     w={160}
                                     h={160}
-                                    bg="rgba(37, 99, 235, 0.1)"
+                                    bg="color-mix(in srgb, var(--mantine-color-brandBlue-6) 10%, transparent)"
                                     style={{ borderRadius: '9999px', filter: 'blur(48px)' }}
                                 />
                                 <Box
@@ -76,7 +76,7 @@ export function Hero() {
                                     left={-40}
                                     w={160}
                                     h={160}
-                                    bg="rgba(99, 102, 241, 0.1)"
+                                    bg="color-mix(in srgb, var(--mantine-color-indigo-6) 10%, transparent)"
                                     style={{ borderRadius: '9999px', filter: 'blur(48px)' }}
                                 />
                                 <Image

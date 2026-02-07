@@ -1,6 +1,8 @@
 "use client";
 
 import React from 'react';
+
+const CURRENT_YEAR = new Date().getFullYear();
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Facebook, Linkedin } from 'lucide-react';
 import { CONTACT_DETAILS, COMPANY_FULL_NAME, NAV_LINKS } from '../constants';
@@ -21,10 +23,10 @@ const Footer: React.FC = () => {
               Twój zaufany partner w biznesie. Profesjonalna księgowość, kadry i płace oraz doradztwo dla firm każdej wielkości.
             </Text>
             <Group gap="md">
-              <Anchor href="#" c="white" className={classes.footerLink}>
+              <Anchor href="#" c="white" className={classes.footerLink} aria-label="Facebook">
                 <Facebook size={20} />
               </Anchor>
-              <Anchor href="#" c="white" className={classes.footerLink}>
+              <Anchor href="#" c="white" className={classes.footerLink} aria-label="LinkedIn">
                 <Linkedin size={20} />
               </Anchor>
             </Group>
@@ -117,7 +119,7 @@ const Footer: React.FC = () => {
 
         <Box mt={64} pt="lg" ta="center" c="slate.5" className={classes.footerBorder}>
           <Text size="xs">
-            © {new Date().getFullYear()} {COMPANY_FULL_NAME}. Wszelkie prawa zastrzeżone.
+            © {CURRENT_YEAR} {COMPANY_FULL_NAME}. Wszelkie prawa zastrzeżone.
           </Text>
         </Box>
       </Container>

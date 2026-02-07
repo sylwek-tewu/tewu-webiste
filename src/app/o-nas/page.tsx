@@ -1,12 +1,8 @@
+"use client";
 
 import React from 'react';
 import { ShieldCheck, Clock, Award, Users, CheckCircle2 } from 'lucide-react';
-import { Metadata } from 'next';
 import { Box, Container, SimpleGrid, Stack, Title, Text, ThemeIcon, Paper, Image, Group } from '@mantine/core';
-
-export const metadata: Metadata = {
-    title: "O nas - Biuro Rachunkowe TEWU",
-};
 
 export default function About() {
     return (

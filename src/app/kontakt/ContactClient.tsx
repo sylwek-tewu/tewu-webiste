@@ -1,11 +1,13 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Clock, FileText, Landmark, Building2, Smartphone } from 'lucide-react';
 import { CONTACT_DETAILS } from '@/constants';
 import { Box, Container, SimpleGrid, Stack, Title, Text, Group, ThemeIcon, Paper, Anchor } from '@mantine/core';
-
+import classes from '@/components/layout/Layout.module.css';
 export default function ContactClient() {
+    const [isMapHovered, setIsMapHovered] = useState(false);
+
     return (
         <Stack gap={0} bg="white">
             <Box component="section" py={96} bg="slate.0">
@@ -43,10 +45,10 @@ export default function ContactClient() {
                                         </ThemeIcon>
                                         <Box>
                                             <Text size="xs" fw={700} c="slate.4" tt="uppercase" mb={4}>Email</Text>
-                                            <Anchor href={`mailto:${CONTACT_DETAILS.email}`} display="block" size="sm" fw={700} c="slate.9" style={{ transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--mantine-color-blue-6)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--mantine-color-slate-9)'}>
+                                            <Anchor href={`mailto:${CONTACT_DETAILS.email}`} display="block" size="sm" fw={700} c="slate.9" className={classes.contactLink}>
                                                 {CONTACT_DETAILS.email}
                                             </Anchor>
-                                            <Anchor href="mailto:sw@tewu.szczecin.pl" display="block" size="sm" fw={700} c="slate.9" style={{ transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--mantine-color-blue-6)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--mantine-color-slate-9)'}>
+                                            <Anchor href="mailto:sw@tewu.szczecin.pl" display="block" size="sm" fw={700} c="slate.9" className={classes.contactLink}>
                                                 sw@tewu.szczecin.pl
                                             </Anchor>
                                         </Box>
@@ -58,10 +60,10 @@ export default function ContactClient() {
                                         </ThemeIcon>
                                         <Box>
                                             <Text size="xs" fw={700} c="slate.4" tt="uppercase" mb={4}>Tel. sekretariat</Text>
-                                            <Anchor href={`tel:${CONTACT_DETAILS.phone.replace(/\s/g, '')}`} display="block" size="sm" fw={700} c="slate.9" style={{ transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--mantine-color-blue-6)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--mantine-color-slate-9)'}>
+                                            <Anchor href={`tel:${CONTACT_DETAILS.phone.replace(/\s/g, '')}`} display="block" size="sm" fw={700} c="slate.9" className={classes.contactLink}>
                                                 {CONTACT_DETAILS.phone}
                                             </Anchor>
-                                            <Anchor href="tel:+48602235736" display="block" size="sm" fw={700} c="slate.9" style={{ transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--mantine-color-blue-6)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--mantine-color-slate-9)'}>
+                                            <Anchor href="tel:+48602235736" display="block" size="sm" fw={700} c="slate.9" className={classes.contactLink}>
                                                 602 235 736
                                             </Anchor>
                                         </Box>
@@ -73,10 +75,10 @@ export default function ContactClient() {
                                         </ThemeIcon>
                                         <Box>
                                             <Text size="xs" fw={700} c="slate.4" tt="uppercase" mb={4}>Tel. komórkowy</Text>
-                                            <Anchor href="tel:+48501482555" display="block" size="sm" fw={700} c="slate.9" style={{ transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--mantine-color-blue-6)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--mantine-color-slate-9)'}>
+                                            <Anchor href="tel:+48501482555" display="block" size="sm" fw={700} c="slate.9" className={classes.contactLink}>
                                                 501 482 555
                                             </Anchor>
-                                            <Anchor href="tel:+48886543973" display="block" size="sm" fw={700} c="slate.9" style={{ transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--mantine-color-blue-6)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--mantine-color-slate-9)'}>
+                                            <Anchor href="tel:+48886543973" display="block" size="sm" fw={700} c="slate.9" className={classes.contactLink}>
                                                 886 543 973
                                             </Anchor>
                                         </Box>
@@ -160,20 +162,15 @@ export default function ContactClient() {
                     <Text c="slate.5" mt="xs">Al. Powstańców Wielkopolskich 78A LU2</Text>
                 </Container>
                 <Box h={500} bg="slate.1" pos="relative" style={{ overflow: 'hidden' }}
-                    onMouseEnter={(e) => {
-                        const iframe = e.currentTarget.querySelector('iframe');
-                        if (iframe) iframe.style.filter = 'grayscale(0)';
-                    }}
-                    onMouseLeave={(e) => {
-                        const iframe = e.currentTarget.querySelector('iframe');
-                        if (iframe) iframe.style.filter = 'grayscale(1)';
-                    }}
+                    onMouseEnter={() => setIsMapHovered(true)}
+                    onMouseLeave={() => setIsMapHovered(false)}
                 >
                     <iframe
+                        title="Mapa lokalizacji biura TEWU w Szczecinie"
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2377.9304323676235!2d14.536737377030806!3d53.40715377230495!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47aa0914a8b79b9b%3A0x6a0c5c6d3d6e5a6b!2sAleja%20Powsta%C5%84c%C3%B3w%20Wielkopolskich%2078A%2C%2070-110%20Szczecin!5e0!3m2!1spl!2spl!4v1715850000000!5m2!1spl!2spl"
                         width="100%"
                         height="100%"
-                        style={{ border: 0, filter: 'grayscale(1)', transition: 'filter 0.7s' }}
+                        style={{ border: 0, filter: isMapHovered ? 'grayscale(0)' : 'grayscale(1)', transition: 'filter 0.7s' }}
                         allowFullScreen
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"

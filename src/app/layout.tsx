@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 import '@mantine/core/styles.css';
-import { ColorSchemeScript, Box, Stack } from '@mantine/core';
+import { mantineHtmlProps, ColorSchemeScript, Box, Stack } from '@mantine/core';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,15 +14,13 @@ export const metadata: Metadata = {
     description: "Twój zaufany partner w biznesie. Profesjonalna księgowość, kadry i płace oraz doradztwo dla firm każdej wielkości.",
 };
 
-import { ThemeProvider } from "@/components/ThemeProvider";
-
 export default function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="pl" suppressHydrationWarning>
+        <html lang="pl" {...mantineHtmlProps}>
             <head>
                 <ColorSchemeScript />
             </head>

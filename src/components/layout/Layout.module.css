@@ -50,7 +50,7 @@
 }
 
 .serviceCard:hover {
-    box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.1);
+    box-shadow: var(--mantine-shadow-xl);
     transform: translateY(-2px);
 }
 
@@ -105,10 +105,8 @@
     --anchor-text-color: var(--mantine-color-brandBlue-6);
 }
 
-/* WhyUs reason row - hover on entire row triggers icon effect */
-.reasonRow {
-    cursor: pointer;
-}
+/* WhyUs reason row - purely visual, not interactive */
+/* .reasonRow has no styles needed, hover effect triggers icon change */
 
 /* WhyUs reason icon - includes base styles */
 .reasonIcon {
@@ -122,6 +120,17 @@
     background-color: var(--mantine-color-brandBlue-6);
     color: white;
     transform: scale(1.05);
+}
+
+/* Contact page links - hover AND focus states for keyboard accessibility */
+.contactLink {
+    color: var(--mantine-color-slate-9);
+    transition: color 0.2s ease;
+}
+
+.contactLink:hover,
+.contactLink:focus {
+    color: var(--mantine-color-blue-6);
 }
 
 /* Service "Więcej" link hover - arrow slides right */

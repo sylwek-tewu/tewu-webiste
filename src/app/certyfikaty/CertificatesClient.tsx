@@ -1,28 +1,11 @@
-
 "use client";
 
-import React, { useState, useRef } from 'react';
-import { Award, ShieldCheck, X, FileText, ExternalLink, ChevronLeft, ChevronRight, Download, Loader2, ZoomIn, ZoomOut, RotateCcw, Hand } from 'lucide-react';
-import { Document, Page, pdfjs } from 'react-pdf';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
-import { Box, Container, SimpleGrid, Stack, Title, Text, Group, Button, ActionIcon, Modal, Loader, Paper, ThemeIcon, Badge, Image } from '@mantine/core';
-
-// Konfiguracja workera PDF.js z CDN
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+import React, { useState } from 'react';
+import { ShieldCheck, X, FileText, Download, ExternalLink } from 'lucide-react';
+import { Box, Container, SimpleGrid, Stack, Title, Text, Group, ActionIcon, Modal, Paper, ThemeIcon, Badge, Image } from '@mantine/core';
 
 const CertificatesClient: React.FC = () => {
     const [selectedPdf, setSelectedPdf] = useState<string | null>(null);
-    const [numPages, setNumPages] = useState<number | null>(null);
-    const [pageNumber, setPageNumber] = useState(1);
-    const [scale, setScale] = useState(1.0);
-
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [isDragging, setIsDragging] = useState(false);
-    const [startX, setStartX] = useState(0);
-    const [startY, setStartY] = useState(0);
-    const [scrollLeft, setScrollLeft] = useState(0);
-    const [scrollTop, setScrollTop] = useState(0);
 
     const certs = [
         {
@@ -38,45 +21,6 @@ const CertificatesClient: React.FC = () => {
             pdfUrl: 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf'
         }
     ];
-
-    function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
-        setNumPages(numPages);
-        setPageNumber(1);
-        setScale(1.0);
-    }
-
-    const changePage = (offset: number) => {
-        setPageNumber(prevPageNumber => prevPageNumber + offset);
-    };
-
-    const handleZoomIn = () => setScale(prev => Math.min(prev + 0.25, 3.0));
-    const handleZoomOut = () => setScale(prev => Math.max(prev - 0.25, 0.5));
-    const handleResetZoom = () => setScale(1.0);
-
-    // Grab-to-pan logic
-    const handleMouseDown = (e: React.MouseEvent) => {
-        if (!containerRef.current) return;
-        setIsDragging(true);
-        // e.pageX i e.pageY są względem całego dokumentu
-        setStartX(e.pageX - containerRef.current.offsetLeft);
-        setStartY(e.pageY - containerRef.current.offsetTop);
-        setScrollLeft(containerRef.current.scrollLeft);
-        setScrollTop(containerRef.current.scrollTop);
-    };
-
-    const handleMouseLeave = () => setIsDragging(false);
-    const handleMouseUp = () => setIsDragging(false);
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        if (!isDragging || !containerRef.current) return;
-        e.preventDefault();
-        const x = e.pageX - containerRef.current.offsetLeft;
-        const y = e.pageY - containerRef.current.offsetTop;
-        const walkX = (x - startX);
-        const walkY = (y - startY);
-        containerRef.current.scrollLeft = scrollLeft - walkX;
-        containerRef.current.scrollTop = scrollTop - walkY;
-    };
 
     const closeModal = () => setSelectedPdf(null);
 
@@ -138,7 +82,7 @@ const CertificatesClient: React.FC = () => {
                 </Container>
             </Box>
 
-            {/* PDF Preview Modal */}
+            {/* PDF Preview Modal - Using native browser PDF viewer */}
             <Modal
                 opened={!!selectedPdf}
                 onClose={closeModal}
@@ -155,49 +99,19 @@ const CertificatesClient: React.FC = () => {
                             <Text fw={700} tt="uppercase" size="xs" visibleFrom="xs">Podgląd PDF</Text>
                         </Group>
 
-                        <Group gap="md">
-                            {numPages && numPages > 1 && (
-                                <Group gap={0} bg="white" style={{ border: '1px solid var(--mantine-color-slate-2)', borderRadius: '9999px', boxShadow: 'var(--mantine-shadow-sm)', overflow: 'hidden' }}>
-                                    <ActionIcon
-                                        variant="subtle"
-                                        color="slate.7"
-                                        disabled={pageNumber <= 1}
-                                        onClick={() => changePage(-1)}
-                                    >
-                                        <ChevronLeft size={18} />
-                                    </ActionIcon>
-                                    <Text size="xs" fw={700} c="slate.6" style={{ minWidth: 40, textAlign: 'center' }}>
-                                        {pageNumber} / {numPages}
-                                    </Text>
-                                    <ActionIcon
-                                        variant="subtle"
-                                        color="slate.7"
-                                        disabled={pageNumber >= (numPages || 0)}
-                                        onClick={() => changePage(1)}
-                                    >
-                                        <ChevronRight size={18} />
-                                    </ActionIcon>
-                                </Group>
-                            )}
-
-                            <Group gap={0} bg="white" p={4} style={{ border: '1px solid var(--mantine-color-slate-2)', borderRadius: '9999px', boxShadow: 'var(--mantine-shadow-sm)', overflow: 'hidden' }}>
-                                <ActionIcon onClick={handleZoomOut} variant="subtle" color="slate.6">
-                                    <ZoomOut size={18} />
-                                </ActionIcon>
-                                <Text size="xs" fw={900} c="slate.5" w={48} ta="center">
-                                    {Math.round(scale * 100)}%
-                                </Text>
-                                <ActionIcon onClick={handleZoomIn} variant="subtle" color="slate.6">
-                                    <ZoomIn size={18} />
-                                </ActionIcon>
-                                <Box w={1} h={16} bg="slate.2" mx={4} />
-                                <ActionIcon onClick={handleResetZoom} variant="subtle" color="slate.6">
-                                    <RotateCcw size={16} />
-                                </ActionIcon>
-                            </Group>
-                        </Group>
-
                         <Group gap="xs">
+                            <ActionIcon
+                                component="a"
+                                href={selectedPdf || '#'}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                variant="subtle"
+                                color="slate.6"
+                                size="lg"
+                                aria-label="Otwórz w nowej karcie"
+                            >
+                                <ExternalLink size={20} />
+                            </ActionIcon>
                             <ActionIcon
                                 component="a"
                                 href={selectedPdf || '#'}
@@ -205,6 +119,7 @@ const CertificatesClient: React.FC = () => {
                                 variant="subtle"
                                 color="slate.6"
                                 size="lg"
+                                aria-label="Pobierz PDF"
                             >
                                 <Download size={20} />
                             </ActionIcon>
@@ -214,6 +129,7 @@ const CertificatesClient: React.FC = () => {
                                 color="slate.9"
                                 size="lg"
                                 radius="xl"
+                                aria-label="Zamknij podgląd PDF"
                             >
                                 <X size={24} />
                             </ActionIcon>
@@ -221,75 +137,25 @@ const CertificatesClient: React.FC = () => {
                     </Group>
                 </Paper>
 
-                <Box
-                    ref={containerRef}
-                    onMouseDown={handleMouseDown}
-                    onMouseLeave={handleMouseLeave}
-                    onMouseUp={handleMouseUp}
-                    onMouseMove={handleMouseMove}
-                    bg="slate.2"
-                    style={{
-                        flex: 1,
-                        overflow: 'auto',
-                        cursor: isDragging ? 'grabbing' : 'grab',
-                        userSelect: 'none',
-                        position: 'relative'
-                    }}
-                >
-                    <Box
-                        py={64}
-                        px={{ base: 16, md: 64 }}
-                        style={{ minHeight: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}
-                    >
-                        <Document
-                            file={selectedPdf}
-                            onLoadSuccess={onDocumentLoadSuccess}
-                            loading={
-                                <Stack align="center" justify="center" h={400} c="slate.5">
-                                    <Loader color="blue" />
-                                    <Text fw={700}>Wczytywanie...</Text>
-                                </Stack>
-                            }
-                        >
-                            <Page
-                                pageNumber={pageNumber}
-                                scale={scale}
-                                renderTextLayer={true}
-                                renderAnnotationLayer={true}
-                                loading={null}
-                            />
-                        </Document>
-                    </Box>
-
-                    {scale > 1.2 && (
-                        <Paper
-                            pos="absolute"
-                            bottom={24}
-                            left="50%"
-                            style={{ transform: 'translateX(-50%)', backdropFilter: 'blur(12px)', borderColor: 'rgba(255,255,255,0.1)', pointerEvents: 'none' }}
-                            bg="rgba(15, 23, 42, 0.6)"
-                            c="white"
-                            px="md"
-                            py="xs"
-                            radius="xl"
-                            shadow="xl"
-                            withBorder
-                        >
-                            <Group gap="xs">
-                                <Hand size={14} color="var(--mantine-color-blue-4)" />
-                                <Text size="xs" fw={700} tt="uppercase" opacity={0.9} style={{ letterSpacing: '0.2em' }}>
-                                    Przeciągnij, aby przesunąć widok
-                                </Text>
-                            </Group>
-                        </Paper>
-                    )}
+                <Box style={{ flex: 1, position: 'relative' }}>
+                    <iframe
+                        src={`https://docs.google.com/viewer?url=${encodeURIComponent(selectedPdf || '')}&embedded=true`}
+                        title="Podgląd certyfikatu PDF"
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            border: 'none',
+                            position: 'absolute',
+                            inset: 0
+                        }}
+                    />
                 </Box>
             </Modal>
-        </Stack >
+        </Stack>
     );
 };
 
-function CertificateCard({ cert, onClick }: { cert: any, onClick: () => void }) {
+function CertificateCard({ cert, onClick }: { cert: { url: string; title: string; desc: string; pdfUrl: string }, onClick: () => void }) {
     const [hovered, setHovered] = useState(false);
 
     return (
@@ -326,7 +192,7 @@ function CertificateCard({ cert, onClick }: { cert: any, onClick: () => void }) 
             <Box
                 pos="absolute"
                 inset={0}
-                bg="rgba(15, 23, 42, 0.4)"
+                bg="color-mix(in srgb, var(--mantine-color-slate-9) 40%, transparent)"
                 style={{
                     opacity: hovered ? 1 : 0,
                     transition: 'opacity 0.3s',
