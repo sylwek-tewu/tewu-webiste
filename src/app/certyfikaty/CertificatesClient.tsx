@@ -224,7 +224,7 @@ function CertificateCard({ cert, onClick }: { cert: { url: string; title: string
                 left={0}
                 right={0}
                 p={24}
-                style={{ background: 'linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent)' }}
+                style={{ background: 'linear-gradient(to top, color-mix(in srgb, var(--mantine-color-slate-9) 90%, transparent), transparent)' }}
             >
                 <Text c="white" fw={700}>{cert.title}</Text>
                 <Text c="slate.3" size="xs">{cert.desc}</Text>

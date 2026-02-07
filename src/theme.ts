@@ -39,8 +39,10 @@ export const theme = createTheme({
         fontFamily: "Inter, sans-serif",
         fontWeight: "900",
         sizes: {
-            h1: { fontSize: "72px", lineHeight: "1" },
-            h2: { fontSize: "36px", lineHeight: "1.2" },
+            // Hero/Page titles - large responsive
+            h1: { fontSize: "clamp(2.25rem, 5vw, 3.75rem)", lineHeight: "1.1" },
+            // Section headers - medium responsive
+            h2: { fontSize: "clamp(1.875rem, 4vw, 2.25rem)", lineHeight: "1.2" },
             h3: { fontSize: "30px", lineHeight: "1.25" },
             h4: { fontSize: "24px", lineHeight: "1.3" },
             h5: { fontSize: "20px", lineHeight: "1.4" },

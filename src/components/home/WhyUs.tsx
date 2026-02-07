@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Grid, Title, Text, Stack, Group, ThemeIcon, Image, SimpleGrid } from '@mantine/core';
+import { Box, Container, Grid, GridCol, Title, Text, Stack, Group, ThemeIcon, Image, SimpleGrid } from '@mantine/core';
 import { REASONS_TO_TRUST } from '@/constants';
 import classes from '@/components/layout/Layout.module.css';
 
@@ -9,7 +9,7 @@ export function WhyUs() {
             <Container>
                 {/* Upper Section: 7/12 content + 5/12 sticky images */}
                 <Grid gutter={{ base: 48, lg: 80 }}>
-                    <Grid.Col span={{ base: 12, lg: 7 }}>
+                    <GridCol span={{ base: 12, lg: 7 }}>
                         <Stack gap={48}>
                             {/* Header */}
                             <Box>
@@ -42,10 +42,10 @@ export function WhyUs() {
                                 ))}
                             </Stack>
                         </Stack>
-                    </Grid.Col>
+                    </GridCol>
 
                     {/* Floating Images Column */}
-                    <Grid.Col span={{ base: 12, lg: 5 }} visibleFrom="lg">
+                    <GridCol span={{ base: 12, lg: 5 }} visibleFrom="lg">
                         <Box pos="relative" h={480} style={{ position: 'sticky', top: 128 }}>
                             {/* First image - offset down */}
                             <Box
@@ -84,7 +84,7 @@ export function WhyUs() {
                                 />
                             </Box>
                         </Box>
-                    </Grid.Col>
+                    </GridCol>
                 </Grid>
 
                 {/* Lower Section: Remaining reasons in 2-column grid */}

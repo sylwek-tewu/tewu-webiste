@@ -1,0 +1,9 @@
+/* Feature card hover effect */
+.featureCard {
+    transition: border-color 0.2s ease;
+}
+
+.featureCard:hover,
+.featureCard:focus-within {
+    border-color: var(--mantine-color-blue-2);
+}

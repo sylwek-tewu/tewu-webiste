@@ -5,7 +5,7 @@
 
 .serviceCard:hover {
     background-color: white !important;
-    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(219, 234, 254) 0px 25px 50px -12px;
+    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, var(--mantine-color-blue-1) 0px 25px 50px -12px;
 }
 
 .iconContainer {
@@ -20,6 +20,18 @@
 }
 
 .serviceCard:hover .iconContainer {
-    background-color: rgb(37, 99, 235);
-    color: rgb(255, 255, 255);
+    background-color: var(--mantine-color-brandBlue-6);
+    color: white;
+}
+
+/* CTA Button - white button with hover state */
+.ctaButton {
+    background-color: white;
+    color: var(--mantine-color-brandBlue-6);
+    transition: background-color 0.2s ease;
+}
+
+.ctaButton:hover,
+.ctaButton:focus {
+    background-color: var(--mantine-color-blue-0);
 }

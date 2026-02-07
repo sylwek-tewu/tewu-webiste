@@ -60,7 +60,7 @@ export default function ServicesClient() {
             </Box>
 
             {/* CTA Section */}
-            <Box component="section" py={96} style={{ backgroundColor: 'rgb(37, 99, 235)' }}>
+            <Box component="section" py={96} bg="brandBlue.6">
                 <Container size="md" px="md" ta="center">
                     <Title order={2} c="white" fw={900} mb="lg" fz={{ base: 'xl', md: '2.25rem' }}>
                         Nie wiesz, która forma rozliczenia będzie dla Ciebie najlepsza?
@@ -73,14 +73,12 @@ export default function ServicesClient() {
                         href="/kontakt"
                         size="xl"
                         radius="lg"
-                        bg="white"
-                        style={{ color: 'rgb(37, 99, 235)', boxShadow: 'var(--mantine-shadow-xl)', transition: 'background-color 0.2s' }}
                         fw={800}
                         px={40}
                         py={20}
                         rightSection={<ArrowRight size={20} />}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-0)'}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                        className={classes.ctaButton}
+                        style={{ boxShadow: 'var(--mantine-shadow-xl)' }}
                     >
                         Umów się na konsultację
                     </Button>

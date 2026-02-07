@@ -4,6 +4,7 @@
 import React from 'react';
 import { ShieldCheck, Zap, Crosshair, Lock } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, ThemeIcon, List, Paper } from '@mantine/core';
+import classes from './OutsourcingClient.module.css';
 
 export default function OutsourcingClient() {
     return (
@@ -66,9 +67,8 @@ export default function OutsourcingClient() {
                                     radius="lg"
                                     withBorder
                                     bg="slate.0"
-                                    style={{ borderColor: 'var(--mantine-color-slate-1)', transition: 'border-color 0.2s' }}
-                                    onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--mantine-color-blue-2)'}
-                                    onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--mantine-color-slate-1)'}
+                                    className={classes.featureCard}
+                                    style={{ borderColor: 'var(--mantine-color-slate-1)' }}
                                 >
                                     <Box mb="md">{box.icon}</Box>
                                     <Text fw={700} c="slate.9" mb="xs">{box.title}</Text>

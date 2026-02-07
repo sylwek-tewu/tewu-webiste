@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import { Box, Stack, Text, Group, ActionIcon, Paper, Loader } from '@mantine/core';
+import type { PDFDocumentProxy } from 'pdfjs-dist';
+import type * as PDFJS from 'pdfjs-dist';
 
 export interface PDFViewerProps {
     /** URL of the PDF to display */
@@ -23,13 +25,13 @@ export function PDFViewer({
 }: PDFViewerProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const [pdfDoc, setPdfDoc] = useState<any>(null);
+    const [pdfDoc, setPdfDoc] = useState<PDFDocumentProxy | null>(null);
     const [pageNum, setPageNum] = useState(1);
     const [numPages, setNumPages] = useState(0);
     const [scale, setScale] = useState(initialScale);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [pdfjsLib, setPdfjsLib] = useState<any>(null);
+    const [pdfjsLib, setPdfjsLib] = useState<typeof PDFJS | null>(null);
 
     // Drag state
     const [isDragging, setIsDragging] = useState(false);
@@ -56,7 +58,7 @@ export function PDFViewer({
             try {
                 setLoading(true);
                 setError(null);
-                const loadingTask = pdfjsLib.getDocument(url);
+                const loadingTask = pdfjsLib!.getDocument(url);
                 const pdf = await loadingTask.promise;
                 if (!cancelled) {
                     setPdfDoc(pdf);
@@ -91,7 +93,7 @@ export function PDFViewer({
 
         async function render() {
             try {
-                const page = await pdfDoc.getPage(pageNum);
+                const page = await pdfDoc!.getPage(pageNum);
                 if (isCancelled) return;
 
                 const viewport = page.getViewport({ scale });

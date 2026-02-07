@@ -1,6 +1,8 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
-import { Container, Title, Text, Button, Group, Badge, Grid, Box, Stack, Image, SimpleGrid } from '@mantine/core';
+import { Container, Title, Text, Button, Group, Badge, Grid, GridCol, Box, Stack, Image, SimpleGrid } from '@mantine/core';
 import { ArrowRight } from 'lucide-react';
 import classes from '@/components/layout/Layout.module.css';
 
@@ -11,7 +13,7 @@ export function Hero() {
             <Box component="section" bg="slate.0" pt={{ base: 64, md: 96 }} pb={{ base: 96, md: 128 }}>
                 <Container>
                     <Grid gutter={{ base: 48, lg: 48 }} align="center">
-                        <Grid.Col span={{ base: 12, md: 6 }}>
+                        <GridCol span={{ base: 12, md: 6 }}>
                             <Stack gap="xl">
                                 <Badge>
                                     Ponad 25 lat na rynku
@@ -40,7 +42,7 @@ export function Hero() {
                                         fw={700}
                                         rightSection={<ArrowRight size={20} />}
                                         className={classes.primaryButton}
-                                        style={{ boxShadow: '0 25px 50px -12px rgba(226, 232, 240, 1)' }}
+                                        style={{ boxShadow: '0 25px 50px -12px var(--mantine-color-slate-2)' }}
                                     >
                                         Skontaktuj się z nami
                                     </Button>
@@ -57,9 +59,9 @@ export function Hero() {
                                     </Button>
                                 </Group>
                             </Stack>
-                        </Grid.Col>
+                        </GridCol>
 
-                        <Grid.Col span={{ base: 12, md: 6 }} visibleFrom="md">
+                        <GridCol span={{ base: 12, md: 6 }} visibleFrom="md">
                             <Box pos="relative">
                                 <Box
                                     pos="absolute"
@@ -92,7 +94,7 @@ export function Hero() {
                                     }}
                                 />
                             </Box>
-                        </Grid.Col>
+                        </GridCol>
                     </Grid>
                 </Container>
             </Box>

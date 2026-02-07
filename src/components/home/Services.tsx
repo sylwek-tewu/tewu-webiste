@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { Box, Container, SimpleGrid, Paper, ThemeIcon, Text, Title, Anchor } from '@mantine/core';
 import { ArrowRight } from 'lucide-react';
