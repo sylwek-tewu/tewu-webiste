@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { ShieldCheck, X, FileText, Download, ExternalLink } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, Group, ActionIcon, Modal, Paper, ThemeIcon, Badge, Image } from '@mantine/core';
+import { PDFViewer } from '@/components/PDFViewer';
 
 const CertificatesClient: React.FC = () => {
     const [selectedPdf, setSelectedPdf] = useState<string | null>(null);
@@ -82,7 +83,7 @@ const CertificatesClient: React.FC = () => {
                 </Container>
             </Box>
 
-            {/* PDF Preview Modal - Using native browser PDF viewer */}
+            {/* PDF Preview Modal */}
             <Modal
                 opened={!!selectedPdf}
                 onClose={closeModal}
@@ -137,18 +138,8 @@ const CertificatesClient: React.FC = () => {
                     </Group>
                 </Paper>
 
-                <Box style={{ flex: 1, position: 'relative' }}>
-                    <iframe
-                        src={`https://docs.google.com/viewer?url=${encodeURIComponent(selectedPdf || '')}&embedded=true`}
-                        title="Podgląd certyfikatu PDF"
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            border: 'none',
-                            position: 'absolute',
-                            inset: 0
-                        }}
-                    />
+                <Box style={{ flex: 1, overflow: 'hidden' }}>
+                    {selectedPdf && <PDFViewer url={selectedPdf} />}
                 </Box>
             </Modal>
         </Stack>
