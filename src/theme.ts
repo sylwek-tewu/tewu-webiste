@@ -25,7 +25,7 @@ const slate: MantineColorsTuple = [
     "#475569", // slate-600
     "#334155", // slate-700
     "#1e293b", // slate-800
-    "#0a0f1c", // slate-900 - Dark backgrounds (Updated to match prototype)
+    "#0F172A", // slate-900 - Dark backgrounds (Updated to match prototype)
 ];
 
 export const theme = createTheme({

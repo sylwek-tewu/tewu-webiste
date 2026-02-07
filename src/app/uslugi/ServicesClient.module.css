@@ -1,0 +1,25 @@
+.serviceCard {
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.serviceCard:hover {
+    background-color: white !important;
+    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(219, 234, 254) 0px 25px 50px -12px;
+}
+
+.iconContainer {
+    transition: all 0.3s ease;
+    background-color: white;
+    border-radius: var(--mantine-radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mantine-color-blue-6);
+    box-shadow: var(--mantine-shadow-sm);
+}
+
+.serviceCard:hover .iconContainer {
+    background-color: rgb(37, 99, 235);
+    color: rgb(255, 255, 255);
+}

@@ -1,16 +1,16 @@
-
 "use client";
 
 import React from 'react';
 import { SERVICES } from '@/constants';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
-import { Box, Container, SimpleGrid, Grid, Stack, Title, Text, Button, ThemeIcon, Group, Paper, List } from '@mantine/core';
+import { Box, Container, SimpleGrid, Stack, Title, Text, Button, ThemeIcon, Group, Paper } from '@mantine/core';
 import Link from 'next/link';
+import classes from './ServicesClient.module.css';
 
 export default function ServicesClient() {
     return (
         <Stack gap={0} bg="white">
-            {/* Header */}
+            {/* Hero Section */}
             <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
                 <Container size="md" px="md">
                     <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', letterSpacing: '-0.025em' }}>
@@ -22,128 +22,117 @@ export default function ServicesClient() {
                 </Container>
             </Box>
 
-            {/* Services List */}
-            <Box component="section" py={96}>
-                <Container size="xl" px="md">
-                    <Stack gap={96}>
-                        {SERVICES.map((service, index) => (
+            {/* Services Grid */}
+            <Box component="section" py={96} bg="white">
+                <Container size="xl" px={{ base: 'md', sm: 'xl' }}>
+                    <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="lg">
+                        {SERVICES.map((service) => (
                             <Paper
-                                key={index}
-                                id={service.id}
+                                key={service.id}
+                                p="xl"
                                 radius="xl"
+                                bg="slate.0"
                                 withBorder
-                                bg="white"
-                                style={{ borderColor: 'var(--mantine-color-slate-1)', overflow: 'hidden', scrollMarginTop: '6rem' }}
+                                className={classes.serviceCard}
+                                style={{
+                                    borderColor: 'var(--mantine-color-slate-1)'
+                                }}
                             >
-                                <Grid gutter={0}>
-                                    <Grid.Col span={{ base: 12, lg: 6 }} order={{ base: 2, lg: index % 2 === 0 ? 1 : 2 }}>
-                                        <Box
-                                            p={{ base: 32, md: 64 }}
-                                            bg={index % 2 === 0 ? 'white' : 'slate.0'}
-                                            style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}
-                                        >
-                                            <Group mb="lg">
-                                                <ThemeIcon size={56} radius="lg" bg="blue.0" c="blue.6">
-                                                    <CheckCircle2 size={32} />
-                                                </ThemeIcon>
-                                            </Group>
-                                            <Title order={2} fw={900} c="slate.9" mb="md" style={{ fontSize: '2rem' }}>
-                                                {service.title}
-                                            </Title>
-                                            <Text size="lg" c="slate.6" lh={1.6} mb="xl">
-                                                {service.description}
-                                            </Text>
-
-                                            <Box>
-                                                <Text fw={700} c="slate.9" mb="md" tt="uppercase" size="sm" style={{ letterSpacing: '0.05em' }}>
-                                                    Zakres usług:
-                                                </Text>
-                                                <List
-                                                    spacing="sm"
-                                                    size="md"
-                                                    center
-                                                    icon={
-                                                        <ThemeIcon variant="transparent" c="blue.6" size={20}>
-                                                            <CheckCircle2 size={20} />
-                                                        </ThemeIcon>
-                                                    }
-                                                >
-                                                    {service.features.map((feature, idx) => (
-                                                        <List.Item key={idx}>
-                                                            <Text span c="slate.7">{feature}</Text>
-                                                        </List.Item>
-                                                    ))}
-                                                </List>
-                                            </Box>
-                                        </Box>
-                                    </Grid.Col>
-                                    <Grid.Col span={{ base: 12, lg: 6 }} order={{ base: 1, lg: index % 2 === 0 ? 2 : 1 }}>
-                                        <Box
-                                            bg="slate.1"
-                                            style={{
-                                                backgroundImage: `url(${getServiceImage(index)})`,
-                                                backgroundSize: 'cover',
-                                                backgroundPosition: 'center',
-                                                minHeight: '400px',
-                                                height: '100%'
-                                            }}
-                                        />
-                                    </Grid.Col>
-                                </Grid>
+                                {/* Service Icon Container */}
+                                <Box
+                                    w={56}
+                                    h={56}
+                                    mb="lg"
+                                    className={classes.iconContainer}
+                                >
+                                    {service.icon}
+                                </Box>
+                                <Title order={3} fw={700} c="slate.9" mb="sm" lh={1.3} fz="xl">
+                                    {service.title}
+                                </Title>
+                                <Text size="sm" c="slate.6" lh={1.6}>
+                                    {service.description}
+                                </Text>
                             </Paper>
                         ))}
-                    </Stack>
+                    </SimpleGrid>
                 </Container>
             </Box>
 
-            {/* CTA */}
+            {/* CTA Section */}
+            <Box component="section" py={96} style={{ backgroundColor: 'rgb(37, 99, 235)' }}>
+                <Container size="md" px="md" ta="center">
+                    <Title order={2} c="white" fw={900} mb="lg" fz={{ base: 'xl', md: '2.25rem' }}>
+                        Nie wiesz, która forma rozliczenia będzie dla Ciebie najlepsza?
+                    </Title>
+                    <Text c="blue.1" size="lg" mb="xl" maw={600} mx="auto">
+                        Skontaktuj się z nami. Przeanalizujemy Twoją sytuację i zaproponujemy optymalne rozwiązania podatkowe.
+                    </Text>
+                    <Button
+                        component={Link}
+                        href="/kontakt"
+                        size="xl"
+                        radius="lg"
+                        bg="white"
+                        style={{ color: 'rgb(37, 99, 235)', boxShadow: 'var(--mantine-shadow-xl)', transition: 'background-color 0.2s' }}
+                        fw={800}
+                        px={40}
+                        py={20}
+                        rightSection={<ArrowRight size={20} />}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-0)'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                    >
+                        Umów się na konsultację
+                    </Button>
+                </Container>
+            </Box>
+
+            {/* Additional Values */}
             <Box component="section" py={96} bg="slate.0">
-                <Container size="lg" px="md">
-                    <Paper radius="2xl" p={{ base: 40, md: 80 }} bg="blue.6" c="white" ta="center" pos="relative" style={{ overflow: 'hidden' }}>
-                        <Box
-                            pos="absolute"
-                            top={0}
-                            left={0}
-                            right={0}
-                            h="100%"
-                            bg="radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 70%)"
-                            style={{ pointerEvents: 'none' }}
-                        />
-                        <Stack align="center" gap="xl" pos="relative">
-                            <Title order={2} fw={900} style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-                                Nie wiesz co wybrać?
-                            </Title>
-                            <Text size="xl" c="blue.1" maw={600}>
-                                Skontaktuj się z nami. Pomożemy Ci dobrać optymalny zakres usług dla Twojej firmy.
-                            </Text>
-                            <Button
-                                component={Link}
-                                href="/kontakt"
-                                size="xl"
-                                radius="md"
-                                bg="white"
-                                c="blue.6"
-                                fw={800}
-                                style={{ boxShadow: 'var(--mantine-shadow-xl)', transition: 'background-color 0.2s' }}
-                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--mantine-color-blue-0)'}
-                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
-                            >
-                                Umów konsultację
-                            </Button>
-                        </Stack>
-                    </Paper>
+                <Container size="xl" px={{ base: 'md', sm: 'xl' }}>
+                    <SimpleGrid cols={{ base: 1, md: 3 }} spacing="xl">
+                        <Group gap="md" align="flex-start" wrap="nowrap">
+                            <ThemeIcon size={32} variant="transparent" c="green.5">
+                                <CheckCircle2 size={32} />
+                            </ThemeIcon>
+                            <Box>
+                                <Title order={4} fw={700} c="slate.9" mb="xs" fz="lg">
+                                    Bezpieczeństwo
+                                </Title>
+                                <Text size="sm" c="slate.6">
+                                    Pełna odpowiedzialność cywilna i ubezpieczenie OC biura.
+                                </Text>
+                            </Box>
+                        </Group>
+                        <Group gap="md" align="flex-start" wrap="nowrap">
+                            <ThemeIcon size={32} variant="transparent" c="green.5">
+                                <CheckCircle2 size={32} />
+                            </ThemeIcon>
+                            <Box>
+                                <Title order={4} fw={700} c="slate.9" mb="xs" fz="lg">
+                                    Terminowość
+                                </Title>
+                                <Text size="sm" c="slate.6">
+                                    Gwarantujemy dotrzymanie wszystkich terminów ustawowych.
+                                </Text>
+                            </Box>
+                        </Group>
+                        <Group gap="md" align="flex-start" wrap="nowrap">
+                            <ThemeIcon size={32} variant="transparent" c="green.5">
+                                <CheckCircle2 size={32} />
+                            </ThemeIcon>
+                            <Box>
+                                <Title order={4} fw={700} c="slate.9" mb="xs" fz="lg">
+                                    Nowoczesność
+                                </Title>
+                                <Text size="sm" c="slate.6">
+                                    E-księgowość i elektroniczny obieg dokumentów.
+                                </Text>
+                            </Box>
+                        </Group>
+                    </SimpleGrid>
                 </Container>
             </Box>
         </Stack>
     );
-}
-
-function getServiceImage(index: number) {
-    const images = [
-        "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1590486803833-1c5c65d60d99?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1554224154-260312c60e48?auto=format&fit=crop&w=1200&q=80",
-    ];
-    return images[index % images.length];
 }
