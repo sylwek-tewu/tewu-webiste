@@ -2,7 +2,7 @@ import React from 'react';
 import { Mail, Phone, MapPin, Clock, FileText, Landmark, Building2, Smartphone } from 'lucide-react';
 import { CONTACT_DETAILS } from '@/constants';
 import { Box, Container, SimpleGrid, Stack, Title, Text, Group, ThemeIcon, Paper, Anchor } from '@mantine/core';
-import classes from '@/components/layout/Layout.module.css';
+import classes from './ContactClient.module.css';
 import ContactMap from '@/components/contact/ContactMap';
 
 export default function ContactClient() {
@@ -43,10 +43,10 @@ export default function ContactClient() {
                                         </ThemeIcon>
                                         <Box>
                                             <Text size="xs" fw={700} c="slate.4" tt="uppercase" mb={4}>Email</Text>
-                                            <Anchor href={`mailto:${CONTACT_DETAILS.email}`} display="block" size="sm" fw={700} c="slate.9" className={classes.contactLink}>
+                                            <Anchor href={`mailto:${CONTACT_DETAILS.email}`} display="block" size="sm" fw={700} className={classes.contactLink}>
                                                 {CONTACT_DETAILS.email}
                                             </Anchor>
-                                            <Anchor href="mailto:sw@tewu.szczecin.pl" display="block" size="sm" fw={700} c="slate.9" className={classes.contactLink}>
+                                            <Anchor href="mailto:sw@tewu.szczecin.pl" display="block" size="sm" fw={700} className={classes.contactLink}>
                                                 sw@tewu.szczecin.pl
                                             </Anchor>
                                         </Box>
@@ -58,10 +58,10 @@ export default function ContactClient() {
                                         </ThemeIcon>
                                         <Box>
                                             <Text size="xs" fw={700} c="slate.4" tt="uppercase" mb={4}>Tel. sekretariat</Text>
-                                            <Anchor href={`tel:${CONTACT_DETAILS.phone.replace(/\s/g, '')}`} display="block" size="sm" fw={700} c="slate.9" className={classes.contactLink}>
+                                            <Anchor href={`tel:${CONTACT_DETAILS.phone.replace(/\s/g, '')}`} display="block" size="sm" fw={700} className={classes.contactLink}>
                                                 {CONTACT_DETAILS.phone}
                                             </Anchor>
-                                            <Anchor href="tel:+48602235736" display="block" size="sm" fw={700} c="slate.9" className={classes.contactLink}>
+                                            <Anchor href="tel:+48602235736" display="block" size="sm" fw={700} className={classes.contactLink}>
                                                 602 235 736
                                             </Anchor>
                                         </Box>
@@ -73,10 +73,10 @@ export default function ContactClient() {
                                         </ThemeIcon>
                                         <Box>
                                             <Text size="xs" fw={700} c="slate.4" tt="uppercase" mb={4}>Tel. komórkowy</Text>
-                                            <Anchor href="tel:+48501482555" display="block" size="sm" fw={700} c="slate.9" className={classes.contactLink}>
+                                            <Anchor href="tel:+48501482555" display="block" size="sm" fw={700} className={classes.contactLink}>
                                                 501 482 555
                                             </Anchor>
-                                            <Anchor href="tel:+48886543973" display="block" size="sm" fw={700} c="slate.9" className={classes.contactLink}>
+                                            <Anchor href="tel:+48886543973" display="block" size="sm" fw={700} className={classes.contactLink}>
                                                 886 543 973
                                             </Anchor>
                                         </Box>

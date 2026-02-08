@@ -1,0 +1,12 @@
+/* Contact page links - hover AND focus states for keyboard accessibility */
+.contactLink {
+    --anchor-text-color: var(--mantine-color-slate-9);
+    color: var(--mantine-color-slate-9);
+    transition: color 0.2s ease;
+}
+
+.contactLink:hover,
+.contactLink:focus {
+    --anchor-text-color: var(--mantine-color-blue-6);
+    color: var(--mantine-color-blue-6);
+}

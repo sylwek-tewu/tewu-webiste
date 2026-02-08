@@ -128,17 +128,6 @@
     transform: scale(1.05);
 }
 
-/* Contact page links - hover AND focus states for keyboard accessibility */
-.contactLink {
-    color: var(--mantine-color-slate-9);
-    transition: color 0.2s ease;
-}
-
-.contactLink:hover,
-.contactLink:focus {
-    color: var(--mantine-color-blue-6);
-}
-
 /* Service "Więcej" link hover - arrow slides right */
 .moreLink {
     color: var(--mantine-primary-color-6);
