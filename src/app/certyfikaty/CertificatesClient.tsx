@@ -5,16 +5,16 @@ import CertificatesList from '@/components/certificates/CertificatesList';
 
 const certs = [
     {
-        url: 'https://images.unsplash.com/photo-1589330694653-ded6df03f754?auto=format&fit=crop&w=1200&q=80',
+        url: '/img/cert.png',
         title: 'Certyfikat Księgowy I',
         desc: 'Wydany przez Ministra Finansów',
-        pdfUrl: 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf'
+        pdfUrl: '/pdfs/example.pdf'
     },
     {
-        url: 'https://images.unsplash.com/photo-1568667256549-094345857637?auto=format&fit=crop&w=1200&q=80',
+        url: '/img/library.png',
         title: 'Certyfikat Księgowy II',
         desc: 'Uprawnienia do usługowego prowadzenia ksiąg',
-        pdfUrl: 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf'
+        pdfUrl: '/pdfs/example.pdf'
     }
 ];
 
