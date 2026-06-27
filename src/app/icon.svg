@@ -1,0 +1,8 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TEWU">
+  <rect x="9" y="9" width="494" height="494" rx="100" ry="100" fill="#ffffff" stroke="rgb(100,116,139)" stroke-width="18"/>
+  <path
+    fill="rgb(100,116,139)"
+    transform="translate(106,129.4) scale(0.0866) translate(-1454,-1635)"
+    d="M 2763,4559 L 2763,2346 L 1454,2346 L 1454,1635 L 4918,1635 L 4918,2346 L 3658,2346 L 3658,4559 L 2763,4559 Z"
+  />
+</svg>
