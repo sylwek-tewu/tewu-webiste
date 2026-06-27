@@ -125,7 +125,7 @@ export const SERVICES: Service[] = [
   {
     id: 'doradztwo',
     title: 'Doradztwo podatkowe',
-    description: 'Profesjonalne wsparcie w optymalizacji zobowościń podatkowych i interpretacji przepisów.',
+    description: 'Profesjonalne wsparcie w rozliczeniach zobowiązań podatkowych.',
     icon: <TrendingUp size={24} />,
     features: [
       "Wybór optymalnej formy opodatkowania",

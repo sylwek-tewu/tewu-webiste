@@ -28,7 +28,7 @@ export function Hero() {
                                 </Title>
 
                                 <Text size="xl" c="slate.6" lh={1.6} maw={512}>
-                                    Zajmij się rozwojem swojej firmy, a weźmiemy na siebie formalności. Profesjonalne wsparcie księgowe dla biznesu w TEWU.
+                                    Zajmij się rozwojem swojej firmy, a my weźmiemy na siebie formalności. Profesjonalne wsparcie księgowe dla biznesu w TEWU.
                                 </Text>
 
                                 <Group gap="md" pt="md">

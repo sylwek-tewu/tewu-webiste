@@ -8,13 +8,13 @@ const certs = [
         url: '/img/cert.png',
         title: 'Certyfikat Księgowy',
         desc: 'Sylwester Wrzeszcz',
-        pdfUrl: '/pdfs/swiadectwo_kwalifikacyjne_t_ugha.pdf'
+        pdfUrl: '/pdfs/certyfikat_sw_kolor.pdf'
     },
     {
         url: '/img/library.png',
         title: 'Certyfikat Księgowy',
         desc: 'Tamara Ugha',
-        pdfUrl: '/pdfs/certyfikat_sw_kolor.pdf'
+        pdfUrl: '/pdfs/swiadectwo_kwalifikacyjne_t_ugha.pdf'
     }
 ];
 
