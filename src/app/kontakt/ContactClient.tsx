@@ -33,7 +33,14 @@ export default function ContactClient() {
                                         </ThemeIcon>
                                         <Box>
                                             <Text size="xs" fw={700} c="slate.4" tt="uppercase" mb={4}>Adres</Text>
-                                            <Text size="sm" fw={700} c="slate.9" lh={1.3}>{CONTACT_DETAILS.address}</Text>
+                                            <Text size="sm" fw={700} c="slate.9" lh={1.3}>
+                                                {CONTACT_DETAILS.address.split(',').map((line, index) => (
+                                                    <span key={index}>
+                                                        {line}
+                                                        {index < CONTACT_DETAILS.address.split(',').length - 1 && <br />}
+                                                    </span>
+                                                ))}
+                                            </Text>
                                         </Box>
                                     </Paper>
 
@@ -116,7 +123,10 @@ export default function ContactClient() {
                             <Paper p={32} radius="xl" withBorder style={{ borderColor: 'var(--mantine-color-slate-2)', flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '24px' }}>
                                 <Box style={{ borderBottom: '1px solid var(--mantine-color-slate-1)' }} pb="md">
                                     <Text size="xs" fw={700} c="slate.4" tt="uppercase" mb={4}>Nazwa pełna</Text>
-                                    <Text size="lg" fw={700} c="slate.9">Biuro Rachunkowe TEWU Sp z o.o.</Text>
+                                    <Text size="lg" fw={700} c="slate.9">
+                                        <span>Biuro Rachunkowe TEWU <br /></span>
+                                        <span>Spółka z ograniczoną odpowiedzialnością</span>
+                                    </Text>
                                 </Box>
 
                                 <SimpleGrid cols={2} spacing="md">
@@ -137,7 +147,10 @@ export default function ContactClient() {
                                         <Text size="md" fw={700} c="slate.9">50 000,00 ZŁ</Text>
                                     </Box>
                                 </SimpleGrid>
-
+                                    <Box>
+                                        <Text size="xs" fw={700} c="slate.4" tt="uppercase" mb={4}>Sąd rejestrowy</Text>
+                                        <Text size="sm" fw={700} c="slate.9">Sąd Rejonowy Szczecin-Centrum w Szczecinie, XIII Wydział Gosp. KRS.</Text>
+                                    </Box>
                                 <Paper mt="auto" pt="md" p="lg" radius="lg" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-blue-0)' }}>
                                     <Group gap="xs" mb="xs" c="blue.6">
                                         <Landmark size={20} />
