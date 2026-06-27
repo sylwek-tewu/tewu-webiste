@@ -6,15 +6,15 @@ import CertificatesList from '@/components/certificates/CertificatesList';
 const certs = [
     {
         url: '/img/cert.png',
-        title: 'Certyfikat Księgowy I',
-        desc: 'Wydany przez Ministra Finansów',
-        pdfUrl: '/pdfs/example.pdf'
+        title: 'Certyfikat Księgowy',
+        desc: 'Sylwester Wrzeszcz',
+        pdfUrl: '/pdfs/swiadectwo_kwalifikacyjne_t_ugha.pdf'
     },
     {
         url: '/img/library.png',
-        title: 'Certyfikat Księgowy II',
-        desc: 'Uprawnienia do usługowego prowadzenia ksiąg',
-        pdfUrl: '/pdfs/example.pdf'
+        title: 'Certyfikat Księgowy',
+        desc: 'Tamara Ugha',
+        pdfUrl: '/pdfs/certyfikat_sw_kolor.pdf'
     }
 ];
 
@@ -47,7 +47,7 @@ const CertificatesClient: React.FC = () => {
                                 </Title>
                                 <Stack gap="md" c="slate.6" lh={1.6}>
                                     <Text>
-                                        Działalność Biura Rachunkowego TEWU oparta jest na solidnych fundamentach prawnych i merytorycznych. Posiadamy <Text span fw={700}>Certyfikaty Księgowe wydane przez Ministra Finansów</Text>, które uprawniają nas do usługowego prowadzenia ksiąg rachunkowych.
+                                        Działalność Biura Rachunkowego TEWU oparta jest na solidnych fundamentach prawnych i merytorycznych. Biuro zarządzane jest przez wspólników posiadających <Text span fw={700}>Certyfikaty Księgowe wydane przez Ministra Finansów</Text>, które uprawniają do usługowego prowadzenia ksiąg rachunkowych.
                                     </Text>
                                     <Text>
                                         Uzyskanie takich certyfikatów wiąże się ze spełnieniem rygorystycznych wymogów dotyczących wykształcenia, praktyki zawodowej oraz nieposzlakowanej opinii. Dla naszych Klientów to pewność, że powierzają swoje finanse w ręce profesjonalistów, których wiedza została zweryfikowana na szczeblu państwowym.
