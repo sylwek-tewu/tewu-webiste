@@ -8,6 +8,7 @@ import { NAV_LINKS } from '../constants';
 import { Box, Container, Group, Burger, Drawer, Stack, Button, Text, Anchor, Paper } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import classes from './layout/Layout.module.css';
+import { TewuLogo } from './icons';
 
 const Navbar: React.FC = () => {
   const [opened, { toggle, close }] = useDisclosure(false);
@@ -19,9 +20,7 @@ const Navbar: React.FC = () => {
         <Group justify="space-between" h={80}>
           <Group gap="xs">
             <Link href="/" onClick={close} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, textDecoration: 'none' }}>
-              <Text span fw={900} size="30px" lh={1} className={classes.logoText} c="slate.8">
-                TEWU
-              </Text>
+              <Box component={TewuLogo} w="7em" c="slate.5" />
               <Box visibleFrom="sm" h={32} w={2} bg="slate.2" mx={8} />
               <Text
                 span

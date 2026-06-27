@@ -8,6 +8,7 @@ import { Mail, Phone, MapPin, Facebook, Linkedin } from 'lucide-react';
 import { CONTACT_DETAILS, COMPANY_FULL_NAME, NAV_LINKS } from '../constants';
 import { Box, Container, SimpleGrid, Stack, Text, Group, Anchor, ThemeIcon } from '@mantine/core';
 import classes from './layout/Layout.module.css';
+import { TewuLogo } from './icons';
 
 const Footer: React.FC = () => {
   return (
@@ -16,9 +17,7 @@ const Footer: React.FC = () => {
         <SimpleGrid cols={{ base: 1, md: 4 }} spacing={48}>
           {/* Brand Section */}
           <Stack gap="md">
-            <Text fw={900} size="xl" c="white" className={classes.logoText} style={{ fontSize: '1.5rem' }}>
-              TEWU
-            </Text>
+            <Box component={TewuLogo} w="4.5em" c="white" />
             <Text size="sm" lh={1.6}>
               Twój zaufany partner w biznesie. Profesjonalna księgowość, kadry i płace oraz doradztwo dla firm każdej wielkości.
             </Text>
