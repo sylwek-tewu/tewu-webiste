@@ -34,18 +34,6 @@ export default function PrivacyPolicyPage() {
             </Text>
           </Box>
 
-          {/* Legal Notice Callout */}
-          <Paper p="md" radius="md" withBorder bg="blue.0" style={{ borderColor: 'var(--mantine-color-blue-2)' }}>
-            <Group gap="sm" wrap="nowrap" align="flex-start">
-              <AlertTriangle size={20} color="var(--mantine-color-brandBlue-6)" style={{ flexShrink: 0, marginTop: 2 }} />
-              <Text size="xs" c="slate.7" lh={1.5}>
-                <strong>Informacja informacyjna:</strong> Poniższy dokument stanowi szkic polityki prywatności uwzględniający
-                funkcjonowanie formularza zamówienia wyceny i oddzwonienia. Treść podlega weryfikacji formalno-prawnej
-                przez doradcę prawnego Administratora przed finalną publikacją.
-              </Text>
-            </Group>
-          </Paper>
-
           {/* Main Content Card */}
           <Paper p={{ base: 'xl', md: 40 }} radius="xl" shadow="sm" withBorder bg="white" style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
             <Stack gap="xl">
@@ -168,20 +156,6 @@ export default function PrivacyPolicyPage() {
                       W przypadku chwilowej awarii dostawcy poczty e-mail, zgłoszenie jest tymczasowo zabezpieczane w buforze awaryjnym
                       w postaci zaszyfrowanej algorytmem AES-256-GCM. Bufor służy wyłącznie automatycznemu ponowieniu wysyłki
                       i ulega bezpowrotnemu usunięciu niezwłocznie po doręczeniu lub maksymalnie po upływie 72 godzin.
-                      <br />
-                      <em>/* TODO: potwierdzić region Blobs i podstawę prawną transferu poza EOG */</em>
-                    </Text>
-                  </Paper>
-
-                  <Paper p="md" radius="md" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
-                    <Group gap="xs" mb={4}>
-                      <Shield size={16} color="var(--mantine-color-green-7)" />
-                      <Text size="sm" fw={700} c="slate.9">Komunikator Telegram – brak danych osobowych</Text>
-                    </Group>
-                    <Text size="xs" c="slate.6" lh={1.5}>
-                      Powiadomienia techniczne przesyłane do komunikatora Telegram (Bot API) <strong>nie zawierają numeru telefonu,
-                      imienia ani żadnych innych danych osobowych</strong>. Zawierają jedynie anonimowy identyfikator techniczny
-                      oraz wybraną porę kontaktu, informując personel o konieczności sprawdzenia skrzynki biurowej.
                     </Text>
                   </Paper>
                 </Stack>
@@ -242,12 +216,11 @@ export default function PrivacyPolicyPage() {
                   Serwis wykorzystuje niezbędne mechanizmy sesyjne zapewniające prawidłowe działanie interfejsu. Formularz
                   oddzwonienia nie ładuje zewnętrznych skryptów śledzących (m.in. brak zewnętrznych systemów CAPTCHA).
                 </Text>
-                <Paper p="md" radius="md" bg="slate.0" withBorder style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
+                {/* <Paper p="md" radius="md" bg="slate.0" withBorder style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
                   <Text size="xs" c="slate.6" fs="italic">
-                    /* TODO: Sekcja zostanie zaktualizowana i rozbudowana po wdrożeniu baneru cookies (CMP / Cookiebot),
-                    trybu Google Consent Mode v2, Google Analytics 4 oraz tagów konwersji kampanii reklamowych Google Ads. */
-                  </Text>
-                </Paper>
+                    TODO: Sekcja zostanie zaktualizowana i rozbudowana po wdrożeniu baneru cookies (CMP / Cookiebot),
+                    trybu Google Consent Mode v2, Google Analytics 4 oraz tagów konwersji kampanii reklamowych Google Ads.
+                </Paper> */}
               </div>
             </Stack>
           </Paper>
