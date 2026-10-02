@@ -65,7 +65,7 @@ export default function ContactClient() {
                                         </ThemeIcon>
                                         <Box>
                                             <Text size="xs" fw={700} c="slate.4" tt="uppercase" mb={4}>Tel. sekretariat</Text>
-                                            <Anchor href={`tel:${CONTACT_DETAILS.phone.replace(/\s/g, '')}`} display="block" size="sm" fw={700} className={classes.contactLink}>
+                                            <Anchor href={`tel:${CONTACT_DETAILS.phoneE164 || '+48914824190'}`} display="block" size="sm" fw={700} className={classes.contactLink}>
                                                 {CONTACT_DETAILS.phone}
                                             </Anchor>
                                             <Anchor href="tel:+48602235736" display="block" size="sm" fw={700} className={classes.contactLink}>

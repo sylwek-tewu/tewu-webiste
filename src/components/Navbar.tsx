@@ -3,16 +3,17 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
 import { NAV_LINKS } from '../constants';
 import { Box, Container, Group, Burger, Drawer, Stack, Button, Text, Anchor, Paper } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import classes from './layout/Layout.module.css';
 import { TewuLogo } from './icons';
+import { useCallbackWidget } from './callback-widget';
 
 const Navbar: React.FC = () => {
   const [opened, { toggle, close }] = useDisclosure(false);
   const pathname = usePathname();
+  const { openWidget } = useCallbackWidget();
 
   return (
     <Paper component="nav" pos="sticky" top={0} bg="white" shadow="sm" withBorder radius={0} style={{ zIndex: 50 }}>
@@ -54,6 +55,10 @@ const Navbar: React.FC = () => {
             <Button
               component={Link}
               href="/kontakt"
+              onClick={(e) => {
+                e.preventDefault();
+                openWidget('header');
+              }}
               size="md"
               fw={700}
               radius={12}
@@ -102,7 +107,11 @@ const Navbar: React.FC = () => {
           <Button
             component={Link}
             href="/kontakt"
-            onClick={close}
+            onClick={(e) => {
+              e.preventDefault();
+              close();
+              openWidget('header');
+            }}
             fullWidth
             size="lg"
             radius="md"

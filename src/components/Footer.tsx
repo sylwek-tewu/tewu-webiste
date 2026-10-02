@@ -6,7 +6,7 @@ const CURRENT_YEAR = new Date().getFullYear();
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Facebook, Linkedin } from 'lucide-react';
 import { CONTACT_DETAILS, COMPANY_FULL_NAME, NAV_LINKS } from '../constants';
-import { Box, Container, SimpleGrid, Stack, Text, Group, Anchor, ThemeIcon } from '@mantine/core';
+import { Box, Container, SimpleGrid, Stack, Text, Group, Anchor } from '@mantine/core';
 import classes from './layout/Layout.module.css';
 import { TewuLogo } from './icons';
 
@@ -98,7 +98,7 @@ const Footer: React.FC = () => {
               <Group align="flex-start" gap="xs" wrap="nowrap">
                 <Phone size={18} color="var(--mantine-color-brandBlue-4)" style={{ flexShrink: 0, marginTop: 4 }} />
                 <Stack gap={4}>
-                  <Anchor href={`tel:${CONTACT_DETAILS.phone.replace(/\s/g, '')}`} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
+                  <Anchor href={`tel:${CONTACT_DETAILS.phoneE164 || '+48914824190'}`} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
                     {CONTACT_DETAILS.phone}
                   </Anchor>
                   <Anchor href="tel:+48501482555" c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
@@ -117,9 +117,17 @@ const Footer: React.FC = () => {
         </SimpleGrid>
 
         <Box mt={64} pt="lg" ta="center" c="slate.5" className={classes.footerBorder}>
-          <Text size="xs">
-            © {CURRENT_YEAR} {COMPANY_FULL_NAME}. Wszelkie prawa zastrzeżone.
-          </Text>
+          <Group justify="center" gap="md" wrap="wrap">
+            <Text size="xs">
+              © {CURRENT_YEAR} {COMPANY_FULL_NAME}. Wszelkie prawa zastrzeżone.
+            </Text>
+            <Text size="xs" c="slate.6" visibleFrom="xs">
+              •
+            </Text>
+            <Anchor component={Link} href="/polityka-prywatnosci" size="xs" c="slate.4" underline="hover">
+              Polityka prywatności
+            </Anchor>
+          </Group>
         </Box>
       </Container>
     </Box>
