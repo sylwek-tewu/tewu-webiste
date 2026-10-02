@@ -2,12 +2,14 @@
  * Netlify Scheduled Function: Retries failed callback emails every 10 minutes.
  */
 
-import { processOutbox, getOutboxStore, getOutboxTtlHours } from '../../src/lib/outbox';
+import { processOutbox, NetlifyBlobsOutboxStore, getOutboxTtlHours } from '../../src/lib/outbox';
 import { sendCallbackEmail } from '../../src/lib/notify/email';
 import { sendTelegramAlert } from '../../src/lib/notify/telegram';
 
 export default async () => {
-  const store = getOutboxStore();
+  // Always Blobs: this esbuild-bundled function may not get NODE_ENV=production or NETLIFY* at
+  // runtime, and the in-memory fallback would silently process an empty outbox.
+  const store = new NetlifyBlobsOutboxStore();
   const ttlHours = getOutboxTtlHours();
 
   const result = await processOutbox(

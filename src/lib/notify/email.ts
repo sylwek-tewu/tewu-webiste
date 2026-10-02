@@ -121,6 +121,25 @@ Data i godzina: ${dateFormatted} (czas polski)
   return { subject, text: textBody, html: htmlBody };
 }
 
+/**
+ * Timeouts stay below the route's email budget (DELIVERY_BUDGET.emailMs): a slow server should fail
+ * inside the window rather than deliver after the request was already buffered (and later resent).
+ */
+export function getSmtpTransportOptions(config: { host: string; port: number; user: string; pass: string }) {
+  return {
+    host: config.host,
+    port: config.port,
+    secure: config.port === 465,
+    auth: {
+      user: config.user,
+      pass: config.pass,
+    },
+    connectionTimeout: 2000,
+    greetingTimeout: 1500,
+    socketTimeout: 3000,
+  };
+}
+
 export async function sendCallbackEmail(data: CallbackNotificationData): Promise<boolean> {
   const config = getSmtpConfig();
 
@@ -132,18 +151,9 @@ export async function sendCallbackEmail(data: CallbackNotificationData): Promise
   const { subject, text: textBody, html: htmlBody } = buildCallbackEmail(data);
 
   try {
-    const transporter = nodemailer.createTransport({
-      host: config.host,
-      port: config.port,
-      secure: config.port === 465,
-      auth: {
-        user: config.user,
-        pass: config.pass,
-      },
-      connectionTimeout: 5000,
-      greetingTimeout: 5000,
-      socketTimeout: 5000,
-    });
+    const transporter = nodemailer.createTransport(
+      getSmtpTransportOptions({ host: config.host!, port: config.port, user: config.user!, pass: config.pass! })
+    );
 
     const recipients = config.to.split(',').map((email) => email.trim()).filter(Boolean);
 

@@ -18,12 +18,15 @@ export interface OutboxStore {
 }
 
 export interface ProcessResult {
+  /** All record ids listed in this run, whatever happened to them. */
   processed: number;
   succeeded: number;
   failed: number;
   expired: number;
   /** Not due yet because of retry backoff. */
   skipped: number;
-  /** Could not be read (e.g. encryption key changed) and was deleted. */
+  /** Could not be decrypted (e.g. encryption key changed) and was deleted. */
   corrupt: number;
+  /** Store errors (read, write, delete); the record is left for the next run. */
+  errors: number;
 }

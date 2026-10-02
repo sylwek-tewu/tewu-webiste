@@ -43,7 +43,7 @@ Wycena usług w TEWU jest indywidualna i powstaje w rozmowie. Strona nie liczy c
 
 ### 4. Powiadomienia backendowe i odporność na awarie (Netlify Blobs Outbox)
 - Endpoint: `POST /api/callback` (App Router, funkcja serverless).
-- Każde zgłoszenie otrzymuje krótki unikalny identyfikator (np. `#A7K2`).
+- Każde zgłoszenie otrzymuje krótki unikalny identyfikator: 6 znaków szesnastkowych (np. `#C9F1A2`).
 - **Podwójny kanał powiadomień:**
   1. **E-mail (SMTP / Nodemailer):** niesie pełne dane zgłoszenia wraz z numerem telefonu.
   2. **Telegram Bot API:** wysyła wyłącznie krótki ping **bez danych osobowych** (`#ID`, pora, temat, źródło, znacznik czasu). Brak numeru telefonu chroni przed wyciekiem PII do komunikatora zewnętrznego.
@@ -90,14 +90,14 @@ Właściciel serwisu zdecydował (commit `622cf18`), że opublikowana treść `/
 Konsekwencje dla kodu: deklaracja szyfrowania jest wymuszana – na produkcji brak `OUTBOX_ENCRYPTION_KEY` blokuje zapis do bufora (zamiast zapisu numeru jawnym tekstem). Okres retencji w polityce jest pobierany z `CALLBACK_OUTBOX_TTL_HOURS` podczas kompilacji, więc tekst i zachowanie bufora pozostają spójne.
 
 ### Pozostałe zmiany
-- **Time-trap:** przeglądarka wysyła czas wypełniania formularza (`elapsedMs`) mierzony własnym zegarem; serwer nie porównuje już swojego zegara z zegarem odwiedzającego. Brak `elapsedMs` = zgłoszenie odrzucane po cichu. Odpowiedzi pułapek antyspamowych nie zawierają pola `delivery`, więc widżet nie wysyła dla nich zdarzenia `callback_request_submit`.
+- **Time-trap:** przeglądarka wysyła czas wypełniania formularza (`elapsedMs`) mierzony własnym zegarem; serwer nie porównuje już swojego zegara z zegarem odwiedzającego. Brak `elapsedMs` = zgłoszenie odrzucane po cichu. Formularz wysłany szybciej niż w 2 s (np. z autouzupełnieniem) czeka w przeglądarce do upływu 2 s, więc prawdziwy klient nigdy nie wpada w pułapkę. Odpowiedzi pułapek antyspamowych nie zawierają pola `delivery`, więc widżet nie wysyła dla nich zdarzenia `callback_request_submit`.
 - **Pola `topic` i `source`:** przyjmowane tylko z zamkniętych list (`CALLBACK_TOPICS`, `CALLBACK_SOURCES`); nieznany temat jest pomijany, nieznane źródło zapisywane jako `unknown`. Wartości w HTML e-maila są escapowane.
-- **Walidacja numeru telefonu:** biblioteka `libphonenumber-js` (pełne metadane `max` w formularzu i API, domyślne `min` dla numeru biura w pasku mobilnym). Odrzuca m.in. nieprzydzielone polskie prefiksy.
+- **Walidacja numeru telefonu:** biblioteka `libphonenumber-js`. API (i numer „Zadzwoń”, wyliczany na serwerze w layoucie i przekazywany do widżetu) używa pełnych metadanych `max`, które odrzucają m.in. nieprzydzielone polskie prefiksy. Formularz w przeglądarce używa mniejszych metadanych `min` jako wstępnej kontroli – nieliczne numery przepuszczone przez nią odrzuca API (400).
 - **Brak konfiguracji SMTP:** endpoint zwraca 500 z numerem biura i alarmem na Telegram, zamiast buforować zgłoszenia, które nie mogłyby zostać wysłane.
-- **Budżet czasu odpowiedzi:** e-mail i ping Telegram ≤ 5 s, zapis do bufora ≤ 2 s, alarm ≤ 1,5 s – razem poniżej domyślnego limitu 10 s funkcji Netlify.
-- **Bufor awaryjny:** na produkcji zawsze Netlify Blobs (brak kontekstu Blobs = błąd 502 zamiast utraty danych w pamięci); nieczytelne wpisy (np. po zmianie klucza) są usuwane z alarmem i nie blokują pozostałych; ponowienia z rosnącą przerwą (10, 20, 40, 80 min, potem co 2 h) aż do upływu TTL; niepoprawne `CALLBACK_OUTBOX_TTL_HOURS` → domyślne 72 h.
+- **Budżet czasu odpowiedzi:** e-mail i ping Telegram ≤ 5 s, zapis do bufora ≤ 2 s, alarm ≤ 1,5 s – razem poniżej domyślnego limitu 10 s funkcji Netlify. Limity czasu SMTP (połączenie 2 s, powitanie 1,5 s, gniazdo 3 s) są krótsze niż budżet, żeby wolny serwer poczty nie doręczył e-maila już po zbuforowaniu zgłoszenia (co dałoby duplikat).
+- **Bufor awaryjny:** na produkcji zawsze Netlify Blobs (brak kontekstu Blobs = błąd 502 zamiast utraty danych w pamięci); wpisy, których nie da się odszyfrować (np. po zmianie klucza), są usuwane z alarmem; przejściowe błędy odczytu/zapisu (sieć, Blobs 5xx) zostawiają wpis do następnego przebiegu i nie przerywają przetwarzania pozostałych; zaplanowana funkcja zawsze używa Netlify Blobs (nie zależy od `NODE_ENV`); ponowienia z rosnącą przerwą (10, 20, 40, 80 min, potem co 2 h) aż do upływu TTL; niepoprawne lub niecałkowite `CALLBACK_OUTBOX_TTL_HOURS` → domyślne 72 h.
 - **Dodatkowe dni wolne:** zmienna przemianowana na `NEXT_PUBLIC_EXTRA_CLOSED_DATES`, bo komunikat o terminie i przycisk „Zadzwoń” są liczone w przeglądarce. Zmiana wymaga ponownego deployu.
-- **Formularz ładowany leniwie** (`next/dynamic`) przy pierwszym otwarciu widżetu; na mobile strona ma dolny margines równy wysokości paska, by nie zasłaniał stopki.
+- **Formularz ładowany leniwie** (`React.lazy`) przy pierwszym otwarciu widżetu, z komunikatem „Ładowanie formularza…”; gdy pobranie się nie powiedzie (offline, stara karta po deployu), widżet pokazuje numer biura; na mobile strona ma dolny margines równy wysokości paska, by nie zasłaniał stopki.
 
 ### Wymagania operacyjne (aktualizacja)
 - `OUTBOX_ENCRYPTION_KEY` jest wymagany na produkcji.

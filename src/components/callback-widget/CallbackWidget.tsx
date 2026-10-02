@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Button, Text, Box } from '@mantine/core';
 import { Phone, Clock, PhoneCall } from 'lucide-react';
 import { useCallbackWidget } from './CallbackContext';
 import type { ResolvedCallNumber } from '@/lib/callback/call-number';
 import { isOfficeOpen } from '@/lib/callback/business-hours';
+import { CallbackFormErrorBoundary, CallbackFormLoading } from './CallbackFormFallbacks';
 import classes from './CallbackWidget.module.css';
 
-const CallbackFormModal = dynamic(() => import('./CallbackFormModal'), { ssr: false });
+// Separate chunk: Modal/Select/Radio and the phone-number metadata download on first open only.
+const CallbackFormModal = lazy(() => import('./CallbackFormModal'));
 
 export default function CallbackWidget({ callInfo }: { callInfo: ResolvedCallNumber }) {
   const { isOpen, openWidget } = useCallbackWidget();
@@ -89,7 +90,13 @@ export default function CallbackWidget({ callInfo }: { callInfo: ResolvedCallNum
         </div>
       </Box>
 
-      {hasOpened && <CallbackFormModal callInfo={callInfo} />}
+      {hasOpened && (
+        <CallbackFormErrorBoundary callInfo={callInfo}>
+          <Suspense fallback={<CallbackFormLoading />}>
+            <CallbackFormModal callInfo={callInfo} />
+          </Suspense>
+        </CallbackFormErrorBoundary>
+      )}
     </>
   );
 }

@@ -189,7 +189,7 @@ describe('POST /api/callback route handler', () => {
       expect((await res.json()).delivery).toBe('buffered');
     });
 
-    it('does not wait for a hanging Telegram ping once email succeeded', async () => {
+    it('answers within the email budget when the Telegram ping hangs', async () => {
       vi.spyOn(emailModule, 'sendCallbackEmail').mockResolvedValue(true);
       vi.spyOn(telegramModule, 'sendTelegramPing').mockReturnValue(never());
 
@@ -212,9 +212,26 @@ describe('POST /api/callback route handler', () => {
       expect(res.status).toBe(502);
     });
 
-    it('keeps the worst case under the 10 s Netlify function limit', () => {
-      const worstCase = DELIVERY_BUDGET.emailMs + DELIVERY_BUDGET.outboxMs + DELIVERY_BUDGET.alertMs;
-      expect(worstCase).toBeLessThanOrEqual(9000);
+    it('answers within 8.5 s when email, outbox and alert all hang (Netlify limit is 10 s)', async () => {
+      vi.spyOn(emailModule, 'sendCallbackEmail').mockReturnValue(never());
+      vi.spyOn(telegramModule, 'sendTelegramPing').mockReturnValue(never());
+      vi.spyOn(memoryStore, 'put').mockReturnValue(never());
+      vi.spyOn(telegramModule, 'sendTelegramAlert').mockReturnValue(never());
+
+      let settled = false;
+      const pending = POST(makeRequest(validBody)).then((res) => {
+        settled = true;
+        return res;
+      });
+
+      const total = DELIVERY_BUDGET.emailMs + DELIVERY_BUDGET.outboxMs + DELIVERY_BUDGET.alertMs;
+      expect(total).toBeLessThanOrEqual(8500);
+      await vi.advanceTimersByTimeAsync(total - 1);
+      expect(settled).toBe(false);
+      await vi.advanceTimersByTimeAsync(1);
+
+      expect(settled).toBe(true);
+      expect((await pending).status).toBe(502);
     });
   });
 });

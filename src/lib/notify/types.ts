@@ -1,5 +1,5 @@
 export interface CallbackNotificationData {
-  id: string; // e.g. 'A7K2'
+  id: string; // 6 uppercase hex characters, e.g. 'C9F1A2'
   phone: string; // E.164 phone
   slot: string; // 'asap' | '8-12' | '12-16' | '17-18'
   topic?: string;

@@ -11,7 +11,7 @@ describe('processOutbox', () => {
   it('deletes record immediately when sendEmail succeeds', () => {
     const store = new MemoryOutboxStore();
     const record: OutboxRecord = {
-      id: 'A7K2',
+      id: 'C9F1A2',
       phone: '+48501482555',
       slot: '8-12',
       source: 'header',
@@ -25,7 +25,7 @@ describe('processOutbox', () => {
         expect(res.succeeded).toBe(1);
         expect(res.failed).toBe(0);
 
-        return store.get('A7K2').then((found) => {
+        return store.get('C9F1A2').then((found) => {
           expect(found).toBeNull();
         });
       });
@@ -118,6 +118,39 @@ describe('processOutbox', () => {
     expect(await store.listIds()).toEqual([]);
   });
 
+  it('keeps a record when reading it fails for any reason other than decryption', async () => {
+    const store = new MemoryOutboxStore();
+    const now = new Date();
+    await store.put({ id: 'NET1', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 1 });
+    vi.spyOn(store, 'get').mockRejectedValueOnce(new Error('Blobs 503'));
+
+    const corrupt: string[] = [];
+    const res = await processOutbox(store, async () => true, { now, onCorrupt: (id) => void corrupt.push(id) });
+
+    expect(corrupt).toEqual([]);
+    expect(res.corrupt).toBe(0);
+    expect(res.errors).toBe(1);
+    expect(await store.listIds()).toEqual(['NET1']);
+  });
+
+  it('keeps processing the other records when a store write fails', async () => {
+    const store = new MemoryOutboxStore();
+    const now = new Date();
+    await store.put({ id: 'BAD1', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 0 });
+    await store.put({ id: 'OK01', phone: '+48602235736', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 0 });
+    const realDelete = store.delete.bind(store);
+    vi.spyOn(store, 'delete').mockImplementation(async (id) => {
+      if (id === 'BAD1') throw new Error('Blobs 503');
+      return realDelete(id);
+    });
+
+    const res = await processOutbox(store, async () => true, { now });
+
+    expect(res.errors).toBe(1);
+    expect(res.succeeded).toBe(1);
+    expect(await store.listIds()).toEqual(['BAD1']);
+  });
+
   it('waits longer between retries as attempts grow', async () => {
     const store = new MemoryOutboxStore();
     const now = new Date('2026-10-05T12:00:00Z');
@@ -157,8 +190,8 @@ describe('getOutboxTtlHours', () => {
     expect(getOutboxTtlHours()).toBe(48);
   });
 
-  it('falls back to the default for missing, invalid or non-positive values', () => {
-    for (const value of ['', 'abc', '0', '-5']) {
+  it('falls back to the default for missing, invalid, fractional or non-positive values', () => {
+    for (const value of ['', 'abc', '0', '-5', '1.5']) {
       vi.stubEnv('CALLBACK_OUTBOX_TTL_HOURS', value);
       expect(getOutboxTtlHours()).toBe(DEFAULT_OUTBOX_TTL_HOURS);
     }

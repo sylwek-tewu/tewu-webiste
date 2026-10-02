@@ -19,9 +19,10 @@ import { Phone, Clock, CheckCircle2, PhoneCall, AlertCircle, Send } from 'lucide
 import { useCallbackWidget } from './CallbackContext';
 import { getConversionDelivery, pushCallbackRequestSubmit } from './analytics';
 import { CALLBACK_SLOTS, CALLBACK_TOPICS, CallbackSlot, CallbackTopic } from '@/lib/callback/types';
-import { normalizePhoneNumber } from '@/lib/callback/phone';
+import { normalizePhoneNumberForForm } from '@/lib/callback/phone-client';
 import type { ResolvedCallNumber } from '@/lib/callback/call-number';
 import { getCallbackMessage } from '@/lib/callback/business-hours';
+import { getSubmitDelayMs } from '@/lib/callback/time-trap';
 import classes from './CallbackWidget.module.css';
 
 /**
@@ -76,7 +77,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
     setPhoneError(null);
     setSubmitError(null);
 
-    const normalized = normalizePhoneNumber(phone);
+    const normalized = normalizePhoneNumberForForm(phone);
     if (!normalized.valid) {
       setPhoneError(normalized.error || 'Wprowadź poprawny numer telefonu');
       return;
@@ -84,6 +85,14 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
 
     startTransition(async () => {
       try {
+        // Measured on the visitor's own clock, so clock skew vs. the server doesn't matter.
+        // A very fast (e.g. autofilled) submission waits out the server's anti-bot minimum.
+        const elapsed = Date.now() - formOpenedAt;
+        const delay = getSubmitDelayMs(elapsed);
+        if (delay > 0) {
+          await new Promise((resolve) => setTimeout(resolve, delay));
+        }
+
         const response = await fetch('/api/callback', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -93,8 +102,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
             topic: topic || undefined,
             source,
             honeypot,
-            // Measured on the visitor's own clock, so clock skew vs. the server doesn't matter
-            elapsedMs: Date.now() - formOpenedAt,
+            elapsedMs: elapsed + delay,
           }),
         });
 

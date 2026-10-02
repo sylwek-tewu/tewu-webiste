@@ -5,6 +5,7 @@
  */
 
 import { OutboxRecord, OutboxStore, ProcessResult } from './types';
+import { CorruptRecordError } from './crypto';
 
 export const DEFAULT_OUTBOX_TTL_HOURS = 72;
 
@@ -20,10 +21,10 @@ export interface ProcessOutboxOptions {
   onCorrupt?: (id: string) => Promise<void> | void;
 }
 
-/** Reads CALLBACK_OUTBOX_TTL_HOURS; invalid or non-positive values fall back to the default. */
+/** Reads CALLBACK_OUTBOX_TTL_HOURS; anything but a positive whole number falls back to the default. */
 export function getOutboxTtlHours(): number {
   const parsed = Number(process.env.CALLBACK_OUTBOX_TTL_HOURS);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : DEFAULT_OUTBOX_TTL_HOURS;
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : DEFAULT_OUTBOX_TTL_HOURS;
 }
 
 /** Wait after the given number of attempts: 10, 20, 40, 80 min, then every 2 h. */
@@ -54,22 +55,24 @@ export async function processOutbox(
     expired: 0,
     skipped: 0,
     corrupt: 0,
+    errors: 0,
   };
 
-  for (const id of ids) {
+  async function processRecord(id: string): Promise<void> {
     let record: OutboxRecord | null;
     try {
       record = await store.get(id);
-    } catch {
-      // Unreadable (e.g. the encryption key changed): it can never be delivered, so drop it.
+    } catch (error) {
+      if (!(error instanceof CorruptRecordError)) throw error;
+      // Can never be decrypted (e.g. the encryption key changed), so it can never be delivered.
       await store.delete(id);
       result.corrupt++;
       if (options.onCorrupt) {
         await options.onCorrupt(id);
       }
-      continue;
+      return;
     }
-    if (!record) continue;
+    if (!record) return;
 
     const ageMs = now.getTime() - new Date(record.createdAt).getTime();
 
@@ -80,12 +83,12 @@ export async function processOutbox(
       if (options.onExpire) {
         await options.onExpire(record);
       }
-      continue;
+      return;
     }
 
     if (!isDue(record, now)) {
       result.skipped++;
-      continue;
+      return;
     }
 
     // Attempt email delivery
@@ -104,6 +107,19 @@ export async function processOutbox(
       record.lastAttemptAt = now.toISOString();
       await store.put(record);
       result.failed++;
+    }
+  }
+
+  for (const id of ids) {
+    try {
+      await processRecord(id);
+    } catch (error) {
+      // Transient store error (network, Blobs 5xx): keep the record for the next run.
+      console.error(
+        `[Outbox] Store error for #${id}:`,
+        error instanceof Error ? error.message : 'Unknown'
+      );
+      result.errors++;
     }
   }
 

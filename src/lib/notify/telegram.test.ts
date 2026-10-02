@@ -4,7 +4,7 @@ import { CallbackNotificationData } from './types';
 
 describe('Telegram Ping PII Leak Prevention', () => {
   const sampleData: CallbackNotificationData = {
-    id: 'A7K2',
+    id: 'C9F1A2',
     phone: '+48501482555',
     slot: '12-16',
     topic: 'kadry-place',
@@ -14,7 +14,7 @@ describe('Telegram Ping PII Leak Prevention', () => {
 
   it('builds a message containing slot, topic, source and id', () => {
     const text = buildTelegramPingText(sampleData);
-    expect(text).toContain('#A7K2');
+    expect(text).toContain('#C9F1A2');
     expect(text).toContain('12:00–16:00');
     expect(text).toContain('Kadry i płace');
     expect(text).toContain('hero');

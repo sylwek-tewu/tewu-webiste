@@ -48,7 +48,7 @@ export default function PrivacyPolicyPage() {
                   1. Administrator Danych Osobowych
                 </Title>
                 <Text size="sm" c="slate.7" lh={1.7} mb="md">
-                  Administratorem Twoich danych osobowych jest <strong>{COMPANY_FULL_NAME}</strong> z siedzibą w Szczecinie przy
+                  Administratorem Twoich danych osobowych jest <strong>{COMPANY_FULL_NAME}</strong> z siedzibą w Szczecinie przy{' '}
                   {CONTACT_DETAILS.address}, wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego pod numerem
                   KRS: 0000320281, NIP: 9552249417, REGON: 320601499.
                 </Text>

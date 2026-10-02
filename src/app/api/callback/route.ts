@@ -9,6 +9,7 @@ import { normalizePhoneNumber } from '@/lib/callback/phone';
 import { getCallNumber } from '@/lib/callback/call-number';
 import { CALLBACK_TOPICS, CallbackSlot, toKnownSource } from '@/lib/callback/types';
 import { DELIVERY_BUDGET } from '@/lib/callback/delivery-budget';
+import { MIN_FILL_TIME_MS } from '@/lib/callback/time-trap';
 import { getSmtpConfig, sendCallbackEmail } from '@/lib/notify/email';
 import { sendTelegramPing, sendTelegramAlert } from '@/lib/notify/telegram';
 import { getOutboxStore } from '@/lib/outbox/store';
@@ -16,7 +17,6 @@ import { CallbackNotificationData } from '@/lib/notify/types';
 import { withTimeout } from '@/lib/timeout';
 
 const VALID_SLOTS: CallbackSlot[] = ['asap', '8-12', '12-16', '17-18'];
-const MIN_FILL_TIME_MS = 2000;
 
 // Silent "success" for spam traps. Carries no `delivery`, so the widget records no conversion.
 const silentlyIgnored = () => NextResponse.json({ success: true, id: 'OK' }, { status: 200 });

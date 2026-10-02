@@ -7,6 +7,14 @@ import crypto from 'crypto';
 
 const PREFIX = 'enc:v1:';
 
+/** The stored phone can never be decrypted (wrong/missing key, tampered or malformed payload). */
+export class CorruptRecordError extends Error {
+  constructor(message: string, options?: { cause?: unknown }) {
+    super(message, options);
+    this.name = 'CorruptRecordError';
+  }
+}
+
 function get32ByteKey(secret?: string): Buffer | null {
   const rawKey = secret !== undefined ? secret : process.env.OUTBOX_ENCRYPTION_KEY;
   if (!rawKey || rawKey.trim() === '') {
@@ -54,12 +62,12 @@ export function decryptPhone(cipherText: string, secret?: string): string {
 
   const key = get32ByteKey(secret);
   if (!key) {
-    throw new Error('Cannot decrypt outbox record: OUTBOX_ENCRYPTION_KEY is missing');
+    throw new CorruptRecordError('Cannot decrypt outbox record: OUTBOX_ENCRYPTION_KEY is missing');
   }
 
   const parts = cipherText.slice(PREFIX.length).split(':');
   if (parts.length !== 3) {
-    throw new Error('Malformed encrypted phone payload');
+    throw new CorruptRecordError('Malformed encrypted phone payload');
   }
 
   const [ivHex, authTagHex, encryptedHex] = parts;
@@ -67,13 +75,18 @@ export function decryptPhone(cipherText: string, secret?: string): string {
   const authTag = Buffer.from(authTagHex, 'hex');
   const encrypted = Buffer.from(encryptedHex, 'hex');
 
-  const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
-  decipher.setAuthTag(authTag);
+  try {
+    const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
+    decipher.setAuthTag(authTag);
 
-  const decrypted = Buffer.concat([
-    decipher.update(encrypted),
-    decipher.final(),
-  ]);
+    const decrypted = Buffer.concat([
+      decipher.update(encrypted),
+      decipher.final(),
+    ]);
 
-  return decrypted.toString('utf8');
+    return decrypted.toString('utf8');
+  } catch (error) {
+    // Auth tag mismatch: wrong key or tampered data
+    throw new CorruptRecordError('Outbox record failed authentication', { cause: error });
+  }
 }

@@ -39,3 +39,16 @@ describe('buildCallbackEmail', () => {
     expect(email.html).not.toContain('free text');
   });
 });
+
+describe('getSmtpTransportOptions', () => {
+  it('times out the SMTP handshake well inside the route email budget, so a slow server is not later sent twice', async () => {
+    const { getSmtpTransportOptions } = await import('./email');
+    const { DELIVERY_BUDGET } = await import('../callback/delivery-budget');
+    const options = getSmtpTransportOptions({ host: 'smtp.example.com', port: 587, user: 'u', pass: 'p' });
+
+    expect(options.connectionTimeout + options.greetingTimeout).toBeLessThan(DELIVERY_BUDGET.emailMs);
+    expect(options.socketTimeout).toBeLessThan(DELIVERY_BUDGET.emailMs);
+    expect(options.secure).toBe(false);
+    expect(getSmtpTransportOptions({ host: 'h', port: 465, user: 'u', pass: 'p' }).secure).toBe(true);
+  });
+});
