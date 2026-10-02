@@ -25,7 +25,7 @@ describe('CallbackWidget first open', () => {
     );
     expect(formModuleLoaded).not.toHaveBeenCalled();
 
-    await user.click(screen.getByRole('button', { name: /Zamów bezpłatną wycenę/ }));
+    await user.click(screen.getByRole('button', { name: /Bezpłatna wycena – oddzwonimy/ }));
 
     expect(await screen.findByText(/Ładowanie formularza/)).toBeInTheDocument();
     await screen.findByLabelText(/Numer telefonu/);

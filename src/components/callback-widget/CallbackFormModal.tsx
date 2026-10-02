@@ -23,6 +23,7 @@ import { normalizePhoneNumberForForm } from '@/lib/callback/phone-client';
 import type { ResolvedCallNumber } from '@/lib/callback/call-number';
 import { getCallbackMessage } from '@/lib/callback/business-hours';
 import { getSubmitDelayMs } from '@/lib/callback/time-trap';
+import { useLocale } from '@/i18n/LocaleContext';
 import classes from './CallbackWidget.module.css';
 
 /**
@@ -31,6 +32,7 @@ import classes from './CallbackWidget.module.css';
  */
 export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCallNumber }) {
   const { isOpen, source, closeWidget } = useCallbackWidget();
+  const { t, locale } = useLocale();
 
   const [phone, setPhone] = useState('');
   const [slot, setSlot] = useState<CallbackSlot>('asap');
@@ -58,7 +60,8 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
     }
   }, [isOpen]);
 
-  const promisePreview = getCallbackMessage(slot);
+  const promisePreview = getCallbackMessage(slot, undefined, locale);
+  const privacyPath = locale === 'uk' ? '/uk/polityka-prywatnosci' : '/polityka-prywatnosci';
 
   const resetForm = () => {
     setPhone('');
@@ -85,7 +88,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
 
     const normalized = normalizePhoneNumberForForm(phone);
     if (!normalized.valid) {
-      setPhoneError(normalized.error || 'Wprowadź poprawny numer telefonu');
+      setPhoneError(normalized.error || t.callbackWidget.phoneErrorInvalid);
       return;
     }
 
@@ -109,6 +112,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
             slot,
             topic: topic || undefined,
             source,
+            locale,
             honeypot,
             elapsedMs: elapsed + delay,
           }),
@@ -132,12 +136,12 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
           setPhoneError(data.error);
         } else {
           setSubmitError(
-            data.error || `Wystąpił problem z wysłaniem zgłoszenia. Zadzwoń do nas: ${callInfo.display}`
+            data.error || `${t.callbackWidget.errorTitle}. ${t.callbackWidget.callNow} ${callInfo.display}`
           );
         }
       } catch {
         setSubmitError(
-          `Błąd połączenia z serwerem. Zadzwoń do biura: ${callInfo.display}`
+          `${t.callbackWidget.errorTitle}. ${t.callbackWidget.callNow} ${callInfo.display}`
         );
       }
     });
@@ -151,7 +155,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
         <Group gap="xs">
           <PhoneCall size={20} color="var(--mantine-color-brandBlue-6)" />
           <Text fw={800} size="lg" c="slate.9">
-            {submitSuccess ? 'Zgłoszenie przyjęte' : 'Bezpłatna wycena – oddzwonimy'}
+            {submitSuccess ? t.callbackWidget.titleSuccess : t.callbackWidget.titleNormal}
           </Text>
         </Group>
       }
@@ -171,10 +175,10 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
 
           <div>
             <Text fw={800} size="xl" c="slate.9" mb="xs">
-              Dziękujemy! Otrzymaliśmy Twoją prośbę.
+              {t.callbackWidget.successTitle}
             </Text>
             <Text size="sm" c="slate.6" maw={380} mx="auto">
-              Zadzwonimy, aby omówić szczegóły i przedstawić ofertę.
+              {t.callbackWidget.successDesc}
             </Text>
           </div>
 
@@ -188,14 +192,14 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
           </Box>
 
           <Button onClick={handleClose} fullWidth size="md" radius="md" mt="sm" bg="slate.8">
-            Zamknij
+            {t.callbackWidget.closeButton}
           </Button>
         </Stack>
       ) : (
         <form onSubmit={handleSubmit}>
           <Stack gap="md">
             <Text size="sm" c="slate.6">
-              Wycena w TEWU jest indywidualna i powstaje w rozmowie. Zostaw numer telefonu – oddzwonimy w wybranym terminie.
+              {t.callbackWidget.description}
             </Text>
 
             {/* Honeypot field for bot trapping */}
@@ -211,8 +215,8 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
 
             {/* Phone Input */}
             <TextInput
-              label="Numer telefonu"
-              placeholder="np. 501 482 555"
+              label={t.callbackWidget.phoneLabel}
+              placeholder={t.callbackWidget.phonePlaceholder}
               required
               type="tel"
               inputMode="tel"
@@ -231,7 +235,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
             {/* Time slot preference */}
             <div>
               <Radio.Group
-                label="Kiedy możemy oddzwonić?"
+                label={t.callbackWidget.slotTitle}
                 labelProps={{ fw: 600, c: 'slate.8', mb: 6 }}
                 value={slot}
                 onChange={(val) => setSlot(val as CallbackSlot)}
@@ -244,7 +248,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
                       label={
                         <Group gap="xs">
                           <Text size="sm" fw={500}>
-                            {s.label}
+                            {t.callbackWidget.slots[s.id] || s.label}
                           </Text>
                         </Group>
                       }
@@ -254,7 +258,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
               </Radio.Group>
               {slot === '17-18' && (
                 <Text size="xs" c="slate.5" mt={4} pl={28}>
-                  Dyżur telefoniczny po standardowych godzinach pracy biura
+                  {t.callbackWidget.dutyNote}
                 </Text>
               )}
             </div>
@@ -271,12 +275,15 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
 
             {/* Topic (optional) */}
             <Select
-              label="Czego dotyczy rozmowa? (opcjonalnie)"
-              placeholder="Wybierz rodzaj działalności"
+              label={t.callbackWidget.topicLabel}
+              placeholder={t.callbackWidget.topicPlaceholder}
               size="sm"
               radius="md"
               clearable
-              data={CALLBACK_TOPICS.map((t) => ({ value: t.id, label: t.label }))}
+              data={CALLBACK_TOPICS.map((topicItem) => ({
+                value: topicItem.id,
+                label: t.callbackWidget.topics[topicItem.id] || topicItem.label,
+              }))}
               value={topic}
               onChange={(val) => setTopic((val as CallbackTopic) || '')}
             />
@@ -286,7 +293,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
               <Alert
                 color="red"
                 icon={<AlertCircle size={18} />}
-                title="Nie udało się wysłać prośby"
+                title={t.callbackWidget.errorTitle}
                 radius="md"
               >
                 <Text size="sm" mb="xs">
@@ -300,19 +307,18 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
                   variant="light"
                   leftSection={<Phone size={14} />}
                 >
-                  Zadzwoń teraz: {callInfo.display}
+                  {t.callbackWidget.callNow} {callInfo.display}
                 </Button>
               </Alert>
             )}
 
             {/* Legal RODO information notice */}
             <Text className={classes.rodoDisclaimer}>
-              Numer telefonu wykorzystamy wyłącznie, aby oddzwonić w sprawie wyceny.
-              Administratorem danych jest Biuro Rachunkowe TEWU Sp. z o.o. Szczegóły znajdziesz w naszej{' '}
-              <Link href="/polityka-prywatnosci" onClick={closeWidget} className={classes.rodoLink}>
-                Polityce prywatności
+              {t.callbackWidget.rodoPrefix}
+              <Link href={privacyPath} onClick={closeWidget} className={classes.rodoLink}>
+                {t.callbackWidget.rodoLink}
               </Link>
-              .
+              {t.callbackWidget.rodoSuffix}
             </Text>
 
             {/* Submit Button */}
@@ -326,7 +332,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
               rightSection={<Send size={18} />}
               mt="xs"
             >
-              Poproś o kontakt
+              {t.callbackWidget.submitButton}
             </Button>
           </Stack>
         </form>

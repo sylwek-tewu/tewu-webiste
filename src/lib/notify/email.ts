@@ -65,12 +65,17 @@ export function buildCallbackEmail(data: CallbackNotificationData): { subject: s
     source: escapeHtml(source),
   };
 
-  const subject = `[Oddzwonienie #${data.id}] Nowa prośba o kontakt – ${slotLabel}`;
+  const isUk = data.locale === 'uk';
+  const langTag = isUk ? '[UA] ' : '';
+  const langLabel = isUk ? 'Ukraiński (UA)' : 'Polski (PL)';
+
+  const subject = `[Oddzwonienie #${data.id}] ${langTag}Nowa prośba o kontakt – ${slotLabel}`;
 
   const textBody = `
 Nowa prośba o oddzwonienie z formularza na stronie tewu.szczecin.pl
 
 Identyfikator: #${data.id}
+Język strony: ${langLabel}
 Telefon: ${data.phone}
 Preferowana pora kontaktu: ${slotLabel}
 Czego dotyczy: ${topicLabel}
@@ -89,6 +94,10 @@ Data i godzina: ${dateFormatted} (czas polski)
     <tr>
       <td style="padding: 8px 0; color: #64748b; width: 180px;">Identyfikator:</td>
       <td style="padding: 8px 0; font-weight: bold; color: #1e3a8a;">#${h.id}</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 0; color: #64748b;">Język klienta:</td>
+      <td style="padding: 8px 0; font-weight: bold; color: ${isUk ? '#0284c7' : '#0f172a'};">${isUk ? '🇺🇦 Ukraiński (UA)' : '🇵🇱 Polski (PL)'}</td>
     </tr>
     <tr>
       <td style="padding: 8px 0; color: #64748b;">Numer telefonu:</td>

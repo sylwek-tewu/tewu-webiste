@@ -57,4 +57,21 @@ describe('Telegram Ping PII Leak Prevention', () => {
     expect(text).toContain('temat: ogólny');
     expect(text).toContain('źródło: unknown');
   });
+
+  it('includes [UA] indicator when locale is uk', () => {
+    const ukData: CallbackNotificationData = {
+      id: 'UA42',
+      phone: '+48501482555',
+      slot: 'asap',
+      topic: 'spolka',
+      source: 'floating',
+      locale: 'uk',
+      createdAt: '2026-10-05T09:00:00.000Z',
+    };
+
+    const text = buildTelegramPingText(ukData);
+    expect(text).toContain('[UA]');
+    expect(text).toContain('Ukraiński (UA)');
+    expect(text).not.toContain(ukData.phone);
+  });
 });

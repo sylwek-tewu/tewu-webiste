@@ -1,4 +1,10 @@
-export {};
+import { vi } from 'vitest';
+
+// No Next.js app router in tests; LocaleProvider reads the path (Polish site root) and router.
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/',
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn(), back: vi.fn(), refresh: vi.fn() }),
+}));
 
 // Runs before every test file. Browser-only setup is skipped in the default node environment.
 if (typeof window !== 'undefined') {

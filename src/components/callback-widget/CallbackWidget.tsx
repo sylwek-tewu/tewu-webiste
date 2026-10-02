@@ -7,6 +7,7 @@ import { useCallbackWidget } from './CallbackContext';
 import type { ResolvedCallNumber } from '@/lib/callback/call-number';
 import { isOfficeOpen } from '@/lib/callback/business-hours';
 import { CallbackFormErrorBoundary, CallbackFormLoading } from './CallbackFormFallbacks';
+import { useLocale } from '@/i18n/LocaleContext';
 import classes from './CallbackWidget.module.css';
 
 // Separate chunk: Modal/Select/Radio and the phone-number metadata download on first open only.
@@ -14,6 +15,7 @@ const CallbackFormModal = lazy(() => import('./CallbackFormModal'));
 
 export default function CallbackWidget({ callInfo }: { callInfo: ResolvedCallNumber }) {
   const { isOpen, openWidget } = useCallbackWidget();
+  const { t } = useLocale();
 
   // Mount (and download) the form only after the first open; keep it mounted afterwards
   // so the modal's close animation and the entered values survive.
@@ -41,11 +43,11 @@ export default function CallbackWidget({ callInfo }: { callInfo: ResolvedCallNum
         onClick={() => openWidget('floating')}
         className={classes.floatingButton}
         visibleFrom="sm"
-        aria-label="Zamów bezpłatną wycenę - oddzwonimy"
+        aria-label={t.callbackWidget.titleNormal}
       >
         <PhoneCall size={20} />
         <Text fw={700} size="sm">
-          Bezpłatna wycena
+          {t.callbackWidget.floatingButton}
         </Text>
       </Box>
 
@@ -62,7 +64,7 @@ export default function CallbackWidget({ callInfo }: { callInfo: ResolvedCallNum
               leftSection={<Phone size={18} color="var(--mantine-color-green-7)" />}
               fw={700}
             >
-              Zadzwoń
+              {t.callbackWidget.mobileCall}
             </Button>
           ) : (
             <Button
@@ -73,7 +75,7 @@ export default function CallbackWidget({ callInfo }: { callInfo: ResolvedCallNum
               leftSection={<Clock size={16} />}
               title="Biuro czynne pn–pt 8:00–16:00"
             >
-              8:00–16:00
+              {t.callbackWidget.mobileCallHours}
             </Button>
           )}
 
@@ -85,7 +87,7 @@ export default function CallbackWidget({ callInfo }: { callInfo: ResolvedCallNum
             bg="brandBlue.6"
             leftSection={<PhoneCall size={18} />}
           >
-            Oddzwońcie
+            {t.callbackWidget.mobileRequest}
           </Button>
         </div>
       </Box>

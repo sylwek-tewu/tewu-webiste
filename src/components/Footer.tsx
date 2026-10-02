@@ -1,16 +1,22 @@
 "use client";
 
 import React from 'react';
-
-const CURRENT_YEAR = new Date().getFullYear();
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Facebook, Linkedin } from 'lucide-react';
-import { CONTACT_DETAILS, COMPANY_FULL_NAME, NAV_LINKS } from '../constants';
+import { CONTACT_DETAILS } from '../constants';
 import { Box, Container, SimpleGrid, Stack, Text, Group, Anchor } from '@mantine/core';
 import classes from './layout/Layout.module.css';
 import { TewuLogo } from './icons';
+import { useLocale } from '@/i18n/LocaleContext';
+
+const CURRENT_YEAR = new Date().getFullYear();
 
 const Footer: React.FC = () => {
+  const { t, locale } = useLocale();
+  const privacyPath = locale === 'uk' ? '/uk/polityka-prywatnosci' : '/polityka-prywatnosci';
+  const servicesPath = locale === 'uk' ? '/uk/uslugi' : '/uslugi';
+  const outsourcingPath = locale === 'uk' ? '/uk/outsourcing' : '/outsourcing';
+
   return (
     <Box component="footer" bg="slate.9" c="slate.3">
       <Container size="xl" py={{ base: 'xl', md: 80 }} px="md">
@@ -19,7 +25,7 @@ const Footer: React.FC = () => {
           <Stack gap="md">
             <Box component={TewuLogo} w="4.5em" c="white" />
             <Text size="sm" lh={1.6}>
-              Twój zaufany partner w biznesie. Profesjonalna księgowość, kadry i płace oraz doradztwo dla firm każdej wielkości.
+              {t.footer.description}
             </Text>
             <Group gap="md">
               <Anchor href="#" c="white" className={classes.footerLink} aria-label="Facebook">
@@ -34,11 +40,11 @@ const Footer: React.FC = () => {
           {/* Quick Links */}
           <Stack gap="md">
             <Text fw={700} size="sm" c="white" tt="uppercase" className={classes.logoSubtext}>
-              Nawigacja
+              {t.footer.navTitle}
             </Text>
             <SimpleGrid cols={2} spacing={{ base: 'sm', sm: 'md' }}>
               <Stack gap="xs">
-                {NAV_LINKS.slice(0, 4).map(link => (
+                {t.nav.links.slice(0, 3).map((link) => (
                   <Anchor
                     key={link.path}
                     component={Link}
@@ -53,7 +59,7 @@ const Footer: React.FC = () => {
                 ))}
               </Stack>
               <Stack gap="xs">
-                {NAV_LINKS.slice(4).map(link => (
+                {t.nav.links.slice(3).map((link) => (
                   <Anchor
                     key={link.path}
                     component={Link}
@@ -68,13 +74,13 @@ const Footer: React.FC = () => {
                 ))}
                 <Anchor
                   component={Link}
-                  href="/polityka-prywatnosci"
+                  href={privacyPath}
                   size="sm"
                   underline="hover"
                   className={classes.footerLink}
                   c="slate.3"
                 >
-                  Polityka prywatności
+                  {t.footer.privacyPolicy}
                 </Anchor>
               </Stack>
             </SimpleGrid>
@@ -83,20 +89,20 @@ const Footer: React.FC = () => {
           {/* Services */}
           <Stack gap="md">
             <Text fw={700} size="sm" c="white" tt="uppercase" className={classes.logoSubtext}>
-              Usługi
+              {t.footer.servicesTitle}
             </Text>
             <Stack gap="xs">
-              <Anchor component={Link} href="/uslugi" c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                Pełna Księgowość
+              <Anchor component={Link} href={servicesPath} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
+                {t.footer.fullAccounting}
               </Anchor>
-              <Anchor component={Link} href="/uslugi" c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                Księga Przychodów
+              <Anchor component={Link} href={servicesPath} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
+                {t.footer.revenueBook}
               </Anchor>
-              <Anchor component={Link} href="/outsourcing" c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                Outsourcing BPO
+              <Anchor component={Link} href={outsourcingPath} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
+                {t.footer.bpoOutsourcing}
               </Anchor>
-              <Anchor component={Link} href="/uslugi" c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                Kadry i Płace
+              <Anchor component={Link} href={servicesPath} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
+                {t.footer.hrAndPayroll}
               </Anchor>
             </Stack>
           </Stack>
@@ -104,7 +110,7 @@ const Footer: React.FC = () => {
           {/* Contact */}
           <Stack gap="md">
             <Text fw={700} size="sm" c="white" tt="uppercase" className={classes.logoSubtext}>
-              Kontakt
+              {t.footer.contactTitle}
             </Text>
             <Stack gap="sm">
               <Group align="flex-start" gap="xs" wrap="nowrap">
@@ -146,13 +152,13 @@ const Footer: React.FC = () => {
         <Box mt={64} pt="lg" ta="center" c="slate.5" className={classes.footerBorder}>
           <Group justify="center" gap="md" wrap="wrap">
             <Text size="xs">
-              © {CURRENT_YEAR} {COMPANY_FULL_NAME}. Wszelkie prawa zastrzeżone.
+              © {CURRENT_YEAR} {t.common.companyFullName}. {t.footer.allRightsReserved}
             </Text>
             <Text size="xs" c="slate.6" visibleFrom="xs">
               •
             </Text>
-            <Anchor component={Link} href="/polityka-prywatnosci" size="xs" c="slate.4" underline="hover">
-              Polityka prywatności
+            <Anchor component={Link} href={privacyPath} size="xs" c="slate.4" underline="hover">
+              {t.footer.privacyPolicy}
             </Anchor>
           </Group>
         </Box>

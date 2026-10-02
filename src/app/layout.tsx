@@ -9,6 +9,7 @@ import { mantineHtmlProps, ColorSchemeScript, Box, Stack } from '@mantine/core';
 
 import { CallbackProvider, CallbackWidget } from "@/components/callback-widget";
 import { getCallNumber } from "@/lib/callback/call-number";
+import { LocaleProvider } from "@/i18n/LocaleContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,14 +30,16 @@ export default function RootLayout({
             </head>
             <body className={inter.className}>
                 <ThemeProvider>
-                    <CallbackProvider>
-                        <Stack gap={0} mih="100vh">
-                            <Navbar />
-                            <Box component="main" style={{ flex: 1 }}>{children}</Box>
-                            <Footer />
-                        </Stack>
-                        <CallbackWidget callInfo={getCallNumber()} />
-                    </CallbackProvider>
+                    <LocaleProvider>
+                        <CallbackProvider>
+                            <Stack gap={0} mih="100vh">
+                                <Navbar />
+                                <Box component="main" style={{ flex: 1 }}>{children}</Box>
+                                <Footer />
+                            </Stack>
+                            <CallbackWidget callInfo={getCallNumber()} />
+                        </CallbackProvider>
+                    </LocaleProvider>
                 </ThemeProvider>
             </body>
         </html>

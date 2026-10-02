@@ -1,9 +1,25 @@
+"use client";
+
 import React from 'react';
 import { Box, Container, Grid, GridCol, Title, Text, Stack, Group, ThemeIcon, Image, SimpleGrid } from '@mantine/core';
-import { REASONS_TO_TRUST } from '@/constants';
+import { Briefcase, Clock, ShieldCheck, Coins, Users, Cpu, CheckSquare } from 'lucide-react';
 import classes from '@/components/layout/Layout.module.css';
+import { useLocale } from '@/i18n/LocaleContext';
+
+const REASON_ICONS = [
+  <Briefcase key="0" size={32} />,
+  <Clock key="1" size={32} />,
+  <ShieldCheck key="2" size={32} />,
+  <Coins key="3" size={32} />,
+  <Users key="4" size={32} />,
+  <Cpu key="5" size={32} />,
+  <CheckSquare key="6" size={32} />,
+];
 
 export function WhyUs() {
+    const { t } = useLocale();
+    const reasons = t.home.whyUs.reasons;
+
     return (
         <Box component="section" py={96} bg="white" style={{ borderBottom: '1px solid var(--mantine-color-slate-1)' }}>
             <Container>
@@ -14,16 +30,16 @@ export function WhyUs() {
                             {/* Header */}
                             <Box>
                                 <Title order={2} fw={900} c="slate.9" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', letterSpacing: '-0.025em' }} mb="md">
-                                    Dlaczego warto nam zaufać?
+                                    {t.home.whyUs.title}
                                 </Title>
                                 <Text size="lg" c="slate.6" lh={1.6}>
-                                    W TEWU wierzymy, że księgowość to co więcej niż tylko liczby. To fundament Twojego biznesu, który wymaga solidności, nowoczesnego podejścia i pełnej transparentności.
+                                    {t.home.whyUs.description}
                                 </Text>
                             </Box>
 
                             {/* First 3 Reasons */}
                             <Stack gap={40}>
-                                {REASONS_TO_TRUST.slice(0, 3).map((reason, index) => (
+                                {reasons.slice(0, 3).map((reason, index) => (
                                     <Group key={index} align="flex-start" wrap="nowrap" gap="lg" className={classes.reasonRow}>
                                         <ThemeIcon
                                             size={64}
@@ -32,7 +48,7 @@ export function WhyUs() {
                                             className={classes.reasonIcon}
                                             style={{ flexShrink: 0 }}
                                         >
-                                            {reason.icon}
+                                            {REASON_ICONS[index]}
                                         </ThemeIcon>
                                         <Box>
                                             <Text fw={700} c="slate.9" size="xl" mb={8} lh={1.2}>{reason.title}</Text>
@@ -89,8 +105,8 @@ export function WhyUs() {
 
                 {/* Lower Section: Remaining reasons in 2-column grid */}
                 <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: 32, md: 48 }} verticalSpacing={40} mt={48}>
-                    {REASONS_TO_TRUST.slice(3).map((reason, index) => (
-                        <Group key={index} align="flex-start" wrap="nowrap" gap="lg" className={classes.reasonRow}>
+                    {reasons.slice(3).map((reason, index) => (
+                        <Group key={index + 3} align="flex-start" wrap="nowrap" gap="lg" className={classes.reasonRow}>
                             <ThemeIcon
                                 size={64}
                                 radius="lg"
@@ -98,7 +114,7 @@ export function WhyUs() {
                                 className={classes.reasonIcon}
                                 style={{ flexShrink: 0 }}
                             >
-                                {reason.icon}
+                                {REASON_ICONS[index + 3]}
                             </ThemeIcon>
                             <Box>
                                 <Text fw={700} c="slate.9" size="xl" mb={8} lh={1.2}>{reason.title}</Text>
