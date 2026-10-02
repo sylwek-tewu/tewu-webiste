@@ -20,7 +20,14 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Local Env Files
+.env
 .env*.local
+.env.development
+.env.production
+!.env.example
+
+# Netlify
+.netlify
 
 # Vercel
 .vercel
