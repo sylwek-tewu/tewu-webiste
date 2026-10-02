@@ -4,82 +4,111 @@ A modern web application for "Biuro Rachunkowe TEWU Sp. z o.o.", an accounting o
 
 ## Tech Stack
 
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Framework**: [Next.js 16 (App Router / Turbopack)](https://nextjs.org/)
 - **Library**: [React 19](https://react.dev/)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **UI Component Library**: [Mantine UI v7](https://mantine.dev/)
-- **Styling**: Mantine Theme & CSS Modules
-- **Package Manager**: [pnpm](https://pnpm.io/)
+- **Language**: [TypeScript 5](https://www.typescriptlang.org/)
+- **UI Component Library**: [Mantine UI v8](https://mantine.dev/)
 - **Icons**: [Lucide React](https://lucide.dev/)
-- **PDF Viewer**: `react-pdf` / `pdfjs-dist`
+- **Hosting & Serverless**: [Netlify](https://www.netlify.com/) (Next.js Runtime + Netlify Blobs + Scheduled Functions)
+- **Testing**: [Vitest](https://vitest.dev/)
+- **Linter**: [ESLint](https://eslint.org/) (Flat Config)
+- **Package Manager**: [pnpm](https://pnpm.io/)
+
+---
 
 ## Features
 
-- **Service Listings**: Detailed descriptions of accounting services (Full Accounting, KPiR, HR/Payroll, etc.).
-- **Certificate Showcase**: Interactive gallery of professional certifications with a built-in PDF viewer.
-- **Outsourcing**: Information on outsourcing services.
-- **Contact**: Contact details, map integration (if applicable), and inquiry forms.
-- **Responsive Design**: Fully responsive layout optimized for desktop, tablet, and mobile devices.
-- **Dark/Light Mode**: Built-in theme switching support via Mantine, the mode switch is not implemented yet.
+- **Widżet Call-Back „Bezpłatna wycena – oddzwonimy”**:
+  - Globalny pływający widżet w prawym dolnym rogu (desktop) oraz dwuprzyciskowy pasek akcji „Zadzwoń” / „Oddzwońcie” (mobile).
+  - Otwierany ze wszystkich przycisków „Bezpłatna wycena” w nagłówku menu (desktop i mobile Drawer).
+  - Inteligentne wyliczanie obietnicy kontaktu w strefie `Europe/Warsaw`: uwzględnia godziny pracy biura (8:00–16:00), 15-minutowy bufor, dyżur telefoniczny (17:00–18:00) oraz polskie dni ustawowo wolne od pracy (w tym Wigilię i święta ruchome).
+  - Zabezpieczenia antyspamowe: honeypot oraz time-trap (bez zewnętrznych skryptów śledzących i captcha).
+  - Podwójny tor powiadomień:
+    - **E-mail (SMTP)**: pełne dane zgłoszenia (w tym numer telefonu).
+    - **Telegram Bot API**: powiadomienia techniczne **bez danych osobowych** (brak numeru telefonu chroni przed wyciekiem PII).
+  - **Bufor awaryjny (Netlify Blobs)**: w razie awarii serwera pocztowego zgłoszenie trafia do szyfrowanego bufora (AES-256-GCM), a zaplanowana funkcja Netlify ponawia wysyłkę co 10 minut przez 72 godziny.
+  - Analityka: zdarzenia `callback_widget_open` i `callback_request_submit` przekazywane do `window.dataLayer` (bez danych osobowych).
+- **Service Listings**: Szczegółowe opisy usług księgowych (pełna księgowość, KPiR, ryczałt, kadry i płace, ZUS/US).
+- **Certificate Showcase**: Galeria certyfikatów z wbudowaną przeglądarką PDF.
+- **Podstrona Polityki Prywatności (`/polityka-prywatnosci`)**: Zgodna z RODO, opisująca cele, podstawy, retencję 72h bufora w Blobs oraz brak PII w Telegramie (szkic do weryfikacji prawnej).
+- **Ujednolicone linki kontaktowe**: Wszystkie numery jako `tel:+48…`, adresy pocztowe jako `mailto:`.
 
-## Project Structure
+---
 
-The project follows a standard Next.js App Router structure:
+## Konfiguracja środowiska (Environment Variables)
 
-- `src/app`: Application routes, pages, and global layouts.
-- `src/components`: Reusable UI components (Navbar, Footer, specialized features).
-- `src/constants.tsx`: Centralized configuration, navigation links, and static data.
-- `src/theme.ts`: Mantine theme configuration, color palette, and component defaults.
-- `*.module.css`: Component-specific CSS modules for custom styling overrides.
-
-## Getting Started
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) (v18 or higher recommended)
-- [pnpm](https://pnpm.io/) (v8 or higher recommended)
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd biuro-rachunkowe-tewu-2026
-   ```
-
-2. Install dependencies:
-   ```bash
-   pnpm install
-   ```
-
-### Running Locally
-
-Start the development server:
+Skopiuj plik `.env.example` do `.env.local` na potrzeby pracy lokalnej:
 
 ```bash
-pnpm run dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Lista zmiennych środowiskowych:
 
-### Building for Production
+| Zmienna | Wymagana | Opis | Przykład |
+|---|---|---|---|
+| `CALLBACK_SMTP_HOST` | Tak | Host serwera poczty wychodzącej | `smtp.twojadomena.pl` |
+| `CALLBACK_SMTP_PORT` | Tak | Port SMTP (587 dla STARTTLS, 465 dla SSL) | `587` |
+| `CALLBACK_SMTP_USER` | Tak | Nazwa użytkownika / login konta pocztowego | `biuro@tewu.szczecin.pl` |
+| `CALLBACK_SMTP_PASS` | Tak | Hasło konta pocztowego | `tajne-haslo` |
+| `CALLBACK_FROM` | Tak | Nagłówek nadawcy wiadomości e-mail | `"Biuro TEWU <biuro@tewu.szczecin.pl>"` |
+| `CALLBACK_TO` | Tak | Adres(y) odbiorcy powiadomień w biurze | `biuro@tewu.szczecin.pl` |
+| `NEXT_PUBLIC_CALLBACK_CALL_NUMBER` | Nie | Numer pod przyciskiem „Zadzwoń” (mobile) w formacie E.164. Domyślnie stacjonarny biura. *(Wymaga ponownego deployu na Netlify po zmianie)* | `+48914824190` lub `+48501482555` |
+| `TELEGRAM_BOT_TOKEN` | Nie | Token bota z @BotFather (opcjonalny ping bez PII) | `123456789:ABC...` |
+| `TELEGRAM_CHAT_ID` | Nie | ID czatu lub grupy biura na Telegramie | `-1001234567890` |
+| `OUTBOX_ENCRYPTION_KEY` | Nie | Klucz szyfrowania danych w Netlify Blobs (AES-256-GCM) | `losowy-32-bajtowy-klucz` |
+| `CALLBACK_OUTBOX_TTL_HOURS` | Nie | Czas retencji zgłoszeń w buforze awaryjnym (w godzinach, domyślnie 72) | `72` |
+| `EXTRA_CLOSED_DATES` | Nie | Dodatkowe dni wolne biura (np. Sylwester, mostki) | `2026-12-31,2026-05-02` |
 
-To create an optimized production build:
+---
 
+## Instrukcja konfiguracji bota Telegram dla właściciela biura
+
+Powiadomienia na Telegramie mają charakter czysto pomocniczy i **nie zawierają żadnych danych osobowych klientów** (numer telefonu trafia wyłącznie do bezpiecznej skrzynki e-mail biura).
+
+1. Otwórz aplikację Telegram i wyszukaj bota **@BotFather**.
+2. Wpisz polecenie `/newbot` i postępuj zgodnie z instrukcjami, podając nazwę oraz unikalny username bota (np. `TewuCallbackBot`).
+3. Po utworzeniu bota skopiuj wygenerowany **HTTP API token** – będzie to wartość zmiennej `TELEGRAM_BOT_TOKEN`.
+4. Utwórz grupę na Telegramie dla pracowników biura (lub użyj istniejącej) i dodaj do niej nowo utworzonego bota.
+5. Aby pozyskać identyfikator grupy (`TELEGRAM_CHAT_ID`):
+   - Wyślij do grupy dowolną wiadomość (np. `test`).
+   - Otwórz w przeglądarce adres: `https://api.telegram.org/bot<TWOJ_TOKEN>/getUpdates`.
+   - W sekcji `"chat":{"id": ...}` odczytaj identyfikator (dla grup jest to liczba ujemna, np. `-1001234567890`).
+6. Wprowadź `TELEGRAM_BOT_TOKEN` i `TELEGRAM_CHAT_ID` w panelu Netlify w sekcji:
+   *Site configuration* > *Environment variables*.
+
+---
+
+## Development i weryfikacja
+
+### Uruchomienie lokalne:
 ```bash
-pnpm run build
+pnpm dev
 ```
 
-To start the production server:
-
+### Uruchomienie testów jednostkowych (Vitest):
 ```bash
-pnpm run start
+pnpm test
 ```
 
-## Learn More
+### Uruchomienie lintera (ESLint):
+```bash
+pnpm lint
+```
 
-To learn more about the technologies used in this project, take a look at the following resources:
+### Budowanie aplikacji produkcyjnej:
+```bash
+pnpm build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Mantine Documentation](https://mantine.dev/) - learn about Mantine components and theming.
+---
 
+## Otwarte kwestie prawne i organizacyjne (dla właściciela TEWU)
+
+1. **Weryfikacja szkicu Polityki Prywatności (`/polityka-prywatnosci`)**:
+   - Skonsultowanie treści szkicu z radcą prawnym biura (potwierdzenie podstawy prawnej z art. 6 ust. 1 lit. b vs f RODO).
+   - Potwierdzenie regionu danych w usłudze Netlify Blobs oraz zawarcia umowy powierzenia przetwarzania danych (DPA) z Netlify.
+   - Uzupełnienie sekcji dotyczącej plików cookies po późniejszym wdrożeniu baneru CMP / Cookiebota.
+2. **Kolejne kroki marketingowe**:
+   - Wdrożenie Cookiebota / Google Consent Mode v2.
+   - Podpięcie tagów konwersji Google Ads i GA4 pod zaimplementowane zdarzenia `dataLayer` (`callback_widget_open`, `callback_request_submit`).
