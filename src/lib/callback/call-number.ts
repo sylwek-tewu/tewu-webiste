@@ -3,7 +3,10 @@
  * Controlled via NEXT_PUBLIC_CALLBACK_CALL_NUMBER env variable, falling back to default +48914824190.
  */
 
+// Pulls in libphonenumber metadata: call this on the server (the root layout passes the result
+// to the widget as a prop) or in lazily loaded code, not in the always-loaded client bundle.
 import { normalizePhoneNumber } from './phone';
+import { CONTACT_DETAILS } from '@/constants';
 
 export const DEFAULT_OFFICE_CALL_NUMBER = '+48914824190'; // TEWU Sekretariat
 
@@ -13,18 +16,9 @@ export interface ResolvedCallNumber {
   display: string; // '91 48 24 190'
 }
 
-function formatPolishDisplay(e164: string): string {
-  // e164 is like +48914824190 or +48501482555
-  if (e164.startsWith('+48') && e164.length === 12) {
-    const digits = e164.slice(3);
-    // If Szczecin landline (91...): 91 48 24 190
-    if (digits.startsWith('91')) {
-      return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4, 6)} ${digits.slice(6, 9)}`;
-    }
-    // Mobile or other: 501 482 555
-    return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 9)}`;
-  }
-  return e164;
+// The office's own number keeps the house style used across the site.
+function formatDisplay(e164: string, libraryDisplay: string): string {
+  return e164 === DEFAULT_OFFICE_CALL_NUMBER ? CONTACT_DETAILS.phone : libraryDisplay;
 }
 
 export function getCallNumber(envValue?: string): ResolvedCallNumber {
@@ -36,7 +30,7 @@ export function getCallNumber(envValue?: string): ResolvedCallNumber {
       return {
         raw: parsed.normalized,
         telUri: `tel:${parsed.normalized}`,
-        display: formatPolishDisplay(parsed.normalized),
+        display: formatDisplay(parsed.normalized, parsed.display),
       };
     }
     if (process.env.NODE_ENV === 'development') {
@@ -49,6 +43,6 @@ export function getCallNumber(envValue?: string): ResolvedCallNumber {
   return {
     raw: DEFAULT_OFFICE_CALL_NUMBER,
     telUri: `tel:${DEFAULT_OFFICE_CALL_NUMBER}`,
-    display: '91 48 24 190',
+    display: CONTACT_DETAILS.phone,
   };
 }

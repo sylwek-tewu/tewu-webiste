@@ -8,6 +8,7 @@ import '@mantine/core/styles.css';
 import { mantineHtmlProps, ColorSchemeScript, Box, Stack } from '@mantine/core';
 
 import { CallbackProvider, CallbackWidget } from "@/components/callback-widget";
+import { getCallNumber } from "@/lib/callback/call-number";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,7 +35,7 @@ export default function RootLayout({
                             <Box component="main" style={{ flex: 1 }}>{children}</Box>
                             <Footer />
                         </Stack>
-                        <CallbackWidget />
+                        <CallbackWidget callInfo={getCallNumber()} />
                     </CallbackProvider>
                 </ThemeProvider>
             </body>

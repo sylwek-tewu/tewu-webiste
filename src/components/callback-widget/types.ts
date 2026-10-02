@@ -1,12 +1,6 @@
-import { CallbackSlot, CallbackTopic } from '@/lib/callback/types';
+import { CallbackSlot, CallbackSource, CallbackTopic } from '@/lib/callback/types';
 
-export type WidgetTriggerSource =
-  | 'header'
-  | 'floating'
-  | 'contact'
-  | 'hero'
-  | 'service'
-  | string;
+export type WidgetTriggerSource = CallbackSource;
 
 export interface CallbackContextType {
   isOpen: boolean;
@@ -20,5 +14,5 @@ export interface CallbackFormData {
   slot: CallbackSlot;
   topic?: CallbackTopic | '';
   honeypot?: string;
-  formOpenedAt?: number;
+  elapsedMs?: number;
 }

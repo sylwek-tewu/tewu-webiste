@@ -41,6 +41,13 @@
   padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
 }
 
+/* Reserve room under the page so the fixed bar never covers the footer (shown below Mantine's sm = 48em) */
+@media (max-width: 47.99em) {
+  :global(body) {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + var(--callback-bottom-offset, 0px));
+  }
+}
+
 .mobileBarGrid {
   display: grid;
   grid-template-columns: 1fr 1.3fr;

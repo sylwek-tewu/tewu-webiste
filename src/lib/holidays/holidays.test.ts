@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   isPolishHoliday,
   getHolidaysInYear,
@@ -7,6 +7,7 @@ import {
   isBusinessDay,
   nextBusinessDay,
   isWeekend,
+  getExtraClosedDates,
 } from './index';
 
 describe('Polish Public Holidays (Original Spec Ported)', () => {
@@ -157,5 +158,23 @@ describe('Business Days and Next Business Day Calculations', () => {
 
     const nextFromWed = nextBusinessDay('2026-12-23');
     expect(getWarsawDateString(nextFromWed)).toBe('2026-12-28');
+  });
+});
+
+describe('getExtraClosedDates', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  // NEXT_PUBLIC_ so Next.js inlines it into the browser bundle, where the
+  // promised callback time and the "Zadzwoń" button are computed.
+  it('reads NEXT_PUBLIC_EXTRA_CLOSED_DATES and skips malformed entries', () => {
+    vi.stubEnv('NEXT_PUBLIC_EXTRA_CLOSED_DATES', '2026-12-31, nope ,2026-05-02');
+    expect(getExtraClosedDates()).toEqual(['2026-12-31', '2026-05-02']);
+  });
+
+  it('makes env-configured dates non-business days', () => {
+    vi.stubEnv('NEXT_PUBLIC_EXTRA_CLOSED_DATES', '2026-10-05');
+    expect(isBusinessDay('2026-10-05')).toBe(false);
   });
 });

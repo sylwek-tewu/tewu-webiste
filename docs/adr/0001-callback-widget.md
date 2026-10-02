@@ -77,3 +77,28 @@ Wycena usług w TEWU jest indywidualna i powstaje w rozmowie. Strona nie liczy c
 - **Wymagania operacyjne dla właściciela:**
   - Konfiguracja zmiennych środowiskowych w Netlify: SMTP (`CALLBACK_SMTP_*`), Telegram (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`), `OUTBOX_ENCRYPTION_KEY`, opcjonalnie `NEXT_PUBLIC_CALLBACK_CALL_NUMBER`.
   - Weryfikacja treści szkicu polityki prywatności przez radcę/prawnika biura.
+
+## Zmiany po przeglądzie kodu (2026-10-03)
+
+### Polityka prywatności – decyzja właściciela
+Właściciel serwisu zdecydował (commit `622cf18`), że opublikowana treść `/polityka-prywatnosci` odbiega od sekcji 5 tego ADR:
+- usunięty baner „szkic do weryfikacji prawnej” – treść jest traktowana jako wersja docelowa,
+- usunięta sekcja o Telegramie (brak danych osobowych w powiadomieniach) – zasada nadal obowiązuje w kodzie, ale nie jest opisywana w polityce,
+- usunięte `TODO` dotyczące regionu Netlify Blobs i podstawy przekazania danych poza EOG,
+- umowa powierzenia (DPA) z Netlify i szyfrowanie bufora AES-256-GCM są opisane jako fakty.
+
+Konsekwencje dla kodu: deklaracja szyfrowania jest wymuszana – na produkcji brak `OUTBOX_ENCRYPTION_KEY` blokuje zapis do bufora (zamiast zapisu numeru jawnym tekstem). Okres retencji w polityce jest pobierany z `CALLBACK_OUTBOX_TTL_HOURS` podczas kompilacji, więc tekst i zachowanie bufora pozostają spójne.
+
+### Pozostałe zmiany
+- **Time-trap:** przeglądarka wysyła czas wypełniania formularza (`elapsedMs`) mierzony własnym zegarem; serwer nie porównuje już swojego zegara z zegarem odwiedzającego. Brak `elapsedMs` = zgłoszenie odrzucane po cichu. Odpowiedzi pułapek antyspamowych nie zawierają pola `delivery`, więc widżet nie wysyła dla nich zdarzenia `callback_request_submit`.
+- **Pola `topic` i `source`:** przyjmowane tylko z zamkniętych list (`CALLBACK_TOPICS`, `CALLBACK_SOURCES`); nieznany temat jest pomijany, nieznane źródło zapisywane jako `unknown`. Wartości w HTML e-maila są escapowane.
+- **Walidacja numeru telefonu:** biblioteka `libphonenumber-js` (pełne metadane `max` w formularzu i API, domyślne `min` dla numeru biura w pasku mobilnym). Odrzuca m.in. nieprzydzielone polskie prefiksy.
+- **Brak konfiguracji SMTP:** endpoint zwraca 500 z numerem biura i alarmem na Telegram, zamiast buforować zgłoszenia, które nie mogłyby zostać wysłane.
+- **Budżet czasu odpowiedzi:** e-mail i ping Telegram ≤ 5 s, zapis do bufora ≤ 2 s, alarm ≤ 1,5 s – razem poniżej domyślnego limitu 10 s funkcji Netlify.
+- **Bufor awaryjny:** na produkcji zawsze Netlify Blobs (brak kontekstu Blobs = błąd 502 zamiast utraty danych w pamięci); nieczytelne wpisy (np. po zmianie klucza) są usuwane z alarmem i nie blokują pozostałych; ponowienia z rosnącą przerwą (10, 20, 40, 80 min, potem co 2 h) aż do upływu TTL; niepoprawne `CALLBACK_OUTBOX_TTL_HOURS` → domyślne 72 h.
+- **Dodatkowe dni wolne:** zmienna przemianowana na `NEXT_PUBLIC_EXTRA_CLOSED_DATES`, bo komunikat o terminie i przycisk „Zadzwoń” są liczone w przeglądarce. Zmiana wymaga ponownego deployu.
+- **Formularz ładowany leniwie** (`next/dynamic`) przy pierwszym otwarciu widżetu; na mobile strona ma dolny margines równy wysokości paska, by nie zasłaniał stopki.
+
+### Wymagania operacyjne (aktualizacja)
+- `OUTBOX_ENCRYPTION_KEY` jest wymagany na produkcji.
+- `EXTRA_CLOSED_DATES` → `NEXT_PUBLIC_EXTRA_CLOSED_DATES`.

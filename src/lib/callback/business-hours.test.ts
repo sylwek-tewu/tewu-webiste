@@ -116,3 +116,34 @@ describe('getCallbackMessage', () => {
     });
   });
 });
+
+describe('daylight saving time transitions (Europe/Warsaw)', () => {
+  // 2026-10-25 (Sun) 03:00 CEST -> 02:00 CET; 2026-03-29 (Sun) 02:00 CET -> 03:00 CEST
+
+  it('opens at 8:00 local time on the Monday after the switch to winter time', () => {
+    expect(isOfficeOpen(new Date('2026-10-26T07:59:00+01:00'))).toBe(false);
+    expect(isOfficeOpen(new Date('2026-10-26T08:00:00+01:00'))).toBe(true);
+    expect(isOfficeOpen(new Date('2026-10-26T15:59:00+01:00'))).toBe(true);
+    expect(isOfficeOpen(new Date('2026-10-26T16:00:00+01:00'))).toBe(false);
+  });
+
+  it('opens at 8:00 local time on the Monday after the switch to summer time', () => {
+    expect(isOfficeOpen(new Date('2026-03-30T07:59:00+02:00'))).toBe(false);
+    expect(isOfficeOpen(new Date('2026-03-30T08:00:00+02:00'))).toBe(true);
+  });
+
+  it('promises Monday when submitted on Friday evening before the autumn switch', () => {
+    const res = getCallbackMessage('asap', new Date('2026-10-23T17:00:00+02:00'));
+    expect(res.message).toBe('Biuro jest teraz zamknięte. Oddzwonimy w poniedziałek 26 października od 8:00.');
+  });
+
+  it('promises "jutro" late on the Sunday of the autumn switch (25 hours long)', () => {
+    const res = getCallbackMessage('8-12', new Date('2026-10-25T23:30:00+01:00'));
+    expect(res.message).toBe('Oddzwonimy jutro w godzinach 8:00–12:00.');
+  });
+
+  it('promises "jutro" late on the Sunday of the spring switch (23 hours long)', () => {
+    const res = getCallbackMessage('asap', new Date('2026-03-29T23:30:00+02:00'));
+    expect(res.message).toBe('Biuro jest dziś nieczynne. Oddzwonimy jutro od 8:00.');
+  });
+});

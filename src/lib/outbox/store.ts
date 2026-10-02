@@ -22,12 +22,8 @@ export class MemoryOutboxStore implements OutboxStore {
     return { ...raw, phone: decryptPhone(raw.phone) };
   }
 
-  async list(): Promise<OutboxRecord[]> {
-    const list: OutboxRecord[] = [];
-    for (const raw of this.records.values()) {
-      list.push({ ...raw, phone: decryptPhone(raw.phone) });
-    }
-    return list;
+  async listIds(): Promise<string[]> {
+    return Array.from(this.records.keys());
   }
 
   async delete(id: string): Promise<void> {
@@ -68,19 +64,9 @@ export class NetlifyBlobsOutboxStore implements OutboxStore {
     };
   }
 
-  async list(): Promise<OutboxRecord[]> {
-    const blobs = this.getBlobsStore();
-    const { blobs: list } = await blobs.list();
-    const records: OutboxRecord[] = [];
-
-    for (const item of list) {
-      const rec = await this.get(item.key);
-      if (rec) {
-        records.push(rec);
-      }
-    }
-
-    return records;
+  async listIds(): Promise<string[]> {
+    const { blobs: list } = await this.getBlobsStore().list();
+    return list.map((item) => item.key);
   }
 
   async delete(id: string): Promise<void> {
@@ -93,8 +79,14 @@ export class NetlifyBlobsOutboxStore implements OutboxStore {
 let memoryStoreInstance: MemoryOutboxStore | null = null;
 
 export function getOutboxStore(): OutboxStore {
-  // If running in Netlify environment with blobs support
-  if (process.env.NETLIFY || process.env.NETLIFY_BLOBS_CONTEXT || process.env.NETLIFY_SITE_ID) {
+  // Production always uses Blobs: if its context is missing, writes fail loudly (502 + alert)
+  // instead of "buffering" into memory that disappears with the function instance.
+  if (
+    process.env.NODE_ENV === 'production' ||
+    process.env.NETLIFY ||
+    process.env.NETLIFY_BLOBS_CONTEXT ||
+    process.env.NETLIFY_SITE_ID
+  ) {
     return new NetlifyBlobsOutboxStore();
   }
 

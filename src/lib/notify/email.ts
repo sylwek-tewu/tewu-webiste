@@ -4,18 +4,27 @@
 
 import nodemailer from 'nodemailer';
 import { CallbackNotificationData } from './types';
-import { CALLBACK_SLOTS, CALLBACK_TOPICS } from '../callback/types';
+import { CALLBACK_SLOTS, CALLBACK_TOPICS, toKnownSource } from '../callback/types';
 import { getWarsawTime } from '../callback/business-hours';
 
 function getSlotLabel(slotId: string): string {
   const found = CALLBACK_SLOTS.find((s) => s.id === slotId);
-  return found ? `${found.label} (${found.timeRangeLabel})` : slotId;
+  return found ? `${found.label} (${found.timeRangeLabel})` : 'Nieznana';
 }
 
 function getTopicLabel(topicId?: string): string {
   if (!topicId) return 'Nie określono';
   const found = CALLBACK_TOPICS.find((t) => t.id === topicId);
-  return found ? found.label : topicId;
+  return found ? found.label : 'Nie określono';
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 export function formatWarsawDateTime(isoString: string): string {
@@ -41,17 +50,18 @@ export function getSmtpConfig() {
   return { host, port, user, pass, from, to, missing };
 }
 
-export async function sendCallbackEmail(data: CallbackNotificationData): Promise<boolean> {
-  const config = getSmtpConfig();
-
-  if (config.missing.length > 0) {
-    console.error(`[SMTP] Missing required environment variables: ${config.missing.join(', ')}`);
-    return false;
-  }
-
+export function buildCallbackEmail(data: CallbackNotificationData): { subject: string; text: string; html: string } {
   const slotLabel = getSlotLabel(data.slot);
   const topicLabel = getTopicLabel(data.topic);
+  const source = toKnownSource(data.source);
   const dateFormatted = formatWarsawDateTime(data.createdAt);
+  const h = {
+    id: escapeHtml(data.id),
+    phone: escapeHtml(data.phone),
+    slot: escapeHtml(slotLabel),
+    topic: escapeHtml(topicLabel),
+    source: escapeHtml(source),
+  };
 
   const subject = `[Oddzwonienie #${data.id}] Nowa prośba o kontakt – ${slotLabel}`;
 
@@ -62,7 +72,7 @@ Identyfikator: #${data.id}
 Telefon: ${data.phone}
 Preferowana pora kontaktu: ${slotLabel}
 Czego dotyczy: ${topicLabel}
-Źródło zgłoszenia: ${data.source}
+Źródło zgłoszenia: ${source}
 Data i godzina: ${dateFormatted} (czas polski)
 `.trim();
 
@@ -76,25 +86,25 @@ Data i godzina: ${dateFormatted} (czas polski)
   <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
     <tr>
       <td style="padding: 8px 0; color: #64748b; width: 180px;">Identyfikator:</td>
-      <td style="padding: 8px 0; font-weight: bold; color: #1e3a8a;">#${data.id}</td>
+      <td style="padding: 8px 0; font-weight: bold; color: #1e3a8a;">#${h.id}</td>
     </tr>
     <tr>
       <td style="padding: 8px 0; color: #64748b;">Numer telefonu:</td>
       <td style="padding: 8px 0; font-weight: bold; font-size: 18px; color: #0f172a;">
-        <a href="tel:${data.phone}" style="color: #2563eb; text-decoration: none;">${data.phone}</a>
+        <a href="tel:${h.phone}" style="color: #2563eb; text-decoration: none;">${h.phone}</a>
       </td>
     </tr>
     <tr>
       <td style="padding: 8px 0; color: #64748b;">Preferowana pora:</td>
-      <td style="padding: 8px 0; font-weight: bold;">${slotLabel}</td>
+      <td style="padding: 8px 0; font-weight: bold;">${h.slot}</td>
     </tr>
     <tr>
       <td style="padding: 8px 0; color: #64748b;">Temat:</td>
-      <td style="padding: 8px 0;">${topicLabel}</td>
+      <td style="padding: 8px 0;">${h.topic}</td>
     </tr>
     <tr>
       <td style="padding: 8px 0; color: #64748b;">Miejsce wywołania:</td>
-      <td style="padding: 8px 0; font-family: monospace; color: #475569;">${data.source}</td>
+      <td style="padding: 8px 0; font-family: monospace; color: #475569;">${h.source}</td>
     </tr>
     <tr>
       <td style="padding: 8px 0; color: #64748b;">Czas zgłoszenia:</td>
@@ -107,6 +117,19 @@ Data i godzina: ${dateFormatted} (czas polski)
   </div>
 </div>
 `.trim();
+
+  return { subject, text: textBody, html: htmlBody };
+}
+
+export async function sendCallbackEmail(data: CallbackNotificationData): Promise<boolean> {
+  const config = getSmtpConfig();
+
+  if (config.missing.length > 0) {
+    console.error(`[SMTP] Missing required environment variables: ${config.missing.join(', ')}`);
+    return false;
+  }
+
+  const { subject, text: textBody, html: htmlBody } = buildCallbackEmail(data);
 
   try {
     const transporter = nodemailer.createTransport({

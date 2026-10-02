@@ -26,11 +26,11 @@ A modern web application for "Biuro Rachunkowe TEWU Sp. z o.o.", an accounting o
   - Podwójny tor powiadomień:
     - **E-mail (SMTP)**: pełne dane zgłoszenia (w tym numer telefonu).
     - **Telegram Bot API**: powiadomienia techniczne **bez danych osobowych** (brak numeru telefonu chroni przed wyciekiem PII).
-  - **Bufor awaryjny (Netlify Blobs)**: w razie awarii serwera pocztowego zgłoszenie trafia do szyfrowanego bufora (AES-256-GCM), a zaplanowana funkcja Netlify ponawia wysyłkę co 10 minut przez 72 godziny.
+  - **Bufor awaryjny (Netlify Blobs)**: w razie awarii serwera pocztowego zgłoszenie trafia do szyfrowanego bufora (AES-256-GCM), a zaplanowana funkcja Netlify ponawia wysyłkę z rosnącą przerwą (10, 20, 40, 80 min, potem co 2 h) do upływu `CALLBACK_OUTBOX_TTL_HOURS` (domyślnie 72 godziny).
   - Analityka: zdarzenia `callback_widget_open` i `callback_request_submit` przekazywane do `window.dataLayer` (bez danych osobowych).
 - **Service Listings**: Szczegółowe opisy usług księgowych (pełna księgowość, KPiR, ryczałt, kadry i płace, ZUS/US).
 - **Certificate Showcase**: Galeria certyfikatów z wbudowaną przeglądarką PDF.
-- **Podstrona Polityki Prywatności (`/polityka-prywatnosci`)**: Zgodna z RODO, opisująca cele, podstawy, retencję 72h bufora w Blobs oraz brak PII w Telegramie (szkic do weryfikacji prawnej).
+- **Podstrona Polityki Prywatności (`/polityka-prywatnosci`)**: Zgodna z RODO, opisująca cele, podstawy, retencję bufora w Blobs (wartość z `CALLBACK_OUTBOX_TTL_HOURS`), DPA z Netlify i szyfrowanie bufora.
 - **Ujednolicone linki kontaktowe**: Wszystkie numery jako `tel:+48…`, adresy pocztowe jako `mailto:`.
 
 ---
@@ -56,9 +56,9 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_CALLBACK_CALL_NUMBER` | Nie | Numer pod przyciskiem „Zadzwoń” (mobile) w formacie E.164. Domyślnie stacjonarny biura. *(Wymaga ponownego deployu na Netlify po zmianie)* | `+48914824190` lub `+48501482555` |
 | `TELEGRAM_BOT_TOKEN` | Nie | Token bota z @BotFather (opcjonalny ping bez PII) | `123456789:ABC...` |
 | `TELEGRAM_CHAT_ID` | Nie | ID czatu lub grupy biura na Telegramie | `-1001234567890` |
-| `OUTBOX_ENCRYPTION_KEY` | Nie | Klucz szyfrowania danych w Netlify Blobs (AES-256-GCM) | `losowy-32-bajtowy-klucz` |
-| `CALLBACK_OUTBOX_TTL_HOURS` | Nie | Czas retencji zgłoszeń w buforze awaryjnym (w godzinach, domyślnie 72) | `72` |
-| `EXTRA_CLOSED_DATES` | Nie | Dodatkowe dni wolne biura (np. Sylwester, mostki) | `2026-12-31,2026-05-02` |
+| `OUTBOX_ENCRYPTION_KEY` | Tak (produkcja) | Klucz szyfrowania danych w Netlify Blobs (AES-256-GCM). Bez niego bufor awaryjny nie przyjmie zgłoszenia. Zmiana klucza usuwa oczekujące wpisy (z alarmem) | `losowy-32-bajtowy-klucz` |
+| `CALLBACK_OUTBOX_TTL_HOURS` | Nie | Czas retencji zgłoszeń w buforze awaryjnym (w godzinach, domyślnie 72). Wartość pojawia się też w polityce prywatności – zmiana wymaga ponownego deployu | `72` |
+| `NEXT_PUBLIC_EXTRA_CLOSED_DATES` | Nie | Dodatkowe dni wolne biura (np. Sylwester, mostki). Wstrzykiwana podczas kompilacji – zmiana wymaga ponownego deployu | `2026-12-31,2026-05-02` |
 
 ---
 

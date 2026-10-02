@@ -46,4 +46,15 @@ describe('Telegram Ping PII Leak Prevention', () => {
     expect(text).not.toContain('602 235 736');
     expect(text).not.toContain('+48');
   });
+
+  it('never echoes topic or source values that are not on the known lists', () => {
+    const text = buildTelegramPingText({
+      ...sampleData,
+      topic: 'oddzwoń 601 602 603',
+      source: 'tel 700 800 900',
+    });
+    expect(text).not.toMatch(/60[1-3]|[789]00/);
+    expect(text).toContain('temat: ogólny');
+    expect(text).toContain('źródło: unknown');
+  });
 });

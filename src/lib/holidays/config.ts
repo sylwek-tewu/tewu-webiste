@@ -108,14 +108,16 @@ export const EXTRA_CLOSED_DATES: string[] = [];
 
 /**
  * Returns the effective list of extra closed dates, combining the static configuration
- * and the EXTRA_CLOSED_DATES environment variable (comma-separated 'YYYY-MM-DD').
+ * and the NEXT_PUBLIC_EXTRA_CLOSED_DATES environment variable (comma-separated 'YYYY-MM-DD').
+ * The NEXT_PUBLIC_ prefix makes Next.js inline it into the browser bundle at build time,
+ * where the callback promise and the "Zadzwoń" button are computed; changing it needs a redeploy.
  */
 export function getExtraClosedDates(overrideList?: string[]): string[] {
   if (overrideList) {
     return overrideList;
   }
-  const envDates = process.env.EXTRA_CLOSED_DATES
-    ? process.env.EXTRA_CLOSED_DATES.split(',')
+  const envDates = process.env.NEXT_PUBLIC_EXTRA_CLOSED_DATES
+    ? process.env.NEXT_PUBLIC_EXTRA_CLOSED_DATES.split(',')
         .map((s) => s.trim())
         .filter((s) => /^\d{4}-\d{2}-\d{2}$/.test(s))
     : [];

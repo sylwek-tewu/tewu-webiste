@@ -1,8 +1,13 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { Container, Title, Text, Stack, Paper, Box, Group, ThemeIcon, Divider } from '@mantine/core';
-import { Shield, Mail, Phone, MapPin, Building2, Lock, AlertTriangle } from 'lucide-react';
+import { Shield, Mail, Phone, MapPin, Building2, Lock } from 'lucide-react';
 import { CONTACT_DETAILS, COMPANY_FULL_NAME } from '@/constants';
+import { getOutboxTtlHours } from '@/lib/outbox/processor';
+import { formatHoursPl } from '@/lib/polish-plural';
+
+// Static page: rendered at build time, so a CALLBACK_OUTBOX_TTL_HOURS change needs a redeploy.
+const OUTBOX_RETENTION = formatHoursPl(getOutboxTtlHours());
 
 export const metadata: Metadata = {
   title: 'Polityka Prywatności | Biuro Rachunkowe TEWU',
@@ -44,7 +49,7 @@ export default function PrivacyPolicyPage() {
                 </Title>
                 <Text size="sm" c="slate.7" lh={1.7} mb="md">
                   Administratorem Twoich danych osobowych jest <strong>{COMPANY_FULL_NAME}</strong> z siedzibą w Szczecinie przy
-                  ul. {CONTACT_DETAILS.address}, wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego pod numerem
+                  {CONTACT_DETAILS.address}, wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego pod numerem
                   KRS: 0000320281, NIP: 9552249417, REGON: 320601499.
                 </Text>
                 <Group gap="lg" wrap="wrap">
@@ -155,7 +160,7 @@ export default function PrivacyPolicyPage() {
                     <Text size="xs" c="slate.6" lh={1.5}>
                       W przypadku chwilowej awarii dostawcy poczty e-mail, zgłoszenie jest tymczasowo zabezpieczane w buforze awaryjnym
                       w postaci zaszyfrowanej algorytmem AES-256-GCM. Bufor służy wyłącznie automatycznemu ponowieniu wysyłki
-                      i ulega bezpowrotnemu usunięciu niezwłocznie po doręczeniu lub maksymalnie po upływie 72 godzin.
+                      i ulega bezpowrotnemu usunięciu niezwłocznie po doręczeniu; jest przechowywany maksymalnie przez {OUTBOX_RETENTION}.
                     </Text>
                   </Paper>
                 </Stack>
@@ -175,7 +180,7 @@ export default function PrivacyPolicyPage() {
                   prawa wymagają ich dłuższego przechowywania.
                 </Text>
                 <Text size="sm" c="slate.7" lh={1.7} mt="xs">
-                  Maksymalny okres retencji zgłoszeń oczekujących w buforze awaryjnym wynosi <strong>72 godziny</strong>.
+                  Maksymalny okres retencji zgłoszeń oczekujących w buforze awaryjnym wynosi <strong>{OUTBOX_RETENTION}</strong>.
                 </Text>
               </div>
 

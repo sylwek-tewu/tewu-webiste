@@ -65,3 +65,12 @@ export const CALLBACK_TOPICS: { id: CallbackTopic; label: string }[] = [
   { id: 'kadry-place', label: 'Kadry i płace' },
   { id: 'inne', label: 'Inne zapytanie' },
 ];
+
+/** Where the widget was opened from. Anything else is recorded as 'unknown'. */
+export const CALLBACK_SOURCES = ['header', 'floating', 'contact', 'hero', 'service'] as const;
+
+export type CallbackSource = (typeof CALLBACK_SOURCES)[number];
+
+export function toKnownSource(value: unknown): CallbackSource | 'unknown' {
+  return (CALLBACK_SOURCES as readonly unknown[]).includes(value) ? (value as CallbackSource) : 'unknown';
+}

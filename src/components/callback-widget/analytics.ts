@@ -22,7 +22,7 @@ export function pushCallbackRequestSubmit(params: {
   source: string;
   topic?: string;
   time_slot: string;
-  delivery: 'direct' | 'buffered';
+  delivery: CallbackDelivery;
 }): void {
   if (typeof window === 'undefined') return;
   window.dataLayer = window.dataLayer || [];
@@ -33,4 +33,17 @@ export function pushCallbackRequestSubmit(params: {
     time_slot: params.time_slot,
     delivery: params.delivery,
   });
+}
+
+export type CallbackDelivery = 'direct' | 'buffered';
+
+/**
+ * The delivery to report as a conversion, or null when nothing was delivered.
+ * Requests the server silently dropped as spam come back without `delivery`.
+ */
+export function getConversionDelivery(response: unknown): CallbackDelivery | null {
+  if (!response || typeof response !== 'object') return null;
+  const { success, delivery } = response as { success?: unknown; delivery?: unknown };
+  if (success !== true) return null;
+  return delivery === 'direct' || delivery === 'buffered' ? delivery : null;
 }

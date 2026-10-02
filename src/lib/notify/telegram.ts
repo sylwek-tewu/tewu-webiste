@@ -3,18 +3,18 @@
  */
 
 import { CallbackNotificationData } from './types';
-import { CALLBACK_SLOTS, CALLBACK_TOPICS } from '../callback/types';
+import { CALLBACK_SLOTS, CALLBACK_TOPICS, toKnownSource } from '../callback/types';
 import { getWarsawTime } from '../callback/business-hours';
 
 function getSlotLabel(slotId: string): string {
   const found = CALLBACK_SLOTS.find((s) => s.id === slotId);
-  return found ? found.label : slotId;
+  return found ? found.label : 'nieznana';
 }
 
 function getTopicLabel(topicId?: string): string {
   if (!topicId) return 'ogólny';
   const found = CALLBACK_TOPICS.find((t) => t.id === topicId);
-  return found ? found.label : topicId;
+  return found ? found.label : 'ogólny';
 }
 
 export function formatTelegramDate(isoString: string): string {
@@ -26,7 +26,8 @@ export function formatTelegramDate(isoString: string): string {
 
 /**
  * Builds the strict non-PII ping message for Telegram.
- * Guarantees zero personal data (no phone numbers, no freeform text, no IPs).
+ * Guarantees zero personal data (no phone numbers, no freeform text, no IPs):
+ * only labels from fixed lists are used, never the raw field values.
  */
 export function buildTelegramPingText(data: CallbackNotificationData): string {
   const slotLabel = getSlotLabel(data.slot);
@@ -35,7 +36,7 @@ export function buildTelegramPingText(data: CallbackNotificationData): string {
 
   return (
     `Nowa prośba o oddzwonienie #${data.id} · ` +
-    `pora: ${slotLabel} · temat: ${topicLabel} · źródło: ${data.source} · ${dateStr}. ` +
+    `pora: ${slotLabel} · temat: ${topicLabel} · źródło: ${toKnownSource(data.source)} · ${dateStr}. ` +
     `Szczegóły i numer: w skrzynce biuro@tewu.szczecin.pl (temat maila zawiera #${data.id}).`
   );
 }

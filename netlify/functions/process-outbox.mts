@@ -2,12 +2,13 @@
  * Netlify Scheduled Function: Retries failed callback emails every 10 minutes.
  */
 
-import { processOutbox, getOutboxStore } from '../../src/lib/outbox';
+import { processOutbox, getOutboxStore, getOutboxTtlHours } from '../../src/lib/outbox';
 import { sendCallbackEmail } from '../../src/lib/notify/email';
 import { sendTelegramAlert } from '../../src/lib/notify/telegram';
 
 export default async () => {
   const store = getOutboxStore();
+  const ttlHours = getOutboxTtlHours();
 
   const result = await processOutbox(
     store,
@@ -22,9 +23,15 @@ export default async () => {
       });
     },
     {
+      ttlHours,
       onExpire: async (record) => {
         await sendTelegramAlert(
-          `⚠️ Zgłoszenie #${record.id} wygasło po przekroczeniu czasu retencji (72h) bez skutecznego doręczenia.`
+          `⚠️ Zgłoszenie #${record.id} wygasło po przekroczeniu czasu retencji (${ttlHours}h) bez skutecznego doręczenia.`
+        );
+      },
+      onCorrupt: async (id) => {
+        await sendTelegramAlert(
+          `🚨 Zgłoszenie #${id} w buforze awaryjnym nie dało się odczytać (zmieniony OUTBOX_ENCRYPTION_KEY?) i zostało usunięte.`
         );
       },
     }

@@ -18,11 +18,15 @@ function get32ByteKey(secret?: string): Buffer | null {
 
 /**
  * Encrypts a phone number using AES-256-GCM.
- * If OUTBOX_ENCRYPTION_KEY is not configured, returns the plaintext phone as fallback.
+ * Without OUTBOX_ENCRYPTION_KEY it throws in production (the privacy policy promises encryption),
+ * and returns the plaintext phone elsewhere so local development works without a key.
  */
 export function encryptPhone(phone: string, secret?: string): string {
   const key = get32ByteKey(secret);
   if (!key) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('OUTBOX_ENCRYPTION_KEY is not configured; refusing to store a phone number in plaintext');
+    }
     return phone;
   }
 

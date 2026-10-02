@@ -1,7 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { encryptPhone, decryptPhone } from './crypto';
 
 describe('Outbox AES-256-GCM Crypto', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   const testSecret = 'my-super-secret-encryption-key-for-test-12345';
   const samplePhone = '+48501482555';
 
@@ -30,15 +34,21 @@ describe('Outbox AES-256-GCM Crypto', () => {
 
   it('fails decryption if ciphertext is tampered with', () => {
     const cipherText = encryptPhone(samplePhone, testSecret);
-    const tampered = cipherText.slice(0, -2) + 'aa';
+    const last = cipherText.slice(-2);
+    const tampered = cipherText.slice(0, -2) + (last === 'aa' ? 'bb' : 'aa');
     expect(() => decryptPhone(tampered, testSecret)).toThrow();
   });
 
-  it('returns plaintext unchanged if no secret key is configured', () => {
+  it('returns plaintext unchanged outside production if no secret key is configured', () => {
     const plaintext = encryptPhone(samplePhone, '');
     expect(plaintext).toBe(samplePhone);
 
     const result = decryptPhone(plaintext, '');
     expect(result).toBe(samplePhone);
+  });
+
+  it('refuses to store plaintext in production when no key is configured', () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    expect(() => encryptPhone(samplePhone, '')).toThrow(/OUTBOX_ENCRYPTION_KEY/);
   });
 });
