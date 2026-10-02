@@ -36,21 +36,48 @@ const Footer: React.FC = () => {
             <Text fw={700} size="sm" c="white" tt="uppercase" className={classes.logoSubtext}>
               Nawigacja
             </Text>
-            <Stack gap="xs">
-              {NAV_LINKS.map(link => (
+            <SimpleGrid cols={2} spacing={{ base: 'sm', sm: 'md' }}>
+              <Stack gap="xs">
+                {NAV_LINKS.slice(0, 4).map(link => (
+                  <Anchor
+                    key={link.path}
+                    component={Link}
+                    href={link.path}
+                    size="sm"
+                    underline="hover"
+                    className={classes.footerLink}
+                    c="slate.3"
+                  >
+                    {link.label}
+                  </Anchor>
+                ))}
+              </Stack>
+              <Stack gap="xs">
+                {NAV_LINKS.slice(4).map(link => (
+                  <Anchor
+                    key={link.path}
+                    component={Link}
+                    href={link.path}
+                    size="sm"
+                    underline="hover"
+                    className={classes.footerLink}
+                    c="slate.3"
+                  >
+                    {link.label}
+                  </Anchor>
+                ))}
                 <Anchor
-                  key={link.path}
                   component={Link}
-                  href={link.path}
+                  href="/polityka-prywatnosci"
                   size="sm"
                   underline="hover"
                   className={classes.footerLink}
                   c="slate.3"
                 >
-                  {link.label}
+                  Polityka prywatności
                 </Anchor>
-              ))}
-            </Stack>
+              </Stack>
+            </SimpleGrid>
           </Stack>
 
           {/* Services */}
