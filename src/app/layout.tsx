@@ -7,6 +7,8 @@ import "./globals.css";
 import '@mantine/core/styles.css';
 import { mantineHtmlProps, ColorSchemeScript, Box, Stack } from '@mantine/core';
 
+import { CallbackProvider, CallbackWidget } from "@/components/callback-widget";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -26,11 +28,14 @@ export default function RootLayout({
             </head>
             <body className={inter.className}>
                 <ThemeProvider>
-                    <Stack gap={0} mih="100vh">
-                        <Navbar />
-                        <Box component="main" style={{ flex: 1 }}>{children}</Box>
-                        <Footer />
-                    </Stack>
+                    <CallbackProvider>
+                        <Stack gap={0} mih="100vh">
+                            <Navbar />
+                            <Box component="main" style={{ flex: 1 }}>{children}</Box>
+                            <Footer />
+                        </Stack>
+                        <CallbackWidget />
+                    </CallbackProvider>
                 </ThemeProvider>
             </body>
         </html>
