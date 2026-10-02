@@ -1,34 +1,24 @@
+"use client";
+
 import React from 'react';
 import { ShieldCheck } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, Group, Paper, ThemeIcon, Badge } from '@mantine/core';
 import CertificatesList from '@/components/certificates/CertificatesList';
-
-const certs = [
-    {
-        url: '/img/cert.png',
-        title: 'Certyfikat Księgowy',
-        desc: 'Sylwester Wrzeszcz',
-        pdfUrl: '/pdfs/certyfikat_sw_kolor.pdf'
-    },
-    {
-        url: '/img/library.png',
-        title: 'Certyfikat Księgowy',
-        desc: 'Tamara Ugha',
-        pdfUrl: '/pdfs/swiadectwo_kwalifikacyjne_t_ugha.pdf'
-    }
-];
+import { useLocale } from '@/i18n/LocaleContext';
 
 const CertificatesClient: React.FC = () => {
+    const { t } = useLocale();
+
     return (
         <Stack gap={0} bg="white">
             {/* Header */}
             <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
                 <Container size="md" px="md">
                     <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', letterSpacing: '-0.025em' }}>
-                        Nasze Certyfikaty
+                        {t.certificates.header.title}
                     </Title>
                     <Text size="xl" c="slate.4">
-                        Gwarancja najwyższych kompetencji potwierdzona państwowymi uprawnieniami.
+                        {t.certificates.header.subtitle}
                     </Text>
                 </Container>
             </Box>
@@ -40,17 +30,19 @@ const CertificatesClient: React.FC = () => {
                         <Stack gap="xl">
                             <Box>
                                 <Badge size="lg" variant="filled" color="blue.0" c="blue.7" radius="lg" mb="sm">
-                                    Ministerstwo Finansów
+                                    {t.certificates.badge}
                                 </Badge>
                                 <Title order={2} fw={900} c="slate.9" lh={1.2} style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)' }} mb="md">
-                                    Uprawnienia wydane przez Ministerstwo Finansów
+                                    {t.certificates.title}
                                 </Title>
                                 <Stack gap="md" c="slate.6" lh={1.6}>
                                     <Text>
-                                        Działalność Biura Rachunkowego TEWU oparta jest na solidnych fundamentach prawnych i merytorycznych. Biuro zarządzane jest przez wspólników posiadających <Text span fw={700}>Certyfikaty Księgowe wydane przez Ministra Finansów</Text>, które uprawniają do usługowego prowadzenia ksiąg rachunkowych.
+                                        {t.certificates.p1Prefix}
+                                        <Text span fw={700}>{t.certificates.p1Bold}</Text>
+                                        {t.certificates.p1Suffix}
                                     </Text>
                                     <Text>
-                                        Uzyskanie takich certyfikatów wiąże się ze spełnieniem rygorystycznych wymogów dotyczących wykształcenia, praktyki zawodowej oraz nieposzlakowanej opinii. Dla naszych Klientów to pewność, że powierzają swoje finanse w ręce profesjonalistów, których wiedza została zweryfikowana na szczeblu państwowym.
+                                        {t.certificates.p2}
                                     </Text>
                                 </Stack>
                             </Box>
@@ -61,14 +53,14 @@ const CertificatesClient: React.FC = () => {
                                         <ShieldCheck size={32} />
                                     </ThemeIcon>
                                     <Box style={{ flex: 1 }}>
-                                        <Text fw={700} c="slate.9" size="lg" mb={4}>Pełne Bezpieczeństwo</Text>
-                                        <Text c="slate.6" size="sm">Posiadane uprawnienia są uzupełnione wysoką polisą ubezpieczenia OC, co stanowi kompleksową ochronę dla obsługiwanych przez nas podmiotów.</Text>
+                                        <Text fw={700} c="slate.9" size="lg" mb={4}>{t.certificates.securityTitle}</Text>
+                                        <Text c="slate.6" size="sm">{t.certificates.securityDesc}</Text>
                                     </Box>
                                 </Group>
                             </Paper>
                         </Stack>
 
-                        <CertificatesList certs={certs} />
+                        <CertificatesList certs={t.certificates.items} />
                     </SimpleGrid>
                 </Container>
             </Box>

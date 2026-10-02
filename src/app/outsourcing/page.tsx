@@ -1,10 +1,17 @@
-
 import React from 'react';
 import { Metadata } from 'next';
 import OutsourcingClient from './OutsourcingClient';
 
 export const metadata: Metadata = {
-    title: "Outsourcing - Biuro Rachunkowe TEWU",
+    title: "Outsourcing Procesów Biznesowych (BPO) - Biuro Rachunkowe TEWU",
+    description: "Zredukuj koszty operacyjne i skup się na rozwoju. Profesjonalny outsourcing księgowy i procesów back-office w TEWU.",
+    alternates: {
+        canonical: '/outsourcing',
+        languages: {
+            'pl': '/outsourcing',
+            'uk': '/uk/outsourcing',
+        },
+    },
 };
 
 export default function Outsourcing() {

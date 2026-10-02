@@ -25,7 +25,7 @@ describe('CallbackWidget when the form cannot be loaded', () => {
       </CallbackProvider>
     );
 
-    await user.click(screen.getByRole('button', { name: /Zamów bezpłatną wycenę/ }));
+    await user.click(screen.getByRole('button', { name: /Bezpłatna wycena – oddzwonimy/ }));
 
     const link = await screen.findByRole('link', { name: /91 48 24 190/ });
     expect(link).toHaveAttribute('href', 'tel:+48914824190');
@@ -40,7 +40,7 @@ describe('CallbackWidget when the form cannot be loaded', () => {
       </CallbackProvider>
     );
 
-    await user.click(screen.getByRole('button', { name: /Zamów bezpłatną wycenę/ }));
+    await user.click(screen.getByRole('button', { name: /Bezpłatna wycena – oddzwonimy/ }));
     await user.click(await screen.findByRole('button', { name: /Odśwież stronę/ }));
 
     expect(reloadPage).toHaveBeenCalledOnce();

@@ -1,23 +1,37 @@
-
+"use client";
 
 import React from 'react';
-import { SERVICES } from '@/constants';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Building2, Calculator, FileDigit, Users, ClipboardCheck, FileText, Scale, TrendingUp } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, Button, ThemeIcon, Group, Paper } from '@mantine/core';
 import Link from 'next/link';
 import classes from './ServicesClient.module.css';
+import { useLocale } from '@/i18n/LocaleContext';
+
+const SERVICE_ICONS: Record<string, React.ReactNode> = {
+  'pelna-ksiegowosc': <Building2 size={24} />,
+  'kpir': <Calculator size={24} />,
+  'ryczalt': <FileDigit size={24} />,
+  'kadry-place': <Users size={24} />,
+  'zus-us': <ClipboardCheck size={24} />,
+  'deklaracje': <FileText size={24} />,
+  'reprezentacja': <Scale size={24} />,
+  'doradztwo': <TrendingUp size={24} />,
+};
 
 export default function ServicesClient() {
+    const { t, locale } = useLocale();
+    const contactPath = locale === 'uk' ? '/uk/kontakt' : '/kontakt';
+
     return (
         <Stack gap={0} bg="white">
             {/* Hero Section */}
             <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
                 <Container size="md" px="md">
                     <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', letterSpacing: '-0.025em' }}>
-                        Pełna oferta usług księgowych
+                        {t.servicesPage.header.title}
                     </Title>
                     <Text size="xl" c="slate.4">
-                        Dostarczamy kompleksowe rozwiązania dla biznesu, od prostych ewidencji po zaawansowane doradztwo podatkowe.
+                        {t.servicesPage.header.subtitle}
                     </Text>
                 </Container>
             </Box>
@@ -26,7 +40,7 @@ export default function ServicesClient() {
             <Box component="section" py={96} bg="white">
                 <Container size="xl" px={{ base: 'md', sm: 'xl' }}>
                     <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="lg">
-                        {SERVICES.map((service) => (
+                        {t.servicesPage.items.map((service) => (
                             <Paper
                                 key={service.id}
                                 p="xl"
@@ -41,7 +55,7 @@ export default function ServicesClient() {
                                     mb="lg"
                                     className={classes.iconContainer}
                                 >
-                                    {service.icon}
+                                    {SERVICE_ICONS[service.id] || <Building2 size={24} />}
                                 </Box>
                                 <Title order={3} fw={700} c="slate.9" mb="sm" lh={1.3} fz="xl">
                                     {service.title}
@@ -59,12 +73,12 @@ export default function ServicesClient() {
             <Box component="section" py={96} bg="brandBlue.6">
                 <Container size="md" px="md" ta="center">
                     <Title order={2} c="white" fw={900} mb="lg" fz={{ base: 'xl', md: '2.25rem' }}>
-                        Nie wiesz, która forma rozliczenia będzie dla Ciebie najlepsza?
+                        {t.servicesPage.cta.title}
                     </Title>
                     <Text c="blue.1" size="lg" mb="xl" maw={600} mx="auto">
-                        Skontaktuj się z nami. Przeanalizujemy Twoją sytuację i zaproponujemy optymalne rozwiązania podatkowe.
+                        {t.servicesPage.cta.description}
                     </Text>
-                    <Link href="/kontakt" style={{ textDecoration: 'none' }}>
+                    <Link href={contactPath} style={{ textDecoration: 'none' }}>
                         <Button
                             component="span"
                             size="xl"
@@ -75,7 +89,7 @@ export default function ServicesClient() {
                             rightSection={<ArrowRight size={20} />}
                             className={classes.ctaButton}
                         >
-                            Umów się na konsultację
+                            {t.servicesPage.cta.button}
                         </Button>
                     </Link>
                 </Container>
@@ -91,10 +105,10 @@ export default function ServicesClient() {
                             </ThemeIcon>
                             <Box>
                                 <Title order={4} fw={700} c="slate.9" mb="xs" fz="lg">
-                                    Bezpieczeństwo
+                                    {t.servicesPage.values.securityTitle}
                                 </Title>
                                 <Text size="sm" c="slate.6">
-                                    Pełna odpowiedzialność cywilna i ubezpieczenie OC biura.
+                                    {t.servicesPage.values.securityDesc}
                                 </Text>
                             </Box>
                         </Group>
@@ -104,10 +118,10 @@ export default function ServicesClient() {
                             </ThemeIcon>
                             <Box>
                                 <Title order={4} fw={700} c="slate.9" mb="xs" fz="lg">
-                                    Terminowość
+                                    {t.servicesPage.values.timelinessTitle}
                                 </Title>
                                 <Text size="sm" c="slate.6">
-                                    Gwarantujemy dotrzymanie wszystkich terminów ustawowych.
+                                    {t.servicesPage.values.timelinessDesc}
                                 </Text>
                             </Box>
                         </Group>
@@ -117,10 +131,10 @@ export default function ServicesClient() {
                             </ThemeIcon>
                             <Box>
                                 <Title order={4} fw={700} c="slate.9" mb="xs" fz="lg">
-                                    Nowoczesność
+                                    {t.servicesPage.values.modernityTitle}
                                 </Title>
                                 <Text size="sm" c="slate.6">
-                                    E-księgowość i elektroniczny obieg dokumentów.
+                                    {t.servicesPage.values.modernityDesc}
                                 </Text>
                             </Box>
                         </Group>

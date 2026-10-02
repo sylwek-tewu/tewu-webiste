@@ -22,6 +22,7 @@ export default async () => {
         slot: record.slot,
         topic: record.topic,
         source: record.source,
+        locale: record.locale,
         createdAt: record.createdAt,
       });
     },

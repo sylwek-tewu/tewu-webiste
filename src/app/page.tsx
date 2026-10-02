@@ -7,6 +7,14 @@ import { WhyUs } from '@/components/home/WhyUs';
 
 export const metadata: Metadata = {
     title: "Strona główna - Biuro Rachunkowe TEWU",
+    description: "Twój zaufany partner w biznesie. Profesjonalna księgowość, kadry i płace oraz doradztwo dla firm każdej wielkości. Biuro rachunkowe TEWU w Szczecinie.",
+    alternates: {
+        canonical: '/',
+        languages: {
+            'pl': '/',
+            'uk': '/uk',
+        },
+    },
 };
 
 export default function Home() {

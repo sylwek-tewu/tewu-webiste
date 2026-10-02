@@ -33,9 +33,12 @@ export function buildTelegramPingText(data: CallbackNotificationData): string {
   const slotLabel = getSlotLabel(data.slot);
   const topicLabel = getTopicLabel(data.topic);
   const dateStr = formatTelegramDate(data.createdAt);
+  const langPrefix = data.locale === 'uk' ? '[UA] ' : '';
+  const langTag = data.locale === 'uk' ? 'język: Ukraiński (UA) · ' : '';
 
   return (
-    `Nowa prośba o oddzwonienie #${data.id} · ` +
+    `${langPrefix}Nowa prośba o oddzwonienie #${data.id} · ` +
+    langTag +
     `pora: ${slotLabel} · temat: ${topicLabel} · źródło: ${toKnownSource(data.source)} · ${dateStr}. ` +
     `Szczegóły i numer: w skrzynce biuro@tewu.szczecin.pl (temat maila zawiera #${data.id}).`
   );

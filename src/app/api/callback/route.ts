@@ -85,6 +85,7 @@ export async function POST(request: NextRequest) {
 
     // 4. Short unique ID (6 uppercase hex characters)
     const id = crypto.randomBytes(3).toString('hex').toUpperCase();
+    const locale: 'pl' | 'uk' = body.locale === 'uk' ? 'uk' : 'pl';
 
     // 5. Without SMTP config every request would sit in the outbox until it expires.
     const smtp = getSmtpConfig();
@@ -100,6 +101,7 @@ export async function POST(request: NextRequest) {
       slot: body.slot as CallbackSlot,
       topic,
       source,
+      locale,
       createdAt: new Date().toISOString(),
     };
 
@@ -128,6 +130,7 @@ export async function POST(request: NextRequest) {
           slot: notificationData.slot,
           topic: notificationData.topic,
           source: notificationData.source,
+          locale: notificationData.locale,
           createdAt: notificationData.createdAt,
           attempts: 1,
           lastAttemptAt: new Date().toISOString(),

@@ -31,6 +31,31 @@ const POLISH_MONTHS_GENITIVE = [
   'grudnia',
 ];
 
+const UKRAINIAN_DAYS_PREP = [
+  'у неділю',
+  'у понеділок',
+  'у вівторок',
+  'у середу',
+  'у четвер',
+  'у п\'ятницю',
+  'у суботу',
+];
+
+const UKRAINIAN_MONTHS_GENITIVE = [
+  'січня',
+  'лютого',
+  'березня',
+  'квітня',
+  'травня',
+  'червня',
+  'липня',
+  'серпня',
+  'вересня',
+  'жовтня',
+  'листопада',
+  'грудня',
+];
+
 export interface WarsawTime {
   year: number;
   month: number;
@@ -88,11 +113,11 @@ export function isOfficeOpen(nowInput?: Date): boolean {
 }
 
 /**
- * Formats a descriptive date phrase for the callback target day in Polish.
- * If next business day is tomorrow, returns "jutro".
- * Otherwise returns e.g. "w poniedziałek 5 maja".
+ * Formats a descriptive date phrase for the callback target day in Polish or Ukrainian.
+ * If next business day is tomorrow, returns "jutro" or "завтра".
+ * Otherwise returns e.g. "w poniedziałek 5 maja" or "у понеділок 5 травня".
  */
-export function formatTargetDayPhrase(currentWarsawDateStr: string, targetDate: Date): string {
+export function formatTargetDayPhrase(currentWarsawDateStr: string, targetDate: Date, locale: 'pl' | 'uk' = 'pl'): string {
   const targetWarsaw = getWarsawTime(targetDate);
   const targetDayOfWeek = getWarsawDayOfWeek(targetDate);
 
@@ -102,11 +127,15 @@ export function formatTargetDayPhrase(currentWarsawDateStr: string, targetDate: 
   const tomorrowStr = tomorrowUtc.toISOString().slice(0, 10);
 
   if (targetWarsaw.dateStr === tomorrowStr) {
-    return 'jutro';
+    return locale === 'uk' ? 'завтра' : 'jutro';
   }
 
-  const prepDay = POLISH_DAYS_PREP[targetDayOfWeek] || 'w dniu roboczym';
-  const monthName = POLISH_MONTHS_GENITIVE[targetWarsaw.month - 1] || '';
+  const daysList = locale === 'uk' ? UKRAINIAN_DAYS_PREP : POLISH_DAYS_PREP;
+  const monthsList = locale === 'uk' ? UKRAINIAN_MONTHS_GENITIVE : POLISH_MONTHS_GENITIVE;
+  const defaultPrep = locale === 'uk' ? 'у робочий день' : 'w dniu roboczym';
+
+  const prepDay = daysList[targetDayOfWeek] || defaultPrep;
+  const monthName = monthsList[targetWarsaw.month - 1] || '';
   return `${prepDay} ${targetWarsaw.day} ${monthName}`;
 }
 
@@ -117,9 +146,9 @@ export interface CallbackMessageResult {
 }
 
 /**
- * Calculates the exact promise message based on the chosen slot and current Warsaw time.
+ * Calculates the exact promise message based on the chosen slot, current Warsaw time, and locale.
  */
-export function getCallbackMessage(slot: CallbackSlot, nowInput?: Date): CallbackMessageResult {
+export function getCallbackMessage(slot: CallbackSlot, nowInput?: Date, locale: 'pl' | 'uk' = 'pl'): CallbackMessageResult {
   const now = nowInput ?? new Date();
   const wt = getWarsawTime(now);
   const todayIsBusinessDay = isBusinessDay(wt.dateStr);
@@ -132,32 +161,40 @@ export function getCallbackMessage(slot: CallbackSlot, nowInput?: Date): Callbac
       if (wt.totalMinutes < 480) {
         // Before 8:00 on a business day
         return {
-          message: 'Biuro otwiera się o 8:00. Oddzwonimy dziś od 8:00.',
+          message: locale === 'uk'
+            ? 'Офіс відкривається о 8:00. Передзвонимо вам сьогодні з 8:00 (за польським часом).'
+            : 'Biuro otwiera się o 8:00. Oddzwonimy dziś od 8:00.',
           isToday: true,
         };
       }
       if (wt.totalMinutes < 960) {
         // Between 8:00 and 16:00
         return {
-          message: 'Oddzwonimy jak najszybciej, w godzinach pracy biura (pn–pt 8:00–16:00).',
+          message: locale === 'uk'
+            ? 'Передзвонимо якомога швидше в робочі години (пн–пт 8:00–16:00 за польським часом).'
+            : 'Oddzwonimy jak najszybciej, w godzinach pracy biura (pn–pt 8:00–16:00).',
           isToday: true,
         };
       }
       // After 16:00 on a business day
       const nextDate = nextBusinessDay(now);
-      const targetPhrase = formatTargetDayPhrase(wt.dateStr, nextDate);
-      const daySuffix = targetPhrase === 'jutro' ? 'jutro' : `${targetPhrase}`;
+      const targetPhrase = formatTargetDayPhrase(wt.dateStr, nextDate, locale);
+      const daySuffix = (targetPhrase === 'jutro' || targetPhrase === 'завтра') ? targetPhrase : `${targetPhrase}`;
       return {
-        message: `Biuro jest teraz zamknięte. Oddzwonimy ${daySuffix} od 8:00.`,
+        message: locale === 'uk'
+          ? `Офіс зараз зачинено. Передзвонимо ${daySuffix} з 8:00 (за польським часом).`
+          : `Biuro jest teraz zamknięte. Oddzwonimy ${daySuffix} od 8:00.`,
         isToday: false,
         targetDayPhrase: daySuffix,
       };
     } else {
       // Weekend or public holiday
       const nextDate = nextBusinessDay(now);
-      const targetPhrase = formatTargetDayPhrase(wt.dateStr, nextDate);
+      const targetPhrase = formatTargetDayPhrase(wt.dateStr, nextDate, locale);
       return {
-        message: `Biuro jest dziś nieczynne. Oddzwonimy ${targetPhrase} od 8:00.`,
+        message: locale === 'uk'
+          ? `Офіс сьогодні зачинено. Передзвонимо ${targetPhrase} з 8:00 (за польським часом).`
+          : `Biuro jest dziś nieczynne. Oddzwonimy ${targetPhrase} od 8:00.`,
         isToday: false,
         targetDayPhrase: targetPhrase,
       };
@@ -173,25 +210,31 @@ export function getCallbackMessage(slot: CallbackSlot, nowInput?: Date): Callbac
 
   if (canFulfillToday) {
     return {
-      message: `Oddzwonimy dziś w godzinach ${slotConfig.timeRangeLabel}.`,
+      message: locale === 'uk'
+        ? `Передзвонимо сьогодні в проміжку ${slotConfig.timeRangeLabel} (за польським часом).`
+        : `Oddzwonimy dziś w godzinach ${slotConfig.timeRangeLabel}.`,
       isToday: true,
     };
   }
 
   // Not today -> calculate next business day
   const nextDate = nextBusinessDay(now);
-  const targetPhrase = formatTargetDayPhrase(wt.dateStr, nextDate);
+  const targetPhrase = formatTargetDayPhrase(wt.dateStr, nextDate, locale);
 
-  if (targetPhrase === 'jutro') {
+  if (targetPhrase === 'jutro' || targetPhrase === 'завтра') {
     return {
-      message: `Oddzwonimy jutro w godzinach ${slotConfig.timeRangeLabel}.`,
+      message: locale === 'uk'
+        ? `Передзвонимо завтра в проміжку ${slotConfig.timeRangeLabel} (за польським часом).`
+        : `Oddzwonimy jutro w godzinach ${slotConfig.timeRangeLabel}.`,
       isToday: false,
-      targetDayPhrase: 'jutro',
+      targetDayPhrase: targetPhrase,
     };
   }
 
   return {
-    message: `Oddzwonimy w najbliższym dniu roboczym (${targetPhrase}) w godzinach ${slotConfig.timeRangeLabel}.`,
+    message: locale === 'uk'
+      ? `Передзвонимо в найближчий робочий день (${targetPhrase}) в проміжку ${slotConfig.timeRangeLabel} (за польським часом).`
+      : `Oddzwonimy w najbliższym dniu roboczym (${targetPhrase}) w godzinach ${slotConfig.timeRangeLabel}.`,
     isToday: false,
     targetDayPhrase: targetPhrase,
   };

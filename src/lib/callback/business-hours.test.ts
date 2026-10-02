@@ -115,6 +115,48 @@ describe('getCallbackMessage', () => {
       expect(res.message).toBe('Oddzwonimy w najbliższym dniu roboczym (w poniedziałek 12 października) w godzinach 17:00–18:00.');
     });
   });
+
+  describe('Ukrainian locale (locale: "uk")', () => {
+    it('returns Ukrainian message during office hours with Warsaw timezone note', () => {
+      const wed1030 = new Date('2026-10-07T10:30:00+02:00');
+      const res = getCallbackMessage('asap', wed1030, 'uk');
+      expect(res.isToday).toBe(true);
+      expect(res.message).toBe('Передзвонимо якомога швидше в робочі години (пн–пт 8:00–16:00 за польським часом).');
+    });
+
+    it('returns Ukrainian morning message before 8:00', () => {
+      const wed0730 = new Date('2026-10-07T07:30:00+02:00');
+      const res = getCallbackMessage('asap', wed0730, 'uk');
+      expect(res.isToday).toBe(true);
+      expect(res.message).toBe('Офіс відкривається о 8:00. Передзвонимо вам сьогодні з 8:00 (за польським часом).');
+    });
+
+    it('returns Ukrainian tomorrow message after office hours', () => {
+      const wed1630 = new Date('2026-10-07T16:30:00+02:00');
+      const res = getCallbackMessage('asap', wed1630, 'uk');
+      expect(res.isToday).toBe(false);
+      expect(res.message).toBe('Офіс зараз зачинено. Передзвонимо завтра з 8:00 (за польським часом).');
+    });
+
+    it('returns Ukrainian weekend message with next business day phrase', () => {
+      const saturday = new Date('2026-10-10T14:00:00+02:00');
+      const res = getCallbackMessage('asap', saturday, 'uk');
+      expect(res.isToday).toBe(false);
+      expect(res.message).toBe('Офіс сьогодні зачинено. Передзвонимо у понеділок 12 жовтня з 8:00 (за польським часом).');
+    });
+
+    it('returns Ukrainian slot message for today and tomorrow', () => {
+      const wed1000 = new Date('2026-10-07T10:00:00+02:00');
+      const todayRes = getCallbackMessage('8-12', wed1000, 'uk');
+      expect(todayRes.isToday).toBe(true);
+      expect(todayRes.message).toBe('Передзвонимо сьогодні в проміжку 8:00–12:00 (за польським часом).');
+
+      const wed1145 = new Date('2026-10-07T11:45:00+02:00');
+      const tomorrowRes = getCallbackMessage('8-12', wed1145, 'uk');
+      expect(tomorrowRes.isToday).toBe(false);
+      expect(tomorrowRes.message).toBe('Передзвонимо завтра в проміжку 8:00–12:00 (за польським часом).');
+    });
+  });
 });
 
 describe('daylight saving time transitions (Europe/Warsaw)', () => {

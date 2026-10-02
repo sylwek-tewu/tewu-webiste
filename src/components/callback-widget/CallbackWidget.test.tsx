@@ -32,7 +32,7 @@ async function openForm() {
       <CallbackWidget callInfo={callInfo} />
     </CallbackProvider>
   );
-  await user.click(screen.getByRole('button', { name: /Zamów bezpłatną wycenę/ }));
+  await user.click(screen.getByRole('button', { name: /Bezpłatna wycena – oddzwonimy/ }));
   await screen.findByLabelText(/Numer telefonu/);
   return user;
 }
@@ -136,7 +136,7 @@ describe('CallbackWidget', () => {
     await new Promise((r) => setTimeout(r, 2000));
     expect(fetchMock).not.toHaveBeenCalled();
 
-    await user.click(screen.getByRole('button', { name: /Zamów bezpłatną wycenę/ }));
+    await user.click(screen.getByRole('button', { name: /Bezpłatna wycena – oddzwonimy/ }));
     expect(await screen.findByRole('button', { name: /Poproś o kontakt/ })).toBeInTheDocument();
     expect(screen.queryByText(/Otrzymaliśmy Twoją prośbę/)).not.toBeInTheDocument();
   });

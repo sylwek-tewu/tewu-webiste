@@ -1,21 +1,31 @@
+"use client";
 
 import React from 'react';
 import { ShieldCheck, Zap, Crosshair, Lock } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, ThemeIcon, Paper, Group } from '@mantine/core';
 import classes from './OutsourcingClient.module.css';
+import { useLocale } from '@/i18n/LocaleContext';
+
+const FEATURE_ICONS = [
+  <Zap key="0" color="var(--mantine-color-yellow-5)" />,
+  <Crosshair key="1" color="var(--mantine-color-blue-5)" />,
+  <Lock key="2" color="var(--mantine-color-indigo-5)" />,
+  <ShieldCheck key="3" color="var(--mantine-color-grape-5)" />,
+];
 
 export default function OutsourcingClient() {
+    const { t } = useLocale();
+
     return (
         <Stack gap={0} bg="white">
             {/* Header */}
             <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
                 <Container size="md" px="md">
                     <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', letterSpacing: '-0.025em' }}>
-                        Outsourcing Procesów Biznesowych (BPO)
+                        {t.outsourcing.header.title}
                     </Title>
                     <Text size="xl" c="slate.4">
-                        Zredukuj koszty operacyjne i skup się na kluczowych aspektach swojej działalności.
-                        Przejmiemy Twoje procesy back-office z najwyższą dbałością o jakość i rzetelność.
+                        {t.outsourcing.header.subtitle}
                     </Text>
                 </Container>
             </Box>
@@ -27,21 +37,15 @@ export default function OutsourcingClient() {
                         <Stack gap="xl">
                             <Box>
                                 <Title order={2} fw={900} c="slate.9" style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)', letterSpacing: '-0.025em' }} mb="md">
-                                    Dlaczego outsourcing z TEWU?
+                                    {t.outsourcing.intro.title}
                                 </Title>
                                 <Text size="lg" c="slate.6" lh={1.6}>
-                                    Zewnętrzna obsługa procesów finansowo-księgowych to nie tylko oszczędność na etatach.
-                                    To dostęp do wyspecjalizowanej wiedzy naszych ekspertów oraz gwarancja pełnej zgodności z aktualnymi przepisami prawa.
+                                    {t.outsourcing.intro.description}
                                 </Text>
                             </Box>
 
                             <Stack gap="md">
-                                {[
-                                    "Obniżenie kosztów operacyjnych nawet o 40%",
-                                    "Dostęp do ekspertów bez konieczności rekrutacji",
-                                    "Gwarancja ciągłości procesów (brak problemów z urlopami)",
-                                    "Przeniesienie ryzyka prawnego i podatkowego na biuro"
-                                ].map((item, index) => (
+                                {t.outsourcing.intro.bullets.map((item, index) => (
                                     <Group key={index} gap="md" align="center" wrap="nowrap">
                                         <ThemeIcon variant="transparent" c="green.5" size={24} style={{ flexShrink: 0 }}>
                                             <ShieldCheck size={20} />
@@ -53,12 +57,7 @@ export default function OutsourcingClient() {
                         </Stack>
 
                         <SimpleGrid cols={2} spacing="lg">
-                            {[
-                                { title: "Szybkość", icon: <Zap color="var(--mantine-color-yellow-5)" />, desc: "Sprawne procesowanie dokumentacji" },
-                                { title: "Optymalizacja", icon: <Crosshair color="var(--mantine-color-blue-5)" />, desc: "Usprawnienie procesów wewnętrznych" },
-                                { title: "Poufność", icon: <Lock color="var(--mantine-color-indigo-5)" />, desc: "Ścisła ochrona danych biznesowych" },
-                                { title: "Stabilność", icon: <ShieldCheck color="var(--mantine-color-grape-5)" />, desc: "Bezpieczeństwo i ciągłość operacji" }
-                            ].map((box, i) => (
+                            {t.outsourcing.features.map((box, i) => (
                                 <Paper
                                     key={i}
                                     p="lg"
@@ -68,7 +67,7 @@ export default function OutsourcingClient() {
                                     className={classes.featureCard}
                                     style={{ borderColor: 'var(--mantine-color-slate-1)' }}
                                 >
-                                    <Box mb="md">{box.icon}</Box>
+                                    <Box mb="md">{FEATURE_ICONS[i]}</Box>
                                     <Text fw={700} c="slate.9" mb="xs">{box.title}</Text>
                                     <Text size="xs" c="slate.5" lh={1.4}>{box.desc}</Text>
                                 </Paper>
@@ -83,17 +82,13 @@ export default function OutsourcingClient() {
                 <Container size="xl" px="md">
                     <Box ta="center" mb={64}>
                         <Title order={2} fw={900} c="slate.9" style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)', letterSpacing: '-0.025em' }} mb="xs">
-                            Jak zacząć?
+                            {t.outsourcing.steps.title}
                         </Title>
-                        <Text c="slate.5">Wdrożenie procesu outsourcingu w 3 krokach</Text>
+                        <Text c="slate.5">{t.outsourcing.steps.subtitle}</Text>
                     </Box>
 
                     <SimpleGrid cols={{ base: 1, md: 3 }} spacing={48}>
-                        {[
-                            { step: "01", title: "Analiza", desc: "Poznajemy Twoje procesy i identyfikujemy obszary do przejęcia." },
-                            { step: "02", title: "Migracja", desc: "Przygotowujemy dokumentację i ustalamy zasady obiegu informacji." },
-                            { step: "03", title: "Operacje", desc: "Przejmujemy pełną odpowiedzialność za wybrane procesy biznesowe." }
-                        ].map((step, i) => (
+                        {t.outsourcing.steps.items.map((step, i) => (
                             <Paper
                                 key={i}
                                 p="xl"
