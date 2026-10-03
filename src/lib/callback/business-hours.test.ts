@@ -142,19 +142,28 @@ describe('getCallbackMessage', () => {
       const saturday = new Date('2026-10-10T14:00:00+02:00');
       const res = getCallbackMessage('asap', saturday, 'uk');
       expect(res.isToday).toBe(false);
-      expect(res.message).toBe('Офіс сьогодні зачинено. Передзвонимо у понеділок 12 жовтня з 8:00 (за польським часом).');
+      expect(res.message).toBe('Офіс сьогодні зачинено. Передзвонимо в понеділок, 12 жовтня з 8:00 (за польським часом).');
     });
 
     it('returns Ukrainian slot message for today and tomorrow', () => {
       const wed1000 = new Date('2026-10-07T10:00:00+02:00');
       const todayRes = getCallbackMessage('8-12', wed1000, 'uk');
       expect(todayRes.isToday).toBe(true);
-      expect(todayRes.message).toBe('Передзвонимо сьогодні в проміжку 8:00–12:00 (за польським часом).');
+      expect(todayRes.message).toBe('Передзвонимо сьогодні з 8:00 до 12:00 (за польським часом).');
 
       const wed1145 = new Date('2026-10-07T11:45:00+02:00');
       const tomorrowRes = getCallbackMessage('8-12', wed1145, 'uk');
       expect(tomorrowRes.isToday).toBe(false);
-      expect(tomorrowRes.message).toBe('Передзвонимо завтра в проміжку 8:00–12:00 (за польським часом).');
+      expect(tomorrowRes.message).toBe('Передзвонимо завтра з 8:00 до 12:00 (за польським часом).');
+    });
+
+    it('says "у вівторок" (not "в вівторок") when the next working day is a Tuesday', () => {
+      // Saturday before Easter Monday 2026 (6 April), so the next working day is Tuesday 7 April
+      const easterSaturday = new Date('2026-04-04T12:00:00+02:00');
+      const res = getCallbackMessage('12-16', easterSaturday, 'uk');
+      expect(res.message).toBe(
+        'Передзвонимо в найближчий робочий день (у вівторок, 7 квітня) з 12:00 до 16:00 (за польським часом).'
+      );
     });
   });
 });

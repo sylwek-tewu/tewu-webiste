@@ -31,14 +31,15 @@ const POLISH_MONTHS_GENITIVE = [
   'grudnia',
 ];
 
+// "в" after the vowel that ends "Передзвонимо"; "у" before "в" (вівторок) for euphony
 const UKRAINIAN_DAYS_PREP = [
-  'у неділю',
-  'у понеділок',
+  'в неділю',
+  'в понеділок',
   'у вівторок',
-  'у середу',
-  'у четвер',
-  'у п\'ятницю',
-  'у суботу',
+  'в середу',
+  'в четвер',
+  'в пʼятницю',
+  'в суботу',
 ];
 
 const UKRAINIAN_MONTHS_GENITIVE = [
@@ -132,11 +133,20 @@ export function formatTargetDayPhrase(currentWarsawDateStr: string, targetDate: 
 
   const daysList = locale === 'uk' ? UKRAINIAN_DAYS_PREP : POLISH_DAYS_PREP;
   const monthsList = locale === 'uk' ? UKRAINIAN_MONTHS_GENITIVE : POLISH_MONTHS_GENITIVE;
-  const defaultPrep = locale === 'uk' ? 'у робочий день' : 'w dniu roboczym';
+  const defaultPrep = locale === 'uk' ? 'в робочий день' : 'w dniu roboczym';
 
   const prepDay = daysList[targetDayOfWeek] || defaultPrep;
   const monthName = monthsList[targetWarsaw.month - 1] || '';
-  return `${prepDay} ${targetWarsaw.day} ${monthName}`;
+  // Ukrainian dates take a comma: "в понеділок, 12 жовтня"
+  return locale === 'uk'
+    ? `${prepDay}, ${targetWarsaw.day} ${monthName}`
+    : `${prepDay} ${targetWarsaw.day} ${monthName}`;
+}
+
+/** "з 8:00 до 12:00" – more natural in Ukrainian than a dashed range. */
+function ukTimeRange(slot: { startHour: number; startMinute: number; endHour: number; endMinute: number }): string {
+  const time = (h: number, m: number) => `${h}:${String(m).padStart(2, '0')}`;
+  return `з ${time(slot.startHour, slot.startMinute)} до ${time(slot.endHour, slot.endMinute)}`;
 }
 
 export interface CallbackMessageResult {
@@ -211,7 +221,7 @@ export function getCallbackMessage(slot: CallbackSlot, nowInput?: Date, locale: 
   if (canFulfillToday) {
     return {
       message: locale === 'uk'
-        ? `Передзвонимо сьогодні в проміжку ${slotConfig.timeRangeLabel} (за польським часом).`
+        ? `Передзвонимо сьогодні ${ukTimeRange(slotConfig)} (за польським часом).`
         : `Oddzwonimy dziś w godzinach ${slotConfig.timeRangeLabel}.`,
       isToday: true,
     };
@@ -224,7 +234,7 @@ export function getCallbackMessage(slot: CallbackSlot, nowInput?: Date, locale: 
   if (targetPhrase === 'jutro' || targetPhrase === 'завтра') {
     return {
       message: locale === 'uk'
-        ? `Передзвонимо завтра в проміжку ${slotConfig.timeRangeLabel} (за польським часом).`
+        ? `Передзвонимо завтра ${ukTimeRange(slotConfig)} (за польським часом).`
         : `Oddzwonimy jutro w godzinach ${slotConfig.timeRangeLabel}.`,
       isToday: false,
       targetDayPhrase: targetPhrase,
@@ -233,7 +243,7 @@ export function getCallbackMessage(slot: CallbackSlot, nowInput?: Date, locale: 
 
   return {
     message: locale === 'uk'
-      ? `Передзвонимо в найближчий робочий день (${targetPhrase}) в проміжку ${slotConfig.timeRangeLabel} (за польським часом).`
+      ? `Передзвонимо в найближчий робочий день (${targetPhrase}) ${ukTimeRange(slotConfig)} (за польським часом).`
       : `Oddzwonimy w najbliższym dniu roboczym (${targetPhrase}) w godzinach ${slotConfig.timeRangeLabel}.`,
     isToday: false,
     targetDayPhrase: targetPhrase,
