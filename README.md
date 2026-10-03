@@ -48,7 +48,7 @@ cp .env.example .env.local
 | Zmienna | Wymagana | Opis | Przykład |
 |---|---|---|---|
 | `CALLBACK_SMTP_HOST` | Tak | Host serwera poczty wychodzącej | `smtp.twojadomena.pl` |
-| `CALLBACK_SMTP_PORT` | Tak | Port SMTP (587 dla STARTTLS, 465 dla SSL) | `587` |
+| `CALLBACK_SMTP_PORT` | Tak | Port SMTP (587 dla STARTTLS, 465 dla SSL). TLS jest wymagany: serwer bez STARTTLS odrzuci wysyłkę (zgłoszenia trafią do bufora) | `587` |
 | `CALLBACK_SMTP_USER` | Tak | Nazwa użytkownika / login konta pocztowego | `biuro@tewu.szczecin.pl` |
 | `CALLBACK_SMTP_PASS` | Tak | Hasło konta pocztowego | `tajne-haslo` |
 | `CALLBACK_FROM` | Tak | Nagłówek nadawcy wiadomości e-mail | `"Biuro TEWU <biuro@tewu.szczecin.pl>"` |

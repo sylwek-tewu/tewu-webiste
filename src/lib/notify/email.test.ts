@@ -65,4 +65,18 @@ describe('getSmtpTransportOptions', () => {
     expect(options.secure).toBe(false);
     expect(getSmtpTransportOptions({ host: 'h', port: 465, user: 'u', pass: 'p' }).secure).toBe(true);
   });
+
+  it('refuses to send without TLS, also on the STARTTLS port', async () => {
+    const { getSmtpTransportOptions } = await import('./email');
+    expect(getSmtpTransportOptions({ host: 'h', port: 587, user: 'u', pass: 'p' }).requireTLS).toBe(true);
+    expect(getSmtpTransportOptions({ host: 'h', port: 465, user: 'u', pass: 'p' }).requireTLS).toBe(true);
+  });
+
+  it('allows plain SMTP only to the same machine', async () => {
+    const { getSmtpTransportOptions } = await import('./email');
+    for (const host of ['localhost', '127.0.0.1', '::1']) {
+      expect(getSmtpTransportOptions({ host, port: 587, user: 'u', pass: 'p' }).requireTLS).toBe(false);
+    }
+    expect(getSmtpTransportOptions({ host: '127.example.com', port: 587, user: 'u', pass: 'p' }).requireTLS).toBe(true);
+  });
 });

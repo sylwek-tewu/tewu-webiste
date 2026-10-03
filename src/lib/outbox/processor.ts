@@ -17,7 +17,7 @@ const SCHEDULE_TOLERANCE_MS = 60 * 1000;
 export interface ProcessOutboxOptions {
   ttlHours?: number;
   now?: Date;
-  onExpire?: (record: OutboxRecord) => Promise<void> | void;
+  onExpire?: (record: Pick<OutboxRecord, 'id' | 'createdAt'>) => Promise<void> | void;
   onCorrupt?: (id: string) => Promise<void> | void;
 }
 
@@ -123,14 +123,32 @@ export async function processOutbox(
     }
   }
 
+  async function expireUnreadable(id: string, createdAt: string | undefined): Promise<void> {
+    if (!createdAt || now.getTime() - new Date(createdAt).getTime() <= ttlMs) return;
+    try {
+      await store.delete(id);
+    } catch (error) {
+      console.error(`[Outbox] Store error for #${id}:`, error instanceof Error ? error.message : 'Unknown');
+      result.errors++;
+      return;
+    }
+    result.expired++;
+    if (options.onExpire) {
+      const onExpire = options.onExpire;
+      await notify(() => onExpire({ id, createdAt }), id);
+    }
+  }
+
   for (const id of ids) {
     try {
       await processRecord(id);
     } catch (error) {
       if (error instanceof OutboxKeyMissingError) {
-        // Config problem affecting every record: stop and keep them all until the key is back.
+        // Config problem: nothing can be delivered until the key is back, so records are kept,
+        // except those past the retention period, which the privacy policy promises to delete.
         result.keyMissing = true;
-        break;
+        await expireUnreadable(id, error.createdAt);
+        continue;
       }
       // Transient store error (network, Blobs 5xx): keep the record for the next run.
       console.error(

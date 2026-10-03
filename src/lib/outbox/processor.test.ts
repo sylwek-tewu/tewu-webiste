@@ -118,7 +118,7 @@ describe('processOutbox', () => {
     expect(await store.listIds()).toEqual([]);
   });
 
-  it('keeps every record and stops the run when the encryption key is missing', async () => {
+  it('keeps every record within the retention period when the encryption key is missing', async () => {
     const store = new MemoryOutboxStore();
     const now = new Date();
     vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'the-key');
@@ -136,6 +136,32 @@ describe('processOutbox', () => {
 
     vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'the-key');
     expect((await store.get('K1'))?.phone).toBe('+48501482555');
+  });
+
+  it('still deletes records past the retention period when the encryption key is missing', async () => {
+    const store = new MemoryOutboxStore();
+    const now = new Date();
+    const fourDaysAgo = new Date(now.getTime() - 4 * 24 * 60 * 60 * 1000).toISOString();
+    vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'the-key');
+    await store.put({ id: 'OLD', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: fourDaysAgo, attempts: 3 });
+    await store.put({ id: 'NEW', phone: '+48602235736', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 1 });
+    vi.stubEnv('OUTBOX_ENCRYPTION_KEY', '');
+
+    const expired: string[] = [];
+    const sent: string[] = [];
+    const res = await processOutbox(
+      store,
+      async (r) => {
+        sent.push(r.id);
+        return true;
+      },
+      { now, ttlHours: 72, onExpire: (r) => void expired.push(r.id) }
+    );
+
+    expect(res).toMatchObject({ keyMissing: true, expired: 1, succeeded: 0 });
+    expect(expired).toEqual(['OLD']);
+    expect(sent).toEqual([]);
+    expect(await store.listIds()).toEqual(['NEW']);
   });
 
   it('does not count a failing expiry alert as a store error', async () => {

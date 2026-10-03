@@ -72,7 +72,7 @@ export function WhyUs() {
                                 style={{ aspectRatio: '3/4', zIndex: 1 }}
                             >
                                 <Image
-                                    src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80"
+                                    src="/img/stock/team-at-work.jpg"
                                     alt="Zespół przy pracy"
                                     radius="xl"
                                     w="100%"
@@ -90,7 +90,7 @@ export function WhyUs() {
                                 style={{ aspectRatio: '3/4', zIndex: 2 }}
                             >
                                 <Image
-                                    src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80"
+                                    src="/img/stock/business-meeting.jpg"
                                     alt="Spotkanie biznesowe"
                                     radius="xl"
                                     w="100%"

@@ -5,7 +5,7 @@
 
 import { getStore } from '@netlify/blobs';
 import { OutboxRecord, OutboxStore } from './types';
-import { encryptPhone, decryptPhone, CorruptRecordError } from './crypto';
+import { encryptPhone, decryptPhone, CorruptRecordError, OutboxKeyMissingError } from './crypto';
 
 /**
  * Turns a stored value back into a record with a decrypted phone. Anything that can never be
@@ -32,7 +32,13 @@ function reviveRecord(raw: unknown): OutboxRecord {
   ) {
     throw new CorruptRecordError('Outbox record is missing required fields');
   }
-  return { ...(record as OutboxRecord), phone: decryptPhone(record.phone) };
+  try {
+    return { ...(record as OutboxRecord), phone: decryptPhone(record.phone) };
+  } catch (error) {
+    // createdAt is stored in plain text, so the processor can still expire the record
+    if (error instanceof OutboxKeyMissingError) throw new OutboxKeyMissingError(record.createdAt);
+    throw error;
+  }
 }
 
 export class MemoryOutboxStore implements OutboxStore {

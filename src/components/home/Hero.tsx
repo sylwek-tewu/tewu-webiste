@@ -89,7 +89,7 @@ export function Hero() {
                                     style={{ borderRadius: '9999px', filter: 'blur(48px)' }}
                                 />
                                 <Image
-                                    src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                                    src="/img/stock/hero-office.jpg"
                                     alt="Biuro rachunkowe"
                                     radius="xl"
                                     style={{
