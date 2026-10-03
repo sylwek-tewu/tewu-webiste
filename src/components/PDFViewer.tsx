@@ -42,7 +42,8 @@ export function PDFViewer({
     useEffect(() => {
         async function loadPdfjs() {
             const pdfjs = await import('pdfjs-dist');
-            pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+            // Bundled with the site instead of loaded from a CDN, so no visitor IP goes to a third party
+            pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
             setPdfjsLib(pdfjs);
         }
         loadPdfjs();

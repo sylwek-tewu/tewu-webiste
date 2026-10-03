@@ -9,9 +9,13 @@ const PREFIX = 'enc:v1:';
 
 /** OUTBOX_ENCRYPTION_KEY is not configured. A config problem: restoring the key makes records readable again. */
 export class OutboxKeyMissingError extends Error {
-  constructor() {
+  /** When thrown for a stored record: its (unencrypted) creation time, so expiry still works. */
+  readonly createdAt?: string;
+
+  constructor(createdAt?: string) {
     super('Cannot decrypt outbox record: OUTBOX_ENCRYPTION_KEY is missing');
     this.name = 'OutboxKeyMissingError';
+    this.createdAt = createdAt;
   }
 }
 

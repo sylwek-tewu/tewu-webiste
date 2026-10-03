@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Container, Title, Text, Stack, Paper, Box, Group, ThemeIcon, Divider, Alert } from '@mantine/core';
-import { Shield, Mail, Phone, MapPin, Building2, Lock, AlertTriangle } from 'lucide-react';
+import { Shield, Mail, Phone, MapPin, Building2, Lock, AlertTriangle, Globe } from 'lucide-react';
 import { CONTACT_DETAILS } from '@/constants';
 import { useLocale } from '@/i18n/LocaleContext';
 import { Emphasis } from '@/i18n/Emphasis';
@@ -64,9 +64,12 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                   </Group>
                   <Group gap="xs">
                     <MapPin size={16} color="var(--mantine-color-brandBlue-6)" />
-                    <Text size="xs" fw={600} c="slate.8">Szczecin, Polska</Text>
+                    <Text size="xs" fw={600} c="slate.8">{p.s1Location}</Text>
                   </Group>
                 </Group>
+                <Text size="sm" c="slate.7" lh={1.7} mt="md">
+                  <Emphasis text={p.s1NoDpo} />
+                </Text>
               </div>
 
               <Divider color="slate.1" />
@@ -80,15 +83,11 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                   {p.s2Intro}
                 </Text>
                 <Stack gap="xs" pl="sm">
-                  <Text size="sm" c="slate.7" lh={1.7}>
-                    • <Emphasis text={p.s2Bullet1} />
-                  </Text>
-                  <Text size="sm" c="slate.7" lh={1.7}>
-                    • <Emphasis text={p.s2Bullet2} />
-                  </Text>
-                  <Text size="sm" c="slate.7" lh={1.7}>
-                    • <Emphasis text={p.s2Bullet3} />
-                  </Text>
+                  {p.s2Bullets.map((bullet, i) => (
+                    <Text key={i} size="sm" c="slate.7" lh={1.7}>
+                      • <Emphasis text={bullet} />
+                    </Text>
+                  ))}
                 </Stack>
               </div>
 
@@ -107,6 +106,9 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                     <Text key={i} size="sm" c="slate.7">• {bullet}</Text>
                   ))}
                 </Stack>
+                <Text size="sm" c="slate.7" lh={1.7} mt="sm">
+                  {p.s3Voluntary}
+                </Text>
                 <Text size="xs" c="slate.5" mt="sm">
                   {p.s3Note}
                 </Text>
@@ -126,10 +128,10 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                   <Paper p="md" radius="md" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
                     <Group gap="xs" mb={4}>
                       <Mail size={16} color="var(--mantine-color-brandBlue-6)" />
-                      <Text size="sm" fw={700} c="slate.9">{p.s4SmtpTitle}</Text>
+                      <Text size="sm" fw={700} c="slate.9">{p.s4MailTitle}</Text>
                     </Group>
                     <Text size="xs" c="slate.6" lh={1.5}>
-                      {p.s4SmtpDesc}
+                      {p.s4MailDesc}
                     </Text>
                   </Paper>
 
@@ -152,6 +154,16 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                       {p.s4BlobsDesc(retentionHours)}
                     </Text>
                   </Paper>
+
+                  <Paper p="md" radius="md" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
+                    <Group gap="xs" mb={4}>
+                      <Globe size={16} color="var(--mantine-color-brandBlue-6)" />
+                      <Text size="sm" fw={700} c="slate.9">{p.s4TransferTitle}</Text>
+                    </Group>
+                    <Text size="xs" c="slate.6" lh={1.5}>
+                      <Emphasis text={p.s4TransferDesc} />
+                    </Text>
+                  </Paper>
                 </Stack>
               </div>
 
@@ -167,6 +179,9 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                 </Text>
                 <Text size="sm" c="slate.7" lh={1.7} mt="xs">
                   <Emphasis text={p.s5Retention(retentionHours)} />
+                </Text>
+                <Text size="sm" c="slate.7" lh={1.7} mt="xs">
+                  {p.s5Logs}
                 </Text>
               </div>
 
@@ -185,6 +200,13 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                     <Text key={i} size="sm" c="slate.7">• {bullet}</Text>
                   ))}
                 </Stack>
+                {/* Art. 21(4) GDPR: the right to object, presented separately */}
+                <Text size="sm" c="slate.7" lh={1.7} mt="md">
+                  <Emphasis text={p.s6Objection} />
+                </Text>
+                <Text size="sm" c="slate.7" lh={1.7} mt="xs">
+                  {p.s6Automated}
+                </Text>
                 <Text size="sm" c="slate.7" lh={1.7} mt="md">
                   <Emphasis text={p.s6Contact} />
                 </Text>

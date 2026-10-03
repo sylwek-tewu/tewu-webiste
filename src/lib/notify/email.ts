@@ -136,11 +136,19 @@ Data i godzina: ${dateFormatted} (czas polski)
  * Timeouts stay below the route's email budget (DELIVERY_BUDGET.emailMs): a slow server should fail
  * inside the window rather than deliver after the request was already buffered (and later resent).
  */
+function isLoopbackHost(host: string): boolean {
+  return host === 'localhost' || host === '::1' || (net.isIPv4(host) && host.startsWith('127.'));
+}
+
 export function getSmtpTransportOptions(config: { host: string; port: number; user: string; pass: string }) {
   return {
     host: config.host,
     port: config.port,
     secure: config.port === 465,
+    // Phone numbers travel over the internet to the office mail server: never fall back to
+    // plain text when STARTTLS is missing (the privacy policy promises an encrypted channel).
+    // Loopback traffic never leaves the machine (local relays, tests).
+    requireTLS: !isLoopbackHost(config.host),
     auth: {
       user: config.user,
       pass: config.pass,

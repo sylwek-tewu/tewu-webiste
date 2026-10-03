@@ -41,6 +41,20 @@ describe('Privacy policy page', () => {
     expect(container.textContent).not.toContain('**');
   });
 
+  it.each([
+    ['pl', ['Podanie numeru telefonu jest dobrowolne', 'EU-US Data Privacy Framework', 'Prawo do sprzeciwu:', 'Prawo do przenoszenia danych', 'Nie wyznaczyliśmy inspektora ochrony danych', 'preferred_locale', 'Logi funkcji serwerowych Netlify są przechowywane przez 7 dni', 'terminu przedawnienia', 'Szczecin, Polska']],
+    ['uk', ['Надання номера телефону є добровільним', 'EU-US Data Privacy Framework', 'Право на заперечення:', 'Перенесення даних', 'Ми не призначали інспектора із захисту даних', 'preferred_locale', 'Журнали серверних функцій Netlify зберігаються протягом 7 днів', 'строку позовної давності', 'Щецин, Польща']],
+  ] as const)('gives the information required by art. 13 GDPR (%s)', async (locale, texts) => {
+    const { container } = await renderPage(locale);
+    for (const text of texts) expect(container.textContent).toContain(text);
+    expect(container.textContent).not.toContain('**');
+  });
+
+  it('shows the right to object as its own emphasized statement (art. 21(4) GDPR)', async () => {
+    const { container } = await renderPage();
+    expect(strongTexts(container)).toContain('Prawo do sprzeciwu:');
+  });
+
   describe('in Ukrainian', () => {
     it('states the configured retention with the Ukrainian plural', async () => {
       vi.stubEnv('CALLBACK_OUTBOX_TTL_HOURS', '22');
