@@ -27,6 +27,15 @@ describe('buildCallbackEmail', () => {
     expect(email.text).toContain('Język strony: Ukraiński (UA)');
   });
 
+  // Outlook on Windows shows flag emoji as letters ("UA Ukraiński (UA)").
+  it('names the language in the HTML body without flag emoji', () => {
+    for (const locale of ['pl', 'uk'] as const) {
+      const email = buildCallbackEmail({ ...base, locale });
+      expect(email.html).toContain(locale === 'uk' ? 'Ukraiński (UA)' : 'Polski (PL)');
+      expect(email.html).not.toMatch(/[\u{1F1E6}-\u{1F1FF}]/u);
+    }
+  });
+
   it('has no language tag in the subject for a Polish request or an old record without locale', () => {
     for (const data of [{ ...base, locale: 'pl' as const }, base]) {
       const email = buildCallbackEmail(data);

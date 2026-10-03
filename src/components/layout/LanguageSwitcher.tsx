@@ -68,7 +68,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ size = 'sm',
             paddingRight: 10,
             display: 'flex',
             alignItems: 'center',
-            gap: 4,
+            justifyContent: 'center',
             cursor: 'pointer',
           },
           innerLabel: {
