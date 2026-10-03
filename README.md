@@ -88,7 +88,7 @@ cp .env.example .env.local
        ```bash
        wget -qO- --post-data='' --header="Authorization: Bearer $CRON_SECRET" http://127.0.0.1:3000/api/internal/process-outbox
        ```
-   - Po zapisaniu uruchom zadanie ręcznie i sprawdź w logach wynik `{"processed":…}`. Odpowiedź `{"skipped":"run-in-progress"}` oznacza, że poprzedni przebieg jeszcze trwał – wpisy zostaną obsłużone w kolejnym przebiegu.
+   - Po zapisaniu uruchom zadanie ręcznie i sprawdź w logach wynik `{"processed":…}`. Odpowiedź `{"status":"skipped","reason":"run-in-progress"}` oznacza, że poprzedni przebieg jeszcze trwał – wpisy zostaną obsłużone w kolejnym przebiegu.
 5. **Retencja logów (7 dni, wymagana przez politykę prywatności)**:
    - Docker nie usuwa logów kontenerów po czasie. Na serwerze VPS (jako root) zainstaluj konfigurację logrotate z repozytorium:
      ```bash

@@ -9,8 +9,17 @@ import { getDb, schema } from '@/db';
 
 export const RUN_ALERT_INTERVAL_MS = 6 * 60 * 60 * 1000;
 
-/** Last alert times sent by this process; used only when the database cannot be read. */
+/** Last alert times sent by this process; covers a database that cannot be read or written. */
 const lastAlertInMemory = new Map<string, string>();
+
+/** The later of two ISO timestamps; an unreadable one counts as missing. */
+function latest(a: string | null, b: string | null): string | null {
+  const ta = a ? Date.parse(a) : NaN;
+  const tb = b ? Date.parse(b) : NaN;
+  if (Number.isNaN(ta)) return Number.isNaN(tb) ? null : b;
+  if (Number.isNaN(tb)) return a;
+  return ta >= tb ? a : b;
+}
 
 /** For tests: forgets the in-memory fallback. */
 export function resetRunAlertMemory(): void {
@@ -67,15 +76,16 @@ export async function sendRateLimitedRunAlert(
   now: Date = new Date(),
   db?: BetterSQLite3Database<typeof schema>
 ): Promise<void> {
-  let lastAlertAt: string | null;
+  let storedAt: string | null = null;
   try {
-    lastAlertAt = await getLastAlertAt(key, db);
+    storedAt = await getLastAlertAt(key, db);
   } catch (err) {
     console.error('[RunAlerts] Failed to query alert meta from SQLite:', err);
-    // The database being down is often what the alert is about; fall back to this process's memory
-    // so the alert still goes out at most once per interval instead of on every run.
-    lastAlertAt = lastAlertInMemory.get(key) ?? null;
   }
+  // A broken database is often what the alert is about: unreadable, or readable but not writable
+  // (full disk, read-only volume), which leaves a stale stored time. The later of the stored time
+  // and this process's memory wins, so the alert still goes out at most once per interval.
+  const lastAlertAt = latest(storedAt, lastAlertInMemory.get(key) ?? null);
 
   if (!shouldSendRunAlert(lastAlertAt, now)) return;
 

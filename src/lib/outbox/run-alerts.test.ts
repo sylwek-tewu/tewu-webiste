@@ -1,8 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { shouldSendRunAlert, RUN_ALERT_INTERVAL_MS, sendRateLimitedRunAlert, resetRunAlertMemory } from './run-alerts';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import Database from 'better-sqlite3';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { initDb, schema } from '@/db';
+import { initDb, resetDbInstance, schema } from '@/db';
 
 describe('shouldSendRunAlert', () => {
   const now = new Date('2026-10-05T12:00:00Z');
@@ -27,6 +30,7 @@ describe('sendRateLimitedRunAlert with SQLite', () => {
   let testDb: ReturnType<typeof initDb>;
 
   beforeEach(() => {
+    resetRunAlertMemory();
     testDb = initDb({ path: ':memory:' });
   });
 
@@ -70,5 +74,30 @@ describe('sendRateLimitedRunAlert when the database is unavailable', () => {
 
     await sendRateLimitedRunAlert('db-down', 'Run failed', send, new Date(now.getTime() + RUN_ALERT_INTERVAL_MS), brokenDb);
     expect(send).toHaveBeenCalledTimes(2);
+  });
+
+  it('still alerts at most once per interval when the database is readable but not writable', async () => {
+    // Full disk or a volume remounted read-only: reads return a stale time, every write fails
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'run-alerts-'));
+    const file = path.join(dir, 'outbox.db');
+    const now = new Date('2026-10-05T12:00:00Z');
+    const stale = new Date(now.getTime() - 2 * RUN_ALERT_INTERVAL_MS).toISOString();
+    const writable = initDb({ path: file, setAsDefault: true });
+    await writable.insert(schema.outboxMeta).values({ key: 'store-errors', value: stale, updatedAt: stale });
+    resetDbInstance(); // closes the writable connection
+    const sqlite = new Database(file, { readonly: true });
+    const readOnlyDb = drizzle(sqlite, { schema });
+    const send = vi.fn().mockResolvedValue(true);
+
+    try {
+      for (let run = 0; run < 4; run++) {
+        const at = new Date(now.getTime() + run * 10 * 60 * 1000);
+        await sendRateLimitedRunAlert('store-errors', 'Store errors', send, at, readOnlyDb);
+      }
+      expect(send).toHaveBeenCalledOnce();
+    } finally {
+      sqlite.close();
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

@@ -5,6 +5,7 @@ import { getOutboxStore, resetOutboxStore, MemoryOutboxStore, SqliteOutboxStore 
 import * as telegram from '@/lib/notify/telegram';
 import * as email from '@/lib/notify/email';
 import { initDb, resetDbInstance } from '@/db';
+import { resetRunAlertMemory } from '@/lib/outbox/run-alerts';
 
 vi.mock('@/lib/notify/telegram', () => ({
   sendTelegramAlert: vi.fn(async () => true),
@@ -35,6 +36,7 @@ describe('POST /api/internal/process-outbox', () => {
   beforeEach(() => {
     vi.stubEnv('OUTBOX_STORE', 'memory');
     resetOutboxStore();
+    resetRunAlertMemory();
     memoryStore = getOutboxStore() as MemoryOutboxStore;
     memoryStore.clear();
 
@@ -164,7 +166,7 @@ describe('POST /api/internal/process-outbox', () => {
 
     // 200 so the scheduled task (wget) is not reported as failed
     expect(second.status).toBe(200);
-    expect(await second.json()).toEqual({ skipped: 'run-in-progress' });
+    expect(await second.json()).toEqual({ status: 'skipped', reason: 'run-in-progress' });
     expect(firstRes.status).toBe(200);
     expect(email.sendCallbackEmail).toHaveBeenCalledOnce();
     expect(await memoryStore.listIds()).toEqual([]);

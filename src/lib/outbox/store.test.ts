@@ -1,4 +1,7 @@
 import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import { getOutboxStore, resetOutboxStore, MemoryOutboxStore, SqliteOutboxStore } from './store';
 import { CorruptRecordError } from './crypto';
 import { initDb, schema, resetDbInstance } from '@/db';
@@ -124,6 +127,26 @@ describe('SqliteOutboxStore', () => {
     await store.delete('C9F1A2');
     expect(await store.listIds()).toEqual(['D8E2B1']);
     expect(await store.get('C9F1A2')).toBeNull();
+  });
+
+  it('leaves no trace of a deleted record in the database files', async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'outbox-store-'));
+    const file = path.join(dir, 'outbox.db');
+    try {
+      const fileDb = initDb({ path: file, setAsDefault: true });
+      const store = new SqliteOutboxStore(fileDb);
+      // slot is stored in plain text, so it is easy to look for in the raw bytes
+      const marker = 'TRACE-MARKER-7f3a';
+      await store.put({ ...valid, slot: marker });
+      await store.delete(valid.id);
+
+      for (const name of fs.readdirSync(dir)) {
+        expect(fs.readFileSync(path.join(dir, name)).includes(marker), name).toBe(false);
+      }
+    } finally {
+      resetDbInstance();
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
   });
 
   it('reports a record with an invalid date as corrupt', async () => {

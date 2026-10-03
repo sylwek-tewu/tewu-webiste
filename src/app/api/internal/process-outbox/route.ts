@@ -4,11 +4,10 @@ import { processOutbox, getOutboxStore, getOutboxTtlHours } from '@/lib/outbox';
 import { sendCallbackEmail } from '@/lib/notify/email';
 import { sendTelegramAlert } from '@/lib/notify/telegram';
 import { sendRateLimitedRunAlert } from '@/lib/outbox/run-alerts';
-import { withTimeout } from '@/lib/timeout';
 
-// Per-retry limit: the SMTP deadline destroys an open connection, and the outer withTimeout also
-// covers the time before one exists (DNS). With SMTP hanging, a run takes up to this long per due
-// record; a run that outlasts the 10-minute schedule is handled by the guard below and by claim().
+// Per-retry limit: the SMTP socket is created at once (DNS included), so destroying it at the
+// deadline ends the send. With SMTP hanging, a run takes up to this long per due record; a run
+// that outlasts the 10-minute schedule is handled by the guard below and by claim().
 const RETRY_EMAIL_DEADLINE_MS = 30_000;
 
 // One run at a time in this process; store.claim() covers a second container during a deploy.
@@ -50,7 +49,7 @@ export async function POST(request: NextRequest) {
     // 200, not an error status: a skipped run is expected and must not show as a failed
     // scheduled task (wget exits non-zero on 4xx/5xx).
     console.warn('[Process Outbox API] Previous run still in progress; skipping this one.');
-    return NextResponse.json({ skipped: 'run-in-progress' }, { status: 200 });
+    return NextResponse.json({ status: 'skipped', reason: 'run-in-progress' }, { status: 200 });
   }
   runInProgress = true;
 
@@ -61,21 +60,17 @@ export async function POST(request: NextRequest) {
     const result = await processOutbox(
       store,
       (record) =>
-        withTimeout(
-          sendCallbackEmail(
-            {
-              id: record.id,
-              phone: record.phone,
-              slot: record.slot,
-              topic: record.topic,
-              source: record.source,
-              locale: record.locale,
-              createdAt: record.createdAt,
-            },
-            { deadlineMs: RETRY_EMAIL_DEADLINE_MS }
-          ),
-          RETRY_EMAIL_DEADLINE_MS + 1000,
-          false
+        sendCallbackEmail(
+          {
+            id: record.id,
+            phone: record.phone,
+            slot: record.slot,
+            topic: record.topic,
+            source: record.source,
+            locale: record.locale,
+            createdAt: record.createdAt,
+          },
+          { deadlineMs: RETRY_EMAIL_DEADLINE_MS }
         ),
       {
         ttlHours,

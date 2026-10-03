@@ -71,6 +71,11 @@ export function initDb(options: InitDbOptions = {}): BetterSQLite3Database<typeo
   const sqlite = new Database(dbPath, { timeout: BUSY_TIMEOUT_MS });
   try {
     sqlite.pragma('journal_mode = WAL');
+    // The privacy policy says a delivered request is deleted for good: overwrite deleted rows with
+    // zeros instead of leaving them in free pages, and shrink the WAL (which still holds the old
+    // page images) back to zero once it has been checkpointed.
+    sqlite.pragma('secure_delete = ON');
+    sqlite.pragma('journal_size_limit = 0');
     const db = drizzle(sqlite, { schema });
     if (options.autoMigrate ?? true) {
       runMigrations(db);

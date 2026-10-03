@@ -7,7 +7,7 @@ Zaakceptowany (Accepted)
 Dotychczas serwis Biura Rachunkowego TEWU wdrażany był na platformie Netlify. Wiązało się to z kilkoma istotnymi ograniczeniami:
 1. **Zależność od technologii dostawcy (vendor lock-in):** Awaryjny bufor zgłoszeń call-back opierał się na usłudze `@netlify/blobs`, a ponawianie wysyłki – na funkcji harmonogramu `netlify/functions/process-outbox.mts`.
 2. **Kwestie RODO i lokalizacja danych:** Funkcje serverless Netlify oraz bufor Blobs domyślnie przetwarzały żądania w regionie US East (USA), co wymuszało powoływanie się w Polityce Prywatności na ramy *EU-US Data Privacy Framework* i deklarowanie transferu danych poza Europejski Obszar Gospodarczy.
-3. **Koszty i elastyczność:** Przejście na własny serwer wirtualny VPS w OVHcloud zarządzany przez platformę Coolify zapewnia pełną suwerenność technologiczną, niezależność od zewnętrznych limitów serverless oraz gwarantuje lokalizację przetwarzania w 100% na terenie EOG.
+3. **Koszty i elastyczność:** Przejście na własny serwer wirtualny VPS w OVHcloud zarządzany przez platformę Coolify zapewnia pełną suwerenność technologiczną, niezależność od zewnętrznych limitów serverless oraz gwarantuje, że hosting serwisu i bufor zgłoszeń znajdują się na terenie EOG.
 
 ## Decyzje architektoniczne i projektowe
 
@@ -26,7 +26,8 @@ Dotychczas serwis Biura Rachunkowego TEWU wdrażany był na platformie Netlify. 
   - `outbox_meta`: przechowuje stan ograniczenia częstotliwości powiadomień technicznych (rate limiting alertów o błędach magazynu lub braku klucza szyfrowania, zastępując dawny store `callback-outbox-meta`).
 - Lokalizacja bazy danych: domyślnie `/app/data/outbox.db` w kontenerze, mapowane w Coolify jako trwały wolumen dyskowy (Persistent Storage). Ścieżka może być nadpisana zmienną środowiskową `OUTBOX_DB_PATH`.
 - **Automatyczne migracje:** Przy starcie serwera (`src/instrumentation.ts`) otwierane jest połączenie z bazą i uruchamiana funkcja `runMigrations()` oparta o migrator Drizzle (`drizzle-orm/better-sqlite3/migrator`), co zapewnia bezobsługową inicjalizację bazy na nowo uruchomionych wolumenach VPS bez konieczności ręcznego wykonywania poleceń CLI. Połączenie staje się domyślne dopiero po udanej migracji; błąd (np. brak katalogu migracji, brak uprawnień do wolumenu) jest logowany i zgłaszany na Telegram, a kolejne użycie bazy ponawia próbę.
-- **Brak podwójnej wysyłki:** przed każdą próbą wysyłki przebieg „zajmuje” wpis atomową instrukcją `UPDATE … WHERE id = ? AND attempts = ?` (`OutboxStore.claim`). Wysyła tylko przebieg, który zajął wpis, a nieudana próba nie wymaga już zapisu, który mógłby odtworzyć wpis usunięty przez inny przebieg. Dodatkowo endpoint pomija przebieg (kod 200, `{"skipped":"run-in-progress"}`, aby zadanie w Coolify nie było oznaczane jako nieudane), gdy poprzedni w tym samym procesie jeszcze trwa, a każda ponowna wysyłka ma twardy limit czasu (30 s).
+- **Trwałe usuwanie:** baza działa z `secure_delete = ON` i `journal_size_limit = 0`, a każde usunięcie wpisu kończy się `wal_checkpoint(TRUNCATE)`, więc usunięte zgłoszenie nie pozostaje w wolnych stronach pliku bazy ani w pliku WAL (zgodnie z „bezpowrotnym usunięciem” w polityce prywatności).
+- **Brak podwójnej wysyłki:** przed każdą próbą wysyłki przebieg „zajmuje” wpis atomową instrukcją `UPDATE … WHERE id = ? AND attempts = ?` (`OutboxStore.claim`). Wysyła tylko przebieg, który zajął wpis, a nieudana próba nie wymaga już zapisu, który mógłby odtworzyć wpis usunięty przez inny przebieg. Dodatkowo endpoint pomija przebieg (kod 200, `{"status":"skipped","reason":"run-in-progress"}`, aby zadanie w Coolify nie było oznaczane jako nieudane), gdy poprzedni w tym samym procesie jeszcze trwa, a każda ponowna wysyłka ma twardy limit czasu (30 s).
 
 ### 3. Harmonogram przetwarzania bufora (zastąpienie Netlify Scheduled Functions)
 - Wdrożono dedykowany wewnętrzny punkt końcowy: `POST /api/internal/process-outbox`.
@@ -40,7 +41,7 @@ Dotychczas serwis Biura Rachunkowego TEWU wdrażany był na platformie Netlify. 
 ### 4. Polityka Prywatności i zgodność z RODO
 - Zaktualizowano treści polityki w języku polskim i ukraińskim (`src/i18n/pl.ts`, `src/i18n/uk.ts`, `PrivacyPolicyClient.tsx`):
   - Wskazano hostingodawcę: **OVHcloud – OVH Sp. z o.o. (Wrocław)**, strona umowy powierzenia (DPA), z infrastrukturą w centrum danych w EOG.
-  - **Usunięto sekcję dotyczącą transferu danych do USA** oraz odwołania do *EU-US Data Privacy Framework* – wszystkie dane przetwarzane są wyłącznie na terenie Europejskiego Obszaru Gospodarczego.
+  - **Usunięto sekcję dotyczącą transferu danych do USA** oraz odwołania do *EU-US Data Privacy Framework* – serwer i baza bufora znajdują się na terenie Europejskiego Obszaru Gospodarczego. Deklaracja w polityce obejmuje wyłącznie hosting i bufor awaryjny (dane z formularza); usługi zewnętrzne osadzane na stronie zostaną opisane osobno.
   - Bufor awaryjny opisano jako lokalną, szyfrowaną bazę danych na serwerze o retencji do 72 godzin (zgodnie z `CALLBACK_OUTBOX_TTL_HOURS`).
   - Określono retencję logów serwera i aplikacji na 7 dni. Docker nie usuwa logów po czasie, dlatego retencję zapewnia konfiguracja logrotate na serwerze VPS (`deploy/logrotate/docker-containers`).
 
@@ -53,7 +54,7 @@ Dotychczas serwis Biura Rachunkowego TEWU wdrażany był na platformie Netlify. 
 ## Konsekwencje
 
 ### Pozytywne
-- **Prywatność i RODO:** Brak transferu jakichkolwiek danych poza Europejski Obszar Gospodarczy.
+- **Prywatność i RODO:** Hosting i bufor awaryjny nie przekazują danych z formularza poza Europejski Obszar Gospodarczy.
 - **Odporność i brak vendor lock-in:** Aplikacja działa jako w 100% standardowy kontener Docker możliwy do uruchomienia na dowolnym serwerze VPS / chmurze.
 - **Trwałość danych:** SQLite w trybie WAL na wolumenie trwałym zapewnia niezawodne, transakcyjne kolejkowanie zgłoszeń w przypadku awarii SMTP.
 - **Determinizm środowiska:** Standalone Next.js z Drizzle ORM eliminuje narzut i nieprzewidywalność platform serverless.

@@ -4,7 +4,7 @@
  * and in-memory store for dev/testing.
  */
 
-import { and, eq, asc } from 'drizzle-orm';
+import { and, eq, asc, sql } from 'drizzle-orm';
 import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import { getDb, schema } from '@/db';
 import { OutboxRecord, OutboxStore } from './types';
@@ -156,6 +156,11 @@ export class SqliteOutboxStore implements OutboxStore {
     await this.db
       .delete(schema.outboxRecords)
       .where(eq(schema.outboxRecords.id, id));
+    // The WAL still holds the record's old page images until a checkpoint, which at this traffic
+    // could take very long; checkpoint now so it is gone from disk (secure_delete zeroes the page).
+    // Deletes are rare, so the cost is negligible. Under a concurrent reader it is a no-op, and the
+    // next delete or SQLite's own checkpoint finishes the job.
+    this.db.run(sql`PRAGMA wal_checkpoint(TRUNCATE)`);
   }
 }
 
