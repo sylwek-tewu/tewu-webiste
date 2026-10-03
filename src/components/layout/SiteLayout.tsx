@@ -28,7 +28,7 @@ export default function SiteLayout({
     return (
         <html lang={lang} {...mantineHtmlProps}>
             <head>
-                <ColorSchemeScript />
+                <ColorSchemeScript forceColorScheme="light" />
             </head>
             <body className={inter.className}>
                 <ThemeProvider>
