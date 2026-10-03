@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { NextRequest } from 'next/server';
-import { proxy } from './proxy';
+import { unstable_doesMiddlewareMatch } from 'next/experimental/testing/server';
+import { proxy, config } from './proxy';
 import { LOCALE_COOKIE_NAME, SITE_LOCALE_HEADER } from './i18n/config';
 
 function createRequest(url: string, headers: Record<string, string> = {}, cookies: Record<string, string> = {}) {
@@ -96,6 +97,14 @@ describe('Proxy language detection and routing', () => {
     ])('marks %s as %s', (path, locale) => {
       const res = proxy(createRequest(path, {}, { [LOCALE_COOKIE_NAME]: 'pl' }));
       expect(forwarded(res)).toBe(locale);
+    });
+
+    it('covers dotted paths under /uk, so they get the Ukrainian 404', () => {
+      const matches = (path: string) => unstable_doesMiddlewareMatch({ config, url: path });
+      expect(matches('/uk/stara-strona.php')).toBe(true);
+      expect(matches('/uk')).toBe(true);
+      expect(matches('/img/logo.png')).toBe(false);
+      expect(matches('/api/callback')).toBe(false);
     });
 
     it('is set without a cookie too', () => {

@@ -21,6 +21,9 @@ import {
 export const COMPANY_NAME = "TEWU";
 export const COMPANY_FULL_NAME = "Biuro Rachunkowe TEWU Sp. z o.o.";
 
+/** Production origin; makes canonical and hreflang URLs absolute (metadataBase). */
+export const SITE_URL = "https://tewu.szczecin.pl";
+
 export const NAV_LINKS: NavItem[] = [
   { label: 'Start', path: '/' },
   { label: 'O nas', path: '/o-nas' },
