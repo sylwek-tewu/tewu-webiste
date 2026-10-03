@@ -21,6 +21,20 @@ describe('buildCallbackEmail', () => {
     expect(email.html).toContain('href="tel:+48501482555"');
   });
 
+  it('tags a Ukrainian-language request in the subject and body', () => {
+    const email = buildCallbackEmail({ ...base, locale: 'uk' });
+    expect(email.subject).toMatch(/^\[Oddzwonienie #C9F1A2\] \[UA\] Nowa prośba o kontakt/);
+    expect(email.text).toContain('Język strony: Ukraiński (UA)');
+  });
+
+  it('has no language tag in the subject for a Polish request or an old record without locale', () => {
+    for (const data of [{ ...base, locale: 'pl' as const }, base]) {
+      const email = buildCallbackEmail(data);
+      expect(email.subject).not.toContain('[UA]');
+      expect(email.text).toContain('Język strony: Polski (PL)');
+    }
+  });
+
   it('HTML-escapes interpolated values', () => {
     const email = buildCallbackEmail({ ...base, phone: '"><img src=x onerror=alert(1)>' });
     expect(email.html).not.toContain('<img src=x');

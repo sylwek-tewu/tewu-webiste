@@ -1,5 +1,6 @@
 import { Translations } from './types';
 import { formatHoursPl } from '@/lib/polish-plural';
+import { COMPANY_FULL_NAME, CONTACT_DETAILS } from '@/constants';
 
 export const plTranslations: Translations = {
   locale: 'pl',
@@ -340,12 +341,12 @@ export const plTranslations: Translations = {
     headerTitle: 'Polityka Prywatności',
     headerSubtitle: 'Biuro Rachunkowe TEWU Sp. z o.o. • Ostatnia aktualizacja: październik 2026',
     s1Title: '1. Administrator Danych Osobowych',
-    s1Content: 'Administratorem Twoich danych osobowych jest Biuro Rachunkowe TEWU Sp. z o.o. z siedzibą w Szczecinie przy Al. Powstańców Wielkopolskich 78A LU2, 70-110 Szczecin, wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS: 0000320281, NIP: 9552249417, REGON: 320601499.',
+    s1Content: `Administratorem Twoich danych osobowych jest **${COMPANY_FULL_NAME}** z siedzibą w Szczecinie przy ${CONTACT_DETAILS.address}, wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS: 0000320281, NIP: 9552249417, REGON: 320601499.`,
     s2Title: '2. Cele i podstawy prawne przetwarzania danych',
     s2Intro: 'Dane osobowe zbierane za pośrednictwem serwisu przetwarzane są w następujących celach:',
-    s2Bullet1: 'Realizacja kontaktu telefonicznego i przedstawienie wyceny: Wycena usług księgowych w TEWU ma charakter indywidualny i powstaje w drodze rozmowy. Podstawą prawną jest podjęcie działań na żądanie osoby, której dane dotyczą, przed zawarciem umowy (art. 6 ust. 1 lit. b RODO) lub prawnie uzasadniony interes Administratora polegający na obsłudze zgłoszeń klientów (art. 6 ust. 1 lit. f RODO).',
-    s2Bullet2: 'Zabezpieczenie przed nadużyciami i spamem: Stosowanie mechanizmów technicznych (m.in. honeypot, weryfikacja czasu wysłania) na podstawie art. 6 ust. 1 lit. f RODO (uzasadniony interes polegający na zapewnieniu bezpieczeństwa i ciągłości działania serwisu).',
-    s2Bullet3: 'Ustalenie, obrona lub dochodzenie ewentualnych roszczeń: Na podstawie art. 6 ust. 1 lit. f RODO.',
+    s2Bullet1: '**Realizacja kontaktu telefonicznego i przedstawienie wyceny:** Wycena usług księgowych w TEWU ma charakter indywidualny i powstaje w drodze rozmowy. Podstawą prawną jest podjęcie działań na żądanie osoby, której dane dotyczą, przed zawarciem umowy (art. 6 ust. 1 lit. b RODO) lub prawnie uzasadniony interes Administratora polegający na obsłudze zgłoszeń klientów (art. 6 ust. 1 lit. f RODO).',
+    s2Bullet2: '**Zabezpieczenie przed nadużyciami i spamem:** Stosowanie mechanizmów technicznych (m.in. honeypot, weryfikacja czasu wysłania) na podstawie art. 6 ust. 1 lit. f RODO (uzasadniony interes polegający na zapewnieniu bezpieczeństwa i ciągłości działania serwisu).',
+    s2Bullet3: '**Ustalenie, obrona lub dochodzenie ewentualnych roszczeń:** Na podstawie art. 6 ust. 1 lit. f RODO.',
     s3Title: '3. Zakres zbieranych danych',
     s3Intro: 'W ramach formularza „Bezpłatna wycena – oddzwonimy” zbieramy wyłącznie dane niezbędne do wykonania rozmowy telefonicznej:',
     s3Bullets: [
@@ -365,7 +366,7 @@ export const plTranslations: Translations = {
     s4BlobsDesc: (hours) => `W przypadku chwilowej awarii dostawcy poczty e-mail, zgłoszenie jest tymczasowo zabezpieczane w buforze awaryjnym w postaci zaszyfrowanej algorytmem AES-256-GCM. Bufor służy wyłącznie automatycznemu ponowieniu wysyłki i ulega bezpowrotnemu usunięciu niezwłocznie po doręczeniu; jest przechowywany maksymalnie przez ${formatHoursPl(hours)}.`,
     s5Title: '5. Okres przechowywania danych',
     s5Content: 'Dane kontaktowe przetwarzane są przez okres niezbędny do przeprowadzenia rozmowy i przygotowania oferty. W przypadku nawiązania współpracy, dane podlegają dalszemu przetwarzaniu na zasadach określonych w umowie o świadczenie usług księgowych. W przypadku braku nawiązania współpracy, dane są usuwane, chyba że przepisy prawa wymagają ich dłuższego przechowywania.',
-    s5Retention: (hours) => `Maksymalny okres retencji zgłoszeń oczekujących w buforze awaryjnym wynosi ${formatHoursPl(hours)}.`,
+    s5Retention: (hours) => `Maksymalny okres retencji zgłoszeń oczekujących w buforze awaryjnym wynosi **${formatHoursPl(hours)}**.`,
     s6Title: '6. Prawa osoby, której dane dotyczą',
     s6Intro: 'Zgodnie z przepisami Rozporządzenia RODO, każdej osobie przysługują następujące uprawnienia:',
     s6Bullets: [
@@ -375,15 +376,21 @@ export const plTranslations: Translations = {
       'Prawo do ograniczenia przetwarzania,',
       'Prawo do wniesienia sprzeciwu wobec przetwarzania opartego na uzasadnionym interesie.',
     ],
-    s6Contact: 'W celu realizacji swoich praw skontaktuj się z nami mailowo: biuro@tewu.szczecin.pl.',
-    s6Puodo: 'Przysługuje Ci również prawo wniesienia skargi do organu nadzorczego: Prezes Urzędu Ochrony Danych Osobowych (PUODO), ul. Stawki 2, 00-193 Warszawa.',
+    s6Contact: `W celu realizacji swoich praw skontaktuj się z nami mailowo: **${CONTACT_DETAILS.email}**.`,
+    s6Puodo: 'Przysługuje Ci również prawo wniesienia skargi do organu nadzorczego: **Prezes Urzędu Ochrony Danych Osobowych (PUODO)**, ul. Stawki 2, 00-193 Warszawa.',
     s7Title: '7. Pliki cookies i narzędzia analityczne',
     s7Content: 'Serwis wykorzystuje niezbędne mechanizmy sesyjne zapewniające prawidłowe działanie interfejsu (w tym zapis preferowanego języka strony). Formularz oddzwonienia nie ładuje zewnętrznych skryptów śledzących (m.in. brak zewnętrznych systemów CAPTCHA).',
+  },
+  notFound: {
+    title: 'Nie znaleziono strony',
+    description: 'Strona, której szukasz, nie istnieje lub została przeniesiona.',
+    backHome: 'Wróć na stronę główną',
   },
   callbackWidget: {
     floatingButton: 'Bezpłatna wycena',
     mobileCall: 'Zadzwoń',
     mobileCallHours: '8:00–16:00',
+    officeHours: 'Biuro czynne pn–pt 8:00–16:00',
     mobileRequest: 'Oddzwońcie',
     titleNormal: 'Bezpłatna wycena – oddzwonimy',
     titleSuccess: 'Zgłoszenie przyjęte',
@@ -391,7 +398,7 @@ export const plTranslations: Translations = {
     phoneLabel: 'Numer telefonu',
     phonePlaceholder: 'np. 501 482 555',
     phoneErrorRequired: 'Wprowadź numer telefonu',
-    phoneErrorInvalid: 'Wprowadź poprawny numer telefonu',
+    phoneErrorInvalid: 'Wprowadź poprawny numer telefonu (np. 501 482 555)',
     slotTitle: 'Kiedy możemy oddzwonić?',
     dutyNote: 'Dyżur telefoniczny po standardowych godzinach pracy biura',
     slots: {
@@ -405,8 +412,8 @@ export const plTranslations: Translations = {
     topics: {
       spolka: 'Spółka z o.o. / S.A. / komandytowa',
       fundacja: 'Fundacja lub stowarzyszenie',
-      jdg: 'Jednoosobowa działalność (JDG / spółka cywilna)',
-      kadry: 'Kadry i płace / ZUS',
+      dzialalnosc: 'Jednoosobowa działalność (JDG / spółka cywilna)',
+      'kadry-place': 'Kadry i płace / ZUS',
       inne: 'Inne sprawy księgowe / doradztwo',
     },
     rodoPrefix: 'Numer telefonu wykorzystamy wyłącznie, aby oddzwonić w sprawie wyceny. Administratorem danych jest Biuro Rachunkowe TEWU Sp. z o.o. Szczegóły znajdziesz w naszej ',
@@ -418,6 +425,19 @@ export const plTranslations: Translations = {
     closeButton: 'Zamknij',
     errorTitle: 'Nie udało się wysłać prośby',
     callNow: 'Zadzwoń teraz:',
+    errors: {
+      connection: 'Brak połączenia z serwerem. Zadzwoń do biura – przyjmiemy zgłoszenie telefonicznie.',
+      invalidRequest: 'Formularz wysłał nieprawidłowe dane. Odśwież stronę lub zadzwoń do biura.',
+      slotInvalid: 'Wybierz preferowaną porę kontaktu.',
+      unavailable: 'Formularz jest chwilowo niedostępny. Zadzwoń do biura.',
+      deliveryFailed: 'Nie udało się przekazać zgłoszenia. Zadzwoń do biura.',
+      unexpected: 'Wystąpił nieoczekiwany błąd. Zadzwoń do biura.',
+    },
+    formLoading: 'Ładowanie formularza…',
+    loadErrorTitle: 'Formularz chwilowo niedostępny',
+    loadErrorText: 'Nie udało się wczytać formularza. Zadzwoń do nas – chętnie przygotujemy wycenę przez telefon.',
+    loadErrorCall: 'Zadzwoń:',
+    reloadPage: 'Odśwież stronę',
     timeSuffix: '',
   },
 };

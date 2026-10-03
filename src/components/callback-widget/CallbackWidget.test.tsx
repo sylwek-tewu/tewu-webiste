@@ -108,16 +108,48 @@ describe('CallbackWidget', () => {
   });
 
   it('shows the office number when the server fails', async () => {
-    respondWith({ error: 'Nie udało się wysłać prośby. Zadzwoń: 91 48 24 190' }, 502);
+    respondWith({ error: 'Nie udało się wysłać prośby. Zadzwoń: 91 48 24 190', code: 'delivery_failed' }, 502);
     const user = await openForm();
     await fillAndSubmit(user, 5);
 
     const link = await screen.findByRole('link', { name: /Zadzwoń teraz: 91 48 24 190/ });
     expect(link).toHaveAttribute('href', 'tel:+48914824190');
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveTextContent('Nie udało się przekazać zgłoszenia. Zadzwoń do biura.');
+    // The number is on the button; the message does not repeat it or the alert's title
+    expect(alert.textContent?.match(/91 48 24 190/g)).toHaveLength(1);
+    expect(alert.textContent?.match(/Nie udało się wysłać prośby/g)).toHaveLength(1);
+  });
+
+  it('tells the visitor about a connection problem when the request does not reach the server', async () => {
+    fetchMock.mockRejectedValue(new TypeError('Failed to fetch'));
+    const user = await openForm();
+    await fillAndSubmit(user, 5);
+
+    expect(await screen.findByText(/Brak połączenia z serwerem/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /91 48 24 190/ })).toBeInTheDocument();
+  });
+
+  it('shows a rejected slot as a general error, not on the phone field', async () => {
+    respondWith({ error: 'Wybierz poprawną preferowaną porę kontaktu', code: 'slot_invalid' }, 400);
+    const user = await openForm();
+    await fillAndSubmit(user, 5);
+
+    expect(await screen.findByText('Wybierz preferowaną porę kontaktu.')).toBeInTheDocument();
+    expect(screen.getByLabelText(/Numer telefonu/)).not.toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('shows a generic error for an unknown error code', async () => {
+    respondWith({ error: 'Coś zupełnie innego', code: 'brand_new_code' }, 500);
+    const user = await openForm();
+    await fillAndSubmit(user, 5);
+
+    expect(await screen.findByText('Wystąpił nieoczekiwany błąd. Zadzwoń do biura.')).toBeInTheDocument();
+    expect(screen.queryByText(/Coś zupełnie innego/)).not.toBeInTheDocument();
   });
 
   it('shows a phone number the server rejected as a field error, not a general failure', async () => {
-    respondWith({ error: 'Wprowadź poprawny numer telefonu (np. 501 482 555)' }, 400);
+    respondWith({ error: 'Wprowadź poprawny numer telefonu (np. 501 482 555)', code: 'phone_invalid' }, 400);
     const user = await openForm();
     await fillAndSubmit(user, 5);
 

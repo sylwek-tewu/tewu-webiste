@@ -6,15 +6,17 @@ import { Phone, RotateCw } from 'lucide-react';
 import { useCallbackWidget } from './CallbackContext';
 import type { ResolvedCallNumber } from '@/lib/callback/call-number';
 import { reloadPage } from './reload';
+import { useLocale } from '@/i18n/LocaleContext';
 
 /** Shown while the lazily loaded form chunk downloads. */
 export function CallbackFormLoading() {
   const { isOpen, closeWidget } = useCallbackWidget();
+  const { t } = useLocale();
   return (
     <Modal opened={isOpen} onClose={closeWidget} centered radius="lg" zIndex={150} withCloseButton={false}>
       <Group justify="center" gap="sm" py="md">
         <Loader size="sm" />
-        <Text size="sm" c="slate.7">Ładowanie formularza…</Text>
+        <Text size="sm" c="slate.7">{t.callbackWidget.formLoading}</Text>
       </Group>
     </Modal>
   );
@@ -22,18 +24,19 @@ export function CallbackFormLoading() {
 
 function CallbackFormLoadError({ callInfo }: { callInfo: ResolvedCallNumber }) {
   const { isOpen, closeWidget } = useCallbackWidget();
+  const { t } = useLocale();
   return (
-    <Modal opened={isOpen} onClose={closeWidget} centered radius="lg" zIndex={150} title="Formularz chwilowo niedostępny">
+    <Modal opened={isOpen} onClose={closeWidget} centered radius="lg" zIndex={150} title={t.callbackWidget.loadErrorTitle}>
       <Stack gap="md">
         <Text size="sm" c="slate.7">
-          Nie udało się wczytać formularza. Zadzwoń do nas – chętnie przygotujemy wycenę przez telefon.
+          {t.callbackWidget.loadErrorText}
         </Text>
         <Button component="a" href={callInfo.telUri} leftSection={<Phone size={16} />}>
-          Zadzwoń: {callInfo.display}
+          {t.callbackWidget.loadErrorCall} {callInfo.display}
         </Button>
         {/* React.lazy caches the failed import; a reload fetches the current build's chunks. */}
         <Button variant="default" onClick={reloadPage} leftSection={<RotateCw size={16} />}>
-          Odśwież stronę
+          {t.callbackWidget.reloadPage}
         </Button>
       </Stack>
     </Modal>

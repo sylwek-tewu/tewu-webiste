@@ -107,17 +107,36 @@ describe('POST /api/callback route handler', () => {
     it('rejects invalid phone numbers with 400', async () => {
       const res = await POST(makeRequest({ ...validBody, phone: '123' }));
       expect(res.status).toBe(400);
-      expect((await res.json()).error).toBeDefined();
+      expect(await res.json()).toMatchObject({ code: 'phone_invalid', error: expect.any(String) });
+    });
+
+    it('rejects an empty phone number with its own code', async () => {
+      const res = await POST(makeRequest({ ...validBody, phone: '' }));
+      expect(res.status).toBe(400);
+      expect((await res.json()).code).toBe('phone_required');
+    });
+
+    it('rejects an overlong phone value as an invalid number', async () => {
+      const res = await POST(makeRequest({ ...validBody, phone: '5'.repeat(31) }));
+      expect((await res.json()).code).toBe('phone_invalid');
+    });
+
+    it('rejects an unknown slot with 400 slot_invalid', async () => {
+      const res = await POST(makeRequest({ ...validBody, slot: '22-23' }));
+      expect(res.status).toBe(400);
+      expect((await res.json()).code).toBe('slot_invalid');
     });
 
     it('rejects malformed JSON with 400', async () => {
       const res = await POST(makeRequest('{not json', true));
       expect(res.status).toBe(400);
+      expect((await res.json()).code).toBe('invalid_request');
     });
 
     it('rejects a null body with 400', async () => {
       const res = await POST(makeRequest(null));
       expect(res.status).toBe(400);
+      expect((await res.json()).code).toBe('invalid_request');
     });
 
     it('drops an unknown topic and replaces an unknown source before notifying anyone', async () => {
@@ -133,6 +152,22 @@ describe('POST /api/callback route handler', () => {
       expect(sent.topic).toBe('');
       expect(sent.source).toBe('unknown');
       expect(pingSpy.mock.calls[0][0]).toMatchObject({ topic: '', source: 'unknown' });
+    });
+
+    it('passes the Ukrainian locale to email and Telegram', async () => {
+      const emailSpy = vi.spyOn(emailModule, 'sendCallbackEmail').mockResolvedValue(true);
+      const pingSpy = vi.spyOn(telegramModule, 'sendTelegramPing');
+
+      await POST(makeRequest({ ...validBody, locale: 'uk' }));
+      expect(emailSpy.mock.calls[0][0].locale).toBe('uk');
+      expect(pingSpy.mock.calls[0][0].locale).toBe('uk');
+    });
+
+    it.each([undefined, 'ru', 'UK', '<script>', 42])('records locale %s as Polish', async (locale) => {
+      const emailSpy = vi.spyOn(emailModule, 'sendCallbackEmail').mockResolvedValue(true);
+
+      await POST(makeRequest({ ...validBody, locale }));
+      expect(emailSpy.mock.calls[0][0].locale).toBe('pl');
     });
 
     it('passes known topics and sources through', async () => {
@@ -151,6 +186,7 @@ describe('POST /api/callback route handler', () => {
     const res = await POST(makeRequest(validBody));
     expect(res.status).toBe(500);
     const data = await res.json();
+    expect(data.code).toBe('unavailable');
     expect(data.callNumber).toBe('91 48 24 190');
     expect(emailSpy).not.toHaveBeenCalled();
     expect(await memoryStore.listIds()).toEqual([]);
@@ -168,6 +204,14 @@ describe('POST /api/callback route handler', () => {
 
     const record = await memoryStore.get(data.id);
     expect(record?.phone).toBe('+48501482555');
+    expect(record?.locale).toBe('pl');
+  });
+
+  it('keeps the Ukrainian locale on a buffered request, for the retried email', async () => {
+    vi.spyOn(emailModule, 'sendCallbackEmail').mockResolvedValue(false);
+
+    const data = await (await POST(makeRequest({ ...validBody, locale: 'uk' }))).json();
+    expect((await memoryStore.get(data.id))?.locale).toBe('uk');
   });
 
   it('returns 502 with the office number when both email and the outbox fail', async () => {
@@ -177,7 +221,7 @@ describe('POST /api/callback route handler', () => {
 
     const res = await POST(makeRequest(validBody));
     expect(res.status).toBe(502);
-    expect((await res.json()).telUri).toBe('tel:+48914824190');
+    expect(await res.json()).toMatchObject({ code: 'delivery_failed', telUri: 'tel:+48914824190' });
     expect(alertSpy).toHaveBeenCalledOnce();
   });
 

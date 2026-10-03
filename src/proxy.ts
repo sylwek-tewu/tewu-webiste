@@ -1,32 +1,41 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { detectLocaleFromAcceptLanguage } from './i18n/detect-locale';
-import { LOCALE_COOKIE_NAME } from './i18n';
+import { LOCALE_COOKIE_NAME, SITE_LOCALE_HEADER, isSupportedLocale } from './i18n/config';
+import type { Locale } from './i18n/types';
+
+function localeOfPath(pathname: string): Locale {
+  return pathname === '/uk' || pathname.startsWith('/uk/') ? 'uk' : 'pl';
+}
+
+function continueWithLocale(request: NextRequest) {
+  const headers = new Headers(request.headers);
+  headers.set(SITE_LOCALE_HEADER, localeOfPath(request.nextUrl.pathname));
+  return NextResponse.next({ request: { headers } });
+}
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 1. Check if user already has an explicit preference stored in cookie
+  // 1. An explicit, valid preference stored in the cookie: respect the requested URL
   const preferredLocaleCookie = request.cookies.get(LOCALE_COOKIE_NAME)?.value;
-
-  // If user already has a saved preference, respect the requested URL
-  if (preferredLocaleCookie) {
-    return NextResponse.next();
+  if (preferredLocaleCookie && isSupportedLocale(preferredLocaleCookie)) {
+    return continueWithLocale(request);
   }
 
-  // 2. No preference cookie set: check Accept-Language header
-  const acceptLanguage = request.headers.get('accept-language');
-  const detectedLocale = detectLocaleFromAcceptLanguage(acceptLanguage);
+  // 2. No (valid) preference: check Accept-Language
+  const detectedLocale = detectLocaleFromAcceptLanguage(request.headers.get('accept-language'));
 
-  if (detectedLocale === 'uk') {
-    // If not already on /uk route, redirect to /uk equivalent (307 Temporary Redirect)
-    if (!pathname.startsWith('/uk')) {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = pathname === '/' ? '/uk' : `/uk${pathname}`;
-      return NextResponse.redirect(redirectUrl, { status: 307 });
-    }
+  if (detectedLocale === 'uk' && localeOfPath(pathname) !== 'uk') {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = pathname === '/' ? '/uk' : `/uk${pathname}`;
+    const response = NextResponse.redirect(redirectUrl, { status: 307 });
+    // The redirect depends on the visitor's languages, so no shared cache may store it.
+    response.headers.set('Vary', 'Accept-Language, Cookie');
+    response.headers.set('Cache-Control', 'private, no-store');
+    return response;
   }
 
-  return NextResponse.next();
+  return continueWithLocale(request);
 }
 
 export const config = {

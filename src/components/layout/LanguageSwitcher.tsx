@@ -3,7 +3,7 @@
 import React from 'react';
 import { SegmentedControl, Box } from '@mantine/core';
 import { useLocale } from '@/i18n/LocaleContext';
-import { Locale } from '@/i18n';
+import type { Locale } from '@/i18n/types';
 
 interface LanguageSwitcherProps {
   size?: 'xs' | 'sm' | 'md';

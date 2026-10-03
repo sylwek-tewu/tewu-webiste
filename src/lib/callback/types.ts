@@ -74,3 +74,16 @@ export type CallbackSource = (typeof CALLBACK_SOURCES)[number];
 export function toKnownSource(value: unknown): CallbackSource | 'unknown' {
   return (CALLBACK_SOURCES as readonly unknown[]).includes(value) ? (value as CallbackSource) : 'unknown';
 }
+
+/**
+ * Stable error codes returned by POST /api/callback next to the Polish `error` message,
+ * so the form can show its own text in the visitor's language.
+ */
+export type CallbackErrorCode =
+  | 'invalid_request'
+  | 'phone_required'
+  | 'phone_invalid'
+  | 'slot_invalid'
+  | 'unavailable'
+  | 'delivery_failed'
+  | 'unexpected';

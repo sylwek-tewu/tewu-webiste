@@ -46,6 +46,12 @@ describe('normalizePhoneNumber', () => {
     expect(isValidPhoneNumber('1234567890123456789')).toBe(false);
   });
 
+  it('returns a code with the error, so the form can show it in the visitor\'s language', () => {
+    expect(normalizePhoneNumber('').errorCode).toBe('phone_required');
+    expect(normalizePhoneNumber('123').errorCode).toBe('phone_invalid');
+    expect(normalizePhoneNumber('501 482 555').errorCode).toBeUndefined();
+  });
+
   it('returns a Polish error message for invalid input', () => {
     expect(normalizePhoneNumber('123').error).toMatch(/numer telefonu/);
   });
