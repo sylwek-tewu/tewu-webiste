@@ -1,6 +1,6 @@
 /**
  * Time budget for POST /api/callback, so the worst case (email times out, outbox write,
- * Telegram alert) stays under Netlify's default 10 s synchronous function limit.
+ * Telegram alert) stays well under the 10 s synchronous HTTP timeout limit.
  */
 export const DELIVERY_BUDGET = {
   /** Email and the Telegram ping run in parallel within this window. */

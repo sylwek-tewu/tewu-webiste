@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, id, delivery: 'direct' }, { status: 200 });
     }
 
-    // 7. Email failed -> fallback to Outbox store (Netlify Blobs)
+    // 7. Email failed -> fallback to Outbox store (SQLite persistent storage)
     console.warn(`[Callback API] Direct SMTP delivery failed for #${id}. Buffering in Outbox store.`);
 
     const outboxSaved = await withTimeout(

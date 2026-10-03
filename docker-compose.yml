@@ -1,0 +1,26 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - tewu-data:/app/data
+    environment:
+      - NODE_ENV=production
+      - OUTBOX_DB_PATH=/app/data/outbox.db
+      - OUTBOX_ENCRYPTION_KEY=${OUTBOX_ENCRYPTION_KEY}
+      - CRON_SECRET=${CRON_SECRET}
+      - CALLBACK_SMTP_HOST=${CALLBACK_SMTP_HOST}
+      - CALLBACK_SMTP_PORT=${CALLBACK_SMTP_PORT}
+      - CALLBACK_SMTP_USER=${CALLBACK_SMTP_USER}
+      - CALLBACK_SMTP_PASS=${CALLBACK_SMTP_PASS}
+      - CALLBACK_FROM=${CALLBACK_FROM}
+      - CALLBACK_TO=${CALLBACK_TO}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+
+volumes:
+  tewu-data:

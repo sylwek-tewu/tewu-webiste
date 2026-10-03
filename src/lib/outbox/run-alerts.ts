@@ -3,12 +3,11 @@
  * persistent problem is reported without a Telegram message every 10 minutes.
  */
 
-import { getStore } from '@netlify/blobs';
+import { eq } from 'drizzle-orm';
+import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
+import { getDb, schema } from '@/db';
 
 export const RUN_ALERT_INTERVAL_MS = 6 * 60 * 60 * 1000;
-
-// Separate store, so these keys never show up as outbox records.
-const META_STORE = 'callback-outbox-meta';
 
 export function shouldSendRunAlert(lastAlertAt: string | null, now: Date): boolean {
   if (!lastAlertAt) return true;
@@ -16,17 +15,53 @@ export function shouldSendRunAlert(lastAlertAt: string | null, now: Date): boole
   return Number.isNaN(last) || now.getTime() - last >= RUN_ALERT_INTERVAL_MS;
 }
 
+export async function getLastAlertAt(
+  key: string,
+  db?: BetterSQLite3Database<typeof schema>
+): Promise<string | null> {
+  const targetDb = db || getDb();
+  const rows = await targetDb
+    .select({ value: schema.outboxMeta.value })
+    .from(schema.outboxMeta)
+    .where(eq(schema.outboxMeta.key, key))
+    .limit(1);
+
+  return rows.length > 0 ? rows[0].value : null;
+}
+
+export async function setLastAlertAt(
+  key: string,
+  timestamp: string,
+  db?: BetterSQLite3Database<typeof schema>
+): Promise<void> {
+  const targetDb = db || getDb();
+  await targetDb
+    .insert(schema.outboxMeta)
+    .values({
+      key,
+      value: timestamp,
+      updatedAt: timestamp,
+    })
+    .onConflictDoUpdate({
+      target: schema.outboxMeta.key,
+      set: {
+        value: timestamp,
+        updatedAt: timestamp,
+      },
+    });
+}
+
 /** Sends `text` unless an alert with the same key went out within RUN_ALERT_INTERVAL_MS. */
 export async function sendRateLimitedRunAlert(
   key: string,
   text: string,
   send: (text: string) => Promise<boolean>,
-  now: Date = new Date()
+  now: Date = new Date(),
+  db?: BetterSQLite3Database<typeof schema>
 ): Promise<void> {
-  const meta = getStore({ name: META_STORE, consistency: 'strong' });
-  const lastAlertAt = await meta.get(key, { type: 'text' });
+  const lastAlertAt = await getLastAlertAt(key, db);
   if (!shouldSendRunAlert(lastAlertAt, now)) return;
   if (await send(text)) {
-    await meta.set(key, now.toISOString());
+    await setLastAlertAt(key, now.toISOString(), db);
   }
 }

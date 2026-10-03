@@ -263,7 +263,7 @@ describe('POST /api/callback route handler', () => {
       expect(res.status).toBe(502);
     });
 
-    it('answers within 8.5 s when email, outbox and alert all hang (Netlify limit is 10 s)', async () => {
+    it('answers within 8.5 s when email, outbox and alert all hang (well within 10 s limit)', async () => {
       vi.spyOn(emailModule, 'sendCallbackEmail').mockReturnValue(never());
       vi.spyOn(telegramModule, 'sendTelegramPing').mockReturnValue(never());
       vi.spyOn(memoryStore, 'put').mockReturnValue(never());

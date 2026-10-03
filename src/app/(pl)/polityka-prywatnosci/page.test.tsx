@@ -42,8 +42,8 @@ describe('Privacy policy page', () => {
   });
 
   it.each([
-    ['pl', ['Podanie numeru telefonu jest dobrowolne', 'EU-US Data Privacy Framework', 'Prawo do sprzeciwu:', 'Prawo do przenoszenia danych', 'Nie wyznaczyliśmy inspektora ochrony danych', 'preferred_locale', 'Logi funkcji serwerowych Netlify są przechowywane przez 7 dni', 'terminu przedawnienia', 'Szczecin, Polska']],
-    ['uk', ['Надання номера телефону є добровільним', 'EU-US Data Privacy Framework', 'Право на заперечення:', 'Перенесення даних', 'Ми не призначали інспектора із захисту даних', 'preferred_locale', 'Журнали серверних функцій Netlify зберігаються протягом 7 днів', 'строку позовної давності', 'Щецин, Польща']],
+    ['pl', ['Podanie numeru telefonu jest dobrowolne', 'Europejskiego Obszaru Gospodarczego', 'Prawo do sprzeciwu:', 'Prawo do przenoszenia danych', 'Nie wyznaczyliśmy inspektora ochrony danych', 'preferred_locale', 'Logi serwera i aplikacji są przechowywane przez 7 dni', 'terminu przedawnienia', 'Szczecin, Polska', 'OVHcloud']],
+    ['uk', ['Надання номера телефону є добровільним', 'Європейської економічної зони', 'Право на заперечення:', 'Перенесення даних', 'Ми не призначали інспектора із захисту даних', 'preferred_locale', 'Журнали доступу до сервера та застосунку зберігаються протягом 7 днів', 'строку позовної давності', 'Щецин, Польща', 'OVHcloud']],
   ] as const)('gives the information required by art. 13 GDPR (%s)', async (locale, texts) => {
     const { container } = await renderPage(locale);
     for (const text of texts) expect(container.textContent).toContain(text);

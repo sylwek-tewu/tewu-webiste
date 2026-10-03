@@ -1,0 +1,12 @@
+.git
+.worktrees
+node_modules
+.next
+data
+*.log
+.env
+.env*.local
+.DS_Store
+README.md
+docs
+mantine_cr_results*.md

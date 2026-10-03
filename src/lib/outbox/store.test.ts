@@ -1,73 +1,118 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
-import { getOutboxStore, MemoryOutboxStore, NetlifyBlobsOutboxStore } from './store';
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
+import { getOutboxStore, resetOutboxStore, MemoryOutboxStore, SqliteOutboxStore } from './store';
 import { CorruptRecordError } from './crypto';
-
-const blobs = vi.hoisted(() => ({ get: vi.fn(), setJSON: vi.fn(), delete: vi.fn(), list: vi.fn() }));
-vi.mock('@netlify/blobs', () => ({ getStore: () => blobs }));
+import { initDb, schema, resetDbInstance } from '@/db';
 
 describe('getOutboxStore', () => {
   afterEach(() => {
-    vi.unstubAllEnvs();
+    resetOutboxStore();
+    resetDbInstance();
   });
 
-  it('uses the in-memory store in local development', () => {
-    vi.stubEnv('NODE_ENV', 'development');
-    vi.stubEnv('NETLIFY', '');
-    vi.stubEnv('NETLIFY_BLOBS_CONTEXT', '');
-    vi.stubEnv('NETLIFY_SITE_ID', '');
+  it('uses the in-memory store when OUTBOX_STORE=memory or in default test env', () => {
     expect(getOutboxStore()).toBeInstanceOf(MemoryOutboxStore);
   });
 
-  it('always uses Netlify Blobs in production, even without Netlify env vars', () => {
-    vi.stubEnv('NODE_ENV', 'production');
-    vi.stubEnv('NETLIFY', '');
-    vi.stubEnv('NETLIFY_BLOBS_CONTEXT', '');
-    vi.stubEnv('NETLIFY_SITE_ID', '');
-    expect(getOutboxStore()).toBeInstanceOf(NetlifyBlobsOutboxStore);
+  it('uses SqliteOutboxStore in production', () => {
+    const originalEnv = process.env.NODE_ENV;
+    try {
+      process.env.NODE_ENV = 'production';
+      resetOutboxStore();
+      expect(getOutboxStore()).toBeInstanceOf(SqliteOutboxStore);
+    } finally {
+      process.env.NODE_ENV = originalEnv;
+    }
   });
 });
 
 describe('MemoryOutboxStore', () => {
   it('lists record ids', async () => {
     const store = new MemoryOutboxStore();
-    await store.put({ id: 'A1', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: new Date().toISOString(), attempts: 1 });
+    await store.put({
+      id: 'A1',
+      phone: '+48501482555',
+      slot: 'asap',
+      source: 'header',
+      createdAt: new Date().toISOString(),
+      attempts: 1,
+    });
     expect(await store.listIds()).toEqual(['A1']);
   });
 });
 
-describe('NetlifyBlobsOutboxStore.get', () => {
-  afterEach(() => {
-    vi.resetAllMocks();
+describe('SqliteOutboxStore', () => {
+  let testDb: ReturnType<typeof initDb>;
+
+  beforeEach(() => {
+    testDb = initDb({ path: ':memory:' });
   });
 
-  const valid = { id: 'C9F1A2', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: '2026-10-05T10:00:00.000Z', attempts: 1 };
+  afterEach(() => {
+    resetDbInstance();
+  });
 
-  it('returns a stored record', async () => {
-    blobs.get.mockResolvedValue(JSON.stringify(valid));
-    expect(await new NetlifyBlobsOutboxStore().get('C9F1A2')).toEqual(valid);
+  const valid = {
+    id: 'C9F1A2',
+    phone: '+48501482555',
+    slot: 'asap',
+    source: 'header',
+    createdAt: '2026-10-05T10:00:00.000Z',
+    attempts: 1,
+  };
+
+  it('returns a stored record and encrypts phone at rest', async () => {
+    process.env.OUTBOX_ENCRYPTION_KEY = 'test-encryption-key-for-unit-tests';
+    const store = new SqliteOutboxStore(testDb);
+    await store.put(valid);
+
+    const record = await store.get('C9F1A2');
+    expect(record).toEqual(valid);
+
+    // Verify phone is NOT plaintext in the raw database
+    const rawRows = await testDb.select().from(schema.outboxRecords);
+    expect(rawRows[0].phone).not.toEqual('+48501482555');
+  });
+
+  it('updates existing record on duplicate put', async () => {
+    const store = new SqliteOutboxStore(testDb);
+    await store.put(valid);
+    await store.put({ ...valid, attempts: 2 });
+
+    const updated = await store.get('C9F1A2');
+    expect(updated?.attempts).toBe(2);
+
+    const ids = await store.listIds();
+    expect(ids).toEqual(['C9F1A2']);
   });
 
   it('returns null for a missing record', async () => {
-    blobs.get.mockResolvedValue(null);
-    expect(await new NetlifyBlobsOutboxStore().get('C9F1A2')).toBeNull();
+    const store = new SqliteOutboxStore(testDb);
+    expect(await store.get('C9F1A2')).toBeNull();
   });
 
-  it('reports unparseable JSON as a corrupt record', async () => {
-    blobs.get.mockResolvedValue('{not json');
-    await expect(new NetlifyBlobsOutboxStore().get('C9F1A2')).rejects.toBeInstanceOf(CorruptRecordError);
+  it('lists record ids and deletes records', async () => {
+    const store = new SqliteOutboxStore(testDb);
+    await store.put(valid);
+    await store.put({ ...valid, id: 'D8E2B1' });
+
+    expect(await store.listIds()).toEqual(['C9F1A2', 'D8E2B1']);
+
+    await store.delete('C9F1A2');
+    expect(await store.listIds()).toEqual(['D8E2B1']);
+    expect(await store.get('C9F1A2')).toBeNull();
   });
 
-  it('reports a record without a phone or a valid date as corrupt', async () => {
-    blobs.get.mockResolvedValue(JSON.stringify({ ...valid, phone: undefined }));
-    await expect(new NetlifyBlobsOutboxStore().get('C9F1A2')).rejects.toBeInstanceOf(CorruptRecordError);
-    blobs.get.mockResolvedValue(JSON.stringify({ ...valid, createdAt: 'yesterday' }));
-    await expect(new NetlifyBlobsOutboxStore().get('C9F1A2')).rejects.toBeInstanceOf(CorruptRecordError);
-  });
+  it('reports a record with an invalid date as corrupt', async () => {
+    const store = new SqliteOutboxStore(testDb);
+    await testDb.insert(schema.outboxRecords).values({
+      id: 'CORRUPT',
+      phone: 'some-phone',
+      slot: 'asap',
+      source: 'header',
+      createdAt: 'invalid-date',
+      attempts: 1,
+    });
 
-  it('passes network errors through as ordinary errors, so the record is kept', async () => {
-    blobs.get.mockRejectedValue(new Error('Blobs 503'));
-    const error = await new NetlifyBlobsOutboxStore().get('C9F1A2').catch((e) => e);
-    expect(error).toBeInstanceOf(Error);
-    expect(error).not.toBeInstanceOf(CorruptRecordError);
+    await expect(store.get('CORRUPT')).rejects.toBeInstanceOf(CorruptRecordError);
   });
 });

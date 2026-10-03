@@ -1,9 +1,12 @@
 /**
  * Outbox Store abstraction.
- * Implements production Netlify Blobs store and in-memory store for dev/testing.
+ * Implements production SQLite store (via Drizzle ORM and better-sqlite3)
+ * and in-memory store for dev/testing.
  */
 
-import { getStore } from '@netlify/blobs';
+import { eq } from 'drizzle-orm';
+import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
+import { getDb, schema } from '@/db';
 import { OutboxRecord, OutboxStore } from './types';
 import { encryptPhone, decryptPhone, CorruptRecordError, OutboxKeyMissingError } from './crypto';
 
@@ -12,7 +15,7 @@ import { encryptPhone, decryptPhone, CorruptRecordError, OutboxKeyMissingError }
  * delivered (broken JSON, missing phone, invalid date) is a CorruptRecordError, so the processor
  * removes it instead of retrying it forever past the retention period.
  */
-function reviveRecord(raw: unknown): OutboxRecord {
+export function reviveRecord(raw: unknown): OutboxRecord {
   let value = raw;
   if (typeof value === 'string') {
     try {
@@ -45,7 +48,6 @@ export class MemoryOutboxStore implements OutboxStore {
   private records = new Map<string, OutboxRecord>();
 
   async put(record: OutboxRecord): Promise<void> {
-    // Encrypt at rest in memory store too to simulate real persistence
     const atRest = { ...record, phone: encryptPhone(record.phone) };
     this.records.set(record.id, atRest);
   }
@@ -69,60 +71,113 @@ export class MemoryOutboxStore implements OutboxStore {
   }
 }
 
-export class NetlifyBlobsOutboxStore implements OutboxStore {
-  private storeName = 'callback-outbox';
+export class SqliteOutboxStore implements OutboxStore {
+  private getDbInstance: () => BetterSQLite3Database<typeof schema>;
 
-  private getBlobsStore() {
-    return getStore({
-      name: this.storeName,
-      consistency: 'strong',
-    });
+  constructor(customDb?: BetterSQLite3Database<typeof schema> | (() => BetterSQLite3Database<typeof schema>)) {
+    if (typeof customDb === 'function') {
+      this.getDbInstance = customDb;
+    } else if (customDb) {
+      this.getDbInstance = () => customDb;
+    } else {
+      this.getDbInstance = () => getDb();
+    }
+  }
+
+  private get db(): BetterSQLite3Database<typeof schema> {
+    return this.getDbInstance();
   }
 
   async put(record: OutboxRecord): Promise<void> {
-    const blobs = this.getBlobsStore();
-    const encryptedRecord = {
-      ...record,
-      phone: encryptPhone(record.phone),
-    };
-    await blobs.setJSON(record.id, encryptedRecord);
+    const encryptedPhone = encryptPhone(record.phone);
+    await this.db
+      .insert(schema.outboxRecords)
+      .values({
+        id: record.id,
+        phone: encryptedPhone,
+        slot: record.slot,
+        topic: record.topic || null,
+        source: record.source,
+        locale: record.locale || null,
+        createdAt: record.createdAt,
+        attempts: record.attempts,
+        lastAttemptAt: record.lastAttemptAt || null,
+      })
+      .onConflictDoUpdate({
+        target: schema.outboxRecords.id,
+        set: {
+          phone: encryptedPhone,
+          slot: record.slot,
+          topic: record.topic || null,
+          source: record.source,
+          locale: record.locale || null,
+          createdAt: record.createdAt,
+          attempts: record.attempts,
+          lastAttemptAt: record.lastAttemptAt || null,
+        },
+      });
   }
 
   async get(id: string): Promise<OutboxRecord | null> {
-    const blobs = this.getBlobsStore();
-    const raw = await blobs.get(id);
-    if (raw === null) return null;
-    return reviveRecord(raw);
+    const rows = await this.db
+      .select()
+      .from(schema.outboxRecords)
+      .where(eq(schema.outboxRecords.id, id))
+      .limit(1);
+
+    if (rows.length === 0) return null;
+    const row = rows[0];
+
+    return reviveRecord({
+      id: row.id,
+      phone: row.phone,
+      slot: row.slot,
+      topic: row.topic ?? undefined,
+      source: row.source,
+      locale: (row.locale as 'pl' | 'uk') ?? undefined,
+      createdAt: row.createdAt,
+      attempts: row.attempts,
+      lastAttemptAt: row.lastAttemptAt ?? undefined,
+    });
   }
 
   async listIds(): Promise<string[]> {
-    const { blobs: list } = await this.getBlobsStore().list();
-    return list.map((item) => item.key);
+    const rows = await this.db
+      .select({ id: schema.outboxRecords.id })
+      .from(schema.outboxRecords);
+    return rows.map((r) => r.id);
   }
 
   async delete(id: string): Promise<void> {
-    const blobs = this.getBlobsStore();
-    await blobs.delete(id);
+    await this.db
+      .delete(schema.outboxRecords)
+      .where(eq(schema.outboxRecords.id, id));
   }
 }
 
-// Global in-memory singleton for local development / testing
+// Global in-memory singleton for test environments or explicit memory fallback
 let memoryStoreInstance: MemoryOutboxStore | null = null;
+let sqliteStoreInstance: SqliteOutboxStore | null = null;
 
 export function getOutboxStore(): OutboxStore {
-  // Production always uses Blobs: if its context is missing, writes fail loudly (502 + alert)
-  // instead of "buffering" into memory that disappears with the function instance.
+  // Use memory store if explicitly requested or in test mode without forced sqlite
   if (
-    process.env.NODE_ENV === 'production' ||
-    process.env.NETLIFY ||
-    process.env.NETLIFY_BLOBS_CONTEXT ||
-    process.env.NETLIFY_SITE_ID
+    process.env.OUTBOX_STORE === 'memory' ||
+    (process.env.NODE_ENV === 'test' && process.env.OUTBOX_STORE !== 'sqlite')
   ) {
-    return new NetlifyBlobsOutboxStore();
+    if (!memoryStoreInstance) {
+      memoryStoreInstance = new MemoryOutboxStore();
+    }
+    return memoryStoreInstance;
   }
 
-  if (!memoryStoreInstance) {
-    memoryStoreInstance = new MemoryOutboxStore();
+  if (!sqliteStoreInstance) {
+    sqliteStoreInstance = new SqliteOutboxStore();
   }
-  return memoryStoreInstance;
+  return sqliteStoreInstance;
+}
+
+export function resetOutboxStore(): void {
+  memoryStoreInstance = null;
+  sqliteStoreInstance = null;
 }

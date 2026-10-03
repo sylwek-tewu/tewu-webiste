@@ -43,11 +43,11 @@ describe('dictionaries', () => {
     [72, '72 години'],
   ])('state a %i h retention in Ukrainian as "%s"', (hours, text) => {
     expect(ukTranslations.privacyPolicy.s5Retention(hours)).toContain(`**${text}**`);
-    expect(ukTranslations.privacyPolicy.s4BlobsDesc(hours)).toContain(text);
+    expect(ukTranslations.privacyPolicy.s4BufferDesc(hours)).toContain(text);
   });
 
   it('state the retention in Polish with the Polish plural', () => {
     expect(plTranslations.privacyPolicy.s5Retention(48)).toContain('**48 godzin**');
-    expect(plTranslations.privacyPolicy.s4BlobsDesc(72)).toContain('72 godziny');
+    expect(plTranslations.privacyPolicy.s4BufferDesc(72)).toContain('72 godziny');
   });
 });

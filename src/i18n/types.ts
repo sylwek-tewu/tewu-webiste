@@ -224,10 +224,10 @@ export interface Translations {
     s4Intro: string;
     s4MailTitle: string;
     s4MailDesc: string;
-    s4NetlifyTitle: string;
-    s4NetlifyDesc: string;
-    s4BlobsTitle: string;
-    s4BlobsDesc: (retentionHours: number) => string;
+    s4HostingTitle: string;
+    s4HostingDesc: string;
+    s4BufferTitle: string;
+    s4BufferDesc: (retentionHours: number) => string;
     s4TransferTitle: string;
     s4TransferDesc: string;
     s5Title: string;

@@ -46,3 +46,8 @@ next-env.d.ts
 
 # Worktrees
 .worktrees/
+
+# Database & SQLite
+data/
+*.db
+*.db-*

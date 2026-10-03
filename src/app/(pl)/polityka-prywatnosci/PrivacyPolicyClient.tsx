@@ -138,20 +138,20 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                   <Paper p="md" radius="md" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
                     <Group gap="xs" mb={4}>
                       <Building2 size={16} color="var(--mantine-color-brandBlue-6)" />
-                      <Text size="sm" fw={700} c="slate.9">{p.s4NetlifyTitle}</Text>
+                      <Text size="sm" fw={700} c="slate.9">{p.s4HostingTitle}</Text>
                     </Group>
                     <Text size="xs" c="slate.6" lh={1.5}>
-                      {p.s4NetlifyDesc}
+                      {p.s4HostingDesc}
                     </Text>
                   </Paper>
 
                   <Paper p="md" radius="md" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
                     <Group gap="xs" mb={4}>
                       <Lock size={16} color="var(--mantine-color-brandBlue-6)" />
-                      <Text size="sm" fw={700} c="slate.9">{p.s4BlobsTitle}</Text>
+                      <Text size="sm" fw={700} c="slate.9">{p.s4BufferTitle}</Text>
                     </Group>
                     <Text size="xs" c="slate.6" lh={1.5}>
-                      {p.s4BlobsDesc(retentionHours)}
+                      {p.s4BufferDesc(retentionHours)}
                     </Text>
                   </Paper>
 
