@@ -39,7 +39,7 @@ export const config = {
      * Match all request paths except:
      * - _next/static, _next/image (Next.js assets)
      * - api routes
-     * - static files with extensions (e.g. .svg, .png, .jpg, .ico, .pdf)
+     * - static files with extensions (e.g. .svg, .png, .jpg, .ico, .pdf), except under /uk (see below)
      */
     '/((?!api/|_next/static|_next/image|favicon.ico|.*\\..*).*)',
     // Everything under /uk, dotted paths too (no static files live there), so a missing

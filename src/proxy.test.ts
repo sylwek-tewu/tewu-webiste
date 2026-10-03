@@ -104,6 +104,8 @@ describe('Proxy language detection and routing', () => {
       expect(matches('/uk/stara-strona.php')).toBe(true);
       expect(matches('/uk')).toBe(true);
       expect(matches('/img/logo.png')).toBe(false);
+      // Dotted Polish paths skip the proxy and fall back to the Polish 404
+      expect(matches('/stara.php')).toBe(false);
       expect(matches('/api/callback')).toBe(false);
     });
 
