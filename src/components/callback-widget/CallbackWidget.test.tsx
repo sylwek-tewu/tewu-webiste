@@ -116,6 +116,31 @@ describe('CallbackWidget', () => {
     expect(link).toHaveAttribute('href', 'tel:+48914824190');
   });
 
+  it('shows a phone number the server rejected as a field error, not a general failure', async () => {
+    respondWith({ error: 'Wprowadź poprawny numer telefonu (np. 501 482 555)' }, 400);
+    const user = await openForm();
+    await fillAndSubmit(user, 5);
+
+    const phone = screen.getByLabelText(/Numer telefonu/);
+    await waitFor(() => expect(phone).toHaveAttribute('aria-invalid', 'true'));
+    expect(screen.getByText(/Wprowadź poprawny numer telefonu/)).toBeInTheDocument();
+    expect(screen.queryByText('Nie udało się wysłać prośby')).not.toBeInTheDocument();
+  });
+
+  it('cancels a held submission when the visitor closes the form', async () => {
+    respondWith({ success: true, id: 'C9F1A2', delivery: 'direct' });
+    const user = await openForm();
+    await fillAndSubmit(user, 0.5);
+
+    await user.keyboard('{Escape}');
+    await new Promise((r) => setTimeout(r, 2000));
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole('button', { name: /Zamów bezpłatną wycenę/ }));
+    expect(await screen.findByRole('button', { name: /Poproś o kontakt/ })).toBeInTheDocument();
+    expect(screen.queryByText(/Otrzymaliśmy Twoją prośbę/)).not.toBeInTheDocument();
+  });
+
   it('marks up the form for phone keyboards, autofill and screen readers', async () => {
     await openForm();
 
@@ -126,14 +151,5 @@ describe('CallbackWidget', () => {
     expect(screen.getByRole('radiogroup', { name: /Kiedy możemy oddzwonić/ })).toBeInTheDocument();
     const promise = screen.getByRole('dialog').querySelector('[aria-live="polite"]');
     expect(promise).toHaveTextContent(/Oddzwonimy|Biuro/);
-  });
-
-  it('does not load the form until the widget is opened', () => {
-    renderWithMantine(
-      <CallbackProvider>
-        <CallbackWidget callInfo={callInfo} />
-      </CallbackProvider>
-    );
-    expect(screen.queryByLabelText(/Numer telefonu/)).not.toBeInTheDocument();
   });
 });

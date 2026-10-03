@@ -41,7 +41,7 @@ describe('buildCallbackEmail', () => {
 });
 
 describe('getSmtpTransportOptions', () => {
-  it('times out the SMTP handshake well inside the route email budget, so a slow server is not later sent twice', async () => {
+  it('keeps the SMTP handshake timeouts inside the route email budget', async () => {
     const { getSmtpTransportOptions } = await import('./email');
     const { DELIVERY_BUDGET } = await import('../callback/delivery-budget');
     const options = getSmtpTransportOptions({ host: 'smtp.example.com', port: 587, user: 'u', pass: 'p' });

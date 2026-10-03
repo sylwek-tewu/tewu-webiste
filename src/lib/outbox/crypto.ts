@@ -7,7 +7,15 @@ import crypto from 'crypto';
 
 const PREFIX = 'enc:v1:';
 
-/** The stored phone can never be decrypted (wrong/missing key, tampered or malformed payload). */
+/** OUTBOX_ENCRYPTION_KEY is not configured. A config problem: restoring the key makes records readable again. */
+export class OutboxKeyMissingError extends Error {
+  constructor() {
+    super('Cannot decrypt outbox record: OUTBOX_ENCRYPTION_KEY is missing');
+    this.name = 'OutboxKeyMissingError';
+  }
+}
+
+/** The stored phone can never be decrypted with the configured key (wrong key, tampered or malformed payload). */
 export class CorruptRecordError extends Error {
   constructor(message: string, options?: { cause?: unknown }) {
     super(message, options);
@@ -62,7 +70,7 @@ export function decryptPhone(cipherText: string, secret?: string): string {
 
   const key = get32ByteKey(secret);
   if (!key) {
-    throw new CorruptRecordError('Cannot decrypt outbox record: OUTBOX_ENCRYPTION_KEY is missing');
+    throw new OutboxKeyMissingError();
   }
 
   const parts = cipherText.slice(PREFIX.length).split(':');

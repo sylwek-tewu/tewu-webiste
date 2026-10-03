@@ -105,7 +105,11 @@ export async function POST(request: NextRequest) {
 
     // 6. Email and Telegram ping in parallel, both capped by the email budget
     const [emailSent] = await Promise.all([
-      withTimeout(sendCallbackEmail(notificationData), DELIVERY_BUDGET.emailMs, false),
+      withTimeout(
+        sendCallbackEmail(notificationData, { deadlineMs: DELIVERY_BUDGET.emailMs }),
+        DELIVERY_BUDGET.emailMs,
+        false
+      ),
       withTimeout(sendTelegramPing(notificationData), DELIVERY_BUDGET.emailMs, false),
     ]);
 

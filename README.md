@@ -56,7 +56,7 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_CALLBACK_CALL_NUMBER` | Nie | Numer pod przyciskiem „Zadzwoń” (mobile) w formacie E.164. Domyślnie stacjonarny biura. *(Wymaga ponownego deployu na Netlify po zmianie)* | `+48914824190` lub `+48501482555` |
 | `TELEGRAM_BOT_TOKEN` | Nie | Token bota z @BotFather (opcjonalny ping bez PII) | `123456789:ABC...` |
 | `TELEGRAM_CHAT_ID` | Nie | ID czatu lub grupy biura na Telegramie | `-1001234567890` |
-| `OUTBOX_ENCRYPTION_KEY` | Tak (produkcja) | Klucz szyfrowania danych w Netlify Blobs (AES-256-GCM). Bez niego bufor awaryjny nie przyjmie zgłoszenia. Zmiana klucza usuwa oczekujące wpisy (z alarmem) | `losowy-32-bajtowy-klucz` |
+| `OUTBOX_ENCRYPTION_KEY` | Tak (produkcja) | Klucz szyfrowania danych w Netlify Blobs (AES-256-GCM). Bez niego bufor awaryjny nie przyjmie zgłoszenia. Zmiana klucza usuwa oczekujące wpisy (z alarmem); brak klucza wstrzymuje ponawianie bez usuwania (alarm) | `losowy-32-bajtowy-klucz` |
 | `CALLBACK_OUTBOX_TTL_HOURS` | Nie | Czas retencji zgłoszeń w buforze awaryjnym (w godzinach, domyślnie 72). Wartość pojawia się też w polityce prywatności – zmiana wymaga ponownego deployu | `72` |
 | `NEXT_PUBLIC_EXTRA_CLOSED_DATES` | Nie | Dodatkowe dni wolne biura (np. Sylwester, mostki). Wstrzykiwana podczas kompilacji – zmiana wymaga ponownego deployu | `2026-12-31,2026-05-02` |
 

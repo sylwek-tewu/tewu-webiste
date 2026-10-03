@@ -118,6 +118,43 @@ describe('processOutbox', () => {
     expect(await store.listIds()).toEqual([]);
   });
 
+  it('keeps every record and stops the run when the encryption key is missing', async () => {
+    const store = new MemoryOutboxStore();
+    const now = new Date();
+    vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'the-key');
+    await store.put({ id: 'K1', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 1 });
+    await store.put({ id: 'K2', phone: '+48602235736', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 1 });
+    vi.stubEnv('OUTBOX_ENCRYPTION_KEY', '');
+
+    const corrupt: string[] = [];
+    const res = await processOutbox(store, async () => true, { now, onCorrupt: (id) => void corrupt.push(id) });
+
+    expect(res.keyMissing).toBe(true);
+    expect(res.corrupt).toBe(0);
+    expect(corrupt).toEqual([]);
+    expect(await store.listIds()).toEqual(['K1', 'K2']);
+
+    vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'the-key');
+    expect((await store.get('K1'))?.phone).toBe('+48501482555');
+  });
+
+  it('does not count a failing expiry alert as a store error', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const store = new MemoryOutboxStore();
+    const fourDaysAgo = new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString();
+    await store.put({ id: 'EXP3', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: fourDaysAgo, attempts: 3 });
+
+    const res = await processOutbox(store, async () => true, {
+      onExpire: () => {
+        throw new Error('Telegram down');
+      },
+    });
+
+    expect(res.expired).toBe(1);
+    expect(res.errors).toBe(0);
+    expect(await store.listIds()).toEqual([]);
+  });
+
   it('keeps a record when reading it fails for any reason other than decryption', async () => {
     const store = new MemoryOutboxStore();
     const now = new Date();

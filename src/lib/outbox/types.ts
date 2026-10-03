@@ -29,4 +29,6 @@ export interface ProcessResult {
   corrupt: number;
   /** Store errors (read, write, delete); the record is left for the next run. */
   errors: number;
+  /** OUTBOX_ENCRYPTION_KEY was missing: the run stopped and every record was kept. */
+  keyMissing: boolean;
 }

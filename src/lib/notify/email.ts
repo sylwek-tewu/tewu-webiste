@@ -2,7 +2,9 @@
  * SMTP Email Notification Dispatcher using Nodemailer.
  */
 
+import net from 'node:net';
 import nodemailer from 'nodemailer';
+import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { CallbackNotificationData } from './types';
 import { CALLBACK_SLOTS, CALLBACK_TOPICS, toKnownSource } from '../callback/types';
 import { getWarsawTime } from '../callback/business-hours';
@@ -140,7 +142,20 @@ export function getSmtpTransportOptions(config: { host: string; port: number; us
   };
 }
 
-export async function sendCallbackEmail(data: CallbackNotificationData): Promise<boolean> {
+export interface SendCallbackEmailOptions {
+  /**
+   * Hard limit for the whole send. When it passes, the SMTP socket is destroyed so a slow server
+   * cannot accept the message after the caller has already given up and buffered the request.
+   * A message the server accepted right at the deadline can still arrive: delivery is at-least-once,
+   * and the shared #ID in the subject makes a duplicate easy to spot.
+   */
+  deadlineMs?: number;
+}
+
+export async function sendCallbackEmail(
+  data: CallbackNotificationData,
+  options: SendCallbackEmailOptions = {}
+): Promise<boolean> {
   const config = getSmtpConfig();
 
   if (config.missing.length > 0) {
@@ -150,10 +165,46 @@ export async function sendCallbackEmail(data: CallbackNotificationData): Promise
 
   const { subject, text: textBody, html: htmlBody } = buildCallbackEmail(data);
 
+  // nodemailer has no way to abort a send in progress, so we open the socket ourselves
+  // (its getSocket hook) and destroy it at the deadline; the send then fails.
+  const sockets: net.Socket[] = [];
+  const deadline =
+    options.deadlineMs !== undefined
+      ? setTimeout(() => sockets.forEach((s) => s.destroy(new Error('SMTP deadline exceeded'))), options.deadlineMs)
+      : undefined;
+
   try {
-    const transporter = nodemailer.createTransport(
-      getSmtpTransportOptions({ host: config.host!, port: config.port, user: config.user!, pass: config.pass! })
-    );
+    const transportOptions = getSmtpTransportOptions({
+      host: config.host!,
+      port: config.port,
+      user: config.user!,
+      pass: config.pass!,
+    });
+    const transporter = nodemailer.createTransport({
+      ...transportOptions,
+      getSocket: (socketOptions: SMTPTransport.Options, callback: (err: Error | null, socketOptions: object) => void) => {
+        const socket = net.connect({ host: socketOptions.host ?? config.host!, port: Number(socketOptions.port ?? config.port) });
+        sockets.push(socket);
+        let settled = false;
+        // nodemailer's connectionTimeout doesn't cover a socket we open, so apply it here
+        const connectTimer = setTimeout(
+          () => socket.destroy(new Error('SMTP connection timeout')),
+          transportOptions.connectionTimeout
+        );
+        socket.once('connect', () => {
+          clearTimeout(connectTimer);
+          if (settled) return;
+          settled = true;
+          callback(null, { connection: socket });
+        });
+        socket.once('error', (err) => {
+          clearTimeout(connectTimer);
+          if (settled) return;
+          settled = true;
+          callback(err, {});
+        });
+      },
+    });
 
     const recipients = config.to.split(',').map((email) => email.trim()).filter(Boolean);
 
@@ -169,5 +220,7 @@ export async function sendCallbackEmail(data: CallbackNotificationData): Promise
   } catch (error) {
     console.error('[SMTP] Failed to send email:', error instanceof Error ? error.message : 'Unknown error');
     return false;
+  } finally {
+    clearTimeout(deadline);
   }
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { encryptPhone, decryptPhone } from './crypto';
+import { encryptPhone, decryptPhone, CorruptRecordError, OutboxKeyMissingError } from './crypto';
 
 describe('Outbox AES-256-GCM Crypto', () => {
   afterEach(() => {
@@ -50,5 +50,24 @@ describe('Outbox AES-256-GCM Crypto', () => {
   it('refuses to store plaintext in production when no key is configured', () => {
     vi.stubEnv('NODE_ENV', 'production');
     expect(() => encryptPhone(samplePhone, '')).toThrow(/OUTBOX_ENCRYPTION_KEY/);
+  });
+
+  describe('error classification (decides whether the outbox may delete a record)', () => {
+    it('reports a wrong key or tampered data as a corrupt record', () => {
+      const cipherText = encryptPhone(samplePhone, testSecret);
+      expect(() => decryptPhone(cipherText, 'completely-different-key')).toThrow(CorruptRecordError);
+      const last = cipherText.slice(-2);
+      expect(() => decryptPhone(cipherText.slice(0, -2) + (last === 'aa' ? 'bb' : 'aa'), testSecret)).toThrow(CorruptRecordError);
+    });
+
+    it('reports a malformed payload as a corrupt record', () => {
+      expect(() => decryptPhone('enc:v1:not-three-parts', testSecret)).toThrow(CorruptRecordError);
+    });
+
+    it('reports a missing key as a configuration problem, not corruption (restoring the key recovers the data)', () => {
+      const cipherText = encryptPhone(samplePhone, testSecret);
+      expect(() => decryptPhone(cipherText, '')).toThrow(OutboxKeyMissingError);
+      expect(() => decryptPhone(cipherText, '')).not.toThrow(CorruptRecordError);
+    });
   });
 });

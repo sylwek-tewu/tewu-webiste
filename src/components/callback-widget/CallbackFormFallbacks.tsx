@@ -2,9 +2,10 @@
 
 import React from 'react';
 import { Modal, Loader, Group, Text, Button, Stack } from '@mantine/core';
-import { Phone } from 'lucide-react';
+import { Phone, RotateCw } from 'lucide-react';
 import { useCallbackWidget } from './CallbackContext';
 import type { ResolvedCallNumber } from '@/lib/callback/call-number';
+import { reloadPage } from './reload';
 
 /** Shown while the lazily loaded form chunk downloads. */
 export function CallbackFormLoading() {
@@ -29,6 +30,10 @@ function CallbackFormLoadError({ callInfo }: { callInfo: ResolvedCallNumber }) {
         </Text>
         <Button component="a" href={callInfo.telUri} leftSection={<Phone size={16} />}>
           Zadzwoń: {callInfo.display}
+        </Button>
+        {/* React.lazy caches the failed import; a reload fetches the current build's chunks. */}
+        <Button variant="default" onClick={reloadPage} leftSection={<RotateCw size={16} />}>
+          Odśwież stronę
         </Button>
       </Stack>
     </Modal>

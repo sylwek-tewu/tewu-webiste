@@ -5,7 +5,7 @@
  */
 
 import { OutboxRecord, OutboxStore, ProcessResult } from './types';
-import { CorruptRecordError } from './crypto';
+import { CorruptRecordError, OutboxKeyMissingError } from './crypto';
 
 export const DEFAULT_OUTBOX_TTL_HOURS = 72;
 
@@ -56,7 +56,17 @@ export async function processOutbox(
     skipped: 0,
     corrupt: 0,
     errors: 0,
+    keyMissing: false,
   };
+
+  // Alerts run after the record was already deleted; their failure is not a store error.
+  async function notify(callback: () => Promise<void> | void, id: string): Promise<void> {
+    try {
+      await callback();
+    } catch (error) {
+      console.error(`[Outbox] Alert failed for #${id}:`, error instanceof Error ? error.message : 'Unknown');
+    }
+  }
 
   async function processRecord(id: string): Promise<void> {
     let record: OutboxRecord | null;
@@ -68,7 +78,8 @@ export async function processOutbox(
       await store.delete(id);
       result.corrupt++;
       if (options.onCorrupt) {
-        await options.onCorrupt(id);
+        const onCorrupt = options.onCorrupt;
+        await notify(() => onCorrupt(id), id);
       }
       return;
     }
@@ -81,7 +92,9 @@ export async function processOutbox(
       await store.delete(record.id);
       result.expired++;
       if (options.onExpire) {
-        await options.onExpire(record);
+        const onExpire = options.onExpire;
+        const expired = record;
+        await notify(() => onExpire(expired), id);
       }
       return;
     }
@@ -114,6 +127,11 @@ export async function processOutbox(
     try {
       await processRecord(id);
     } catch (error) {
+      if (error instanceof OutboxKeyMissingError) {
+        // Config problem affecting every record: stop and keep them all until the key is back.
+        result.keyMissing = true;
+        break;
+      }
       // Transient store error (network, Blobs 5xx): keep the record for the next run.
       console.error(
         `[Outbox] Store error for #${id}:`,

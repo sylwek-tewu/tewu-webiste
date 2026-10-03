@@ -54,6 +54,13 @@ describe('POST /api/callback route handler', () => {
     expect(data.id).toMatch(/^[0-9A-F]{6}$/);
   });
 
+  it('gives the email send a hard deadline equal to the email budget', async () => {
+    const emailSpy = vi.spyOn(emailModule, 'sendCallbackEmail').mockResolvedValue(true);
+
+    await POST(makeRequest(validBody));
+    expect(emailSpy.mock.calls[0][1]).toEqual({ deadlineMs: DELIVERY_BUDGET.emailMs });
+  });
+
   describe('spam traps', () => {
     it('silently ignores honeypot submissions without a delivery marker', async () => {
       const emailSpy = vi.spyOn(emailModule, 'sendCallbackEmail');

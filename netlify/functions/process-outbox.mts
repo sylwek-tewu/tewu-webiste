@@ -5,6 +5,7 @@
 import { processOutbox, NetlifyBlobsOutboxStore, getOutboxTtlHours } from '../../src/lib/outbox';
 import { sendCallbackEmail } from '../../src/lib/notify/email';
 import { sendTelegramAlert } from '../../src/lib/notify/telegram';
+import { sendRateLimitedRunAlert } from '../../src/lib/outbox/run-alerts';
 
 export default async () => {
   // Always Blobs: this esbuild-bundled function may not get NODE_ENV=production or NETLIFY* at
@@ -38,6 +39,21 @@ export default async () => {
       },
     }
   );
+
+  if (result.keyMissing) {
+    await sendRateLimitedRunAlert(
+      'alert-key-missing',
+      '🚨 Bufor awaryjny: brak OUTBOX_ENCRYPTION_KEY w środowisku funkcji. Zgłoszenia czekają (nic nie usunięto) – przywróć klucz.',
+      sendTelegramAlert
+    );
+  }
+  if (result.errors > 0) {
+    await sendRateLimitedRunAlert(
+      'alert-store-errors',
+      `⚠️ Bufor awaryjny: błędy odczytu/zapisu Netlify Blobs w ostatnim przebiegu (liczba: ${result.errors}). Zgłoszenia pozostają w buforze – sprawdź logi funkcji.`,
+      sendTelegramAlert
+    );
+  }
 
   return new Response(JSON.stringify(result), {
     status: 200,

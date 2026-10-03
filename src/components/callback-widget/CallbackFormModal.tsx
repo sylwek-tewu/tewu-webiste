@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition } from 'react';
+import React, { useState, useEffect, useRef, useTransition } from 'react';
 import Link from 'next/link';
 import {
   Modal,
@@ -42,10 +42,15 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [isPending, startTransition] = useTransition();
+  // Set when the form closes, so a submission still held by the anti-bot delay is not sent.
+  const cancelledRef = useRef(false);
 
 
   // Reset the time-trap start and errors whenever the widget opens
   useEffect(() => {
+    if (!isOpen) {
+      cancelledRef.current = true;
+    }
     if (isOpen) {
       setFormOpenedAt(Date.now());
       setSubmitError(null);
@@ -66,6 +71,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
   };
 
   const handleClose = () => {
+    cancelledRef.current = true;
     closeWidget();
     if (submitSuccess) {
       resetForm();
@@ -83,6 +89,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
       return;
     }
 
+    cancelledRef.current = false;
     startTransition(async () => {
       try {
         // Measured on the visitor's own clock, so clock skew vs. the server doesn't matter.
@@ -91,6 +98,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
         const delay = getSubmitDelayMs(elapsed);
         if (delay > 0) {
           await new Promise((resolve) => setTimeout(resolve, delay));
+          if (cancelledRef.current) return;
         }
 
         const response = await fetch('/api/callback', {
@@ -119,6 +127,9 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
             });
           }
           setSubmitSuccess(true);
+        } else if (response.status === 400 && data.error) {
+          // Validation error, e.g. a number the server's stricter check rejects
+          setPhoneError(data.error);
         } else {
           setSubmitError(
             data.error || `Wystąpił problem z wysłaniem zgłoszenia. Zadzwoń do nas: ${callInfo.display}`

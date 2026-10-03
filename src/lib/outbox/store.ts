@@ -5,7 +5,35 @@
 
 import { getStore } from '@netlify/blobs';
 import { OutboxRecord, OutboxStore } from './types';
-import { encryptPhone, decryptPhone } from './crypto';
+import { encryptPhone, decryptPhone, CorruptRecordError } from './crypto';
+
+/**
+ * Turns a stored value back into a record with a decrypted phone. Anything that can never be
+ * delivered (broken JSON, missing phone, invalid date) is a CorruptRecordError, so the processor
+ * removes it instead of retrying it forever past the retention period.
+ */
+function reviveRecord(raw: unknown): OutboxRecord {
+  let value = raw;
+  if (typeof value === 'string') {
+    try {
+      value = JSON.parse(value);
+    } catch (error) {
+      throw new CorruptRecordError('Outbox record is not valid JSON', { cause: error });
+    }
+  }
+  const record = value as Partial<OutboxRecord> | null;
+  if (
+    !record ||
+    typeof record !== 'object' ||
+    typeof record.id !== 'string' ||
+    typeof record.phone !== 'string' ||
+    typeof record.createdAt !== 'string' ||
+    Number.isNaN(Date.parse(record.createdAt))
+  ) {
+    throw new CorruptRecordError('Outbox record is missing required fields');
+  }
+  return { ...(record as OutboxRecord), phone: decryptPhone(record.phone) };
+}
 
 export class MemoryOutboxStore implements OutboxStore {
   private records = new Map<string, OutboxRecord>();
@@ -19,7 +47,7 @@ export class MemoryOutboxStore implements OutboxStore {
   async get(id: string): Promise<OutboxRecord | null> {
     const raw = this.records.get(id);
     if (!raw) return null;
-    return { ...raw, phone: decryptPhone(raw.phone) };
+    return reviveRecord(raw);
   }
 
   async listIds(): Promise<string[]> {
@@ -56,12 +84,9 @@ export class NetlifyBlobsOutboxStore implements OutboxStore {
 
   async get(id: string): Promise<OutboxRecord | null> {
     const blobs = this.getBlobsStore();
-    const raw = await blobs.get(id, { type: 'json' }) as OutboxRecord | null;
-    if (!raw) return null;
-    return {
-      ...raw,
-      phone: decryptPhone(raw.phone),
-    };
+    const raw = await blobs.get(id);
+    if (raw === null) return null;
+    return reviveRecord(raw);
   }
 
   async listIds(): Promise<string[]> {
