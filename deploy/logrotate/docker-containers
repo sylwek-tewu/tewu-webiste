@@ -5,14 +5,23 @@
 #   cp deploy/logrotate/docker-containers /etc/logrotate.d/docker-containers
 #   logrotate --debug /etc/logrotate.d/docker-containers   # dry run
 #
+# Docker's own size rotation (log-opts max-size / max-file in /etc/docker/daemon.json, which the
+# Coolify installer may set) keeps its rotated files (*-json.log.1, .2, …) by count, not by age,
+# so they can outlive 7 days. Remove those log-opts and restart Docker; the daily rotation below
+# then keeps at most 7 days of logs. See README ("Retencja logów").
+#
 # logrotate runs daily from cron / systemd timer on Debian and Ubuntu. If the Coolify proxy
 # (Traefik) access log is enabled, add its log file to this list as well.
 /var/lib/docker/containers/*/*-json.log {
     daily
     rotate 6
     maxage 7
+    # Dated names never collide with Docker's own *-json.log.1
+    dateext
+    dateformat -%Y%m%d-%s
     missingok
     notifempty
+    # json-file keeps its file open (O_APPEND), so truncate in place instead of moving it
     copytruncate
     compress
     delaycompress

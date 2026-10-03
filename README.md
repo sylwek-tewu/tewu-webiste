@@ -88,13 +88,14 @@ cp .env.example .env.local
        ```bash
        wget -qO- --post-data='' --header="Authorization: Bearer $CRON_SECRET" http://127.0.0.1:3000/api/internal/process-outbox
        ```
-   - Po zapisaniu uruchom zadanie ręcznie i sprawdź w logach wynik `{"processed":…}`. Kod 409 oznacza, że poprzedni przebieg jeszcze trwa (nic nie zostało pominięte na stałe).
+   - Po zapisaniu uruchom zadanie ręcznie i sprawdź w logach wynik `{"processed":…}`. Odpowiedź `{"skipped":"run-in-progress"}` oznacza, że poprzedni przebieg jeszcze trwał – wpisy zostaną obsłużone w kolejnym przebiegu.
 5. **Retencja logów (7 dni, wymagana przez politykę prywatności)**:
    - Docker nie usuwa logów kontenerów po czasie. Na serwerze VPS (jako root) zainstaluj konfigurację logrotate z repozytorium:
      ```bash
      cp deploy/logrotate/docker-containers /etc/logrotate.d/docker-containers
      logrotate --debug /etc/logrotate.d/docker-containers
      ```
+   - Sprawdź `/etc/docker/daemon.json`: jeżeli zawiera `log-opts` z `max-size` / `max-file` (instalator Coolify może je ustawić), usuń je i zrestartuj Dockera. Pliki rotowane przez samego Dockera (`*-json.log.1` …) są usuwane według liczby, a nie wieku, więc mogłyby leżeć dłużej niż 7 dni. Codzienna rotacja logrotate ogranicza wtedy logi do 7 dni.
    - Jeżeli w Coolify włączono logi dostępowe proxy (Traefik), dopisz ich plik do tej konfiguracji.
 
 ---

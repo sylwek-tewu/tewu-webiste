@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { shouldSendRunAlert, RUN_ALERT_INTERVAL_MS, sendRateLimitedRunAlert } from './run-alerts';
-import { initDb } from '@/db';
+import { shouldSendRunAlert, RUN_ALERT_INTERVAL_MS, sendRateLimitedRunAlert, resetRunAlertMemory } from './run-alerts';
+import Database from 'better-sqlite3';
+import { drizzle } from 'drizzle-orm/better-sqlite3';
+import { initDb, schema } from '@/db';
 
 describe('shouldSendRunAlert', () => {
   const now = new Date('2026-10-05T12:00:00Z');
@@ -44,6 +46,29 @@ describe('sendRateLimitedRunAlert with SQLite', () => {
     // Third alert 7 hours later (after RUN_ALERT_INTERVAL_MS) should send
     const sevenHoursLater = new Date(now.getTime() + 7 * 60 * 60 * 1000);
     await sendRateLimitedRunAlert('test-key', 'Third alert', send, sevenHoursLater, testDb);
+    expect(send).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('sendRateLimitedRunAlert when the database is unavailable', () => {
+  beforeEach(() => {
+    resetRunAlertMemory();
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  it('still alerts at most once per interval', async () => {
+    // A closed connection makes every read and write throw, as with an unreadable volume
+    const sqlite = new Database(':memory:');
+    const brokenDb = drizzle(sqlite, { schema });
+    sqlite.close();
+    const send = vi.fn().mockResolvedValue(true);
+    const now = new Date('2026-10-05T12:00:00Z');
+
+    await sendRateLimitedRunAlert('db-down', 'Run failed', send, now, brokenDb);
+    await sendRateLimitedRunAlert('db-down', 'Run failed', send, new Date(now.getTime() + 10 * 60 * 1000), brokenDb);
+    expect(send).toHaveBeenCalledTimes(1);
+
+    await sendRateLimitedRunAlert('db-down', 'Run failed', send, new Date(now.getTime() + RUN_ALERT_INTERVAL_MS), brokenDb);
     expect(send).toHaveBeenCalledTimes(2);
   });
 });

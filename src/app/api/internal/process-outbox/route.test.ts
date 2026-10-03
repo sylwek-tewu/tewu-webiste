@@ -141,7 +141,7 @@ describe('POST /api/internal/process-outbox', () => {
     expect(await memoryStore.listIds()).toEqual(['E1E2E3']);
   });
 
-  it('rejects a run while the previous one is still in progress and sends each record once', async () => {
+  it('skips a run while the previous one is still in progress and sends each record once', async () => {
     await memoryStore.put({
       id: 'S1S2S3',
       phone: '+48501482555',
@@ -162,7 +162,9 @@ describe('POST /api/internal/process-outbox', () => {
     release();
     const firstRes = await first;
 
-    expect(second.status).toBe(409);
+    // 200 so the scheduled task (wget) is not reported as failed
+    expect(second.status).toBe(200);
+    expect(await second.json()).toEqual({ skipped: 'run-in-progress' });
     expect(firstRes.status).toBe(200);
     expect(email.sendCallbackEmail).toHaveBeenCalledOnce();
     expect(await memoryStore.listIds()).toEqual([]);

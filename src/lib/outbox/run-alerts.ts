@@ -9,6 +9,14 @@ import { getDb, schema } from '@/db';
 
 export const RUN_ALERT_INTERVAL_MS = 6 * 60 * 60 * 1000;
 
+/** Last alert times sent by this process; used only when the database cannot be read. */
+const lastAlertInMemory = new Map<string, string>();
+
+/** For tests: forgets the in-memory fallback. */
+export function resetRunAlertMemory(): void {
+  lastAlertInMemory.clear();
+}
+
 export function shouldSendRunAlert(lastAlertAt: string | null, now: Date): boolean {
   if (!lastAlertAt) return true;
   const last = Date.parse(lastAlertAt);
@@ -59,16 +67,20 @@ export async function sendRateLimitedRunAlert(
   now: Date = new Date(),
   db?: BetterSQLite3Database<typeof schema>
 ): Promise<void> {
-  let lastAlertAt: string | null = null;
+  let lastAlertAt: string | null;
   try {
     lastAlertAt = await getLastAlertAt(key, db);
   } catch (err) {
     console.error('[RunAlerts] Failed to query alert meta from SQLite:', err);
+    // The database being down is often what the alert is about; fall back to this process's memory
+    // so the alert still goes out at most once per interval instead of on every run.
+    lastAlertAt = lastAlertInMemory.get(key) ?? null;
   }
 
   if (!shouldSendRunAlert(lastAlertAt, now)) return;
 
   if (await send(text)) {
+    lastAlertInMemory.set(key, now.toISOString());
     try {
       await setLastAlertAt(key, now.toISOString(), db);
     } catch (err) {
