@@ -19,6 +19,14 @@ describe('getOutboxStore', () => {
     resetOutboxStore();
     expect(getOutboxStore()).toBeInstanceOf(SqliteOutboxStore);
   });
+
+  it('ignores OUTBOX_STORE=memory in production', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.stubEnv('OUTBOX_STORE', 'memory');
+    resetOutboxStore();
+    expect(getOutboxStore()).toBeInstanceOf(SqliteOutboxStore);
+  });
 });
 
 describe('MemoryOutboxStore', () => {
@@ -40,10 +48,12 @@ describe('SqliteOutboxStore', () => {
   let testDb: ReturnType<typeof initDb>;
 
   beforeEach(() => {
+    vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'test-encryption-key-for-unit-tests');
     testDb = initDb({ path: ':memory:' });
   });
 
   afterEach(() => {
+    vi.unstubAllEnvs();
     resetDbInstance();
   });
 
@@ -57,7 +67,6 @@ describe('SqliteOutboxStore', () => {
   };
 
   it('returns a stored record and encrypts phone at rest', async () => {
-    process.env.OUTBOX_ENCRYPTION_KEY = 'test-encryption-key-for-unit-tests';
     const store = new SqliteOutboxStore(testDb);
     await store.put(valid);
 
@@ -69,16 +78,35 @@ describe('SqliteOutboxStore', () => {
     expect(rawRows[0].phone).not.toEqual('+48501482555');
   });
 
-  it('updates existing record on duplicate put', async () => {
+  it('rejects a duplicate put instead of overwriting the pending record', async () => {
     const store = new SqliteOutboxStore(testDb);
     await store.put(valid);
-    await store.put({ ...valid, attempts: 2 });
 
-    const updated = await store.get('C9F1A2');
-    expect(updated?.attempts).toBe(2);
+    await expect(store.put({ ...valid, phone: '+48602235736' })).rejects.toThrow();
+    expect((await store.get('C9F1A2'))?.phone).toBe(valid.phone);
+  });
 
-    const ids = await store.listIds();
-    expect(ids).toEqual(['C9F1A2']);
+  it('claims a record once per attempt count', async () => {
+    const store = new SqliteOutboxStore(testDb);
+    await store.put(valid);
+    const at = '2026-10-05T10:10:00.000Z';
+
+    expect(await store.claim('C9F1A2', 1, at)).toBe(true);
+    // A second run that read the same record (attempts: 1) loses the claim
+    expect(await store.claim('C9F1A2', 1, at)).toBe(false);
+
+    const claimed = await store.get('C9F1A2');
+    expect(claimed?.attempts).toBe(2);
+    expect(claimed?.lastAttemptAt).toBe(at);
+  });
+
+  it('does not re-create a deleted record when claiming it', async () => {
+    const store = new SqliteOutboxStore(testDb);
+    await store.put(valid);
+    await store.delete('C9F1A2');
+
+    expect(await store.claim('C9F1A2', 1, '2026-10-05T10:10:00.000Z')).toBe(false);
+    expect(await store.listIds()).toEqual([]);
   });
 
   it('returns null for a missing record', async () => {

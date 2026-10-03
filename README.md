@@ -57,7 +57,7 @@ cp .env.example .env.local
 | `CALLBACK_TO` | Tak | Adres(y) odbiorcy powiadomień w biurze | `biuro@tewu.szczecin.pl` |
 | `CRON_SECRET` | Tak (produkcja) | Token zabezpieczający endpoint ponawiania bufora (`POST /api/internal/process-outbox`) | `silny-losowy-token-cron` |
 | `OUTBOX_ENCRYPTION_KEY` | Tak (produkcja) | Klucz szyfrowania danych w bazie SQLite (AES-256-GCM). Bez niego bufor awaryjny nie przyjmie zgłoszenia. Zmiana klucza usuwa oczekujące wpisy (z alarmem); brak klucza wstrzymuje ponawianie bez usuwania (alarm) | `losowy-32-bajtowy-klucz` |
-| `OUTBOX_DB_PATH` | Nie | Ścieżka do pliku bazy SQLite (domyślnie `/app/data/outbox.db` w kontenerze) | `/app/data/outbox.db` |
+| `OUTBOX_DB_PATH` | Nie | Ścieżka do pliku bazy SQLite (w kontenerze `/app/data/outbox.db`, lokalnie domyślnie `./data/outbox.db`) | `/app/data/outbox.db` |
 | `NEXT_PUBLIC_CALLBACK_CALL_NUMBER` | Nie | Numer pod przyciskiem „Zadzwoń” (mobile) w formacie E.164. Domyślnie stacjonarny biura. *(Wymaga ponownego buildu kontenera po zmianie)* | `+48914824190` lub `+48501482555` |
 | `TELEGRAM_BOT_TOKEN` | Nie | Token bota z @BotFather (opcjonalny ping bez PII) | `123456789:ABC...` |
 | `TELEGRAM_CHAT_ID` | Nie | ID czatu lub grupy biura na Telegramie | `-1001234567890` |
@@ -80,13 +80,49 @@ cp .env.example .env.local
    - *Wskazówka dotycząca uprawnień:* Przy korzystaniu z wolumenów zarządzanych Dockera (Named Volumes) uprawnienia katalogu są dziedziczone automatycznie dla użytkownika `nextjs` (UID 1001). W przypadku bind mountu z katalogu hosta VPS upewnij się, że katalog na hoście ma uprawnienia zapisu dla UID 1001 (`chown -R 1001:1001 <sciezka_na_hoscie>`).
 3. **Zmienne środowiskowe**:
    - Wprowadź zmienne produkcyjne z powyższej tabeli w zakładce **Environment Variables**.
+   - Zmienne `CALLBACK_OUTBOX_TTL_HOURS`, `NEXT_PUBLIC_CALLBACK_CALL_NUMBER` i `NEXT_PUBLIC_EXTRA_CLOSED_DATES` zaznacz jako **Build Variable** – są odczytywane podczas kompilacji (`ARG` w `Dockerfile`). `CALLBACK_OUTBOX_TTL_HOURS` musi być dostępna także w czasie działania (domyślnie jest), aby okres w polityce prywatności zgadzał się z faktycznym usuwaniem.
 4. **Zadanie harmonogramu (Coolify Scheduled Task)**:
-   - W zakładce **Scheduled Tasks** dodaj zadanie cykliczne:
+   - W zakładce **Scheduled Tasks** dodaj zadanie cykliczne (uruchamiane wewnątrz kontenera aplikacji):
      - **Cron Expression**: `*/10 * * * *` (co 10 minut)
-     - **Command**:
+     - **Command** (obraz nie zawiera `curl`, dostępny jest `wget` z BusyBox):
        ```bash
-       curl -s -X POST http://localhost:3000/api/internal/process-outbox -H "Authorization: Bearer ${CRON_SECRET}"
+       wget -qO- --post-data='' --header="Authorization: Bearer $CRON_SECRET" http://127.0.0.1:3000/api/internal/process-outbox
        ```
+   - Po zapisaniu uruchom zadanie ręcznie i sprawdź w logach wynik `{"processed":…}`. Kod 409 oznacza, że poprzedni przebieg jeszcze trwa (nic nie zostało pominięte na stałe).
+5. **Retencja logów (7 dni, wymagana przez politykę prywatności)**:
+   - Docker nie usuwa logów kontenerów po czasie. Na serwerze VPS (jako root) zainstaluj konfigurację logrotate z repozytorium:
+     ```bash
+     cp deploy/logrotate/docker-containers /etc/logrotate.d/docker-containers
+     logrotate --debug /etc/logrotate.d/docker-containers
+     ```
+   - Jeżeli w Coolify włączono logi dostępowe proxy (Traefik), dopisz ich plik do tej konfiguracji.
+
+---
+
+## Instrukcja konfiguracji bota Telegram dla właściciela biura
+
+Powiadomienia na Telegramie mają charakter czysto pomocniczy i **nie zawierają żadnych danych osobowych klientów** (numer telefonu trafia wyłącznie do bezpiecznej skrzynki e-mail biura).
+
+1. Otwórz aplikację Telegram i wyszukaj bota **@BotFather**.
+2. Wpisz polecenie `/newbot` i postępuj zgodnie z instrukcjami, podając nazwę oraz unikalny username bota (np. `TewuCallbackBot`).
+3. Po utworzeniu bota skopiuj wygenerowany **HTTP API token** – będzie to wartość zmiennej `TELEGRAM_BOT_TOKEN`.
+4. Utwórz grupę na Telegramie dla pracowników biura (lub użyj istniejącej) i dodaj do niej nowo utworzonego bota.
+5. Aby pozyskać identyfikator grupy (`TELEGRAM_CHAT_ID`):
+   - Wyślij do grupy dowolną wiadomość (np. `test`).
+   - Otwórz w przeglądarce adres: `https://api.telegram.org/bot<TWOJ_TOKEN>/getUpdates`.
+   - W sekcji `"chat":{"id": ...}` odczytaj identyfikator (dla grup jest to liczba ujemna, np. `-1001234567890`).
+6. Wprowadź `TELEGRAM_BOT_TOKEN` i `TELEGRAM_CHAT_ID` w panelu Coolify w zakładce **Environment Variables** aplikacji i wdróż ją ponownie.
+
+---
+
+## Otwarte kwestie prawne i organizacyjne (dla właściciela TEWU)
+1. **Weryfikacja szkicu Polityki Prywatności (`/polityka-prywatnosci`)**:
+   - Skonsultowanie treści szkicu z radcą prawnym biura (potwierdzenie podstawy prawnej z art. 6 ust. 1 lit. b vs f RODO).
+   - Potwierdzenie zawarcia umowy powierzenia przetwarzania danych (DPA) z OVH Sp. z o.o. (wskazaną w polityce) i lokalizacji centrum danych VPS w EOG.
+   - Uzupełnienie sekcji dotyczącej plików cookies po późniejszym wdrożeniu baneru CMP / Cookiebota.
+2. **Kolejne kroki marketingowe**:
+   - Wdrożenie Cookiebota / Google Consent Mode v2.
+   - Podpięcie tagów konwersji Google Ads i GA4 pod zaimplementowane zdarzenia `dataLayer` (`callback_widget_open`, `callback_request_submit`).
 
 ---
 
@@ -120,4 +156,4 @@ pnpm db:generate
 # Aplikowanie migracji ręcznie
 pnpm db:migrate
 ```
-*(Uwaga: w środowisku kontenerowym aplikacja automatycznie aplikuje oczekujące migracje podczas pierwszego połączenia przy starcie).*
+*(Uwaga: w środowisku kontenerowym aplikacja otwiera bazę i automatycznie aplikuje oczekujące migracje przy starcie serwera (`src/instrumentation.ts`); błąd zgłaszany jest w logach i alarmem na Telegramie).*

@@ -4,9 +4,11 @@ node_modules
 .next
 data
 *.log
-.env
-.env*.local
+# Any env file would be read by `next build` and baked into the image
+.env*
+!.env.example
 .DS_Store
 README.md
 docs
+deploy
 mantine_cr_results*.md

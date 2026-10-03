@@ -214,6 +214,27 @@ describe('processOutbox', () => {
     expect(await store.listIds()).toEqual(['BAD1']);
   });
 
+  it('sends a record once when two runs overlap, and a failure does not bring it back', async () => {
+    const store = new MemoryOutboxStore();
+    const now = new Date();
+    await store.put({ id: 'DUP1', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 1 });
+
+    let release!: () => void;
+    const slowSend = vi.fn(() => new Promise<boolean>((resolve) => (release = () => resolve(true))));
+    const first = processOutbox(store, slowSend, { now: new Date(now.getTime() + 11 * 60 * 1000) });
+    const second = processOutbox(store, async () => false, { now: new Date(now.getTime() + 11 * 60 * 1000) });
+
+    const secondRes = await second;
+    release();
+    const firstRes = await first;
+
+    expect(slowSend).toHaveBeenCalledOnce();
+    expect(firstRes.succeeded).toBe(1);
+    expect(secondRes.skipped).toBe(1);
+    expect(secondRes.failed).toBe(0);
+    expect(await store.listIds()).toEqual([]);
+  });
+
   it('waits longer between retries as attempts grow', async () => {
     const store = new MemoryOutboxStore();
     const now = new Date('2026-10-05T12:00:00Z');

@@ -4,9 +4,9 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-# 1. Dependencies stage: build tools for native better-sqlite3 compilation
+# 1. Dependencies stage: better-sqlite3's install script compiles it with node-gyp
 FROM base AS deps
-RUN apk add --no-cache libc6-compat python3 make g++
+RUN apk add --no-cache python3 make g++
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml* ./
@@ -18,6 +18,15 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Read at build time: NEXT_PUBLIC_* are inlined into the client bundle and the TTL is printed in the
+# statically rendered privacy policy. In Coolify, mark these variables as "Build Variable".
+ARG CALLBACK_OUTBOX_TTL_HOURS
+ARG NEXT_PUBLIC_CALLBACK_CALL_NUMBER
+ARG NEXT_PUBLIC_EXTRA_CLOSED_DATES
+ENV CALLBACK_OUTBOX_TTL_HOURS=$CALLBACK_OUTBOX_TTL_HOURS \
+    NEXT_PUBLIC_CALLBACK_CALL_NUMBER=$NEXT_PUBLIC_CALLBACK_CALL_NUMBER \
+    NEXT_PUBLIC_EXTRA_CLOSED_DATES=$NEXT_PUBLIC_EXTRA_CLOSED_DATES
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
@@ -53,5 +62,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
 USER nextjs
 
 EXPOSE 3000
+
+# busybox wget is the only HTTP client in the image (no curl); Coolify waits for this before
+# switching traffic during a rolling update.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD wget -q --spider http://127.0.0.1:3000/ || exit 1
 
 CMD ["node", "server.js"]

@@ -11,7 +11,14 @@ export interface OutboxRecord {
 }
 
 export interface OutboxStore {
+  /** Adds a new record; rejects if the id is already taken. */
   put(record: OutboxRecord): Promise<void>;
+  /**
+   * Records a delivery attempt (attempts + 1, lastAttemptAt = `at`) only while the record still has
+   * `attempts`. Returns false when it is gone or another run claimed it first, so two overlapping
+   * runs never send the same record.
+   */
+  claim(id: string, attempts: number, at: string): Promise<boolean>;
   get(id: string): Promise<OutboxRecord | null>;
   /** Keys only, so one unreadable record cannot block the others. */
   listIds(): Promise<string[]>;

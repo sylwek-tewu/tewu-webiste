@@ -4,7 +4,7 @@
  * and in-memory store for dev/testing.
  */
 
-import { eq, asc } from 'drizzle-orm';
+import { and, eq, asc } from 'drizzle-orm';
 import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import { getDb, schema } from '@/db';
 import { OutboxRecord, OutboxStore } from './types';
@@ -48,8 +48,16 @@ export class MemoryOutboxStore implements OutboxStore {
   private records = new Map<string, OutboxRecord>();
 
   async put(record: OutboxRecord): Promise<void> {
+    if (this.records.has(record.id)) throw new Error(`Outbox record #${record.id} already exists`);
     const atRest = { ...record, phone: encryptPhone(record.phone) };
     this.records.set(record.id, atRest);
+  }
+
+  async claim(id: string, attempts: number, at: string): Promise<boolean> {
+    const raw = this.records.get(id);
+    if (!raw || raw.attempts !== attempts) return false;
+    this.records.set(id, { ...raw, attempts: attempts + 1, lastAttemptAt: at });
+    return true;
   }
 
   async get(id: string): Promise<OutboxRecord | null> {
@@ -102,20 +110,15 @@ export class SqliteOutboxStore implements OutboxStore {
         createdAt: record.createdAt,
         attempts: record.attempts,
         lastAttemptAt: record.lastAttemptAt || null,
-      })
-      .onConflictDoUpdate({
-        target: schema.outboxRecords.id,
-        set: {
-          phone: encryptedPhone,
-          slot: record.slot,
-          topic: record.topic || null,
-          source: record.source,
-          locale: record.locale || null,
-          createdAt: record.createdAt,
-          attempts: record.attempts,
-          lastAttemptAt: record.lastAttemptAt || null,
-        },
       });
+  }
+
+  async claim(id: string, attempts: number, at: string): Promise<boolean> {
+    const result = await this.db
+      .update(schema.outboxRecords)
+      .set({ attempts: attempts + 1, lastAttemptAt: at })
+      .where(and(eq(schema.outboxRecords.id, id), eq(schema.outboxRecords.attempts, attempts)));
+    return result.changes === 1;
   }
 
   async get(id: string): Promise<OutboxRecord | null> {
@@ -161,9 +164,11 @@ let memoryStoreInstance: MemoryOutboxStore | null = null;
 let sqliteStoreInstance: SqliteOutboxStore | null = null;
 
 export function getOutboxStore(): OutboxStore {
-  // Use memory store if explicitly requested or in test mode without forced sqlite
+  // A memory buffer loses every pending request on restart, so production never uses it.
+  const memoryRequested = process.env.OUTBOX_STORE === 'memory';
+  const isProduction = process.env.NODE_ENV === 'production';
   if (
-    process.env.OUTBOX_STORE === 'memory' ||
+    (memoryRequested && !isProduction) ||
     (process.env.NODE_ENV === 'test' && process.env.OUTBOX_STORE !== 'sqlite')
   ) {
     if (!memoryStoreInstance) {
@@ -173,6 +178,9 @@ export function getOutboxStore(): OutboxStore {
   }
 
   if (!sqliteStoreInstance) {
+    if (memoryRequested) {
+      console.error('[Outbox] OUTBOX_STORE=memory is ignored in production; using SQLite.');
+    }
     sqliteStoreInstance = new SqliteOutboxStore();
   }
   return sqliteStoreInstance;

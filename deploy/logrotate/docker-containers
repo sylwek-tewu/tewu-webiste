@@ -1,0 +1,19 @@
+# Deletes Docker container logs (the app's stdout/stderr) after 7 days, as the privacy policy
+# (s5Logs) promises. Docker's json-file driver has no time-based retention of its own.
+#
+# Install on the VPS (as root):
+#   cp deploy/logrotate/docker-containers /etc/logrotate.d/docker-containers
+#   logrotate --debug /etc/logrotate.d/docker-containers   # dry run
+#
+# logrotate runs daily from cron / systemd timer on Debian and Ubuntu. If the Coolify proxy
+# (Traefik) access log is enabled, add its log file to this list as well.
+/var/lib/docker/containers/*/*-json.log {
+    daily
+    rotate 6
+    maxage 7
+    missingok
+    notifempty
+    copytruncate
+    compress
+    delaycompress
+}

@@ -26,11 +26,11 @@ export function runMigrations(
   db: BetterSQLite3Database<typeof schema>,
   migrationsFolder = getMigrationsFolder()
 ): void {
-  if (fs.existsSync(migrationsFolder)) {
-    migrate(db, { migrationsFolder });
-  } else {
-    console.warn(`[DB] Migrations folder not found at: ${migrationsFolder}`);
+  // Without migrations the database has no tables and every outbox write fails, so stop here.
+  if (!fs.existsSync(migrationsFolder)) {
+    throw new Error(`[DB] Migrations folder not found at: ${migrationsFolder}`);
   }
+  migrate(db, { migrationsFolder });
 }
 
 export interface InitDbOptions {
@@ -54,6 +54,10 @@ export function setDbInstance(
   sqliteInstance = sqlite ?? null;
 }
 
+// better-sqlite3 is synchronous, so a locked database (two containers sharing the volume during a
+// deploy) blocks the event loop for this long; keep it under DELIVERY_BUDGET.outboxMs.
+const BUSY_TIMEOUT_MS = 1500;
+
 export function initDb(options: InitDbOptions = {}): BetterSQLite3Database<typeof schema> {
   const dbPath = options.path || getDbPath();
 
@@ -64,42 +68,26 @@ export function initDb(options: InitDbOptions = {}): BetterSQLite3Database<typeo
     }
   }
 
-  const sqlite = new Database(dbPath, { timeout: 5000 });
-  sqlite.pragma('journal_mode = WAL');
-  sqlite.pragma('busy_timeout = 5000');
-
-  const db = drizzle(sqlite, { schema });
-
-  if (options.autoMigrate ?? true) {
-    runMigrations(db);
+  const sqlite = new Database(dbPath, { timeout: BUSY_TIMEOUT_MS });
+  try {
+    sqlite.pragma('journal_mode = WAL');
+    const db = drizzle(sqlite, { schema });
+    if (options.autoMigrate ?? true) {
+      runMigrations(db);
+    }
+    // Only a migrated database becomes the default, so a failed migration is retried on the next call.
+    if (options.setAsDefault) {
+      setDbInstance(db, sqlite);
+    }
+    return db;
+  } catch (error) {
+    sqlite.close();
+    throw error;
   }
-
-  if (options.setAsDefault) {
-    setDbInstance(db, sqlite);
-  }
-
-  return db;
 }
 
 export function getDb(): BetterSQLite3Database<typeof schema> {
-  if (!dbInstance) {
-    const dbPath = getDbPath();
-    if (dbPath !== ':memory:') {
-      const dir = path.dirname(dbPath);
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-      }
-    }
-
-    sqliteInstance = new Database(dbPath, { timeout: 5000 });
-    sqliteInstance.pragma('journal_mode = WAL');
-    sqliteInstance.pragma('busy_timeout = 5000');
-
-    dbInstance = drizzle(sqliteInstance, { schema });
-    runMigrations(dbInstance);
-  }
-
-  return dbInstance;
+  return dbInstance ?? initDb({ setAsDefault: true });
 }
 
 /** For testing purposes: resets singleton database connection */

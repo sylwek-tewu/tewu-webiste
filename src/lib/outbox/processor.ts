@@ -104,7 +104,13 @@ export async function processOutbox(
       return;
     }
 
-    // Attempt email delivery
+    // Record the attempt before sending: only the run that claims it sends, and a failure needs no
+    // second write that could re-create a record another run has already delivered and deleted.
+    if (!(await store.claim(record.id, record.attempts, now.toISOString()))) {
+      result.skipped++;
+      return;
+    }
+
     let success: boolean;
     try {
       success = await sendEmail(record);
@@ -116,9 +122,6 @@ export async function processOutbox(
       await store.delete(record.id);
       result.succeeded++;
     } else {
-      record.attempts = (record.attempts || 0) + 1;
-      record.lastAttemptAt = now.toISOString();
-      await store.put(record);
       result.failed++;
     }
   }
