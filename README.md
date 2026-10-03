@@ -70,6 +70,7 @@ cp .env.example .env.local
 
 1. **Utworzenie aplikacji w panelu Coolify**:
    - Wybierz serwer VPS w OVHcloud i dodaj nowy zasób typu **Application** (źródło: repozytorium Git).
+   - **VPS musi stać w centrum danych na terenie EOG** (np. Warszawa – WAW, Gravelines – GRA, Strasburg – SBG, Roubaix – RBX, Frankfurt – DE), zamówiony u OVH Sp. z o.o. Polityka prywatności deklaruje, że serwer i bufor awaryjny znajdują się w EOG – region w Kanadzie, USA czy Azji czyni tę deklarację nieprawdziwą. Lokalizację sprawdzisz w panelu OVHcloud (szczegóły VPS → lokalizacja).
    - Jako metodę budowania wybierz **Dockerfile** (Coolify automatycznie wykryje wieloetapowy `Dockerfile` w głównym katalogu).
 2. **Konfiguracja pamięci trwałej (Persistent Storage)**:
    - W ustawieniach aplikacji przejdź do zakładki **Storages**.
