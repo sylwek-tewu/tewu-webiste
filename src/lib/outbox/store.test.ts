@@ -1,10 +1,11 @@
-import { describe, it, expect, afterEach, beforeEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { getOutboxStore, resetOutboxStore, MemoryOutboxStore, SqliteOutboxStore } from './store';
 import { CorruptRecordError } from './crypto';
 import { initDb, schema, resetDbInstance } from '@/db';
 
 describe('getOutboxStore', () => {
   afterEach(() => {
+    vi.unstubAllEnvs();
     resetOutboxStore();
     resetDbInstance();
   });
@@ -14,14 +15,9 @@ describe('getOutboxStore', () => {
   });
 
   it('uses SqliteOutboxStore in production', () => {
-    const originalEnv = process.env.NODE_ENV;
-    try {
-      process.env.NODE_ENV = 'production';
-      resetOutboxStore();
-      expect(getOutboxStore()).toBeInstanceOf(SqliteOutboxStore);
-    } finally {
-      process.env.NODE_ENV = originalEnv;
-    }
+    vi.stubEnv('NODE_ENV', 'production');
+    resetOutboxStore();
+    expect(getOutboxStore()).toBeInstanceOf(SqliteOutboxStore);
   });
 });
 

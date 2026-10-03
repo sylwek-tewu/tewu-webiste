@@ -64,8 +64,9 @@ export function initDb(options: InitDbOptions = {}): BetterSQLite3Database<typeo
     }
   }
 
-  const sqlite = new Database(dbPath);
+  const sqlite = new Database(dbPath, { timeout: 5000 });
   sqlite.pragma('journal_mode = WAL');
+  sqlite.pragma('busy_timeout = 5000');
 
   const db = drizzle(sqlite, { schema });
 
@@ -90,8 +91,9 @@ export function getDb(): BetterSQLite3Database<typeof schema> {
       }
     }
 
-    sqliteInstance = new Database(dbPath);
+    sqliteInstance = new Database(dbPath, { timeout: 5000 });
     sqliteInstance.pragma('journal_mode = WAL');
+    sqliteInstance.pragma('busy_timeout = 5000');
 
     dbInstance = drizzle(sqliteInstance, { schema });
     runMigrations(dbInstance);

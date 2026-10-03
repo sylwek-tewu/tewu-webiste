@@ -77,6 +77,7 @@ cp .env.example .env.local
      - **Destination Path**: `/app/data`
      - **Name**: `tewu-data` (lub domyślna nazwa wolumenu)
    - Umożliwia to zachowanie bazy SQLite (`/app/data/outbox.db`) pomiędzy kolejnymi wdrożeniami i restartami kontenera.
+   - *Wskazówka dotycząca uprawnień:* Przy korzystaniu z wolumenów zarządzanych Dockera (Named Volumes) uprawnienia katalogu są dziedziczone automatycznie dla użytkownika `nextjs` (UID 1001). W przypadku bind mountu z katalogu hosta VPS upewnij się, że katalog na hoście ma uprawnienia zapisu dla UID 1001 (`chown -R 1001:1001 <sciezka_na_hoscie>`).
 3. **Zmienne środowiskowe**:
    - Wprowadź zmienne produkcyjne z powyższej tabeli w zakładce **Environment Variables**.
 4. **Zadanie harmonogramu (Coolify Scheduled Task)**:

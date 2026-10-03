@@ -150,7 +150,7 @@ export async function processOutbox(
         await expireUnreadable(id, error.createdAt);
         continue;
       }
-      // Transient store error (network, Blobs 5xx): keep the record for the next run.
+      // Transient store error (I/O, database busy): keep the record for the next run.
       console.error(
         `[Outbox] Store error for #${id}:`,
         error instanceof Error ? error.message : 'Unknown'

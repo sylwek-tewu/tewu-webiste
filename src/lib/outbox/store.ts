@@ -4,7 +4,7 @@
  * and in-memory store for dev/testing.
  */
 
-import { eq } from 'drizzle-orm';
+import { eq, asc } from 'drizzle-orm';
 import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import { getDb, schema } from '@/db';
 import { OutboxRecord, OutboxStore } from './types';
@@ -144,7 +144,8 @@ export class SqliteOutboxStore implements OutboxStore {
   async listIds(): Promise<string[]> {
     const rows = await this.db
       .select({ id: schema.outboxRecords.id })
-      .from(schema.outboxRecords);
+      .from(schema.outboxRecords)
+      .orderBy(asc(schema.outboxRecords.createdAt));
     return rows.map((r) => r.id);
   }
 

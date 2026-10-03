@@ -58,7 +58,7 @@ Dotychczas serwis Biura Rachunkowego TEWU wdrażany był na platformie Netlify. 
 - **Determinizm środowiska:** Standalone Next.js z Drizzle ORM eliminuje narzut i nieprzewidywalność platform serverless.
 
 ### Wymagania operacyjne dla wdrożenia w Coolify
-1. **Konfiguracja wolumenu (Persistent Storage):** Zamontować wolumen hosta do ścieżki kontenera `/app/data`.
+1. **Konfiguracja wolumenu (Persistent Storage):** Zamontować wolumen zarządzany Dockera (Named Volume) lub katalog hosta do ścieżki kontenera `/app/data` (w przypadku korzystania z bind mountu katalog na hoście musi posiadać uprawnienia do zapisu dla UID 1001: `chown -R 1001:1001 <sciezka>`).
 2. **Zmienne środowiskowe:** Ustawić zmienne w Coolify:
    - `CRON_SECRET` – silny losowy token autoryzacyjny dla crona,
    - `OUTBOX_ENCRYPTION_KEY` – 32-bajtowy klucz szyfrowania danych osobowych w buforze SQLite,

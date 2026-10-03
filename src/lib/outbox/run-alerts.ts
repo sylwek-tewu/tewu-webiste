@@ -59,9 +59,20 @@ export async function sendRateLimitedRunAlert(
   now: Date = new Date(),
   db?: BetterSQLite3Database<typeof schema>
 ): Promise<void> {
-  const lastAlertAt = await getLastAlertAt(key, db);
+  let lastAlertAt: string | null = null;
+  try {
+    lastAlertAt = await getLastAlertAt(key, db);
+  } catch (err) {
+    console.error('[RunAlerts] Failed to query alert meta from SQLite:', err);
+  }
+
   if (!shouldSendRunAlert(lastAlertAt, now)) return;
+
   if (await send(text)) {
-    await setLastAlertAt(key, now.toISOString(), db);
+    try {
+      await setLastAlertAt(key, now.toISOString(), db);
+    } catch (err) {
+      console.error('[RunAlerts] Failed to update alert meta in SQLite:', err);
+    }
   }
 }

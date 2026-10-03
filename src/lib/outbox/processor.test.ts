@@ -185,7 +185,7 @@ describe('processOutbox', () => {
     const store = new MemoryOutboxStore();
     const now = new Date();
     await store.put({ id: 'NET1', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 1 });
-    vi.spyOn(store, 'get').mockRejectedValueOnce(new Error('Blobs 503'));
+    vi.spyOn(store, 'get').mockRejectedValueOnce(new Error('Database I/O error'));
 
     const corrupt: string[] = [];
     const res = await processOutbox(store, async () => true, { now, onCorrupt: (id) => void corrupt.push(id) });
