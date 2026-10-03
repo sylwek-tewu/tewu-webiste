@@ -97,7 +97,7 @@ Data i godzina: ${dateFormatted} (czas polski)
     </tr>
     <tr>
       <td style="padding: 8px 0; color: #64748b;">Język klienta:</td>
-      <td style="padding: 8px 0; font-weight: bold; color: ${isUk ? '#0284c7' : '#0f172a'};">${isUk ? '🇺🇦 Ukraiński (UA)' : '🇵🇱 Polski (PL)'}</td>
+      <td style="padding: 8px 0; font-weight: bold; color: ${isUk ? '#0284c7' : '#0f172a'};">${langLabel}</td>
     </tr>
     <tr>
       <td style="padding: 8px 0; color: #64748b;">Numer telefonu:</td>
