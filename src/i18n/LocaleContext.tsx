@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import type { Locale, Translations } from './types';
-import { LOCALE_COOKIE_NAME } from './config';
+import { LOCALE_COOKIE_NAME, localeOfPath } from './config';
 
 interface LocaleContextValue {
   locale: Locale;
@@ -22,7 +22,7 @@ export function setLocaleCookie(locale: Locale) {
 
 /** The same page's path in the other language: "/kontakt" <-> "/uk/kontakt", "/" <-> "/uk". */
 export function localizePath(pathname: string, targetLocale: Locale): string {
-  const isUk = pathname === '/uk' || pathname.startsWith('/uk/');
+  const isUk = localeOfPath(pathname) === 'uk';
   if (targetLocale === 'uk') {
     if (isUk) return pathname;
     return pathname === '/' ? '/uk' : `/uk${pathname}`;

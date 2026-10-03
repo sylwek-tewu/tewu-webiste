@@ -14,7 +14,7 @@ Biuro Rachunkowe TEWU rozszerza swoją ofertę na klientów ukraińskojęzycznyc
 - **Slugi podstron:** zachowanie identycznych slugów w obu wersjach językowych pod prefiksem `/uk` (np. `/uslugi` ↔ `/uk/uslugi`). Umożliwia to bezpośrednie i bezbłędne przełączanie języka 1:1 na dowolnej podstronie bez konieczności mapowania słowników tras.
 - **Osobny root layout dla każdego języka:** strony leżą w grupach tras `src/app/(pl)` i `src/app/(uk)/uk`, każda z własnym `layout.tsx`. Dzięki temu `<html lang>` jest poprawny już w HTML z serwera (wyszukiwarki, czytniki ekranu, tłumacz przeglądarki), strony pozostają statyczne, a każda strona ładuje tylko słownik swojego języka. Zmiana języka przechodzi między root layoutami, więc Next.js ładuje stronę docelową w całości.
 - **Strona 404:** bez wspólnego root layoutu nieznane adresy obsługuje `src/app/global-not-found.tsx` (opcja `experimental.globalNotFound` w `next.config.mjs`). Proxy przekazuje język ścieżki w nagłówku `x-site-locale`, więc `/uk/...` dostaje ukraińską stronę 404, a reszta polską – obie w pełnym układzie strony.
-- **SEO:** każda strona ma `canonical` oraz `alternates.languages` z `pl`, `uk` i `x-default` (wskazującym wersję polską).
+- **SEO:** każda strona ma `canonical` oraz `alternates.languages` z `pl`, `uk` i `x-default` (wskazującym wersję polską). Oba root layouty ustawiają `metadataBase` (`SITE_URL` w `src/constants.tsx`), więc adresy w tych linkach są bezwzględne – wyszukiwarki mogą ignorować względne adresy hreflang.
 
 ### 2. Autodetekcja języka i trwałość wyboru
 - **Middleware:** weryfikacja nagłówka HTTP `Accept-Language`. Jeśli użytkownik ma język ukraiński (`uk`, `uk-UA`) lub rosyjski (`ru`, `ru-RU`) i nie posiada zapisanego ciasteczka preferencji, middleware automatycznie przekierowuje go na odpowiednik z `/uk` (zarówno na stronie głównej, jak i przy wejściu na podstrony).
@@ -45,6 +45,10 @@ Biuro Rachunkowe TEWU rozszerza swoją ofertę na klientów ukraińskojęzycznyc
 
 ### 7. Informacja o strefie czasowej
 - W ukraińskich komunikatach dotyczących godzin pracy biura oraz slotów oddzwonienia w widżecie call-back dodana zostaje adnotacja „(за польським часом)”, eliminująca ryzyko nieporozumień z uwagi na różnicę 1 godziny pomiędzy Polską a Ukrainą.
+
+## Ryzyka
+
+- **Eksperymentalna strona 404:** `global-not-found.tsx` działa tylko z flagą `experimental.globalNotFound` (Next.js 16.1). Flaga może zmienić działanie lub zniknąć w kolejnej wersji Next.js, a strona zależy też od tego, czy runtime Netlify (`@netlify/plugin-nextjs`) przekazuje nagłówki ustawione przez proxy (`x-site-locale`). Przy każdej aktualizacji Next.js lub wtyczki Netlify, a także przed pierwszym wdrożeniem, trzeba na podglądzie wdrożenia sprawdzić `/nie-ma` i `/uk/nema`: status 404, `noindex`, pełny układ strony i właściwy język. Gdy flaga przestanie działać, wariantem awaryjnym jest wspólny root layout z językiem odczytywanym z nagłówka (strony stałyby się dynamiczne).
 
 ## Konsekwencje
 - **Pozytywne:**

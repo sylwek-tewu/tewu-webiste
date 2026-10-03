@@ -16,6 +16,7 @@ const CallbackFormModal = lazy(() => import('./CallbackFormModal'));
 export default function CallbackWidget({ callInfo }: { callInfo: ResolvedCallNumber }) {
   const { isOpen, openWidget } = useCallbackWidget();
   const { t } = useLocale();
+  const officeHoursLabel = `${t.callbackWidget.officeHours}${t.callbackWidget.timeSuffix}`;
 
   // Mount (and download) the form only after the first open; keep it mounted afterwards
   // so the modal's close animation and the entered values survive.
@@ -73,8 +74,8 @@ export default function CallbackWidget({ callInfo }: { callInfo: ResolvedCallNum
               radius="md"
               disabled
               leftSection={<Clock size={16} />}
-              title={`${t.callbackWidget.officeHours}${t.callbackWidget.timeSuffix}`}
-              aria-label={`${t.callbackWidget.officeHours}${t.callbackWidget.timeSuffix}`}
+              title={officeHoursLabel}
+              aria-label={officeHoursLabel}
             >
               {t.callbackWidget.mobileCallHours}
             </Button>

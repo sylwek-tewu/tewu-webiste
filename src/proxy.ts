@@ -1,11 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { detectLocaleFromAcceptLanguage } from './i18n/detect-locale';
-import { LOCALE_COOKIE_NAME, SITE_LOCALE_HEADER, isSupportedLocale } from './i18n/config';
-import type { Locale } from './i18n/types';
-
-function localeOfPath(pathname: string): Locale {
-  return pathname === '/uk' || pathname.startsWith('/uk/') ? 'uk' : 'pl';
-}
+import { LOCALE_COOKIE_NAME, SITE_LOCALE_HEADER, isSupportedLocale, localeOfPath } from './i18n/config';
 
 function continueWithLocale(request: NextRequest) {
   const headers = new Headers(request.headers);
@@ -47,5 +42,8 @@ export const config = {
      * - static files with extensions (e.g. .svg, .png, .jpg, .ico, .pdf)
      */
     '/((?!api/|_next/static|_next/image|favicon.ico|.*\\..*).*)',
+    // Everything under /uk, dotted paths too (no static files live there), so a missing
+    // /uk/old.php still gets the Ukrainian 404.
+    '/uk/:path*',
   ],
 };

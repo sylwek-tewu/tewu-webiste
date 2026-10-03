@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Box, Button, Container, Text, Title } from '@mantine/core';
 import { useLocale } from '@/i18n/LocaleContext';
 
-/** 404 body for both locales; rendered by each root layout's not-found.tsx. */
+/** 404 body for both locales; rendered by src/app/global-not-found.tsx inside the locale's site shell. */
 export default function NotFoundContent() {
   const { t, locale } = useLocale();
 
