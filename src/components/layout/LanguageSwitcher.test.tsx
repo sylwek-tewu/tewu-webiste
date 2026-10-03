@@ -25,8 +25,9 @@ describe('LanguageSwitcher', () => {
   });
 
   it('names each option by its language code only, with the flags hidden from screen readers', () => {
-    renderWithMantine(<LanguageSwitcher />);
+    const { container } = renderWithMantine(<LanguageSwitcher />);
 
+    expect(container.querySelectorAll('label svg[aria-hidden="true"]')).toHaveLength(2);
     expect(screen.getByRole('radio', { name: 'PL' })).toBeChecked();
     expect(screen.getByRole('radio', { name: 'UA' })).not.toBeChecked();
   });
