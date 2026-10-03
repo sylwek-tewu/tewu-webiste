@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { NextRequest } from 'next/server';
 import { proxy } from './proxy';
-import { LOCALE_COOKIE_NAME } from './i18n';
+import { LOCALE_COOKIE_NAME, SITE_LOCALE_HEADER } from './i18n/config';
 
 function createRequest(url: string, headers: Record<string, string> = {}, cookies: Record<string, string> = {}) {
   const req = new NextRequest(new URL(url, 'https://tewu.szczecin.pl'), {
@@ -62,5 +62,44 @@ describe('Proxy language detection and routing', () => {
 
     expect(res.status).toBe(200);
     expect(res.headers.get('location')).toBeNull();
+  });
+
+  it('keeps shared caches from storing the language redirect', () => {
+    const res = proxy(createRequest('/kontakt', { 'accept-language': 'uk' }));
+
+    expect(res.status).toBe(307);
+    expect(res.headers.get('vary')).toContain('Accept-Language');
+    expect(res.headers.get('cache-control')).toBe('private, no-store');
+  });
+
+  it('ignores a cookie with an unsupported value and detects the language instead', () => {
+    const req = createRequest('/', { 'accept-language': 'uk' }, { [LOCALE_COOKIE_NAME]: 'garbage' });
+
+    expect(proxy(req).headers.get('location')).toBe('https://tewu.szczecin.pl/uk');
+  });
+
+  it('redirects a path that only starts with "uk" (e.g. /ukryte), as it is not Ukrainian', () => {
+    const res = proxy(createRequest('/ukryte', { 'accept-language': 'uk' }));
+
+    expect(res.headers.get('location')).toBe('https://tewu.szczecin.pl/uk/ukryte');
+  });
+
+  describe('locale header for the 404 page', () => {
+    // NextResponse.next({ request: { headers } }) exposes overridden request headers this way
+    const forwarded = (res: Response) => res.headers.get(`x-middleware-request-${SITE_LOCALE_HEADER}`);
+
+    it.each([
+      ['/uk/nie-ma', 'uk'],
+      ['/uk', 'uk'],
+      ['/nie-ma', 'pl'],
+      ['/ukryte', 'pl'],
+    ])('marks %s as %s', (path, locale) => {
+      const res = proxy(createRequest(path, {}, { [LOCALE_COOKIE_NAME]: 'pl' }));
+      expect(forwarded(res)).toBe(locale);
+    });
+
+    it('is set without a cookie too', () => {
+      expect(forwarded(proxy(createRequest('/uk/nie-ma')))).toBe('uk');
+    });
   });
 });

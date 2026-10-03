@@ -1,3 +1,5 @@
+import type { CallbackSlot, CallbackTopic } from '@/lib/callback/types';
+
 export type Locale = 'pl' | 'uk';
 
 export interface NavItemTranslation {
@@ -236,10 +238,17 @@ export interface Translations {
     s7Title: string;
     s7Content: string;
   };
+  notFound: {
+    title: string;
+    description: string;
+    backHome: string;
+  };
   callbackWidget: {
     floatingButton: string;
     mobileCall: string;
     mobileCallHours: string;
+    /** Tooltip and accessible name of the disabled "office closed" button; timeSuffix is appended. */
+    officeHours: string;
     mobileRequest: string;
     titleNormal: string;
     titleSuccess: string;
@@ -250,10 +259,10 @@ export interface Translations {
     phoneErrorInvalid: string;
     slotTitle: string;
     dutyNote: string;
-    slots: Record<string, string>;
+    slots: Record<CallbackSlot, string>;
     topicLabel: string;
     topicPlaceholder: string;
-    topics: Record<string, string>;
+    topics: Record<CallbackTopic, string>;
     rodoPrefix: string;
     rodoLink: string;
     rodoSuffix: string;
@@ -263,6 +272,20 @@ export interface Translations {
     closeButton: string;
     errorTitle: string;
     callNow: string;
+    /** Shown in the error alert, above the call button that carries the number. */
+    errors: {
+      connection: string;
+      invalidRequest: string;
+      slotInvalid: string;
+      unavailable: string;
+      deliveryFailed: string;
+      unexpected: string;
+    };
+    formLoading: string;
+    loadErrorTitle: string;
+    loadErrorText: string;
+    loadErrorCall: string;
+    reloadPage: string;
     timeSuffix: string; // e.g. "(za polskim czasem)" or "(за польським часом)"
   };
 }

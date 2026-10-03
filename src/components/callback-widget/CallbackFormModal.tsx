@@ -24,6 +24,7 @@ import type { ResolvedCallNumber } from '@/lib/callback/call-number';
 import { getCallbackMessage } from '@/lib/callback/business-hours';
 import { getSubmitDelayMs } from '@/lib/callback/time-trap';
 import { useLocale } from '@/i18n/LocaleContext';
+import { isPhoneErrorCode, phoneErrorMessage, submitErrorMessage } from './error-messages';
 import classes from './CallbackWidget.module.css';
 
 /**
@@ -88,7 +89,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
 
     const normalized = normalizePhoneNumberForForm(phone);
     if (!normalized.valid) {
-      setPhoneError(normalized.error || t.callbackWidget.phoneErrorInvalid);
+      setPhoneError(phoneErrorMessage(normalized.errorCode, t.callbackWidget));
       return;
     }
 
@@ -131,18 +132,14 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
             });
           }
           setSubmitSuccess(true);
-        } else if (response.status === 400 && data.error) {
-          // Validation error, e.g. a number the server's stricter check rejects
-          setPhoneError(data.error);
+        } else if (isPhoneErrorCode(data.code)) {
+          // A number the server's stricter check rejects
+          setPhoneError(phoneErrorMessage(data.code, t.callbackWidget));
         } else {
-          setSubmitError(
-            data.error || `${t.callbackWidget.errorTitle}. ${t.callbackWidget.callNow} ${callInfo.display}`
-          );
+          setSubmitError(submitErrorMessage(data.code, t.callbackWidget));
         }
       } catch {
-        setSubmitError(
-          `${t.callbackWidget.errorTitle}. ${t.callbackWidget.callNow} ${callInfo.display}`
-        );
+        setSubmitError(t.callbackWidget.errors.connection);
       }
     });
   };
@@ -248,7 +245,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
                       label={
                         <Group gap="xs">
                           <Text size="sm" fw={500}>
-                            {t.callbackWidget.slots[s.id] || s.label}
+                            {t.callbackWidget.slots[s.id]}
                           </Text>
                         </Group>
                       }
@@ -282,7 +279,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
               clearable
               data={CALLBACK_TOPICS.map((topicItem) => ({
                 value: topicItem.id,
-                label: t.callbackWidget.topics[topicItem.id] || topicItem.label,
+                label: t.callbackWidget.topics[topicItem.id],
               }))}
               value={topic}
               onChange={(val) => setTopic((val as CallbackTopic) || '')}

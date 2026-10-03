@@ -79,10 +79,8 @@ const Navbar: React.FC = () => {
           </Group>
 
           {/* Mobile controls */}
-          <Group gap="xs" hiddenFrom="md">
-            <LanguageSwitcher size="xs" />
-            <Burger opened={opened} onClick={toggle} size="sm" aria-label="Toggle navigation" />
-          </Group>
+          {/* Language switcher lives in the drawer on mobile (ADR 0002 §3) */}
+          <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="md" aria-label="Toggle navigation" />
         </Group>
       </Container>
 

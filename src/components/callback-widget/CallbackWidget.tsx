@@ -73,7 +73,8 @@ export default function CallbackWidget({ callInfo }: { callInfo: ResolvedCallNum
               radius="md"
               disabled
               leftSection={<Clock size={16} />}
-              title="Biuro czynne pn–pt 8:00–16:00"
+              title={`${t.callbackWidget.officeHours}${t.callbackWidget.timeSuffix}`}
+              aria-label={`${t.callbackWidget.officeHours}${t.callbackWidget.timeSuffix}`}
             >
               {t.callbackWidget.mobileCallHours}
             </Button>

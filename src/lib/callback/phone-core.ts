@@ -9,15 +9,18 @@ export interface PhoneValidationResult {
   valid: boolean;
   normalized: string; // E.164 formatted string (+48XXXXXXXXX) or empty if invalid
   display: string;    // Human-readable: national format for PL ("501 482 555"), international otherwise
-  error?: string;
+  error?: string;     // Polish message (server responses, emails)
+  errorCode?: PhoneErrorCode; // for the form to show the message in the visitor's language
 }
+
+export type PhoneErrorCode = 'phone_required' | 'phone_invalid';
 
 type Parse = (text: string, defaultCountry: CountryCode) => PhoneNumber | undefined;
 
 export function createPhoneNormalizer(parse: Parse) {
   return function normalize(raw: string): PhoneValidationResult {
     if (!raw || typeof raw !== 'string' || raw.trim() === '') {
-      return { valid: false, normalized: '', display: '', error: 'Numer telefonu jest wymagany' };
+      return { valid: false, normalized: '', display: '', error: 'Numer telefonu jest wymagany', errorCode: 'phone_required' };
     }
 
     // Numbers without a country code are treated as Polish
@@ -29,6 +32,7 @@ export function createPhoneNormalizer(parse: Parse) {
         normalized: '',
         display: '',
         error: 'Wprowadź poprawny numer telefonu (np. 501 482 555)',
+        errorCode: 'phone_invalid',
       };
     }
 

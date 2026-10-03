@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event';
 import { renderWithMantine } from '@/test/render';
 import { CallbackProvider } from './CallbackContext';
 import CallbackWidget from './CallbackWidget';
+import { ukTranslations } from '@/i18n';
 
 const reloadPage = vi.hoisted(() => vi.fn());
 vi.mock('./reload', () => ({ reloadPage }));
@@ -44,5 +45,23 @@ describe('CallbackWidget when the form cannot be loaded', () => {
     await user.click(await screen.findByRole('button', { name: /Odśwież stronę/ }));
 
     expect(reloadPage).toHaveBeenCalledOnce();
+  });
+
+  it('explains the failure in Ukrainian on Ukrainian pages', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const t = ukTranslations.callbackWidget;
+    const user = userEvent.setup();
+    renderWithMantine(
+      <CallbackProvider>
+        <CallbackWidget callInfo={{ raw: '+48914824190', telUri: 'tel:+48914824190', display: '91 48 24 190' }} />
+      </CallbackProvider>,
+      { locale: 'uk' }
+    );
+
+    await user.click(screen.getByRole('button', { name: t.titleNormal }));
+
+    expect(await screen.findByText(t.loadErrorText)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: `${t.loadErrorCall} 91 48 24 190` })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: t.reloadPage })).toBeInTheDocument();
   });
 });
