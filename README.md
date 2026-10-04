@@ -72,6 +72,7 @@ cp .env.example .env.local
    - Wybierz serwer VPS w OVHcloud i dodaj nowy zasób typu **Application** (źródło: repozytorium Git).
    - **VPS musi stać w centrum danych na terenie EOG** (np. Warszawa – WAW, Gravelines – GRA, Strasburg – SBG, Roubaix – RBX, Frankfurt – DE), zamówiony u OVH Sp. z o.o. Polityka prywatności deklaruje, że serwer i bufor awaryjny znajdują się w EOG – region w Kanadzie, USA czy Azji czyni tę deklarację nieprawdziwą. Lokalizację sprawdzisz w panelu OVHcloud (szczegóły VPS → lokalizacja).
    - Jako metodę budowania wybierz **Dockerfile** (Coolify automatycznie wykryje wieloetapowy `Dockerfile` w głównym katalogu).
+   - Obraz celowo bazuje na `node:24-alpine`, choć CI działa na Ubuntu 26.04 – system runnera CI i system obrazu są od siebie niezależne. Obraz na Ubuntu byłby o ok. 100 MB większy, bez korzyści istotnych dla tej aplikacji. Uzasadnienie w [ADR 0003](docs/adr/0003-migration-to-coolify-ovhcloud-and-sqlite.md).
 2. **Konfiguracja pamięci trwałej (Persistent Storage)**:
    - W ustawieniach aplikacji przejdź do zakładki **Storages**.
    - Dodaj nowy wolumen:
