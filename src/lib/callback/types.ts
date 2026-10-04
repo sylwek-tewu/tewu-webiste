@@ -87,3 +87,16 @@ export type CallbackErrorCode =
   | 'unavailable'
   | 'delivery_failed'
   | 'unexpected';
+
+import type { Locale } from '@/i18n/types';
+export type { Locale };
+
+export interface CallbackLead {
+  id: string; // 6 uppercase hex characters, e.g. 'A1B2C3'
+  phone: string; // E.164 normalized, e.g. '+48501482555'
+  slot: CallbackSlot | (string & {});
+  topic?: CallbackTopic | '' | (string & {});
+  source: CallbackSource | 'unknown' | (string & {});
+  locale?: Locale;
+  createdAt: string; // ISO 8601
+}

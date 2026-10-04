@@ -1,11 +1,6 @@
-export interface OutboxRecord {
-  id: string; // Random 6-character hex ID (e.g. 'C9F1A2'), never a phone number
-  phone: string; // Plaintext in this object; encrypted at rest by the store
-  slot: string; // 'asap' | '8-12' | '12-16' | '17-18'
-  topic?: string;
-  source: string; // 'header' | 'floating' | 'contact' | 'hero' | etc.
-  locale?: 'pl' | 'uk';
-  createdAt: string; // ISO string
+import type { CallbackLead } from '@/lib/callback/types';
+
+export interface OutboxRecord extends CallbackLead {
   attempts: number;
   lastAttemptAt?: string; // ISO string
 }
