@@ -27,6 +27,7 @@ describe('runOutboxProcessing', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'header',
+      locale: 'pl',
       createdAt: baseNow.toISOString(),
       attempts: 1,
     });
@@ -135,6 +136,7 @@ describe('runOutboxProcessing', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'contact',
+      locale: 'pl',
       createdAt: expiredCreatedAt,
       attempts: 3,
     });
@@ -171,6 +173,7 @@ describe('runOutboxProcessing', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'header',
+      locale: 'pl',
       createdAt: baseNow.toISOString(),
       attempts: 1,
     });
@@ -209,6 +212,7 @@ describe('runOutboxProcessing', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'header',
+      locale: 'pl',
       createdAt: baseNow.toISOString(),
       attempts: 1,
     });
@@ -258,6 +262,7 @@ describe('runOutboxProcessing', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'header',
+      locale: 'pl',
       createdAt: baseNow.toISOString(),
       attempts: 1,
     });
@@ -339,6 +344,7 @@ describe('runOutboxProcessing', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'contact',
+      locale: 'pl',
       createdAt: expiredCreatedAt,
       attempts: 3,
     });
@@ -348,6 +354,7 @@ describe('runOutboxProcessing', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'contact',
+      locale: 'pl',
       createdAt: baseNow.toISOString(),
       attempts: 1,
     });
@@ -387,6 +394,7 @@ describe('runOutboxProcessing', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'header',
+      locale: 'pl',
       createdAt: baseNow.toISOString(),
       attempts: 1,
     });

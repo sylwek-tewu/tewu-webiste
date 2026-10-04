@@ -51,13 +51,14 @@ describe('MemoryOutboxStore', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'header',
+      locale: 'pl',
       createdAt: new Date().toISOString(),
       attempts: 1,
     });
     expect(await store.listIds()).toEqual(['A1']);
   });
 
-  it('defaults attempts, lastAttemptAt and locale when omitted in put', async () => {
+  it('defaults attempts and lastAttemptAt when omitted in put', async () => {
     const store = new MemoryOutboxStore();
     const createdAt = '2026-10-05T10:00:00.000Z';
     await store.put({
@@ -65,6 +66,7 @@ describe('MemoryOutboxStore', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'header',
+      locale: 'pl',
       createdAt,
     });
     const record = await store.get('DEF1');
@@ -89,6 +91,7 @@ describe('MemoryOutboxStore', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'header',
+      locale: 'pl',
       createdAt,
       attempts: 3,
       lastAttemptAt,
@@ -112,6 +115,7 @@ describe('MemoryOutboxStore', () => {
         phone: '+48501482555',
         slot: 'asap',
         source: 'header',
+        locale: 'pl',
         createdAt,
       });
       const result = await store.getRecordStatus('VAL1');
@@ -130,6 +134,7 @@ describe('MemoryOutboxStore', () => {
         phone: '+48501482555',
         slot: 'asap',
         source: 'header',
+        locale: 'pl',
         createdAt,
       });
       vi.stubEnv('OUTBOX_ENCRYPTION_KEY', '');
@@ -146,6 +151,7 @@ describe('MemoryOutboxStore', () => {
         phone: '+48501482555',
         slot: 'asap',
         source: 'header',
+        locale: 'pl',
         createdAt: '2026-10-05T10:00:00.000Z',
       });
       vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'different-key-now');
@@ -159,6 +165,7 @@ describe('MemoryOutboxStore', () => {
         phone: '+48501482555',
         slot: 'asap',
         source: 'header',
+        locale: 'pl',
         createdAt: 'invalid-date',
       });
       expect(await store.getRecordStatus('COR2')).toEqual({ status: 'corrupt' });
@@ -299,6 +306,7 @@ describe('SqliteOutboxStore', () => {
       phone: 'some-phone',
       slot: 'asap',
       source: 'header',
+      locale: 'pl',
       createdAt: 'invalid-date',
       attempts: 1,
     });
@@ -307,7 +315,7 @@ describe('SqliteOutboxStore', () => {
   });
 
   describe('defaults and locale handling', () => {
-    it('defaults attempts, lastAttemptAt and locale when omitted in put', async () => {
+    it('defaults attempts and lastAttemptAt when omitted in put', async () => {
       const store = new SqliteOutboxStore(testDb);
       const createdAt = '2026-10-05T10:00:00.000Z';
       await store.put({
@@ -315,6 +323,7 @@ describe('SqliteOutboxStore', () => {
         phone: '+48501482555',
         slot: 'asap',
         source: 'header',
+        locale: 'pl',
         createdAt,
       });
       const record = await store.get('SQL_DEF1');
@@ -330,19 +339,21 @@ describe('SqliteOutboxStore', () => {
       });
     });
 
-    it('defaults nullable locale in database row to pl', async () => {
-      const store = new SqliteOutboxStore(testDb);
-      await testDb.insert(schema.outboxRecords).values({
-        id: 'NOLOC',
-        phone: '+48501482555',
-        slot: 'asap',
-        source: 'header',
-        locale: null,
-        createdAt: '2026-10-05T10:00:00.000Z',
-        attempts: 1,
-      });
-      const record = await store.get('NOLOC');
-      expect(record?.locale).toBe('pl');
+    it('rejects a row without a locale', () => {
+      expect(() =>
+        testDb
+          .insert(schema.outboxRecords)
+          .values({
+            id: 'NOLOC',
+            phone: '+48501482555',
+            slot: 'asap',
+            source: 'header',
+            locale: null as unknown as string,
+            createdAt: '2026-10-05T10:00:00.000Z',
+            attempts: 1,
+          })
+          .run()
+      ).toThrow(/NOT NULL constraint failed: outbox_records\.locale/);
     });
 
     it('preserves explicit locale', async () => {
@@ -368,6 +379,7 @@ describe('SqliteOutboxStore', () => {
         phone: '+48501482555',
         slot: 'asap',
         source: 'header',
+        locale: 'pl',
         createdAt,
         attempts: 4,
         lastAttemptAt,
@@ -422,6 +434,7 @@ describe('SqliteOutboxStore', () => {
         phone: '+48501482555',
         slot: 'asap',
         source: 'header',
+        locale: 'pl',
         createdAt: 'not-a-date',
         attempts: 1,
       });

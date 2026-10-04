@@ -8,6 +8,7 @@ const base: CallbackNotificationData = {
   slot: '12-16',
   topic: 'kadry-place',
   source: 'header',
+  locale: 'pl',
   createdAt: '2026-10-05T13:42:00.000Z',
 };
 

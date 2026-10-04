@@ -59,6 +59,7 @@ const data: CallbackNotificationData = {
   slot: 'asap',
   topic: '',
   source: 'header',
+  locale: 'pl',
   createdAt: '2026-10-05T10:00:00.000Z',
 };
 

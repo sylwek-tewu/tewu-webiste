@@ -55,7 +55,6 @@ export class MemoryOutboxStore implements OutboxStore {
     const lastAttemptAt = record.lastAttemptAt ?? (record.attempts === undefined ? record.createdAt : undefined);
     const atRest: OutboxRecord = {
       ...record,
-      locale: record.locale ?? 'pl',
       attempts,
       ...(lastAttemptAt !== undefined ? { lastAttemptAt } : {}),
       phone: encryptPhone(record.phone),
@@ -138,7 +137,7 @@ export class SqliteOutboxStore implements OutboxStore {
       phone: row.phone,
       slot: row.slot as OutboxRecord['slot'],
       source: row.source as OutboxRecord['source'],
-      locale: (row.locale as Locale) ?? 'pl',
+      locale: row.locale as Locale,
       createdAt: row.createdAt,
       attempts: row.attempts,
     };
@@ -163,7 +162,7 @@ export class SqliteOutboxStore implements OutboxStore {
         slot: record.slot,
         topic: record.topic || null,
         source: record.source,
-        locale: record.locale || 'pl',
+        locale: record.locale,
         createdAt: record.createdAt,
         attempts,
         lastAttemptAt: lastAttemptAt || null,

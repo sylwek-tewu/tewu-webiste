@@ -10,7 +10,7 @@ CREATE TABLE `outbox_records` (
 	`slot` text NOT NULL,
 	`topic` text,
 	`source` text NOT NULL,
-	`locale` text,
+	`locale` text NOT NULL,
 	`created_at` text NOT NULL,
 	`attempts` integer DEFAULT 1 NOT NULL,
 	`last_attempt_at` text

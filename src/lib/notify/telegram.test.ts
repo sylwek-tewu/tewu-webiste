@@ -9,6 +9,7 @@ describe('Telegram Ping PII Leak Prevention', () => {
     slot: '12-16',
     topic: 'kadry-place',
     source: 'hero',
+    locale: 'pl',
     createdAt: '2026-10-05T13:42:00.000Z',
   };
 
@@ -38,6 +39,7 @@ describe('Telegram Ping PII Leak Prevention', () => {
       slot: 'asap',
       topic: 'spolka',
       source: 'header',
+      locale: 'pl',
       createdAt: '2026-10-05T09:00:00.000Z',
     };
 

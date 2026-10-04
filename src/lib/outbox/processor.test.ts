@@ -15,6 +15,7 @@ describe('processOutbox', () => {
       phone: '+48501482555',
       slot: '8-12',
       source: 'header',
+      locale: 'pl',
       createdAt: new Date().toISOString(),
       attempts: 0,
     };
@@ -39,6 +40,7 @@ describe('processOutbox', () => {
       phone: '+48914824190',
       slot: 'asap',
       source: 'floating',
+      locale: 'pl',
       createdAt: new Date().toISOString(),
       attempts: 1,
     };
@@ -67,6 +69,7 @@ describe('processOutbox', () => {
       phone: '+48501482555',
       slot: '17-18',
       source: 'contact',
+      locale: 'pl',
       createdAt: fourDaysAgo,
       attempts: 5,
     };
@@ -96,9 +99,9 @@ describe('processOutbox', () => {
     const store = new MemoryOutboxStore();
     const now = new Date();
     vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'old-key');
-    await store.put({ id: 'OLD1', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 1 });
+    await store.put({ id: 'OLD1', phone: '+48501482555', slot: 'asap', source: 'header', locale: 'pl', createdAt: now.toISOString(), attempts: 1 });
     vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'new-key');
-    await store.put({ id: 'NEW1', phone: '+48602235736', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 1 });
+    await store.put({ id: 'NEW1', phone: '+48602235736', slot: 'asap', source: 'header', locale: 'pl', createdAt: now.toISOString(), attempts: 1 });
 
     const corrupt: string[] = [];
     const sent: string[] = [];
@@ -122,8 +125,8 @@ describe('processOutbox', () => {
     const store = new MemoryOutboxStore();
     const now = new Date();
     vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'the-key');
-    await store.put({ id: 'K1', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 1 });
-    await store.put({ id: 'K2', phone: '+48602235736', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 1 });
+    await store.put({ id: 'K1', phone: '+48501482555', slot: 'asap', source: 'header', locale: 'pl', createdAt: now.toISOString(), attempts: 1 });
+    await store.put({ id: 'K2', phone: '+48602235736', slot: 'asap', source: 'header', locale: 'pl', createdAt: now.toISOString(), attempts: 1 });
     vi.stubEnv('OUTBOX_ENCRYPTION_KEY', '');
 
     const corrupt: string[] = [];
@@ -143,8 +146,8 @@ describe('processOutbox', () => {
     const now = new Date();
     const fourDaysAgo = new Date(now.getTime() - 4 * 24 * 60 * 60 * 1000).toISOString();
     vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'the-key');
-    await store.put({ id: 'OLD', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: fourDaysAgo, attempts: 3 });
-    await store.put({ id: 'NEW', phone: '+48602235736', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 1 });
+    await store.put({ id: 'OLD', phone: '+48501482555', slot: 'asap', source: 'header', locale: 'pl', createdAt: fourDaysAgo, attempts: 3 });
+    await store.put({ id: 'NEW', phone: '+48602235736', slot: 'asap', source: 'header', locale: 'pl', createdAt: now.toISOString(), attempts: 1 });
     vi.stubEnv('OUTBOX_ENCRYPTION_KEY', '');
 
     const expired: string[] = [];
@@ -168,7 +171,7 @@ describe('processOutbox', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     const store = new MemoryOutboxStore();
     const fourDaysAgo = new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString();
-    await store.put({ id: 'EXP3', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: fourDaysAgo, attempts: 3 });
+    await store.put({ id: 'EXP3', phone: '+48501482555', slot: 'asap', source: 'header', locale: 'pl', createdAt: fourDaysAgo, attempts: 3 });
 
     const res = await processOutbox(store, async () => true, {
       onExpire: () => {
@@ -184,7 +187,7 @@ describe('processOutbox', () => {
   it('keeps a record when reading it fails for any reason other than decryption', async () => {
     const store = new MemoryOutboxStore();
     const now = new Date();
-    await store.put({ id: 'NET1', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 1 });
+    await store.put({ id: 'NET1', phone: '+48501482555', slot: 'asap', source: 'header', locale: 'pl', createdAt: now.toISOString(), attempts: 1 });
     vi.spyOn(store, 'get').mockRejectedValueOnce(new Error('Database I/O error'));
 
     const corrupt: string[] = [];
@@ -199,8 +202,8 @@ describe('processOutbox', () => {
   it('keeps processing the other records when a store write fails', async () => {
     const store = new MemoryOutboxStore();
     const now = new Date();
-    await store.put({ id: 'BAD1', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 0 });
-    await store.put({ id: 'OK01', phone: '+48602235736', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 0 });
+    await store.put({ id: 'BAD1', phone: '+48501482555', slot: 'asap', source: 'header', locale: 'pl', createdAt: now.toISOString(), attempts: 0 });
+    await store.put({ id: 'OK01', phone: '+48602235736', slot: 'asap', source: 'header', locale: 'pl', createdAt: now.toISOString(), attempts: 0 });
     const realDelete = store.delete.bind(store);
     vi.spyOn(store, 'delete').mockImplementation(async (id) => {
       if (id === 'BAD1') throw new Error('Blobs 503');
@@ -217,7 +220,7 @@ describe('processOutbox', () => {
   it('sends a record once when two runs overlap, and a failure does not bring it back', async () => {
     const store = new MemoryOutboxStore();
     const now = new Date();
-    await store.put({ id: 'DUP1', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: now.toISOString(), attempts: 1 });
+    await store.put({ id: 'DUP1', phone: '+48501482555', slot: 'asap', source: 'header', locale: 'pl', createdAt: now.toISOString(), attempts: 1 });
 
     let release!: () => void;
     const slowSend = vi.fn(() => new Promise<boolean>((resolve) => (release = () => resolve(true))));
@@ -242,9 +245,9 @@ describe('processOutbox', () => {
     const thirtyMinAgo = new Date(now.getTime() - 30 * 60 * 1000).toISOString();
 
     // 3rd attempt is due 20 min after the 2nd one (5 min ago -> not due yet)
-    await store.put({ id: 'WAIT', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: thirtyMinAgo, attempts: 2, lastAttemptAt: fiveMinAgo });
+    await store.put({ id: 'WAIT', phone: '+48501482555', slot: 'asap', source: 'header', locale: 'pl', createdAt: thirtyMinAgo, attempts: 2, lastAttemptAt: fiveMinAgo });
     // 1st retry is due 10 min after the first attempt (30 min ago -> due)
-    await store.put({ id: 'DUE1', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: thirtyMinAgo, attempts: 1, lastAttemptAt: thirtyMinAgo });
+    await store.put({ id: 'DUE1', phone: '+48501482555', slot: 'asap', source: 'header', locale: 'pl', createdAt: thirtyMinAgo, attempts: 1, lastAttemptAt: thirtyMinAgo });
 
     const sent: string[] = [];
     const res = await processOutbox(store, async (r) => { sent.push(r.id); return false; }, { now });
@@ -285,7 +288,7 @@ describe('getOutboxTtlHours', () => {
     vi.stubEnv('CALLBACK_OUTBOX_TTL_HOURS', 'abc');
     const store = new MemoryOutboxStore();
     const fourDaysAgo = new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString();
-    await store.put({ id: 'EXP2', phone: '+48501482555', slot: 'asap', source: 'header', createdAt: fourDaysAgo, attempts: 3 });
+    await store.put({ id: 'EXP2', phone: '+48501482555', slot: 'asap', source: 'header', locale: 'pl', createdAt: fourDaysAgo, attempts: 3 });
 
     const res = await processOutbox(store, async () => true);
     expect(res.expired).toBe(1);

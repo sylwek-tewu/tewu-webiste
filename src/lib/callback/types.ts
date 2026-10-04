@@ -97,6 +97,6 @@ export interface CallbackLead {
   slot: CallbackSlot;
   topic?: CallbackTopic | '';
   source: CallbackSource | 'unknown';
-  locale?: Locale;
+  locale: Locale;
   createdAt: string; // ISO 8601
 }

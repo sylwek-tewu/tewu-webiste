@@ -105,6 +105,7 @@ describe('POST /api/internal/process-outbox', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'header',
+      locale: 'pl',
       createdAt: new Date().toISOString(),
       attempts: 1,
     });
@@ -129,6 +130,7 @@ describe('POST /api/internal/process-outbox', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'header',
+      locale: 'pl',
       createdAt: new Date().toISOString(),
       attempts: 1,
     });
@@ -151,6 +153,7 @@ describe('POST /api/internal/process-outbox', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'header',
+      locale: 'pl',
       createdAt: new Date().toISOString(),
       attempts: 1,
     });
@@ -198,6 +201,7 @@ describe('POST /api/internal/process-outbox', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'header',
+      locale: 'pl',
       createdAt: new Date().toISOString(),
       attempts: 1,
     });
@@ -221,6 +225,7 @@ describe('POST /api/internal/process-outbox', () => {
       phone: '+48501482555',
       slot: 'asap',
       source: 'header',
+      locale: 'pl',
       createdAt: new Date().toISOString(),
       attempts: 1,
     });
