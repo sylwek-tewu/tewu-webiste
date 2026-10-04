@@ -52,32 +52,19 @@ export async function runOutboxProcessing(
       ((record: CallbackLead) =>
         sendCallbackEmail(record, { deadlineMs: RETRY_EMAIL_DEADLINE_MS }));
 
+    // processOutbox catches a failing alert, so it never stops the run
     const result = await processOutbox(store, sendEmail, {
       ttlHours,
       now: currentNow,
       onExpire: async (record) => {
-        try {
-          await sendAlert(
-            `⚠️ Zgłoszenie #${record.id} wygasło po przekroczeniu czasu retencji (${ttlHours}h) bez skutecznego doręczenia.`
-          );
-        } catch (error) {
-          console.error(
-            `[Outbox Coordinator] Failed to dispatch expiration alert for #${record.id}:`,
-            error
-          );
-        }
+        await sendAlert(
+          `⚠️ Zgłoszenie #${record.id} wygasło po przekroczeniu czasu retencji (${ttlHours}h) bez skutecznego doręczenia.`
+        );
       },
       onCorrupt: async (id) => {
-        try {
-          await sendAlert(
-            `🚨 Zgłoszenie #${id} w buforze awaryjnym nie dało się odczytać (zmieniony OUTBOX_ENCRYPTION_KEY?) i zostało usunięte.`
-          );
-        } catch (error) {
-          console.error(
-            `[Outbox Coordinator] Failed to dispatch corruption alert for #${id}:`,
-            error
-          );
-        }
+        await sendAlert(
+          `🚨 Zgłoszenie #${id} w buforze awaryjnym nie dało się odczytać (zmieniony OUTBOX_ENCRYPTION_KEY?) i zostało usunięte.`
+        );
       },
     });
 
