@@ -5,9 +5,15 @@ export interface OutboxRecord extends CallbackLead {
   lastAttemptAt?: string; // ISO string
 }
 
+export type StoredRecordResult =
+  | { status: 'valid'; record: OutboxRecord }
+  | { status: 'key_missing'; createdAt?: string }
+  | { status: 'corrupt' }
+  | { status: 'not_found' };
+
 export interface OutboxStore {
   /** Adds a new record; rejects if the id is already taken. */
-  put(record: OutboxRecord): Promise<void>;
+  put(record: CallbackLead & Partial<Pick<OutboxRecord, 'attempts' | 'lastAttemptAt'>>): Promise<void>;
   /**
    * Records a delivery attempt (attempts + 1, lastAttemptAt = `at`) only while the record still has
    * `attempts`. Returns false when it is gone or another run claimed it first, so two overlapping
@@ -15,9 +21,12 @@ export interface OutboxStore {
    */
   claim(id: string, attempts: number, at: string): Promise<boolean>;
   get(id: string): Promise<OutboxRecord | null>;
+  getRecordStatus(id: string): Promise<StoredRecordResult>;
   /** Keys only, so one unreadable record cannot block the others. */
   listIds(): Promise<string[]>;
   delete(id: string): Promise<void>;
+  getMeta(key: string): Promise<string | null>;
+  setMeta(key: string, value: string): Promise<void>;
 }
 
 export interface ProcessResult {

@@ -7,7 +7,8 @@
 import { and, eq, asc, sql } from 'drizzle-orm';
 import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import { getDb, schema } from '@/db';
-import { OutboxRecord, OutboxStore } from './types';
+import type { CallbackLead, Locale } from '@/lib/callback/types';
+import { OutboxRecord, OutboxStore, StoredRecordResult } from './types';
 import { encryptPhone, decryptPhone, CorruptRecordError, OutboxKeyMissingError } from './crypto';
 
 /**
@@ -46,10 +47,19 @@ export function reviveRecord(raw: unknown): OutboxRecord {
 
 export class MemoryOutboxStore implements OutboxStore {
   private records = new Map<string, OutboxRecord>();
+  private meta = new Map<string, string>();
 
-  async put(record: OutboxRecord): Promise<void> {
+  async put(record: CallbackLead & Partial<Pick<OutboxRecord, 'attempts' | 'lastAttemptAt'>>): Promise<void> {
     if (this.records.has(record.id)) throw new Error(`Outbox record #${record.id} already exists`);
-    const atRest = { ...record, phone: encryptPhone(record.phone) };
+    const attempts = record.attempts ?? 1;
+    const lastAttemptAt = record.lastAttemptAt ?? (record.attempts === undefined ? record.createdAt : undefined);
+    const atRest: OutboxRecord = {
+      ...record,
+      locale: record.locale ?? 'pl',
+      attempts,
+      ...(lastAttemptAt !== undefined ? { lastAttemptAt } : {}),
+      phone: encryptPhone(record.phone),
+    };
     this.records.set(record.id, atRest);
   }
 
@@ -66,6 +76,23 @@ export class MemoryOutboxStore implements OutboxStore {
     return reviveRecord(raw);
   }
 
+  async getRecordStatus(id: string): Promise<StoredRecordResult> {
+    const raw = this.records.get(id);
+    if (!raw) return { status: 'not_found' };
+    try {
+      const record = reviveRecord(raw);
+      return { status: 'valid', record };
+    } catch (error) {
+      if (error instanceof OutboxKeyMissingError) {
+        return { status: 'key_missing', createdAt: error.createdAt };
+      }
+      if (error instanceof CorruptRecordError) {
+        return { status: 'corrupt' };
+      }
+      throw error;
+    }
+  }
+
   async listIds(): Promise<string[]> {
     return Array.from(this.records.keys());
   }
@@ -74,8 +101,17 @@ export class MemoryOutboxStore implements OutboxStore {
     this.records.delete(id);
   }
 
+  async getMeta(key: string): Promise<string | null> {
+    return this.meta.get(key) ?? null;
+  }
+
+  async setMeta(key: string, value: string): Promise<void> {
+    this.meta.set(key, value);
+  }
+
   clear(): void {
     this.records.clear();
+    this.meta.clear();
   }
 }
 
@@ -96,8 +132,29 @@ export class SqliteOutboxStore implements OutboxStore {
     return this.getDbInstance();
   }
 
-  async put(record: OutboxRecord): Promise<void> {
+  private reviveRow(row: typeof schema.outboxRecords.$inferSelect): OutboxRecord {
+    const raw: Partial<OutboxRecord> = {
+      id: row.id,
+      phone: row.phone,
+      slot: row.slot as OutboxRecord['slot'],
+      source: row.source as OutboxRecord['source'],
+      locale: (row.locale as Locale) ?? 'pl',
+      createdAt: row.createdAt,
+      attempts: row.attempts,
+    };
+    if (row.topic !== null && row.topic !== undefined) {
+      raw.topic = row.topic as OutboxRecord['topic'];
+    }
+    if (row.lastAttemptAt !== null && row.lastAttemptAt !== undefined) {
+      raw.lastAttemptAt = row.lastAttemptAt;
+    }
+    return reviveRecord(raw);
+  }
+
+  async put(record: CallbackLead & Partial<Pick<OutboxRecord, 'attempts' | 'lastAttemptAt'>>): Promise<void> {
     const encryptedPhone = encryptPhone(record.phone);
+    const attempts = record.attempts ?? 1;
+    const lastAttemptAt = record.lastAttemptAt ?? (record.attempts === undefined ? record.createdAt : null);
     await this.db
       .insert(schema.outboxRecords)
       .values({
@@ -106,10 +163,10 @@ export class SqliteOutboxStore implements OutboxStore {
         slot: record.slot,
         topic: record.topic || null,
         source: record.source,
-        locale: record.locale || null,
+        locale: record.locale || 'pl',
         createdAt: record.createdAt,
-        attempts: record.attempts,
-        lastAttemptAt: record.lastAttemptAt || null,
+        attempts,
+        lastAttemptAt: lastAttemptAt || null,
       });
   }
 
@@ -129,19 +186,31 @@ export class SqliteOutboxStore implements OutboxStore {
       .limit(1);
 
     if (rows.length === 0) return null;
-    const row = rows[0];
+    return this.reviveRow(rows[0]);
+  }
 
-    return reviveRecord({
-      id: row.id,
-      phone: row.phone,
-      slot: row.slot,
-      topic: row.topic ?? undefined,
-      source: row.source,
-      locale: (row.locale as 'pl' | 'uk') ?? undefined,
-      createdAt: row.createdAt,
-      attempts: row.attempts,
-      lastAttemptAt: row.lastAttemptAt ?? undefined,
-    });
+  async getRecordStatus(id: string): Promise<StoredRecordResult> {
+    const rows = await this.db
+      .select()
+      .from(schema.outboxRecords)
+      .where(eq(schema.outboxRecords.id, id))
+      .limit(1);
+
+    if (rows.length === 0) return { status: 'not_found' };
+
+    const row = rows[0];
+    try {
+      const record = this.reviveRow(row);
+      return { status: 'valid', record };
+    } catch (error) {
+      if (error instanceof OutboxKeyMissingError) {
+        return { status: 'key_missing', createdAt: error.createdAt ?? row.createdAt };
+      }
+      if (error instanceof CorruptRecordError) {
+        return { status: 'corrupt' };
+      }
+      throw error;
+    }
   }
 
   async listIds(): Promise<string[]> {
@@ -161,6 +230,34 @@ export class SqliteOutboxStore implements OutboxStore {
     // Deletes are rare, so the cost is negligible. Under a concurrent reader it is a no-op, and the
     // next delete or SQLite's own checkpoint finishes the job.
     this.db.run(sql`PRAGMA wal_checkpoint(TRUNCATE)`);
+  }
+
+  async getMeta(key: string): Promise<string | null> {
+    const rows = await this.db
+      .select({ value: schema.outboxMeta.value })
+      .from(schema.outboxMeta)
+      .where(eq(schema.outboxMeta.key, key))
+      .limit(1);
+
+    return rows.length > 0 ? rows[0].value : null;
+  }
+
+  async setMeta(key: string, value: string): Promise<void> {
+    const now = new Date().toISOString();
+    await this.db
+      .insert(schema.outboxMeta)
+      .values({
+        key,
+        value,
+        updatedAt: now,
+      })
+      .onConflictDoUpdate({
+        target: schema.outboxMeta.key,
+        set: {
+          value,
+          updatedAt: now,
+        },
+      });
   }
 }
 
