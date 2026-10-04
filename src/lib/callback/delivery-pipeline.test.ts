@@ -31,7 +31,7 @@ describe('submitCallbackLead delivery pipeline', () => {
       sendTelegramPing: vi.fn().mockResolvedValue(true),
       sendAlert: vi.fn().mockResolvedValue(true),
       outboxStore: memoryStore,
-      isSmtpConfigured: vi.fn().mockReturnValue(true),
+      getMissingSmtpConfig: vi.fn().mockReturnValue([]),
       getCallNumber: vi.fn().mockReturnValue({
         raw: '+48914824190',
         telUri: 'tel:+48914824190',
@@ -46,13 +46,15 @@ describe('submitCallbackLead delivery pipeline', () => {
   });
 
   describe('1. Rejection of malformed JSON / non-object payload', () => {
-    it('rejects malformed JSON string with validation_error invalid_request', async () => {
-      const result = await submitCallbackLead('{bad json', mockDeps);
-      expect(result).toEqual({
-        status: 'validation_error',
-        code: 'invalid_request',
-        message: expect.any(String),
-      });
+    it('rejects a string payload, even one holding valid JSON (the route parses the body)', async () => {
+      for (const payload of ['{bad json', JSON.stringify(validPayload)]) {
+        expect(await submitCallbackLead(payload, mockDeps)).toEqual({
+          status: 'validation_error',
+          code: 'invalid_request',
+          message: expect.any(String),
+        });
+      }
+      expect(mockDeps.sendEmail).not.toHaveBeenCalled();
     });
 
     it('rejects null payload with validation_error invalid_request', async () => {
@@ -82,11 +84,6 @@ describe('submitCallbackLead delivery pipeline', () => {
         status: 'validation_error',
         code: 'invalid_request',
       });
-    });
-
-    it('accepts valid JSON string payload', async () => {
-      const result = await submitCallbackLead(JSON.stringify(validPayload), mockDeps);
-      expect(result.status).toBe('delivered');
     });
   });
 
@@ -250,9 +247,13 @@ describe('submitCallbackLead delivery pipeline', () => {
 
   describe('6. Missing SMTP configuration', () => {
     it('sends alert and returns fallback_office_call with 500 when SMTP is not configured', async () => {
-      mockDeps.isSmtpConfigured = vi.fn().mockReturnValue(false);
+      mockDeps.getMissingSmtpConfig = vi.fn().mockReturnValue(['CALLBACK_SMTP_HOST', 'CALLBACK_SMTP_PASS']);
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       const result = await submitCallbackLead(validPayload, mockDeps);
+      expect(consoleError).toHaveBeenCalledWith(
+        expect.stringContaining('missing: CALLBACK_SMTP_HOST, CALLBACK_SMTP_PASS')
+      );
       expect(result).toMatchObject({
         status: 'fallback_office_call',
         code: 'unavailable',
@@ -419,7 +420,7 @@ describe('submitCallbackLead delivery pipeline', () => {
 
   describe('Unexpected error handling', () => {
     it('catches unexpected exceptions and returns fallback_office_call with 500 unexpected', async () => {
-      mockDeps.isSmtpConfigured = vi.fn().mockImplementation(() => {
+      mockDeps.getMissingSmtpConfig = vi.fn().mockImplementation(() => {
         throw new Error('Fatal explosion in dependency');
       });
 

@@ -141,6 +141,12 @@ describe('POST /api/callback route handler', () => {
       expect((await res.json()).code).toBe('invalid_request');
     });
 
+    it('rejects a double-encoded body (a JSON string holding the form) with 400', async () => {
+      const res = await POST(makeRequest(JSON.stringify(validBody)));
+      expect(res.status).toBe(400);
+      expect((await res.json()).code).toBe('invalid_request');
+    });
+
     it('drops an unknown topic and replaces an unknown source before notifying anyone', async () => {
       const emailSpy = vi.spyOn(emailModule, 'sendCallbackEmail').mockResolvedValue(true);
       const pingSpy = vi.spyOn(telegramModule, 'sendTelegramPing');

@@ -8,7 +8,7 @@
 
 import crypto from 'node:crypto';
 import { normalizePhoneNumber } from './phone';
-import { getCallNumber, ResolvedCallNumber, DEFAULT_OFFICE_CALL_NUMBER } from './call-number';
+import { getCallNumber, ResolvedCallNumber } from './call-number';
 import {
   CALLBACK_TOPICS,
   CallbackErrorCode,
@@ -25,7 +25,6 @@ import { sendTelegramPing, sendTelegramAlert } from '@/lib/notify/telegram';
 import { getOutboxStore } from '@/lib/outbox/store';
 import type { OutboxStore } from '@/lib/outbox/types';
 import { withTimeout } from '@/lib/timeout';
-import { CONTACT_DETAILS } from '@/constants';
 
 const VALID_SLOTS: CallbackSlot[] = ['asap', '8-12', '12-16', '17-18'];
 
@@ -34,7 +33,8 @@ export interface CallbackDeliveryDependencies {
   sendTelegramPing: (lead: CallbackLead) => Promise<boolean>;
   sendAlert: (message: string) => Promise<boolean>;
   outboxStore: OutboxStore;
-  isSmtpConfigured: () => boolean;
+  /** Names of the SMTP settings that are not set; empty when email can be sent. */
+  getMissingSmtpConfig: () => string[];
   getCallNumber: () => ResolvedCallNumber;
 }
 
@@ -62,20 +62,8 @@ export async function submitCallbackLead(
   const getCallNum = dependencies?.getCallNumber ?? getCallNumber;
 
   try {
-    let body: unknown = payload;
-    if (typeof payload === 'string') {
-      try {
-        body = JSON.parse(payload);
-      } catch {
-        return {
-          status: 'validation_error',
-          code: 'invalid_request',
-          message: 'Nieprawidłowe dane formularza',
-        };
-      }
-    }
-
-    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    // The parsed request body: a string here is a double-encoded form, not one to parse again.
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
       return {
         status: 'validation_error',
         code: 'invalid_request',
@@ -83,7 +71,7 @@ export async function submitCallbackLead(
       };
     }
 
-    const record = body as Record<string, unknown>;
+    const record = payload as Record<string, unknown>;
 
     // 1. Honeypot check (Antispam trap: return silently without dispatching)
     if (typeof record.honeypot === 'string' && record.honeypot.trim() !== '') {
@@ -136,8 +124,7 @@ export async function submitCallbackLead(
     const id = crypto.randomBytes(3).toString('hex').toUpperCase();
 
     // 5. Dependency resolution (lazy evaluated defaults)
-    const isConfigured =
-      dependencies?.isSmtpConfigured ?? (() => getSmtpConfig().missing.length === 0);
+    const getMissingSmtpConfig = dependencies?.getMissingSmtpConfig ?? (() => getSmtpConfig().missing);
     const emailSender = dependencies?.sendEmail ?? sendCallbackEmail;
     const pingSender = dependencies?.sendTelegramPing ?? sendTelegramPing;
     const alertSender = dependencies?.sendAlert ?? sendTelegramAlert;
@@ -146,8 +133,9 @@ export async function submitCallbackLead(
       return withTimeout(alertSender(text), DELIVERY_BUDGET.alertMs, false);
     };
 
-    if (!isConfigured()) {
-      console.error(`[Callback Pipeline] SMTP not configured. Missing configuration.`);
+    const missingSmtpConfig = getMissingSmtpConfig();
+    if (missingSmtpConfig.length > 0) {
+      console.error(`[Callback Pipeline] SMTP not configured, missing: ${missingSmtpConfig.join(', ')}`);
       const callNumber = getCallNum();
       await alert(
         `🚨 Błąd konfiguracji: brak ustawień SMTP. Zgłoszenie #${id} odrzucone, klient zobaczył numer biura.`
@@ -240,22 +228,12 @@ export async function submitCallbackLead(
       '[Callback Pipeline] Unexpected error:',
       error instanceof Error ? error.message : 'Unknown'
     );
-    let callNumber: ResolvedCallNumber;
-    try {
-      callNumber = getCallNum();
-    } catch {
-      callNumber = {
-        raw: DEFAULT_OFFICE_CALL_NUMBER,
-        telUri: `tel:${DEFAULT_OFFICE_CALL_NUMBER}`,
-        display: CONTACT_DETAILS.phone,
-      };
-    }
     return {
       status: 'fallback_office_call',
       code: 'unexpected',
       message: 'Wystąpił nieoczekiwany błąd. Zadzwoń do nas:',
       httpStatus: 500,
-      callNumber,
+      callNumber: getCallNum(),
     };
   }
 }
