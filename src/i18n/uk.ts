@@ -460,5 +460,53 @@ export const ukTranslations: Translations = {
     loadErrorCall: 'Зателефонувати:',
     reloadPage: 'Оновити сторінку',
     timeSuffix: ' (за польським часом)',
+    commitment: {
+      daysPrep: [
+        'в неділю',
+        'в понеділок',
+        'у вівторок',
+        'в середу',
+        'в четвер',
+        'в пʼятницю',
+        'в суботу',
+      ],
+      monthsGenitive: [
+        'січня',
+        'лютого',
+        'березня',
+        'квітня',
+        'травня',
+        'червня',
+        'липня',
+        'серпня',
+        'вересня',
+        'жовтня',
+        'листопада',
+        'грудня',
+      ],
+      defaultPrep: 'в робочий день',
+      tomorrow: 'завтра',
+      formatTargetDayPhrase: (prepDay, day, monthName) => `${prepDay}, ${day} ${monthName}`,
+      formatSlotRange: (slot) => {
+        switch (slot) {
+          case '8-12':
+            return 'з 8:00 до 12:00';
+          case '12-16':
+            return 'з 12:00 до 16:00';
+          case '17-18':
+            return 'з 17:00 до 18:00';
+        }
+      },
+      asapBeforeHours: 'Офіс відкривається о 8:00. Передзвонимо вам сьогодні з 8:00 (за польським часом).',
+      asapOpen: 'Передзвонимо якомога швидше в робочі години (пн–пт 8:00–16:00 за польським часом).',
+      asapAfterHours: (targetDayPhrase) =>
+        `Офіс зараз зачинено. Передзвонимо ${targetDayPhrase} з 8:00 (за польським часом).`,
+      asapClosedDay: (targetDayPhrase) =>
+        `Офіс сьогодні зачинено. Передзвонимо ${targetDayPhrase} з 8:00 (за польським часом).`,
+      slotToday: (timeRange) => `Передзвонимо сьогодні ${timeRange} (за польським часом).`,
+      slotTomorrow: (timeRange) => `Передзвонимо завтра ${timeRange} (за польським часом).`,
+      slotNextBusinessDay: (targetDayPhrase, timeRange) =>
+        `Передзвонимо в найближчий робочий день (${targetDayPhrase}) ${timeRange} (за польським часом).`,
+    },
   },
 };

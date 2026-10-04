@@ -21,7 +21,8 @@ import { getConversionDelivery, pushCallbackRequestSubmit } from './analytics';
 import { CALLBACK_SLOTS, CALLBACK_TOPICS, CallbackSlot, CallbackTopic } from '@/lib/callback/types';
 import { normalizePhoneNumberForForm } from '@/lib/callback/phone-client';
 import type { ResolvedCallNumber } from '@/lib/callback/call-number';
-import { getCallbackMessage } from '@/lib/callback/business-hours';
+import { getCallbackCommitment } from '@/lib/calendar';
+import { formatCallbackCommitment } from '@/i18n/format-commitment';
 import { getSubmitDelayMs } from '@/lib/callback/time-trap';
 import { useLocale } from '@/i18n/LocaleContext';
 import { isPhoneErrorCode, phoneErrorMessage, submitErrorMessage } from './error-messages';
@@ -61,7 +62,8 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
     }
   }, [isOpen]);
 
-  const promisePreview = getCallbackMessage(slot, undefined, locale);
+  const commitment = getCallbackCommitment(slot);
+  const promisePreview = formatCallbackCommitment(commitment, t.callbackWidget, locale);
   const privacyPath = locale === 'uk' ? '/uk/polityka-prywatnosci' : '/polityka-prywatnosci';
 
   const resetForm = () => {

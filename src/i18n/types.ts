@@ -42,6 +42,22 @@ export interface CertificateItemTranslation {
   pdfUrl: string;
 }
 
+export interface CallbackCommitmentTranslations {
+  daysPrep: string[];
+  monthsGenitive: string[];
+  defaultPrep: string;
+  tomorrow: string;
+  formatTargetDayPhrase: (prepDay: string, day: number, monthName: string) => string;
+  formatSlotRange: (slot: Exclude<CallbackSlot, 'asap'>) => string;
+  asapBeforeHours: string;
+  asapOpen: string;
+  asapAfterHours: (targetDayPhrase: string) => string;
+  asapClosedDay: (targetDayPhrase: string) => string;
+  slotToday: (timeRange: string) => string;
+  slotTomorrow: (timeRange: string) => string;
+  slotNextBusinessDay: (targetDayPhrase: string, timeRange: string) => string;
+}
+
 export interface Translations {
   locale: Locale;
   common: {
@@ -294,5 +310,6 @@ export interface Translations {
     loadErrorCall: string;
     reloadPage: string;
     timeSuffix: string; // e.g. "(za polskim czasem)" or "(за польським часом)"
+    commitment: CallbackCommitmentTranslations;
   };
 }

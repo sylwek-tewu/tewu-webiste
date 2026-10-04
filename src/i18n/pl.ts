@@ -451,5 +451,51 @@ export const plTranslations: Translations = {
     loadErrorCall: 'Zadzwoń:',
     reloadPage: 'Odśwież stronę',
     timeSuffix: '',
+    commitment: {
+      daysPrep: [
+        'w niedzielę',
+        'w poniedziałek',
+        'we wtorek',
+        'w środę',
+        'w czwartek',
+        'w piątek',
+        'w sobotę',
+      ],
+      monthsGenitive: [
+        'stycznia',
+        'lutego',
+        'marca',
+        'kwietnia',
+        'maja',
+        'czerwca',
+        'lipca',
+        'sierpnia',
+        'września',
+        'października',
+        'listopada',
+        'grudnia',
+      ],
+      defaultPrep: 'w dniu roboczym',
+      tomorrow: 'jutro',
+      formatTargetDayPhrase: (prepDay, day, monthName) => `${prepDay} ${day} ${monthName}`,
+      formatSlotRange: (slot) => {
+        switch (slot) {
+          case '8-12':
+            return '8:00–12:00';
+          case '12-16':
+            return '12:00–16:00';
+          case '17-18':
+            return '17:00–18:00';
+        }
+      },
+      asapBeforeHours: 'Biuro otwiera się o 8:00. Oddzwonimy dziś od 8:00.',
+      asapOpen: 'Oddzwonimy jak najszybciej, w godzinach pracy biura (pn–pt 8:00–16:00).',
+      asapAfterHours: (targetDayPhrase) => `Biuro jest teraz zamknięte. Oddzwonimy ${targetDayPhrase} od 8:00.`,
+      asapClosedDay: (targetDayPhrase) => `Biuro jest dziś nieczynne. Oddzwonimy ${targetDayPhrase} od 8:00.`,
+      slotToday: (timeRange) => `Oddzwonimy dziś w godzinach ${timeRange}.`,
+      slotTomorrow: (timeRange) => `Oddzwonimy jutro w godzinach ${timeRange}.`,
+      slotNextBusinessDay: (targetDayPhrase, timeRange) =>
+        `Oddzwonimy w najbliższym dniu roboczym (${targetDayPhrase}) w godzinach ${timeRange}.`,
+    },
   },
 };
