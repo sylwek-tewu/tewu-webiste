@@ -5,7 +5,6 @@ import { Modal, Loader, Group, Text, Button, Stack } from '@mantine/core';
 import { Phone, RotateCw } from 'lucide-react';
 import { useCallbackWidget } from './CallbackContext';
 import type { ResolvedCallNumber } from '@/lib/callback/call-number';
-import { reloadPage } from './reload';
 import { useLocale } from '@/i18n/LocaleContext';
 
 /** Shown while the lazily loaded form chunk downloads. */
@@ -22,7 +21,13 @@ export function CallbackFormLoading() {
   );
 }
 
-function CallbackFormLoadError({ callInfo }: { callInfo: ResolvedCallNumber }) {
+function CallbackFormLoadError({
+  callInfo,
+  onReload = () => window.location.reload(),
+}: {
+  callInfo: ResolvedCallNumber;
+  onReload?: () => void;
+}) {
   const { isOpen, closeWidget } = useCallbackWidget();
   const { t } = useLocale();
   return (
@@ -35,7 +40,7 @@ function CallbackFormLoadError({ callInfo }: { callInfo: ResolvedCallNumber }) {
           {t.callbackWidget.loadErrorCall} {callInfo.display}
         </Button>
         {/* React.lazy caches the failed import; a reload fetches the current build's chunks. */}
-        <Button variant="default" onClick={reloadPage} leftSection={<RotateCw size={16} />}>
+        <Button variant="default" onClick={onReload} leftSection={<RotateCw size={16} />}>
           {t.callbackWidget.reloadPage}
         </Button>
       </Stack>
@@ -45,7 +50,7 @@ function CallbackFormLoadError({ callInfo }: { callInfo: ResolvedCallNumber }) {
 
 /** Catches a failed form chunk load (offline, stale tab after a deploy) and offers the phone number. */
 export class CallbackFormErrorBoundary extends React.Component<
-  { callInfo: ResolvedCallNumber; children: React.ReactNode },
+  { callInfo: ResolvedCallNumber; children: React.ReactNode; onReload?: () => void },
   { failed: boolean }
 > {
   state = { failed: false };
@@ -55,6 +60,10 @@ export class CallbackFormErrorBoundary extends React.Component<
   }
 
   render() {
-    return this.state.failed ? <CallbackFormLoadError callInfo={this.props.callInfo} /> : this.props.children;
+    return this.state.failed ? (
+      <CallbackFormLoadError callInfo={this.props.callInfo} onReload={this.props.onReload} />
+    ) : (
+      this.props.children
+    );
   }
 }

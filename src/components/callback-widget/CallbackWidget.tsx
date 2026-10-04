@@ -13,7 +13,13 @@ import classes from './CallbackWidget.module.css';
 // Separate chunk: Modal/Select/Radio and the phone-number metadata download on first open only.
 const CallbackFormModal = lazy(() => import('./CallbackFormModal'));
 
-export default function CallbackWidget({ callInfo }: { callInfo: ResolvedCallNumber }) {
+export default function CallbackWidget({
+  callInfo,
+  onReload,
+}: {
+  callInfo: ResolvedCallNumber;
+  onReload?: () => void;
+}) {
   const { isOpen, openWidget } = useCallbackWidget();
   const { t } = useLocale();
   const officeHoursLabel = `${t.callbackWidget.officeHours}${t.callbackWidget.timeSuffix}`;
@@ -95,7 +101,7 @@ export default function CallbackWidget({ callInfo }: { callInfo: ResolvedCallNum
       </Box>
 
       {hasOpened && (
-        <CallbackFormErrorBoundary callInfo={callInfo}>
+        <CallbackFormErrorBoundary callInfo={callInfo} onReload={onReload}>
           <Suspense fallback={<CallbackFormLoading />}>
             <CallbackFormModal callInfo={callInfo} />
           </Suspense>

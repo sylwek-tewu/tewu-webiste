@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useTransition } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import {
   Modal,
@@ -17,15 +17,10 @@ import {
 } from '@mantine/core';
 import { Phone, Clock, CheckCircle2, PhoneCall, AlertCircle, Send } from 'lucide-react';
 import { useCallbackWidget } from './CallbackContext';
-import { getConversionDelivery, pushCallbackRequestSubmit } from './analytics';
-import { CALLBACK_SLOTS, CALLBACK_TOPICS, CallbackSlot, CallbackTopic } from '@/lib/callback/types';
-import { normalizePhoneNumberForForm } from '@/lib/callback/phone-client';
+import { CALLBACK_SLOTS, CALLBACK_TOPICS, type CallbackSlot, type CallbackTopic } from '@/lib/callback/types';
 import type { ResolvedCallNumber } from '@/lib/callback/call-number';
-import { getCallbackCommitment } from '@/lib/calendar';
-import { formatCallbackCommitment } from '@/i18n/format-commitment';
-import { getSubmitDelayMs } from '@/lib/callback/time-trap';
 import { useLocale } from '@/i18n/LocaleContext';
-import { isPhoneErrorCode, phoneErrorMessage, submitErrorMessage } from './error-messages';
+import { useCallbackForm } from './useCallbackForm';
 import classes from './CallbackWidget.module.css';
 
 /**
@@ -36,115 +31,32 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
   const { isOpen, source, closeWidget } = useCallbackWidget();
   const { t, locale } = useLocale();
 
-  const [phone, setPhone] = useState('');
-  const [slot, setSlot] = useState<CallbackSlot>('asap');
-  const [topic, setTopic] = useState<CallbackTopic | ''>('');
-  const [honeypot, setHoneypot] = useState('');
-  const [formOpenedAt, setFormOpenedAt] = useState<number>(() => Date.now());
+  const {
+    phone,
+    slot,
+    topic,
+    honeypot,
+    phoneError,
+    submitError,
+    submitSuccess,
+    isPending,
+    promiseMessage,
+    setPhone,
+    setSlot,
+    setTopic,
+    setHoneypot,
+    handleSubmit,
+    handleClose,
+  } = useCallbackForm({
+    callInfo,
+    isOpen,
+    source,
+    closeWidget,
+    t: t.callbackWidget,
+    locale,
+  });
 
-  const [phoneError, setPhoneError] = useState<string | null>(null);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [isPending, startTransition] = useTransition();
-  // Set when the form closes, so a submission still held by the anti-bot delay is not sent.
-  const cancelledRef = useRef(false);
-
-
-  // Reset the time-trap start and errors whenever the widget opens
-  useEffect(() => {
-    if (!isOpen) {
-      cancelledRef.current = true;
-    }
-    if (isOpen) {
-      setFormOpenedAt(Date.now());
-      setSubmitError(null);
-      setPhoneError(null);
-    }
-  }, [isOpen]);
-
-  const commitment = getCallbackCommitment(slot);
-  const promisePreview = formatCallbackCommitment(commitment, t.callbackWidget, locale);
   const privacyPath = locale === 'uk' ? '/uk/polityka-prywatnosci' : '/polityka-prywatnosci';
-
-  const resetForm = () => {
-    setPhone('');
-    setSlot('asap');
-    setTopic('');
-    setHoneypot('');
-    setPhoneError(null);
-    setSubmitError(null);
-    setSubmitSuccess(false);
-  };
-
-  const handleClose = () => {
-    cancelledRef.current = true;
-    closeWidget();
-    if (submitSuccess) {
-      resetForm();
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setPhoneError(null);
-    setSubmitError(null);
-
-    const normalized = normalizePhoneNumberForForm(phone);
-    if (!normalized.valid) {
-      setPhoneError(phoneErrorMessage(normalized.errorCode, t.callbackWidget));
-      return;
-    }
-
-    cancelledRef.current = false;
-    startTransition(async () => {
-      try {
-        // Measured on the visitor's own clock, so clock skew vs. the server doesn't matter.
-        // A very fast (e.g. autofilled) submission waits out the server's anti-bot minimum.
-        const elapsed = Date.now() - formOpenedAt;
-        const delay = getSubmitDelayMs(elapsed);
-        if (delay > 0) {
-          await new Promise((resolve) => setTimeout(resolve, delay));
-          if (cancelledRef.current) return;
-        }
-
-        const response = await fetch('/api/callback', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            phone: normalized.normalized,
-            slot,
-            topic: topic || undefined,
-            source,
-            locale,
-            honeypot,
-            elapsedMs: elapsed + delay,
-          }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data.success) {
-          const delivery = getConversionDelivery(data);
-          if (delivery) {
-            pushCallbackRequestSubmit({
-              source,
-              topic: topic || undefined,
-              time_slot: slot,
-              delivery,
-            });
-          }
-          setSubmitSuccess(true);
-        } else if (isPhoneErrorCode(data.code)) {
-          // A number the server's stricter check rejects
-          setPhoneError(phoneErrorMessage(data.code, t.callbackWidget));
-        } else {
-          setSubmitError(submitErrorMessage(data.code, t.callbackWidget));
-        }
-      } catch {
-        setSubmitError(t.callbackWidget.errors.connection);
-      }
-    });
-  };
 
   return (
     <Modal
@@ -185,7 +97,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
             <Group gap="xs" align="flex-start" wrap="nowrap">
               <Clock size={18} style={{ flexShrink: 0, marginTop: 2 }} color="var(--mantine-color-brandBlue-6)" />
               <Text size="sm" fw={600} c="brandBlue.9">
-                {promisePreview.message}
+                {promiseMessage}
               </Text>
             </Group>
           </Box>
@@ -224,10 +136,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
               radius="md"
               leftSection={<Phone size={18} color="var(--mantine-color-slate-4)" />}
               value={phone}
-              onChange={(e) => {
-                setPhone(e.target.value);
-                if (phoneError) setPhoneError(null);
-              }}
+              onChange={(e) => setPhone(e.target.value)}
               error={phoneError}
             />
 
@@ -267,7 +176,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
               <Group gap="xs" align="flex-start" wrap="nowrap">
                 <Clock size={16} style={{ flexShrink: 0, marginTop: 2 }} color="var(--mantine-color-brandBlue-6)" />
                 <Text size="xs" fw={600} c="brandBlue.9">
-                  {promisePreview.message}
+                  {promiseMessage}
                 </Text>
               </Group>
             </Box>

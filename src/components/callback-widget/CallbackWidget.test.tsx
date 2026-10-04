@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithMantine } from '@/test/render';
 import { CallbackProvider } from './CallbackContext';
@@ -165,7 +165,9 @@ describe('CallbackWidget', () => {
     await fillAndSubmit(user, 0.5);
 
     await user.keyboard('{Escape}');
-    await new Promise((r) => setTimeout(r, 2000));
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 2000));
+    });
     expect(fetchMock).not.toHaveBeenCalled();
 
     await user.click(screen.getByRole('button', { name: /Bezpłatna wycena – oddzwonimy/ }));
