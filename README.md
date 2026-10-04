@@ -85,7 +85,7 @@ cp .env.example .env.local
 4. **Zadanie harmonogramu (Coolify Scheduled Task)**:
    - W zakładce **Scheduled Tasks** dodaj zadanie cykliczne (uruchamiane wewnątrz kontenera aplikacji):
      - **Cron Expression**: `*/10 * * * *` (co 10 minut)
-     - **Command** (obraz nie zawiera `curl`, dostępny jest `wget` z BusyBox):
+     - **Command** (obraz nie zawiera `curl`, dostępny jest `wget`):
        ```bash
        wget -qO- --post-data='' --header="Authorization: Bearer $CRON_SECRET" http://127.0.0.1:3000/api/internal/process-outbox
        ```
