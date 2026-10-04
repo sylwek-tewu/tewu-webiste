@@ -56,14 +56,28 @@ export async function runOutboxProcessing(
       ttlHours,
       now: currentNow,
       onExpire: async (record) => {
-        await sendAlert(
-          `⚠️ Zgłoszenie #${record.id} wygasło po przekroczeniu czasu retencji (${ttlHours}h) bez skutecznego doręczenia.`
-        );
+        try {
+          await sendAlert(
+            `⚠️ Zgłoszenie #${record.id} wygasło po przekroczeniu czasu retencji (${ttlHours}h) bez skutecznego doręczenia.`
+          );
+        } catch (error) {
+          console.error(
+            `[Outbox Coordinator] Failed to dispatch expiration alert for #${record.id}:`,
+            error
+          );
+        }
       },
       onCorrupt: async (id) => {
-        await sendAlert(
-          `🚨 Zgłoszenie #${id} w buforze awaryjnym nie dało się odczytać (zmieniony OUTBOX_ENCRYPTION_KEY?) i zostało usunięte.`
-        );
+        try {
+          await sendAlert(
+            `🚨 Zgłoszenie #${id} w buforze awaryjnym nie dało się odczytać (zmieniony OUTBOX_ENCRYPTION_KEY?) i zostało usunięte.`
+          );
+        } catch (error) {
+          console.error(
+            `[Outbox Coordinator] Failed to dispatch corruption alert for #${id}:`,
+            error
+          );
+        }
       },
     });
 

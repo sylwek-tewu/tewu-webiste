@@ -329,4 +329,91 @@ describe('runOutboxProcessing', () => {
       succeeded: 0,
     });
   });
+
+  it('8. Expiration alert failure is caught, logged, and does not block processing', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const expiredCreatedAt = new Date(baseNow.getTime() - 80 * 60 * 60 * 1000).toISOString();
+
+    await store.put({
+      id: 'REC-EXP-FAIL',
+      phone: '+48501482555',
+      slot: 'asap',
+      source: 'contact',
+      createdAt: expiredCreatedAt,
+      attempts: 3,
+    });
+
+    await store.put({
+      id: 'REC-VALID-1',
+      phone: '+48501482555',
+      slot: 'asap',
+      source: 'contact',
+      createdAt: baseNow.toISOString(),
+      attempts: 1,
+    });
+
+    const sendEmail = vi.fn().mockResolvedValue(true);
+    const sendAlert = vi.fn().mockRejectedValue(new Error('Telegram network error'));
+
+    const result = await runOutboxProcessing({
+      store,
+      sendEmail,
+      sendAlert,
+      ttlHours: 72,
+      now: () => baseNow,
+    });
+
+    expect(result).toMatchObject({
+      processed: 2,
+      expired: 1,
+      succeeded: 1,
+    });
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.stringContaining('[Outbox Coordinator] Failed to dispatch expiration alert for #REC-EXP-FAIL:'),
+      expect.any(Error)
+    );
+    expect(sendEmail).toHaveBeenCalledOnce();
+    expect(await store.get('REC-EXP-FAIL')).toBeNull();
+    expect(await store.get('REC-VALID-1')).toBeNull();
+  });
+
+  it('9. Corruption alert failure is caught, logged, and does not block processing', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'initial-key');
+
+    await store.put({
+      id: 'REC-CORRUPT-FAIL',
+      phone: '+48501482555',
+      slot: 'asap',
+      source: 'header',
+      createdAt: baseNow.toISOString(),
+      attempts: 1,
+    });
+
+    // Change encryption key to render ciphertext unreadable
+    vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'different-key');
+
+    const sendEmail = vi.fn().mockResolvedValue(true);
+    const sendAlert = vi.fn().mockRejectedValue(new Error('Telegram timeout'));
+
+    const result = await runOutboxProcessing({
+      store,
+      sendEmail,
+      sendAlert,
+      now: () => baseNow,
+    });
+
+    expect(result).toMatchObject({
+      processed: 1,
+      corrupt: 1,
+      succeeded: 0,
+    });
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.stringContaining('[Outbox Coordinator] Failed to dispatch corruption alert for #REC-CORRUPT-FAIL:'),
+      expect.any(Error)
+    );
+    expect(await store.listIds()).toEqual([]);
+  });
 });
