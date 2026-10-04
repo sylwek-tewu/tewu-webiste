@@ -237,6 +237,41 @@ describe('useCallbackForm', () => {
     expect(result.current.submitSuccess).toBe(false);
   });
 
+  it('still handles the response when the form closes while the request is in flight', async () => {
+    let respond!: (value: unknown) => void;
+    fetchMock.mockReturnValue(new Promise((resolve) => (respond = resolve)));
+    const { result, rerender } = renderHook(
+      (props: UseCallbackFormOptions) => useCallbackForm(props),
+      { initialProps: createOptions() }
+    );
+
+    act(() => {
+      result.current.setPhone('501 482 555');
+    });
+    now += 3000;
+
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    });
+    expect(fetchMock).toHaveBeenCalledOnce();
+
+    act(() => {
+      result.current.handleClose();
+    });
+    rerender(createOptions({ isOpen: false }));
+
+    // The server already has the lead, so the conversion counts and reopening shows the confirmation
+    await act(async () => {
+      respond({ ok: true, status: 200, json: async () => ({ success: true, id: 'REQ-LATE', delivery: 'direct' }) });
+    });
+
+    expect(window.dataLayer).toContainEqual(
+      expect.objectContaining({ event: 'callback_request_submit', delivery: 'direct' })
+    );
+    rerender(createOptions({ isOpen: true }));
+    expect(result.current.submitSuccess).toBe(true);
+  });
+
   it('maps server error codes to localized phone error or submit error', async () => {
     mockFetchResponse({ error: 'Server says bad phone', code: 'phone_invalid' }, 400, false);
     const { result } = renderHook(() => useCallbackForm(createOptions()));

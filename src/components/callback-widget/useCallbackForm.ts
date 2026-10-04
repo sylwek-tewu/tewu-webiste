@@ -52,6 +52,7 @@ export function useCallbackForm(options: UseCallbackFormOptions): {
   const [isPending, startTransition] = useTransition();
 
   // Set when the form closes, so a submission still held by the anti-bot delay is not sent.
+  // A request already sent is still handled: the server has the lead.
   const cancelledRef = useRef(false);
 
   // Reset the time-trap start and errors whenever the widget opens
@@ -137,8 +138,6 @@ export function useCallbackForm(options: UseCallbackFormOptions): {
 
         const data = await response.json();
 
-        if (cancelledRef.current) return;
-
         if (response.ok && data.success) {
           const delivery = getConversionDelivery(data);
           if (delivery) {
@@ -157,9 +156,7 @@ export function useCallbackForm(options: UseCallbackFormOptions): {
           setSubmitError(submitErrorMessage(data.code, t));
         }
       } catch {
-        if (!cancelledRef.current) {
-          setSubmitError(t.errors.connection);
-        }
+        setSubmitError(t.errors.connection);
       }
     });
   };
