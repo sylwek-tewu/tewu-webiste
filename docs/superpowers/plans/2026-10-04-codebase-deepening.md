@@ -482,23 +482,23 @@ git commit -m "refactor(widget): extract useCallbackForm hook and delete single-
 **Files:**
 - All touched files across the repository.
 
-- [ ] **Step 1: Run full test suite**
+- [x] **Step 1: Run full test suite**
 Run: `pnpm test`
 Expected: PASS (all tests pass across all test suites).
 
-- [ ] **Step 2: Run TypeScript type checker**
+- [x] **Step 2: Run TypeScript type checker**
 Run: `pnpm check:types`
 Expected: PASS (zero type errors).
 
-- [ ] **Step 3: Run ESLint**
+- [x] **Step 3: Run ESLint**
 Run: `pnpm lint`
 Expected: PASS (zero lint warnings/errors).
 
-- [ ] **Step 4: Run production build**
+- [x] **Step 4: Run production build**
 Run: `pnpm build`
 Expected: PASS (Next.js standalone build succeeds).
 
-- [ ] **Step 5: Final commit**
+- [x] **Step 5: Final commit**
 ```bash
 git commit --allow-empty -m "chore: complete codebase architecture deepening refactor"
 ```
