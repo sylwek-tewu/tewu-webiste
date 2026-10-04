@@ -47,6 +47,7 @@ describe('POST /api/callback route handler', () => {
 
     const res = await POST(makeRequest(validBody));
     expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toContain('application/json');
 
     const data = await res.json();
     expect(data.success).toBe(true);
@@ -130,6 +131,7 @@ describe('POST /api/callback route handler', () => {
     it('rejects malformed JSON with 400', async () => {
       const res = await POST(makeRequest('{not json', true));
       expect(res.status).toBe(400);
+      expect(res.headers.get('content-type')).toContain('application/json');
       expect((await res.json()).code).toBe('invalid_request');
     });
 
@@ -221,8 +223,23 @@ describe('POST /api/callback route handler', () => {
 
     const res = await POST(makeRequest(validBody));
     expect(res.status).toBe(502);
+    expect(res.headers.get('content-type')).toContain('application/json');
     expect(await res.json()).toMatchObject({ code: 'delivery_failed', telUri: 'tel:+48914824190' });
     expect(alertSpy).toHaveBeenCalledOnce();
+  });
+
+  it('returns 500 with office call details when an unexpected exception occurs in pipeline', async () => {
+    vi.spyOn(emailModule, 'getSmtpConfig').mockImplementation(() => {
+      throw new Error('Pipeline explosion');
+    });
+
+    const res = await POST(makeRequest(validBody));
+    expect(res.status).toBe(500);
+    expect(res.headers.get('content-type')).toContain('application/json');
+    const data = await res.json();
+    expect(data.code).toBe('unexpected');
+    expect(data.callNumber).toBe('91 48 24 190');
+    expect(data.telUri).toBe('tel:+48914824190');
   });
 
   describe('response time budget', () => {
