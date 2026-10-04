@@ -10,8 +10,8 @@ import { CALLBACK_TOPICS } from '@/lib/callback/types';
 import { ukTranslations } from '@/i18n';
 
 // Office closed, so the mobile bar shows the opening hours instead of the call button
-vi.mock('@/lib/callback/business-hours', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@/lib/callback/business-hours')>()),
+vi.mock('@/lib/calendar', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/calendar')>()),
   isOfficeOpen: () => false,
 }));
 

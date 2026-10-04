@@ -1,5 +1,4 @@
 export * from './types';
 export * from './phone';
 export * from './call-number';
-export * from './business-hours';
-export * from './delivery-pipeline';
+// The delivery pipeline (nodemailer, SQLite) is server-only: import it from './delivery-pipeline'.

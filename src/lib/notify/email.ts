@@ -7,7 +7,7 @@ import nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { CallbackNotificationData } from './types';
 import { CALLBACK_SLOTS, CALLBACK_TOPICS, toKnownSource } from '../callback/types';
-import { getWarsawTime } from '../callback/business-hours';
+import { getWarsawTime } from '../calendar';
 
 function getSlotLabel(slotId: string): string {
   const found = CALLBACK_SLOTS.find((s) => s.id === slotId);

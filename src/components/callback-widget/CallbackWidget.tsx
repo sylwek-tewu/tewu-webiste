@@ -5,7 +5,7 @@ import { Button, Text, Box } from '@mantine/core';
 import { Phone, Clock, PhoneCall } from 'lucide-react';
 import { useCallbackWidget } from './CallbackContext';
 import type { ResolvedCallNumber } from '@/lib/callback/call-number';
-import { isOfficeOpen } from '@/lib/callback/business-hours';
+import { isOfficeOpen } from '@/lib/calendar';
 import { CallbackFormErrorBoundary, CallbackFormLoading } from './CallbackFormFallbacks';
 import { useLocale } from '@/i18n/LocaleContext';
 import classes from './CallbackWidget.module.css';
