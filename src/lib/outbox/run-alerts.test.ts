@@ -63,7 +63,6 @@ describe('sendRateLimitedRunAlert with OutboxStore', () => {
       put: vi.fn(),
       claim: vi.fn(),
       get: vi.fn(),
-      getRecordStatus: vi.fn(),
       listIds: vi.fn(),
       delete: vi.fn(),
       getMeta: vi.fn(async (key: string) => metaMap.get(key) ?? null),

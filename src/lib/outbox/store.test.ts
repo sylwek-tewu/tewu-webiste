@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 import { getOutboxStore, resetOutboxStore, MemoryOutboxStore, SqliteOutboxStore } from './store';
 import type { OutboxRecord } from './types';
 import type { CallbackSlot } from '@/lib/callback/types';
-import { CorruptRecordError } from './crypto';
+import { CorruptRecordError, OutboxKeyMissingError } from './crypto';
 import { initDb, schema, resetDbInstance } from '@/db';
 
 describe('getOutboxStore', () => {
@@ -101,75 +101,15 @@ describe('MemoryOutboxStore', () => {
     expect(record?.lastAttemptAt).toBe(lastAttemptAt);
   });
 
-  describe('getRecordStatus', () => {
-    it('returns not_found when record does not exist', async () => {
-      const store = new MemoryOutboxStore();
-      expect(await store.getRecordStatus('NONE')).toEqual({ status: 'not_found' });
-    });
+  it('reports an unreadable record by the reason it cannot be read', async () => {
+    const store = new MemoryOutboxStore();
+    const createdAt = '2026-10-05T10:00:00.000Z';
+    await store.put({ id: 'R1', phone: '+48501482555', slot: 'asap', source: 'header', locale: 'pl', createdAt });
 
-    it('returns valid when record exists and can be decrypted', async () => {
-      const store = new MemoryOutboxStore();
-      const createdAt = '2026-10-05T10:00:00.000Z';
-      await store.put({
-        id: 'VAL1',
-        phone: '+48501482555',
-        slot: 'asap',
-        source: 'header',
-        locale: 'pl',
-        createdAt,
-      });
-      const result = await store.getRecordStatus('VAL1');
-      expect(result.status).toBe('valid');
-      if (result.status === 'valid') {
-        expect(result.record.id).toBe('VAL1');
-        expect(result.record.phone).toBe('+48501482555');
-      }
-    });
-
-    it('returns key_missing with createdAt when OUTBOX_ENCRYPTION_KEY is unset', async () => {
-      const store = new MemoryOutboxStore();
-      const createdAt = '2026-10-05T10:00:00.000Z';
-      await store.put({
-        id: 'KM1',
-        phone: '+48501482555',
-        slot: 'asap',
-        source: 'header',
-        locale: 'pl',
-        createdAt,
-      });
-      vi.stubEnv('OUTBOX_ENCRYPTION_KEY', '');
-      expect(await store.getRecordStatus('KM1')).toEqual({
-        status: 'key_missing',
-        createdAt,
-      });
-    });
-
-    it('returns corrupt when record was encrypted with a different key', async () => {
-      const store = new MemoryOutboxStore();
-      await store.put({
-        id: 'COR1',
-        phone: '+48501482555',
-        slot: 'asap',
-        source: 'header',
-        locale: 'pl',
-        createdAt: '2026-10-05T10:00:00.000Z',
-      });
-      vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'different-key-now');
-      expect(await store.getRecordStatus('COR1')).toEqual({ status: 'corrupt' });
-    });
-
-    it('returns corrupt when record has invalid date in memory', async () => {
-      const store = new MemoryOutboxStore();
-      await store.put({
-        id: 'COR2',
-        phone: '+48501482555',
-        slot: 'asap',
-        source: 'header',
-        locale: 'pl',
-        createdAt: 'invalid-date',
-      });
-      expect(await store.getRecordStatus('COR2')).toEqual({ status: 'corrupt' });
-    });
+    vi.stubEnv('OUTBOX_ENCRYPTION_KEY', '');
+    await expect(store.get('R1')).rejects.toEqual(new OutboxKeyMissingError(createdAt));
+    vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'different-key-now');
+    await expect(store.get('R1')).rejects.toBeInstanceOf(CorruptRecordError);
   });
 
   describe('metadata storage (getMeta / setMeta)', () => {
@@ -390,57 +330,17 @@ describe('SqliteOutboxStore', () => {
     });
   });
 
-  describe('getRecordStatus', () => {
-    it('returns not_found when record does not exist in database', async () => {
-      const store = new SqliteOutboxStore(testDb);
-      expect(await store.getRecordStatus('NONEXISTENT')).toEqual({ status: 'not_found' });
-    });
+  it('reports an unreadable record by the reason it cannot be read', async () => {
+    const store = new SqliteOutboxStore(testDb);
+    await store.put(valid);
 
-    it('returns valid when record exists and decrypts cleanly', async () => {
-      const store = new SqliteOutboxStore(testDb);
-      await store.put(valid);
-      const res = await store.getRecordStatus(valid.id);
-      expect(res.status).toBe('valid');
-      if (res.status === 'valid') {
-        expect(res.record.id).toBe(valid.id);
-        expect(res.record.phone).toBe(valid.phone);
-      }
-    });
-
-    it('returns key_missing with createdAt when encryption key is missing', async () => {
-      const store = new SqliteOutboxStore(testDb);
-      await store.put(valid);
-
-      vi.stubEnv('OUTBOX_ENCRYPTION_KEY', '');
-      const res = await store.getRecordStatus(valid.id);
-      expect(res).toEqual({
-        status: 'key_missing',
-        createdAt: valid.createdAt,
-      });
-    });
-
-    it('returns corrupt when decryption fails with a different key', async () => {
-      const store = new SqliteOutboxStore(testDb);
-      await store.put(valid);
-
-      vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'wrong-key-completely');
-      expect(await store.getRecordStatus(valid.id)).toEqual({ status: 'corrupt' });
-    });
-
-    it('returns corrupt when row has invalid date in database', async () => {
-      const store = new SqliteOutboxStore(testDb);
-      await testDb.insert(schema.outboxRecords).values({
-        id: 'BAD_DATE',
-        phone: '+48501482555',
-        slot: 'asap',
-        source: 'header',
-        locale: 'pl',
-        createdAt: 'not-a-date',
-        attempts: 1,
-      });
-
-      expect(await store.getRecordStatus('BAD_DATE')).toEqual({ status: 'corrupt' });
-    });
+    // createdAt is kept in plain text, so a record waiting for the key can still expire
+    vi.stubEnv('OUTBOX_ENCRYPTION_KEY', '');
+    const keyMissing = store.get(valid.id);
+    await expect(keyMissing).rejects.toBeInstanceOf(OutboxKeyMissingError);
+    await expect(keyMissing).rejects.toMatchObject({ createdAt: valid.createdAt });
+    vi.stubEnv('OUTBOX_ENCRYPTION_KEY', 'wrong-key-completely');
+    await expect(store.get(valid.id)).rejects.toBeInstanceOf(CorruptRecordError);
   });
 
   describe('metadata storage (getMeta / setMeta)', () => {

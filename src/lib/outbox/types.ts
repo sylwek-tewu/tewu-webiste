@@ -5,12 +5,6 @@ export interface OutboxRecord extends CallbackLead {
   lastAttemptAt?: string; // ISO string
 }
 
-export type StoredRecordResult =
-  | { status: 'valid'; record: OutboxRecord }
-  | { status: 'key_missing'; createdAt?: string }
-  | { status: 'corrupt' }
-  | { status: 'not_found' };
-
 export interface OutboxStore {
   /** Adds a new record; rejects if the id is already taken. */
   put(record: CallbackLead & Partial<Pick<OutboxRecord, 'attempts' | 'lastAttemptAt'>>): Promise<void>;
@@ -21,7 +15,6 @@ export interface OutboxStore {
    */
   claim(id: string, attempts: number, at: string): Promise<boolean>;
   get(id: string): Promise<OutboxRecord | null>;
-  getRecordStatus(id: string): Promise<StoredRecordResult>;
   /** Keys only, so one unreadable record cannot block the others. */
   listIds(): Promise<string[]>;
   delete(id: string): Promise<void>;

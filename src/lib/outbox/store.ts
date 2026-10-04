@@ -8,7 +8,7 @@ import { and, eq, asc, sql } from 'drizzle-orm';
 import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import { getDb, schema } from '@/db';
 import type { CallbackLead, Locale } from '@/lib/callback/types';
-import { OutboxRecord, OutboxStore, StoredRecordResult } from './types';
+import { OutboxRecord, OutboxStore } from './types';
 import { encryptPhone, decryptPhone, CorruptRecordError, OutboxKeyMissingError } from './crypto';
 
 /**
@@ -73,23 +73,6 @@ export class MemoryOutboxStore implements OutboxStore {
     const raw = this.records.get(id);
     if (!raw) return null;
     return reviveRecord(raw);
-  }
-
-  async getRecordStatus(id: string): Promise<StoredRecordResult> {
-    const raw = this.records.get(id);
-    if (!raw) return { status: 'not_found' };
-    try {
-      const record = reviveRecord(raw);
-      return { status: 'valid', record };
-    } catch (error) {
-      if (error instanceof OutboxKeyMissingError) {
-        return { status: 'key_missing', createdAt: error.createdAt };
-      }
-      if (error instanceof CorruptRecordError) {
-        return { status: 'corrupt' };
-      }
-      throw error;
-    }
   }
 
   async listIds(): Promise<string[]> {
@@ -186,30 +169,6 @@ export class SqliteOutboxStore implements OutboxStore {
 
     if (rows.length === 0) return null;
     return this.reviveRow(rows[0]);
-  }
-
-  async getRecordStatus(id: string): Promise<StoredRecordResult> {
-    const rows = await this.db
-      .select()
-      .from(schema.outboxRecords)
-      .where(eq(schema.outboxRecords.id, id))
-      .limit(1);
-
-    if (rows.length === 0) return { status: 'not_found' };
-
-    const row = rows[0];
-    try {
-      const record = this.reviveRow(row);
-      return { status: 'valid', record };
-    } catch (error) {
-      if (error instanceof OutboxKeyMissingError) {
-        return { status: 'key_missing', createdAt: error.createdAt ?? row.createdAt };
-      }
-      if (error instanceof CorruptRecordError) {
-        return { status: 'corrupt' };
-      }
-      throw error;
-    }
   }
 
   async listIds(): Promise<string[]> {
