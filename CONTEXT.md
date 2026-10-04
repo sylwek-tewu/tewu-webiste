@@ -23,3 +23,22 @@ _Avoid_: Flagi narodowe, selektor państw
 **Callback Lead Locale**:
 Atrybut zgłoszenia z widżetu call-back (`pl` lub `uk`) przekazywany do powiadomień e-mail i Telegram, informujący konsultantów biura o preferowanym języku rozmowy klienta.
 _Avoid_: Pochodzenie klienta, język przeglądarki leada
+
+## Callback & Lead Intake
+
+**Callback Lead**:
+Zgłoszenie prośby o kontakt telefoniczny z widżetu call-back, zawierające numer telefonu w formacie E.164, preferowaną porę kontaktu, opcjonalny temat rozmowy, źródło wywołania, język oraz unikalny identyfikator.
+_Avoid_: Rekord, zapytanie ofertowe, wiersz bazy, formularz kontaktowy
+
+**Callback Commitment**:
+Obietnica terminu kontaktu składana klientowi na podstawie wybranego slotu, bieżącego czasu w strefie `Europe/Warsaw`, dni roboczych oraz godzin pracy biura.
+_Avoid_: Czas odpowiedzi, SLA, slot oddzwonienia
+
+**Office Hours & Calendar**:
+Zasady wyliczania dostępności biura i terminów kontaktu w oparciu o strefę `Europe/Warsaw`, polskie dni ustawowo wolne od pracy oraz dodatkowe dni zamknięte.
+_Avoid_: Moduł świąt, biblioteka dat
+
+**Emergency Outbox Buffer**:
+Trwały bufor zgłoszeń oparty o lokalną bazę SQLite na wolumenie serwera, zapewniający transakcyjne kolejkowanie z szyfrowaniem AES-256-GCM przy awarii bezpośredniej wysyłki poczty e-mail.
+_Avoid_: Kolejka zadań, baza tymczasowa
+

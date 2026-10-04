@@ -14,7 +14,6 @@ import type { CallbackSlot } from './types';
 import {
   formatCallbackCommitment,
   formatTargetDayPhrase as formatTargetDayPhraseI18n,
-  type FormattedCommitmentResult,
 } from '@/i18n/format-commitment';
 import { plTranslations } from '@/i18n/pl';
 import { ukTranslations } from '@/i18n/uk';

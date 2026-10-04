@@ -113,9 +113,10 @@ export function PDFViewer({
                 });
 
                 await renderTask.promise;
-            } catch (err: any) {
+            } catch (err) {
                 // Ignore cancellation errors
-                if (err?.name !== 'RenderingCancelledException') {
+                const errorName = err instanceof Error ? err.name : (err as { name?: string })?.name;
+                if (errorName !== 'RenderingCancelledException') {
                     console.error('Page rendering error:', err);
                 }
             }

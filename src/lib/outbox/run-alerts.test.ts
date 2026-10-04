@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { shouldSendRunAlert, RUN_ALERT_INTERVAL_MS, sendRateLimitedRunAlert, resetRunAlertMemory } from './run-alerts';
+import type { OutboxStore } from './types';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -58,7 +59,7 @@ describe('sendRateLimitedRunAlert with OutboxStore', () => {
   it('uses store.getMeta and store.setMeta for rate limiting', async () => {
     resetRunAlertMemory();
     const metaMap = new Map<string, string>();
-    const mockStore = {
+    const mockStore: OutboxStore = {
       put: vi.fn(),
       claim: vi.fn(),
       get: vi.fn(),
@@ -75,19 +76,19 @@ describe('sendRateLimitedRunAlert with OutboxStore', () => {
     const now = new Date('2026-10-05T12:00:00Z');
 
     // First alert sends and stores in meta
-    await sendRateLimitedRunAlert('store-alert', 'Store alert 1', send, now, mockStore as any);
+    await sendRateLimitedRunAlert('store-alert', 'Store alert 1', send, now, mockStore);
     expect(send).toHaveBeenCalledTimes(1);
     expect(mockStore.getMeta).toHaveBeenCalledWith('store-alert');
     expect(mockStore.setMeta).toHaveBeenCalledWith('store-alert', now.toISOString());
 
     // Second alert 1 hour later is suppressed
     const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
-    await sendRateLimitedRunAlert('store-alert', 'Store alert 2', send, oneHourLater, mockStore as any);
+    await sendRateLimitedRunAlert('store-alert', 'Store alert 2', send, oneHourLater, mockStore);
     expect(send).toHaveBeenCalledTimes(1);
 
     // Third alert 7 hours later sends
     const sevenHoursLater = new Date(now.getTime() + 7 * 60 * 60 * 1000);
-    await sendRateLimitedRunAlert('store-alert', 'Store alert 3', send, sevenHoursLater, mockStore as any);
+    await sendRateLimitedRunAlert('store-alert', 'Store alert 3', send, sevenHoursLater, mockStore);
     expect(send).toHaveBeenCalledTimes(2);
   });
 });

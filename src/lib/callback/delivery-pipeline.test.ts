@@ -8,7 +8,6 @@ import { DELIVERY_BUDGET } from './delivery-budget';
 import * as emailModule from '@/lib/notify/email';
 import * as telegramModule from '@/lib/notify/telegram';
 import * as storeModule from '@/lib/outbox/store';
-import * as callNumberModule from './call-number';
 
 const validPayload = {
   phone: '501 482 555',
@@ -273,7 +272,7 @@ describe('submitCallbackLead delivery pipeline', () => {
         expect.stringContaining('brak ustawień SMTP')
       );
       // Ensure no PII in alert
-      expect((mockDeps.sendAlert as any).mock.calls[0][0]).not.toContain('501');
+      expect(vi.mocked(mockDeps.sendAlert).mock.calls[0][0]).not.toContain('501');
     });
   });
 
