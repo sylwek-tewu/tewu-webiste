@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { POST } from './route';
-import { getOutboxStore, resetOutboxStore, MemoryOutboxStore, SqliteOutboxStore } from '@/lib/outbox';
+import { getOutboxStore, resetOutboxStore, MemoryOutboxStore, SqliteOutboxStore, resetCoordinatorMutex } from '@/lib/outbox';
 import * as telegram from '@/lib/notify/telegram';
 import * as email from '@/lib/notify/email';
 import { initDb, resetDbInstance } from '@/db';
@@ -34,6 +34,7 @@ describe('POST /api/internal/process-outbox', () => {
   let memoryStore: MemoryOutboxStore;
 
   beforeEach(() => {
+    resetCoordinatorMutex();
     vi.stubEnv('OUTBOX_STORE', 'memory');
     resetOutboxStore();
     resetRunAlertMemory();
@@ -48,6 +49,7 @@ describe('POST /api/internal/process-outbox', () => {
 
   afterEach(() => {
     vi.unstubAllEnvs();
+    resetCoordinatorMutex();
     resetOutboxStore();
     resetDbInstance();
   });

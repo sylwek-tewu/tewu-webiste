@@ -54,6 +54,44 @@ describe('sendRateLimitedRunAlert with SQLite', () => {
   });
 });
 
+describe('sendRateLimitedRunAlert with OutboxStore', () => {
+  it('uses store.getMeta and store.setMeta for rate limiting', async () => {
+    resetRunAlertMemory();
+    const metaMap = new Map<string, string>();
+    const mockStore = {
+      put: vi.fn(),
+      claim: vi.fn(),
+      get: vi.fn(),
+      getRecordStatus: vi.fn(),
+      listIds: vi.fn(),
+      delete: vi.fn(),
+      getMeta: vi.fn(async (key: string) => metaMap.get(key) ?? null),
+      setMeta: vi.fn(async (key: string, value: string) => {
+        metaMap.set(key, value);
+      }),
+    };
+
+    const send = vi.fn().mockResolvedValue(true);
+    const now = new Date('2026-10-05T12:00:00Z');
+
+    // First alert sends and stores in meta
+    await sendRateLimitedRunAlert('store-alert', 'Store alert 1', send, now, mockStore as any);
+    expect(send).toHaveBeenCalledTimes(1);
+    expect(mockStore.getMeta).toHaveBeenCalledWith('store-alert');
+    expect(mockStore.setMeta).toHaveBeenCalledWith('store-alert', now.toISOString());
+
+    // Second alert 1 hour later is suppressed
+    const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
+    await sendRateLimitedRunAlert('store-alert', 'Store alert 2', send, oneHourLater, mockStore as any);
+    expect(send).toHaveBeenCalledTimes(1);
+
+    // Third alert 7 hours later sends
+    const sevenHoursLater = new Date(now.getTime() + 7 * 60 * 60 * 1000);
+    await sendRateLimitedRunAlert('store-alert', 'Store alert 3', send, sevenHoursLater, mockStore as any);
+    expect(send).toHaveBeenCalledTimes(2);
+  });
+});
+
 describe('sendRateLimitedRunAlert when the database is unavailable', () => {
   beforeEach(() => {
     resetRunAlertMemory();

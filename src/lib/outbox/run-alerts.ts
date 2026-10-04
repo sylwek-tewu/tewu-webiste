@@ -6,8 +6,18 @@
 import { eq } from 'drizzle-orm';
 import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import { getDb, schema } from '@/db';
+import type { OutboxStore } from './types';
 
 export const RUN_ALERT_INTERVAL_MS = 6 * 60 * 60 * 1000;
+
+function isOutboxStore(candidate: unknown): candidate is OutboxStore {
+  return (
+    candidate !== null &&
+    typeof candidate === 'object' &&
+    'getMeta' in candidate &&
+    typeof (candidate as OutboxStore).getMeta === 'function'
+  );
+}
 
 /** Last alert times sent by this process; covers a database that cannot be read or written. */
 const lastAlertInMemory = new Map<string, string>();
@@ -34,9 +44,12 @@ export function shouldSendRunAlert(lastAlertAt: string | null, now: Date): boole
 
 export async function getLastAlertAt(
   key: string,
-  db?: BetterSQLite3Database<typeof schema>
+  storeOrDb?: OutboxStore | BetterSQLite3Database<typeof schema>
 ): Promise<string | null> {
-  const targetDb = db || getDb();
+  if (isOutboxStore(storeOrDb)) {
+    return await storeOrDb.getMeta(key);
+  }
+  const targetDb = storeOrDb || getDb();
   const rows = await targetDb
     .select({ value: schema.outboxMeta.value })
     .from(schema.outboxMeta)
@@ -49,9 +62,13 @@ export async function getLastAlertAt(
 export async function setLastAlertAt(
   key: string,
   timestamp: string,
-  db?: BetterSQLite3Database<typeof schema>
+  storeOrDb?: OutboxStore | BetterSQLite3Database<typeof schema>
 ): Promise<void> {
-  const targetDb = db || getDb();
+  if (isOutboxStore(storeOrDb)) {
+    await storeOrDb.setMeta(key, timestamp);
+    return;
+  }
+  const targetDb = storeOrDb || getDb();
   await targetDb
     .insert(schema.outboxMeta)
     .values({
@@ -74,11 +91,11 @@ export async function sendRateLimitedRunAlert(
   text: string,
   send: (text: string) => Promise<boolean>,
   now: Date = new Date(),
-  db?: BetterSQLite3Database<typeof schema>
+  storeOrDb?: OutboxStore | BetterSQLite3Database<typeof schema>
 ): Promise<void> {
   let storedAt: string | null = null;
   try {
-    storedAt = await getLastAlertAt(key, db);
+    storedAt = await getLastAlertAt(key, storeOrDb);
   } catch (err) {
     console.error('[RunAlerts] Failed to query alert meta from SQLite:', err);
   }
@@ -92,7 +109,7 @@ export async function sendRateLimitedRunAlert(
   if (await send(text)) {
     lastAlertInMemory.set(key, now.toISOString());
     try {
-      await setLastAlertAt(key, now.toISOString(), db);
+      await setLastAlertAt(key, now.toISOString(), storeOrDb);
     } catch (err) {
       console.error('[RunAlerts] Failed to update alert meta in SQLite:', err);
     }
