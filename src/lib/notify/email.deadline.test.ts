@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import net from 'node:net';
 import { EventEmitter } from 'node:events';
 import { sendCallbackEmail } from './email';
+import type { CallbackNotificationData } from './types';
 
 /**
  * Minimal SMTP server that answers every command after `replyDelayMs`: slow but never idle,
@@ -52,7 +53,7 @@ function startSlowSmtpServer(replyDelayMs: number) {
   });
 }
 
-const data = {
+const data: CallbackNotificationData = {
   id: 'C9F1A2',
   phone: '+48501482555',
   slot: 'asap',

@@ -3,6 +3,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { getOutboxStore, resetOutboxStore, MemoryOutboxStore, SqliteOutboxStore } from './store';
+import type { OutboxRecord } from './types';
+import type { CallbackSlot } from '@/lib/callback/types';
 import { CorruptRecordError } from './crypto';
 import { initDb, schema, resetDbInstance } from '@/db';
 
@@ -60,7 +62,7 @@ describe('SqliteOutboxStore', () => {
     resetDbInstance();
   });
 
-  const valid = {
+  const valid: OutboxRecord = {
     id: 'C9F1A2',
     phone: '+48501482555',
     slot: 'asap',
@@ -137,7 +139,7 @@ describe('SqliteOutboxStore', () => {
       const store = new SqliteOutboxStore(fileDb);
       // slot is stored in plain text, so it is easy to look for in the raw bytes
       const marker = 'TRACE-MARKER-7f3a';
-      await store.put({ ...valid, slot: marker });
+      await store.put({ ...valid, slot: marker as CallbackSlot });
       await store.delete(valid.id);
 
       for (const name of fs.readdirSync(dir)) {

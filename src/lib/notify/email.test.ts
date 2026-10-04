@@ -51,13 +51,13 @@ describe('buildCallbackEmail', () => {
   });
 
   it('shows an unknown source as "unknown"', () => {
-    const email = buildCallbackEmail({ ...base, source: '<b>601 602 603</b>' });
+    const email = buildCallbackEmail({ ...base, source: '<b>601 602 603</b>' as unknown as CallbackNotificationData['source'] });
     expect(email.html).not.toContain('601');
     expect(email.text).toContain('Źródło zgłoszenia: unknown');
   });
 
   it('never echoes an unknown topic id', () => {
-    const email = buildCallbackEmail({ ...base, topic: '<b>free text</b>' });
+    const email = buildCallbackEmail({ ...base, topic: '<b>free text</b>' as unknown as CallbackNotificationData['topic'] });
     expect(email.text).not.toContain('free text');
     expect(email.html).not.toContain('free text');
   });

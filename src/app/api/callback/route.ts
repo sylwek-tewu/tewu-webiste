@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { normalizePhoneNumber } from '@/lib/callback/phone';
 import { getCallNumber } from '@/lib/callback/call-number';
-import { CALLBACK_TOPICS, CallbackErrorCode, CallbackSlot, toKnownSource } from '@/lib/callback/types';
+import { CALLBACK_TOPICS, CallbackErrorCode, CallbackSlot, CallbackTopic, toKnownSource } from '@/lib/callback/types';
 import { DELIVERY_BUDGET } from '@/lib/callback/delivery-budget';
 import { MIN_FILL_TIME_MS } from '@/lib/callback/time-trap';
 import { getSmtpConfig, sendCallbackEmail } from '@/lib/notify/email';
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Only known values reach email and Telegram; anything else would be user-typed text.
-    const topic = CALLBACK_TOPICS.some((t) => t.id === body.topic) ? (body.topic as string) : '';
+    const topic: CallbackTopic | '' = CALLBACK_TOPICS.some((t) => t.id === body.topic) ? (body.topic as CallbackTopic) : '';
     const source = toKnownSource(body.source);
 
     // 4. Short unique ID (6 uppercase hex characters)

@@ -52,7 +52,7 @@ describe('Telegram Ping PII Leak Prevention', () => {
       ...sampleData,
       topic: 'oddzwoń 601 602 603',
       source: 'tel 700 800 900',
-    });
+    } as unknown as CallbackNotificationData);
     expect(text).not.toMatch(/60[1-3]|[789]00/);
     expect(text).toContain('temat: ogólny');
     expect(text).toContain('źródło: unknown');
