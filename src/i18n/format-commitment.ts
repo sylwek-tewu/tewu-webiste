@@ -4,7 +4,7 @@
  */
 
 import type { CallbackCommitment } from '@/lib/calendar';
-import { getWarsawDayOfWeek, getWarsawDateParts } from '@/lib/calendar';
+import { CALLBACK_SLOT_WINDOWS, formatClockTime, getWarsawDayOfWeek, getWarsawDateParts } from '@/lib/calendar';
 import type { Translations, Locale } from '@/i18n/types';
 
 /**
@@ -78,7 +78,8 @@ export function formatCallbackCommitment(
   }
 
   // Case 2: Fixed time slots ('8-12', '12-16', '17-18')
-  const timeRange = tc.formatSlotRange(commitment.slot);
+  const { startMinutes, endMinutes } = CALLBACK_SLOT_WINDOWS[commitment.slot];
+  const timeRange = tc.formatSlotRange(formatClockTime(startMinutes), formatClockTime(endMinutes));
 
   if (commitment.isToday) {
     return {

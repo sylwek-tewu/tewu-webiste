@@ -478,16 +478,7 @@ export const plTranslations: Translations = {
       defaultPrep: 'w dniu roboczym',
       tomorrow: 'jutro',
       formatTargetDayPhrase: (prepDay, day, monthName) => `${prepDay} ${day} ${monthName}`,
-      formatSlotRange: (slot) => {
-        switch (slot) {
-          case '8-12':
-            return '8:00–12:00';
-          case '12-16':
-            return '12:00–16:00';
-          case '17-18':
-            return '17:00–18:00';
-        }
-      },
+      formatSlotRange: (start, end) => `${start}–${end}`,
       asapBeforeHours: 'Biuro otwiera się o 8:00. Oddzwonimy dziś od 8:00.',
       asapOpen: 'Oddzwonimy jak najszybciej, w godzinach pracy biura (pn–pt 8:00–16:00).',
       asapAfterHours: (targetDayPhrase) => `Biuro jest teraz zamknięte. Oddzwonimy ${targetDayPhrase} od 8:00.`,

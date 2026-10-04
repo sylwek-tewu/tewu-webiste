@@ -81,6 +81,7 @@ export interface WarsawTime {
 export interface CallbackCommitment {
   isToday: boolean;
   isTomorrow: boolean;
+  /** Start of the slot's window on the day we will call. */
   targetDate: Date;
   slot: CallbackSlot;
   withinOfficeHours: boolean;
@@ -440,11 +441,27 @@ export function isOfficeOpen(nowInput?: Date): boolean {
 
 const FIXED_SLOT_BUFFER_MINUTES = 15;
 
-const SLOT_END_MINUTES: Record<Exclude<CallbackSlot, 'asap'>, number> = {
-  '8-12': 12 * 60,
-  '12-16': 16 * 60,
-  '17-18': 18 * 60,
+/** Minutes since midnight, Warsaw time. */
+export interface SlotWindow {
+  startMinutes: number;
+  endMinutes: number;
+}
+
+/**
+ * When we call back for each slot; 'asap' is the office's working hours. The one source for the
+ * cutoff, the promise shown in the form and the slot names in notifications.
+ */
+export const CALLBACK_SLOT_WINDOWS: Record<CallbackSlot, SlotWindow> = {
+  asap: { startMinutes: 8 * 60, endMinutes: 16 * 60 },
+  '8-12': { startMinutes: 8 * 60, endMinutes: 12 * 60 },
+  '12-16': { startMinutes: 12 * 60, endMinutes: 16 * 60 },
+  '17-18': { startMinutes: 17 * 60, endMinutes: 18 * 60 },
 };
+
+/** "8:00", "17:30" */
+export function formatClockTime(minutes: number): string {
+  return `${Math.floor(minutes / 60)}:${String(minutes % 60).padStart(2, '0')}`;
+}
 
 /**
  * Calculates language-neutral callback commitment data based on slot, current Warsaw time,
@@ -473,27 +490,19 @@ export function getCallbackCommitment(slot: CallbackSlot, nowInput?: Date): Call
     if (slot === 'asap') {
       canFulfillToday = wt.totalMinutes < 960;
     } else {
-      const slotEndMinutes = SLOT_END_MINUTES[slot as Exclude<CallbackSlot, 'asap'>];
-      const bufferCutoffMinutes = slotEndMinutes - FIXED_SLOT_BUFFER_MINUTES;
+      const bufferCutoffMinutes = CALLBACK_SLOT_WINDOWS[slot].endMinutes - FIXED_SLOT_BUFFER_MINUTES;
       canFulfillToday = wt.totalMinutes < bufferCutoffMinutes;
     }
   }
 
-  let targetDate: Date;
-  let isToday: boolean;
-
-  if (canFulfillToday) {
-    isToday = true;
-    targetDate = createWarsawDate(wt.dateStr, 8, 0);
-  } else {
-    isToday = false;
-    targetDate = nextBusinessDay(now);
-  }
+  const isToday = canFulfillToday;
+  const targetDateStr = isToday ? wt.dateStr : getWarsawDateString(nextBusinessDay(now));
+  const { startMinutes } = CALLBACK_SLOT_WINDOWS[slot];
+  const targetDate = createWarsawDate(targetDateStr, Math.floor(startMinutes / 60), startMinutes % 60);
 
   const todayParts = getWarsawDateParts(now);
   const tomorrowParts = addDaysToParts(todayParts, 1);
   const tomorrowStr = formatPartsToString(tomorrowParts);
-  const targetDateStr = getWarsawDateString(targetDate);
   const isTomorrow = targetDateStr === tomorrowStr;
 
   return {

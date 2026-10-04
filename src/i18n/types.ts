@@ -48,7 +48,8 @@ export interface CallbackCommitmentTranslations {
   defaultPrep: string;
   tomorrow: string;
   formatTargetDayPhrase: (prepDay: string, day: number, monthName: string) => string;
-  formatSlotRange: (slot: Exclude<CallbackSlot, 'asap'>) => string;
+  /** The slot's hours, e.g. "8:00" and "12:00". */
+  formatSlotRange: (start: string, end: string) => string;
   asapBeforeHours: string;
   asapOpen: string;
   asapAfterHours: (targetDayPhrase: string) => string;

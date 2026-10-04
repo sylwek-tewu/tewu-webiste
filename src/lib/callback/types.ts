@@ -1,3 +1,8 @@
+import { CALLBACK_SLOT_WINDOWS, formatClockTime } from '@/lib/calendar';
+import type { Locale } from '@/i18n/types';
+
+export type { Locale };
+
 export type CallbackSlot = 'asap' | '8-12' | '12-16' | '17-18';
 
 export type CallbackTopic =
@@ -10,50 +15,24 @@ export type CallbackTopic =
 export interface CallbackSlotConfig {
   id: CallbackSlot;
   label: string;
-  startHour: number; // e.g. 8
-  startMinute: number;
-  endHour: number; // e.g. 12
-  endMinute: number;
   timeRangeLabel: string; // '8:00–12:00'
   note?: string; // Optional helper text
 }
 
+function timeRangeLabel(slot: CallbackSlot): string {
+  const { startMinutes, endMinutes } = CALLBACK_SLOT_WINDOWS[slot];
+  return `${formatClockTime(startMinutes)}–${formatClockTime(endMinutes)}`;
+}
+
+/** The slots in form order, named in Polish for the office's notifications; the hours come from the calendar. */
 export const CALLBACK_SLOTS: CallbackSlotConfig[] = [
-  {
-    id: 'asap',
-    label: 'Jak najszybciej',
-    startHour: 8,
-    startMinute: 0,
-    endHour: 16,
-    endMinute: 0,
-    timeRangeLabel: '8:00–16:00',
-  },
-  {
-    id: '8-12',
-    label: '8:00–12:00',
-    startHour: 8,
-    startMinute: 0,
-    endHour: 12,
-    endMinute: 0,
-    timeRangeLabel: '8:00–12:00',
-  },
-  {
-    id: '12-16',
-    label: '12:00–16:00',
-    startHour: 12,
-    startMinute: 0,
-    endHour: 16,
-    endMinute: 0,
-    timeRangeLabel: '12:00–16:00',
-  },
+  { id: 'asap', label: 'Jak najszybciej', timeRangeLabel: timeRangeLabel('asap') },
+  { id: '8-12', label: timeRangeLabel('8-12'), timeRangeLabel: timeRangeLabel('8-12') },
+  { id: '12-16', label: timeRangeLabel('12-16'), timeRangeLabel: timeRangeLabel('12-16') },
   {
     id: '17-18',
-    label: '17:00–18:00',
-    startHour: 17,
-    startMinute: 0,
-    endHour: 18,
-    endMinute: 0,
-    timeRangeLabel: '17:00–18:00',
+    label: timeRangeLabel('17-18'),
+    timeRangeLabel: timeRangeLabel('17-18'),
     note: 'Dyżur telefoniczny po standardowych godzinach pracy biura',
   },
 ];
@@ -87,9 +66,6 @@ export type CallbackErrorCode =
   | 'unavailable'
   | 'delivery_failed'
   | 'unexpected';
-
-import type { Locale } from '@/i18n/types';
-export type { Locale };
 
 export interface CallbackLead {
   id: string; // 6 uppercase hex characters, e.g. 'A1B2C3'

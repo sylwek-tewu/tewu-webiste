@@ -375,6 +375,15 @@ describe('Calendar & Office Hours Module', () => {
         expect(commitSat.officeState).toBe('closed_day');
         expect(getWarsawDateString(commitSat.targetDate)).toBe('2026-10-12');
       });
+
+      it('targets the start of the slot window on the day of the call', () => {
+        const wed1000 = new Date('2026-10-07T10:00:00+02:00');
+        expect(getCallbackCommitment('12-16', wed1000).targetDate).toEqual(createWarsawDate('2026-10-07', 12, 0));
+        expect(getCallbackCommitment('17-18', wed1000).targetDate).toEqual(createWarsawDate('2026-10-07', 17, 0));
+        // Past the 17:45 cutoff: Thursday at 17:00
+        const wed1750 = new Date('2026-10-07T17:50:00+02:00');
+        expect(getCallbackCommitment('17-18', wed1750).targetDate).toEqual(createWarsawDate('2026-10-08', 17, 0));
+      });
     });
 
     it('defaults nowInput to current time when omitted', () => {

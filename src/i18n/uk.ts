@@ -487,16 +487,8 @@ export const ukTranslations: Translations = {
       defaultPrep: 'в робочий день',
       tomorrow: 'завтра',
       formatTargetDayPhrase: (prepDay, day, monthName) => `${prepDay}, ${day} ${monthName}`,
-      formatSlotRange: (slot) => {
-        switch (slot) {
-          case '8-12':
-            return 'з 8:00 до 12:00';
-          case '12-16':
-            return 'з 12:00 до 16:00';
-          case '17-18':
-            return 'з 17:00 до 18:00';
-        }
-      },
+      // "з 8:00 до 12:00" – more natural in Ukrainian than a dashed range
+      formatSlotRange: (start, end) => `з ${start} до ${end}`,
       asapBeforeHours: 'Офіс відкривається о 8:00. Передзвонимо вам сьогодні з 8:00 (за польським часом).',
       asapOpen: 'Передзвонимо якомога швидше в робочі години (пн–пт 8:00–16:00 за польським часом).',
       asapAfterHours: (targetDayPhrase) =>
