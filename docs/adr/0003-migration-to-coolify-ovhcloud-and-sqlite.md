@@ -13,10 +13,10 @@ Dotychczas serwis Biura Rachunkowego TEWU wdrażany był na platformie Netlify. 
 
 ### 1. Konteneryzacja i tryb Next.js Standalone
 - Aplikacja Next.js kompilowana jest z flagą `output: 'standalone'` oraz jawnym `outputFileTracingRoot`.
-- Wdrożono wieloetapowy `Dockerfile` oparty o `ubuntu:26.04` (do października 2026: `node:24-alpine`). Pakiet `nodejs` w Ubuntu 26.04 to Node.js 22, dlatego Node.js 24 wraz z corepack kopiowany jest z oficjalnego obrazu `node:24-slim`:
+- Wdrożono wieloetapowy `Dockerfile` oparty o `node:24-alpine`:
   - **Etap deps:** instalacja zależności (`pnpm install --frozen-lockfile`, wersja pnpm przypięta polem `packageManager`) wraz z narzędziami kompilacji (`python3`, `make`, `g++`), których skrypt instalacyjny `better-sqlite3` (`node-gyp rebuild`, dopuszczony w `allowBuilds`) używa do zbudowania natywnego modułu.
   - **Etap builder:** kompilacja produkcyjna Next.js (`pnpm build`). Zmienne odczytywane podczas kompilacji (`CALLBACK_OUTBOX_TTL_HOURS` – okres w statycznej polityce prywatności, `NEXT_PUBLIC_*`) przekazywane są jako `ARG` (w Coolify: *Build Variable*).
-  - **Etap runner:** minimalny obraz uruchomieniowy działający z uprawnieniami nieuprzywilejowanego użytkownika `nextjs` (UID 1001), z `wget` dla HEALTHCHECK i zadania harmonogramu. Biblioteka współdzielona `libstdc++`, wymagana przez `better-sqlite3`, jest częścią obrazu bazowego.
+  - **Etap runner:** minimalny obraz uruchomieniowy działający z uprawnieniami nieuprzywilejowanego użytkownika `nextjs` (UID 1001), z zainstalowaną biblioteką współdzieloną `libstdc++`.
 - Port aplikacji: standardowy 3000, zarządzany za pośrednictwem wbudowanego w Coolify reverse proxy (Traefik / Caddy) z automatyczną obsługą certyfikatów Let's Encrypt SSL.
 
 ### 2. Silnik bufora awaryjnego: Drizzle ORM + SQLite (`better-sqlite3`)
@@ -32,7 +32,7 @@ Dotychczas serwis Biura Rachunkowego TEWU wdrażany był na platformie Netlify. 
 ### 3. Harmonogram przetwarzania bufora (zastąpienie Netlify Scheduled Functions)
 - Wdrożono dedykowany wewnętrzny punkt końcowy: `POST /api/internal/process-outbox`.
 - **Bezpieczeństwo:** Endpoint chroniony jest tokenem przekazywanym w nagłówku `Authorization: Bearer <CRON_SECRET>` (lub `x-cron-secret`). Na środowisku produkcyjnym brak skonfigurowanej zmiennej `CRON_SECRET` blokuje wykonanie z kodem 500 (fail-safe).
-- **Wyzwalanie:** W Coolify konfigurowane jest cykliczne zadanie (Scheduled Task) wykonujące żądanie HTTP co 10 minut (`*/10 * * * *`). Zadanie działa wewnątrz kontenera aplikacji, a obraz nie zawiera `curl`, dlatego używany jest `wget`:
+- **Wyzwalanie:** W Coolify konfigurowane jest cykliczne zadanie (Scheduled Task) wykonujące żądanie HTTP co 10 minut (`*/10 * * * *`). Zadanie działa wewnątrz kontenera aplikacji, a obraz `node:24-alpine` nie zawiera `curl`, dlatego używany jest `wget` z BusyBox:
   ```bash
   wget -qO- --post-data='' --header="Authorization: Bearer $CRON_SECRET" http://127.0.0.1:3000/api/internal/process-outbox
   ```
