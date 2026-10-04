@@ -13,7 +13,7 @@
 
 **Tech Stack:** Next.js 16 (App Router), React 19, TypeScript 5.8, Mantine 8.3, Drizzle ORM, better-sqlite3, Vitest 5.0.
 
-**Spec:** Architectural Review Report at [`/tmp/architecture-review-20261004-1145.html`](file:///tmp/architecture-review-20261004-1145.html), verified against [`CONTEXT.md`](file:///home/przemek/work/priv/tewu-webiste/CONTEXT.md), [`ADR 0001`](file:///home/przemek/work/priv/tewu-webiste/docs/adr/0001-callback-widget.md), [`ADR 0002`](file:///home/przemek/work/priv/tewu-webiste/docs/adr/0002-ukrainian-language-support.md), and [`ADR 0003`](file:///home/przemek/work/priv/tewu-webiste/docs/adr/0003-migration-to-coolify-ovhcloud-and-sqlite.md).
+**Spec:** an architecture review report from 2026-10-04 (generated outside the repository and not kept), checked against [`CONTEXT.md`](../../../CONTEXT.md), [ADR 0001](../../adr/0001-callback-widget.md), [ADR 0002](../../adr/0002-ukrainian-language-support.md) and [ADR 0003](../../adr/0003-migration-to-coolify-ovhcloud-and-sqlite.md).
 
 ## Global Constraints
 
@@ -502,3 +502,15 @@ Expected: PASS (Next.js standalone build succeeds).
 ```bash
 git commit --allow-empty -m "chore: complete codebase architecture deepening refactor"
 ```
+
+---
+
+## Changes after code review
+
+A review of the finished work changed some of what this plan describes:
+
+- `src/lib/callback/business-hours.ts` (Task 7, Step 4) is gone. It imported both dictionaries, and the widget imported `isOfficeOpen` from it, so every page loaded both. Callers use `@/lib/calendar`; `src/i18n/client-bundles.test.ts` now enforces the ADR 0002 rule.
+- `src/lib/holidays/*` (Task 6) is gone too; its tests and LICENSE moved to `src/lib/calendar/`.
+- `OutboxStore.getRecordStatus` and `StoredRecordResult` (Task 4) were removed: the processor reads records with `get()` and handles the crypto errors itself.
+- `CallbackLead.locale` is required, and the outbox column is `NOT NULL`.
+- Slot hours live only in `CALLBACK_SLOT_WINDOWS` (`@/lib/calendar`); `formatSlotRange` in the dictionaries takes the start and end times.

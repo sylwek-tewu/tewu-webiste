@@ -4,13 +4,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useCallbackForm, type UseCallbackFormOptions } from './useCallbackForm';
 import { plTranslations } from '@/i18n';
-import type { ResolvedCallNumber } from '@/lib/callback/call-number';
-
-const callInfo: ResolvedCallNumber = {
-  raw: '+48914824190',
-  telUri: 'tel:+48914824190',
-  display: '91 48 24 190',
-};
 
 describe('useCallbackForm', () => {
   let now: number;
@@ -35,7 +28,6 @@ describe('useCallbackForm', () => {
 
   function createOptions(overrides?: Partial<UseCallbackFormOptions>): UseCallbackFormOptions {
     return {
-      callInfo,
       isOpen: true,
       source: 'floating',
       closeWidget: closeWidgetMock,

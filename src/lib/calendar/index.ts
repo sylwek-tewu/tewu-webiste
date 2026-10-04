@@ -7,7 +7,7 @@
  *
  * Holiday rules and Easter math ported from https://github.com/mtk3d/poland-public-holidays
  * (commit 4ad14bc536051155a81b25b3cda7e76ecf41cfaa), Copyright 2021 Kamil Szydlowski (MIT License).
- * See src/lib/holidays/LICENSE.poland-public-holidays.txt.
+ * See src/lib/calendar/LICENSE.poland-public-holidays.txt.
  */
 
 import type { CallbackSlot } from '../callback/types';

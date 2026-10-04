@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useTransition } from 'react';
 import type React from 'react';
-import type { ResolvedCallNumber } from '@/lib/callback/call-number';
 import type { CallbackSlot, CallbackSource, CallbackTopic } from '@/lib/callback/types';
 import type { Translations, Locale } from '@/i18n';
 import { normalizePhoneNumberForForm } from '@/lib/callback/phone-client';
@@ -13,7 +12,6 @@ import { getConversionDelivery, pushCallbackRequestSubmit } from './analytics';
 import { isPhoneErrorCode, phoneErrorMessage, submitErrorMessage } from './error-messages';
 
 export interface UseCallbackFormOptions {
-  callInfo: ResolvedCallNumber;
   isOpen: boolean;
   source: CallbackSource;
   closeWidget: () => void;

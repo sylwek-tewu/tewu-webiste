@@ -48,7 +48,6 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
     handleSubmit,
     handleClose,
   } = useCallbackForm({
-    callInfo,
     isOpen,
     source,
     closeWidget,
