@@ -39,3 +39,6 @@ Reklamy Google Ads mają kierować na podstronę odpowiadającą wyszukiwanej fr
 ## Przed wydaniem
 - Gałąź z podstronami nie trafia na produkcję przed odpowiedziami TEWU i akceptacją treści.
 - **Treść ukraińską musi przed wydaniem sprawdzić osoba z TEWU.** Wersje ukraińskie są tłumaczeniem szkicu i mogą zawierać błędy terminologiczne.
+
+## Odchylenia od pierwotnego planu implementacji
+- **Kontrast przycisku CTA w nagłówku Hero (`ServiceLandingPage`):** Pierwotny plan zakładał użycie klasy `layoutClasses.primaryButton` (kolor tła `slate.9`). Ponieważ sekcja Hero ma również ciemne tło `slate.9`, ciemny przycisk na ciemnym tle zlewał się z otoczeniem (brak kontrastu obrysu). Podczas implementacji Task 6 zamieniono stylizację przycisku w Hero na brandowy błękit (`bg="brandBlue.6"`), co zapewnia wymagany kontrast dostępności (a11y) i wyrazistą hierarchię wizualną głównego CTA.
