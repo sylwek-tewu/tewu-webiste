@@ -7,6 +7,7 @@ export const outboxRecords = sqliteTable('outbox_records', {
   topic: text('topic'),
   source: text('source').notNull(),
   locale: text('locale').notNull(),
+  landingPage: text('landing_page'),
   createdAt: text('created_at').notNull(),
   attempts: integer('attempts').notNull().default(1),
   lastAttemptAt: text('last_attempt_at'),

@@ -8,6 +8,7 @@ import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { CallbackNotificationData } from './types';
 import { CALLBACK_SLOTS, CALLBACK_TOPICS, toKnownSource } from '../callback/types';
 import { getWarsawTime } from '../calendar';
+import { SERVICE_PAGES, isServicePageSlug, servicePagePath } from '@/lib/service-pages';
 
 function getSlotLabel(slotId: string): string {
   const found = CALLBACK_SLOTS.find((s) => s.id === slotId);
@@ -18,6 +19,11 @@ function getTopicLabel(topicId?: string): string {
   if (!topicId) return 'Nie określono';
   const found = CALLBACK_TOPICS.find((t) => t.id === topicId);
   return found ? found.label : 'Nie określono';
+}
+
+function getLandingPageLabel(data: CallbackNotificationData): string {
+  if (!isServicePageSlug(data.landingPage)) return 'Nie dotyczy';
+  return `${SERVICE_PAGES[data.landingPage].label} (${servicePagePath(data.locale, data.landingPage)})`;
 }
 
 function escapeHtml(value: string): string {
@@ -56,6 +62,7 @@ export function buildCallbackEmail(data: CallbackNotificationData): { subject: s
   const slotLabel = getSlotLabel(data.slot);
   const topicLabel = getTopicLabel(data.topic);
   const source = toKnownSource(data.source);
+  const landingPageLabel = getLandingPageLabel(data);
   const dateFormatted = formatWarsawDateTime(data.createdAt);
   const h = {
     id: escapeHtml(data.id),
@@ -63,6 +70,7 @@ export function buildCallbackEmail(data: CallbackNotificationData): { subject: s
     slot: escapeHtml(slotLabel),
     topic: escapeHtml(topicLabel),
     source: escapeHtml(source),
+    landingPage: escapeHtml(landingPageLabel),
   };
 
   const isUk = data.locale === 'uk';
@@ -80,6 +88,7 @@ Telefon: ${data.phone}
 Preferowana pora kontaktu: ${slotLabel}
 Czego dotyczy: ${topicLabel}
 Źródło zgłoszenia: ${source}
+Podstrona usługowa: ${landingPageLabel}
 Data i godzina: ${dateFormatted} (czas polski)
 `.trim();
 
@@ -116,6 +125,10 @@ Data i godzina: ${dateFormatted} (czas polski)
     <tr>
       <td style="padding: 8px 0; color: #64748b;">Miejsce wywołania:</td>
       <td style="padding: 8px 0; font-family: monospace; color: #475569;">${h.source}</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 0; color: #64748b;">Podstrona usługowa:</td>
+      <td style="padding: 8px 0;">${h.landingPage}</td>
     </tr>
     <tr>
       <td style="padding: 8px 0; color: #64748b;">Czas zgłoszenia:</td>

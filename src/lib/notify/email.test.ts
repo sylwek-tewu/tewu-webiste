@@ -62,6 +62,21 @@ describe('buildCallbackEmail', () => {
     expect(email.text).not.toContain('free text');
     expect(email.html).not.toContain('free text');
   });
+
+  it('names the landing page the request came from', () => {
+    const email = buildCallbackEmail({ ...base, source: 'service', landingPage: 'kpir' });
+    expect(email.text).toContain('Podstrona usługowa: Księga przychodów i rozchodów (KPiR) (/uslugi/kpir)');
+    expect(email.html).toContain('Księga przychodów i rozchodów (KPiR) (/uslugi/kpir)');
+  });
+
+  it('gives the Ukrainian path for a request from the Ukrainian page', () => {
+    const email = buildCallbackEmail({ ...base, locale: 'uk', landingPage: 'ksef' });
+    expect(email.text).toContain('Podstrona usługowa: KSeF (/uk/uslugi/ksef)');
+  });
+
+  it('says no landing page when the request came from elsewhere', () => {
+    expect(buildCallbackEmail(base).text).toContain('Podstrona usługowa: Nie dotyczy');
+  });
 });
 
 describe('getSmtpTransportOptions', () => {

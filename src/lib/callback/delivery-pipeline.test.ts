@@ -243,6 +243,23 @@ describe('submitCallbackLead delivery pipeline', () => {
         expect.any(Object)
       );
     });
+
+    it('passes a known landing page through', async () => {
+      await submitCallbackLead({ ...validPayload, source: 'service', landingPage: 'kpir' }, mockDeps);
+      expect(mockDeps.sendEmail).toHaveBeenCalledWith(
+        expect.objectContaining({ source: 'service', landingPage: 'kpir' }),
+        expect.anything()
+      );
+    });
+
+    it('drops an unknown landing page but still delivers the lead', async () => {
+      for (const landingPage of ['<script>alert(1)</script>', '__proto__', 'toString', 42, { slug: 'kpir' }]) {
+        vi.mocked(mockDeps.sendEmail).mockClear();
+        const result = await submitCallbackLead({ ...validPayload, landingPage }, mockDeps);
+        expect(result.status).toBe('delivered');
+        expect(vi.mocked(mockDeps.sendEmail).mock.calls[0][0]).not.toHaveProperty('landingPage');
+      }
+    });
   });
 
   describe('6. Missing SMTP configuration', () => {
@@ -347,6 +364,13 @@ describe('submitCallbackLead delivery pipeline', () => {
       expect(mockDeps.sendAlert).toHaveBeenCalledWith(
         expect.stringContaining(`zgłoszenie #${result.id} zapisane w buforze awaryjnym`)
       );
+    });
+
+    it('keeps the landing page of a buffered lead', async () => {
+      vi.mocked(mockDeps.sendEmail).mockResolvedValue(false);
+      const result = await submitCallbackLead({ ...validPayload, landingPage: 'inkubator-spolek' }, mockDeps);
+      if (result.status !== 'buffered') throw new Error('Expected buffered status');
+      expect((await memoryStore.get(result.id))?.landingPage).toBe('inkubator-spolek');
     });
   });
 

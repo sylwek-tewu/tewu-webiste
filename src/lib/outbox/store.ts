@@ -10,6 +10,7 @@ import { getDb, schema } from '@/db';
 import type { CallbackLead, Locale } from '@/lib/callback/types';
 import { OutboxRecord, OutboxStore } from './types';
 import { encryptPhone, decryptPhone, CorruptRecordError, OutboxKeyMissingError } from './crypto';
+import { isServicePageSlug } from '@/lib/service-pages';
 
 /**
  * Turns a stored value back into a record with a decrypted phone. Anything that can never be
@@ -127,6 +128,9 @@ export class SqliteOutboxStore implements OutboxStore {
     if (row.topic !== null && row.topic !== undefined) {
       raw.topic = row.topic as OutboxRecord['topic'];
     }
+    if (isServicePageSlug(row.landingPage)) {
+      raw.landingPage = row.landingPage;
+    }
     if (row.lastAttemptAt !== null && row.lastAttemptAt !== undefined) {
       raw.lastAttemptAt = row.lastAttemptAt;
     }
@@ -146,6 +150,7 @@ export class SqliteOutboxStore implements OutboxStore {
         topic: record.topic || null,
         source: record.source,
         locale: record.locale,
+        landingPage: record.landingPage ?? null,
         createdAt: record.createdAt,
         attempts,
         lastAttemptAt: lastAttemptAt || null,

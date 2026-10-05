@@ -171,6 +171,27 @@ describe('SqliteOutboxStore', () => {
     expect(rawRows[0].phone).not.toEqual('+48501482555');
   });
 
+  it('stores and returns the landing page', async () => {
+    const store = new SqliteOutboxStore(testDb);
+    await store.put({ ...valid, landingPage: 'ryczalt' });
+    expect((await store.get(valid.id))?.landingPage).toBe('ryczalt');
+  });
+
+  it('revives a record stored without a landing page, as before the migration', async () => {
+    const store = new SqliteOutboxStore(testDb);
+    await store.put(valid);
+    const record = await store.get(valid.id);
+    expect(record).not.toBeNull();
+    expect(record).not.toHaveProperty('landingPage');
+  });
+
+  it('ignores an unknown landing page in a stored row', async () => {
+    const store = new SqliteOutboxStore(testDb);
+    await store.put(valid);
+    testDb.update(schema.outboxRecords).set({ landingPage: 'nieznana' }).where(eq(schema.outboxRecords.id, valid.id)).run();
+    expect(await store.get(valid.id)).not.toHaveProperty('landingPage');
+  });
+
   it('rejects a duplicate put instead of overwriting the pending record', async () => {
     const store = new SqliteOutboxStore(testDb);
     await store.put(valid);

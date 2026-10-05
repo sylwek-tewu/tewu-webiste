@@ -76,4 +76,15 @@ describe('Telegram Ping PII Leak Prevention', () => {
     expect(text).toContain('Ukraiński (UA)');
     expect(text).not.toContain(ukData.phone);
   });
+
+  it('names the landing page by its fixed label', () => {
+    const text = buildTelegramPingText({ ...sampleData, landingPage: 'kadry-i-place' });
+    expect(text).toContain('podstrona: Kadry i płace');
+  });
+
+  it('leaves the landing page out when there is none or it is not a known page', () => {
+    expect(buildTelegramPingText(sampleData)).not.toContain('podstrona:');
+    const tampered = { ...sampleData, landingPage: '+48501482555' } as unknown as CallbackNotificationData;
+    expect(buildTelegramPingText(tampered)).not.toContain('501482555');
+  });
 });

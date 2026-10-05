@@ -1,5 +1,6 @@
 import { CALLBACK_SLOT_WINDOWS, formatClockTime } from '@/lib/calendar';
 import type { Locale } from '@/i18n/types';
+import type { ServicePageSlug } from '@/lib/service-pages';
 
 export type { Locale };
 
@@ -74,5 +75,7 @@ export interface CallbackLead {
   topic?: CallbackTopic | '';
   source: CallbackSource | 'unknown';
   locale: Locale;
+  /** The service page the widget was opened on, if any. */
+  landingPage?: ServicePageSlug;
   createdAt: string; // ISO 8601
 }

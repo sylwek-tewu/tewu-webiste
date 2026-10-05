@@ -5,6 +5,7 @@
 import { CallbackNotificationData } from './types';
 import { CALLBACK_SLOTS, CALLBACK_TOPICS, toKnownSource } from '../callback/types';
 import { getWarsawTime } from '../calendar';
+import { SERVICE_PAGES, isServicePageSlug } from '@/lib/service-pages';
 
 function getSlotLabel(slotId: string): string {
   const found = CALLBACK_SLOTS.find((s) => s.id === slotId);
@@ -35,11 +36,12 @@ export function buildTelegramPingText(data: CallbackNotificationData): string {
   const dateStr = formatTelegramDate(data.createdAt);
   const langPrefix = data.locale === 'uk' ? '[UA] ' : '';
   const langTag = data.locale === 'uk' ? 'język: Ukraiński (UA) · ' : '';
+  const landingPageTag = isServicePageSlug(data.landingPage) ? `podstrona: ${SERVICE_PAGES[data.landingPage].label} · ` : '';
 
   return (
     `${langPrefix}Nowa prośba o oddzwonienie #${data.id} · ` +
     langTag +
-    `pora: ${slotLabel} · temat: ${topicLabel} · źródło: ${toKnownSource(data.source)} · ${dateStr}. ` +
+    `pora: ${slotLabel} · temat: ${topicLabel} · ${landingPageTag}źródło: ${toKnownSource(data.source)} · ${dateStr}. ` +
     `Szczegóły i numer: w skrzynce biuro@tewu.szczecin.pl (temat maila zawiera #${data.id}).`
   );
 }

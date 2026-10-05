@@ -25,6 +25,7 @@ import { sendTelegramPing, sendTelegramAlert } from '@/lib/notify/telegram';
 import { getOutboxStore } from '@/lib/outbox/store';
 import type { OutboxStore } from '@/lib/outbox/types';
 import { withTimeout } from '@/lib/timeout';
+import { isServicePageSlug } from '@/lib/service-pages';
 
 const VALID_SLOTS: CallbackSlot[] = ['asap', '8-12', '12-16', '17-18'];
 
@@ -119,6 +120,7 @@ export async function submitCallbackLead(
       : '';
     const source = toKnownSource(record.source);
     const locale: Locale = record.locale === 'uk' ? 'uk' : 'pl';
+    const landingPage = isServicePageSlug(record.landingPage) ? record.landingPage : undefined;
 
     // 4. Short unique ID (6 uppercase hex characters)
     const id = crypto.randomBytes(3).toString('hex').toUpperCase();
@@ -156,6 +158,7 @@ export async function submitCallbackLead(
       topic,
       source,
       locale,
+      ...(landingPage ? { landingPage } : {}),
       createdAt: new Date().toISOString(),
     };
 
@@ -187,6 +190,7 @@ export async function submitCallbackLead(
             topic: lead.topic,
             source: lead.source,
             locale: lead.locale,
+            ...(lead.landingPage ? { landingPage: lead.landingPage } : {}),
             createdAt: lead.createdAt,
             attempts: 1,
             lastAttemptAt: new Date().toISOString(),
