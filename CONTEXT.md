@@ -24,10 +24,24 @@ _Avoid_: Flagi narodowe, selektor państw
 Atrybut zgłoszenia z widżetu call-back (`pl` lub `uk`) przekazywany do powiadomień e-mail i Telegram, informujący konsultantów biura o preferowanym języku rozmowy klienta.
 _Avoid_: Pochodzenie klienta, język przeglądarki leada
 
+## Service Pages
+
+**Service Page**:
+Podstrona usługowa pod `/uslugi/<slug>` (i `/uk/uslugi/<slug>`), będąca stroną docelową reklam dla jednej usługi: pełna księgowość, KPiR, ryczałt, kadry i płace, KSeF, Inkubator spółek z o.o.
+_Avoid_: Landing, lejek, mikrostrona
+
+**Inkubator spółek**:
+Usługa TEWU dla zakładanych spółek z o.o., jedyna podstrona usługowa z linkiem w menu głównym (etykieta „Inkubator”). Dokładny zakres do potwierdzenia przez TEWU.
+_Avoid_: Akcelerator, start-up
+
+**Landing Page Attribution**:
+Przypisanie zgłoszenia call-back do podstrony usługowej, na której otwarto widżet (`landingPage`), niezależnie od przycisku, którym go otwarto (`source`).
+_Avoid_: Źródło zgłoszenia, UTM
+
 ## Callback & Lead Intake
 
 **Callback Lead**:
-Zgłoszenie prośby o kontakt telefoniczny z widżetu call-back, zawierające numer telefonu w formacie E.164, preferowaną porę kontaktu, opcjonalny temat rozmowy, źródło wywołania, język oraz unikalny identyfikator.
+Zgłoszenie prośby o kontakt telefoniczny z widżetu call-back, zawierające numer telefonu w formacie E.164, preferowaną porę kontaktu, opcjonalny temat rozmowy, źródło wywołania, język, opcjonalną podstronę usługową oraz unikalny identyfikator.
 _Avoid_: Rekord, zapytanie ofertowe, wiersz bazy, formularz kontaktowy
 
 **Callback Commitment**:
