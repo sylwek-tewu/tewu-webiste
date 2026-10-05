@@ -8,7 +8,6 @@ import { CONTACT_DETAILS } from '@/constants';
 import { useLocale } from '@/i18n/LocaleContext';
 import { useCallbackWidget } from '@/components/callback-widget';
 import type { ServicePageContent } from '@/content/service-pages/types';
-import layoutClasses from '@/components/layout/Layout.module.css';
 import classes from './ServiceLandingPage.module.css';
 
 /** The quote button (opens the callback widget) and the office phone, shown on dark backgrounds. */
@@ -30,7 +29,8 @@ function QuoteActions({ variant }: { variant: 'primary' | 'white' }) {
         radius="md"
         fw={800}
         variant={variant === 'white' ? 'white' : 'filled'}
-        className={variant === 'primary' ? layoutClasses.primaryButton : undefined}
+        color={variant === 'primary' ? 'brandBlue' : undefined}
+        bg={variant === 'primary' ? 'brandBlue.6' : undefined}
         rightSection={<ArrowRight size={18} />}
       >
         {t.servicePages.ctaButton}

@@ -35,4 +35,8 @@ describe.each([
   it('sets the page metadata', async () => {
     expect(await route.generateMetadata(params('ksef'))).toEqual(buildServicePageMetadata(locale, 'ksef'));
   });
+
+  it('returns empty metadata for an unknown slug without throwing', async () => {
+    expect(await route.generateMetadata(params('nieistnieje'))).toEqual({});
+  });
 });
