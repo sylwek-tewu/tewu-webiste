@@ -58,7 +58,9 @@ export function useCallbackForm(options: UseCallbackFormOptions): {
   // A request already sent is still handled: the server has the lead.
   const cancelledRef = useRef(false);
 
-  // Reset the time-trap start and errors whenever the widget opens
+  // Reset the time-trap start and errors whenever the widget opens. Navigating to another
+  // page with the widget open counts as a new opening too: the topic preset follows the
+  // new page, and restarting the time trap only delays a very fast submission.
   useEffect(() => {
     if (!isOpen) {
       cancelledRef.current = true;

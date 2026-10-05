@@ -27,7 +27,7 @@ export const ukTranslations: Translations = {
       { label: 'Сертифікати', path: '/uk/certyfikaty' },
       { label: 'Контакти', path: '/uk/kontakt' },
     ],
-    freeQuote: 'Безкоштовна оцінка вартості',
+    freeQuote: 'Безкоштовна оцінка',
     menu: 'Меню',
   },
   footer: {

@@ -6,6 +6,14 @@
     letter-spacing: 0.05em;
 }
 
+/* Office name next to the logo: hidden from lg (desktop menu appears) until xl,
+   where the menu leaves no room for it, especially in Ukrainian */
+@media (min-width: $mantine-breakpoint-lg) and (max-width: 87.99em) {
+    .officeName {
+        display: none !important;
+    }
+}
+
 /* Navigation link - color controlled via Mantine CSS variables */
 .navLink {
     --anchor-text-color: var(--mantine-color-slate-6);

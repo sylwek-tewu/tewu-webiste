@@ -28,7 +28,7 @@ _Avoid_: Pochodzenie klienta, język przeglądarki leada
 
 **Service Page**:
 Podstrona usługowa pod `/uslugi/<slug>` (i `/uk/uslugi/<slug>`), będąca stroną docelową reklam dla jednej usługi: pełna księgowość, KPiR, ryczałt, kadry i płace, KSeF, Inkubator spółek z o.o.
-_Avoid_: Landing, lejek, mikrostrona
+_Avoid_: „landing” jako nazwa samej podstrony, lejek, mikrostrona (pole `landingPage` i termin „Landing Page Attribution” zostają)
 
 **Inkubator spółek**:
 Usługa TEWU dla zakładanych spółek z o.o., jedyna podstrona usługowa z linkiem w menu głównym (etykieta „Inkubator”). Dokładny zakres do potwierdzenia przez TEWU.

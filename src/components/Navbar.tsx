@@ -27,10 +27,11 @@ const Navbar: React.FC = () => {
           <Group gap="xs">
             <Link href={homePath} onClick={close} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, textDecoration: 'none' }}>
               <Box component={TewuLogo} w="7em" c="slate.5" />
-              <Box visibleFrom="sm" h={32} w={2} bg="slate.2" mx={8} />
+              <Box visibleFrom="sm" className={classes.officeName} h={32} w={2} bg="slate.2" mx={8} />
               <Text
                 span
                 visibleFrom="sm"
+                className={classes.officeName}
                 tt="uppercase"
                 fw="bold"
                 c="slate.5"
@@ -43,8 +44,8 @@ const Navbar: React.FC = () => {
             </Link>
           </Group>
 
-          {/* Desktop Menu */}
-          <Group gap="lg" visibleFrom="md">
+          {/* Desktop Menu – from lg, because the Ukrainian row does not fit narrower (ADR 0004 §4) */}
+          <Group gap="md" visibleFrom="lg">
             {t.nav.links.map((link) => (
               <Anchor
                 key={link.path}
@@ -80,7 +81,7 @@ const Navbar: React.FC = () => {
 
           {/* Mobile controls */}
           {/* Language switcher lives in the drawer on mobile (ADR 0002 §3) */}
-          <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="md" aria-label="Toggle navigation" />
+          <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="lg" aria-label="Toggle navigation" />
         </Group>
       </Container>
 
@@ -91,7 +92,7 @@ const Navbar: React.FC = () => {
         size="100%"
         padding="md"
         title={t.nav.menu}
-        hiddenFrom="md"
+        hiddenFrom="lg"
         zIndex={100}
       >
         <Stack gap="sm">

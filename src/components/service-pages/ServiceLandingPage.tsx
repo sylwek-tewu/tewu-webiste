@@ -29,16 +29,26 @@ function QuoteActions({ variant }: { variant: 'primary' | 'white' }) {
         radius="md"
         fw={800}
         variant={variant === 'white' ? 'white' : 'filled'}
-        color={variant === 'primary' ? 'brandBlue' : undefined}
-        bg={variant === 'primary' ? 'brandBlue.6' : undefined}
+        // The theme paints every Button slate-9 through inline CSS variables, so the blue
+        // has to be set the same way (a `bg` prop would also disable the hover colour).
+        style={
+          variant === 'primary'
+            ? { '--button-bg': 'var(--mantine-color-brandBlue-6)', '--button-hover': 'var(--mantine-color-brandBlue-7)' }
+            : undefined
+        }
+        // Mantine labels never wrap; the long label must wrap on phones instead of being cut off.
+        styles={{
+          root: { height: 'auto', minHeight: 'var(--button-height)', maxWidth: '100%', paddingBlock: 10 },
+          label: { whiteSpace: 'normal', height: 'auto', textAlign: 'center', lineHeight: 1.3 },
+        }}
         rightSection={<ArrowRight size={18} />}
       >
         {t.servicePages.ctaButton}
       </Button>
-      <Group gap={8} wrap="nowrap" c="white">
+      <Group gap={8} justify="center" c="white">
         <Phone size={20} aria-hidden="true" />
-        <Text span c="slate.2">{t.servicePages.phonePrompt}</Text>
-        <Anchor href={`tel:${CONTACT_DETAILS.phoneE164}`} c="white" fw={800} fz="lg" underline="hover">
+        <Text span c="slate.2" style={{ whiteSpace: 'nowrap' }}>{t.servicePages.phonePrompt}</Text>
+        <Anchor href={`tel:${CONTACT_DETAILS.phoneE164}`} c="white" fw={800} fz="lg" underline="hover" style={{ whiteSpace: 'nowrap' }}>
           {CONTACT_DETAILS.phone}
         </Anchor>
       </Group>
@@ -111,7 +121,8 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
 
       <Box component="section" py="xl" bg="slate.0">
         <Container size="xl" px="md">
-          <SimpleGrid cols={{ base: 2, md: 4 }} spacing="lg">
+          {/* Narrower gap on phones: at 320 px „Zadowolonych firm” overflows its column with `lg` */}
+          <SimpleGrid cols={{ base: 2, md: 4 }} spacing={{ base: 'md', md: 'lg' }}>
             <TrustItem icon={<Briefcase size={20} />} value={stats.yearsCount} label={stats.yearsLabel} />
             <TrustItem icon={<Building2 size={20} />} value={stats.companiesCount} label={stats.companiesLabel} />
             <TrustItem icon={<ShieldCheck size={20} />} label={t.servicePages.trust.insurance} />

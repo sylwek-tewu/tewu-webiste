@@ -76,6 +76,13 @@ Odpowiedź:
 
 **Dlaczego pytamy:** podstrona „Inkubator spółek z o.o.” jako jedyna ma link w menu głównym na górze strony. W menu jest już sześć pozycji, przełącznik języka i przycisk „Bezpłatna wycena”, więc na laptopach o mniejszym ekranie brakuje miejsca. Pełna nazwa „Inkubator spółek z o.o.” nie zmieściłaby się w jednym wierszu albo zepchnęłaby inne elementy. Dlatego w menu jest krótka etykieta **„Inkubator”** (po ukraińsku „Інкубатор”), umieszczona zaraz po „Usługi”. Pełna nazwa jest w nagłówku samej podstrony i w stopce.
 
+Nawet z krótką etykietą siódma pozycja wymagała zmian w nagłówku, bo wersja ukraińska przestała się mieścić:
+- pełne menu pokazuje się od szerokości ekranu 1200 px; na węższych ekranach jest menu rozwijane (ikona „hamburgera”), tak jak na telefonach;
+- napis „Biuro rachunkowe” obok logo jest widoczny dopiero od 1408 px;
+- przycisk w nagłówku wersji ukraińskiej brzmi „Безкоштовна оцінка” zamiast „Безкоштовна оцінка вартості”.
+
+Każde dłuższe słowo w menu zabiera miejsce właśnie tym elementom.
+
 - Czy etykieta „Inkubator” Państwu odpowiada? Jeśli nie – jaką krótką nazwę (najlepiej jedno słowo) proponują Państwo?
 
 Odpowiedź:
