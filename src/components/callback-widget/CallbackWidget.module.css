@@ -49,7 +49,7 @@
 }
 
 /* The left button takes the width of its label and the request button the rest. The Ukrainian
-   labels („Зателефонувати”, „Передзвоніть мені”) do not fit side by side on narrow phones, so the
+   labels („Подзвонити”, „Передзвоніть мені”) do not fit side by side on narrow phones, so the
    request label may wrap to two lines and the icons go below 400px. */
 .mobileBarGrid {
   display: grid;
@@ -59,27 +59,20 @@
   margin: 0 auto;
 }
 
-.mobileBarGrid :global(.mantine-Button-root) {
-  height: auto;
-  min-height: var(--button-height);
+/* Two-class selectors so these win over Mantine's single-class Button rules whatever the
+   stylesheet order. Label wrapping itself comes from wrappingButtonStyles (inline). */
+.mobileBarGrid .barButton {
   padding-block: 4px;
   padding-inline: 12px;
   font-size: var(--mantine-font-size-sm);
 }
 
-.mobileBarGrid :global(.mantine-Button-label) {
-  height: auto;
-  white-space: normal;
-  text-align: center;
-  line-height: 1.15;
-}
-
 @media (max-width: 24.99em) {
-  .mobileBarGrid :global(.mantine-Button-root) {
+  .mobileBarGrid .barButton {
     padding-inline: 8px;
   }
 
-  .mobileBarGrid :global(.mantine-Button-section) {
+  .mobileBarGrid .barButtonSection {
     display: none;
   }
 }

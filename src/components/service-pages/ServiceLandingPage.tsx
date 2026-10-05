@@ -7,6 +7,7 @@ import { Anchor, Box, Button, Container, Group, List, Paper, SimpleGrid, Stack, 
 import { CONTACT_DETAILS } from '@/constants';
 import { useLocale } from '@/i18n/LocaleContext';
 import { useCallbackWidget } from '@/components/callback-widget';
+import { wrappingButtonStyles } from '@/components/layout/wrappingButtonStyles';
 import type { ServicePageContent } from '@/content/service-pages/types';
 import classes from './ServiceLandingPage.module.css';
 
@@ -28,19 +29,11 @@ function QuoteActions({ variant }: { variant: 'primary' | 'white' }) {
         size="lg"
         radius="md"
         fw={800}
+        // An explicit variant overrides the theme's default slate-9: `filled` gives the primary blue
+        // with its hover colour (a `bg` prop would set the background inline and kill the hover).
         variant={variant === 'white' ? 'white' : 'filled'}
-        // The theme paints every Button slate-9 through inline CSS variables, so the blue
-        // has to be set the same way (a `bg` prop would also disable the hover colour).
-        style={
-          variant === 'primary'
-            ? { '--button-bg': 'var(--mantine-color-brandBlue-6)', '--button-hover': 'var(--mantine-color-brandBlue-7)' }
-            : undefined
-        }
-        // Mantine labels never wrap; the long label must wrap on phones instead of being cut off.
-        styles={{
-          root: { height: 'auto', minHeight: 'var(--button-height)', maxWidth: '100%', paddingBlock: 10 },
-          label: { whiteSpace: 'normal', height: 'auto', textAlign: 'center', lineHeight: 1.3 },
-        }}
+        py={10}
+        styles={wrappingButtonStyles}
         rightSection={<ArrowRight size={18} />}
       >
         {t.servicePages.ctaButton}

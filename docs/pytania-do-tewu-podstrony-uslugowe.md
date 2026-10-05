@@ -78,7 +78,7 @@ Odpowiedź:
 
 Nawet z krótką etykietą siódma pozycja wymagała zmian w nagłówku, bo wersja ukraińska przestała się mieścić:
 - pełne menu pokazuje się od szerokości ekranu 1200 px; na węższych ekranach jest menu rozwijane (ikona „hamburgera”), tak jak na telefonach;
-- napis „Biuro rachunkowe” obok logo jest widoczny dopiero od 1408 px;
+- przy pełnym menu napis „Biuro rachunkowe” obok logo jest widoczny dopiero od 1408 px (na węższych ekranach z menu rozwijanym jest widoczny);
 - przycisk w nagłówku wersji ukraińskiej brzmi „Безкоштовна оцінка” zamiast „Безкоштовна оцінка вартості”.
 
 Każde dłuższe słowo w menu zabiera miejsce właśnie tym elementom.

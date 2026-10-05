@@ -49,3 +49,10 @@ jobs:
         run: pnpm build
         env:
           NEXT_TELEMETRY_DISABLED: 1
+
+      # Layout tests run against the build above (header on one row, no sideways scrolling).
+      - name: Install Playwright browser
+        run: pnpm exec playwright install chromium --only-shell
+
+      - name: Layout tests
+        run: pnpm test:e2e

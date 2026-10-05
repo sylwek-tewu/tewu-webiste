@@ -7,6 +7,7 @@ import Link from 'next/link';
 import classes from './ServicesClient.module.css';
 import { useLocale } from '@/i18n/LocaleContext';
 import { servicePagePath, servicePageSlugForServiceItem } from '@/lib/service-pages';
+import { wrappingButtonStyles } from '@/components/layout/wrappingButtonStyles';
 
 const SERVICE_ICONS: Record<string, React.ReactNode> = {
   'pelna-ksiegowosc': <Building2 size={24} />,
@@ -103,11 +104,7 @@ export default function ServicesClient() {
                             fw={800}
                             px={{ base: 'lg', sm: 40 }}
                             py={20}
-                            // Mantine labels never wrap; on phones the label must wrap instead of overflowing.
-                            styles={{
-                                root: { height: 'auto', minHeight: 'var(--button-height)', maxWidth: '100%' },
-                                label: { whiteSpace: 'normal', height: 'auto', textAlign: 'center', lineHeight: 1.3 },
-                            }}
+                            styles={wrappingButtonStyles}
                             rightSection={<ArrowRight size={20} />}
                             className={classes.ctaButton}
                         >

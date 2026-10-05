@@ -6,7 +6,8 @@ export default defineConfig({
     environment: 'node',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
-    exclude: [...configDefaults.exclude, '**/.worktrees/**'],
+    // e2e/ holds Playwright tests (pnpm test:e2e)
+    exclude: [...configDefaults.exclude, '**/.worktrees/**', 'e2e/**'],
   },
   resolve: {
     alias: {

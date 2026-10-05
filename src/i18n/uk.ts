@@ -453,8 +453,8 @@ export const ukTranslations: Translations = {
     backHome: 'Повернутися на головну',
   },
   callbackWidget: {
-    floatingButton: 'Безкоштовна оцінка вартості',
-    mobileCall: 'Зателефонувати',
+    floatingButton: 'Безкоштовна оцінка',
+    mobileCall: 'Подзвонити',
     mobileCallHours: '8:00–16:00',
     officeHours: 'Офіс працює пн–пт 8:00–16:00',
     mobileRequest: 'Передзвоніть мені',

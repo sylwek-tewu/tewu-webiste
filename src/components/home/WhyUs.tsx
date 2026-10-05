@@ -21,8 +21,8 @@ export function WhyUs() {
     const reasons = t.home.whyUs.reasons;
 
     return (
-        // overflow-x: clip (not hidden) keeps the sticky image column working; the gutter's negative
-        // margin is wider than the container padding and made the page scroll sideways
+        // overflow-x: clip, because the gutter's negative margin is wider than the container padding
+        // and made the page scroll sideways; unlike hidden, clip does not break the sticky image column
         <Box component="section" py={96} bg="white" style={{ borderBottom: '1px solid var(--mantine-color-slate-1)', overflowX: 'clip' }}>
             <Container>
                 {/* Upper Section: 7/12 content + 5/12 sticky images */}
@@ -64,7 +64,8 @@ export function WhyUs() {
 
                     {/* Floating Images Column */}
                     <GridCol span={{ base: 12, lg: 5 }} visibleFrom="lg">
-                        <Box pos="relative" h={480} style={{ position: 'sticky', top: 128 }}>
+                        {/* No `pos` prop here: it would override the sticky position (sticky also anchors the absolute images) */}
+                        <Box h={480} style={{ position: 'sticky', top: 128 }}>
                             {/* First image - offset down */}
                             <Box
                                 pos="absolute"

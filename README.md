@@ -151,6 +151,13 @@ pnpm lint
 pnpm build
 ```
 
+### Testy układu w przeglądarce (Playwright):
+Sprawdzają na zbudowanej aplikacji, że nagłówek mieści się w jednym wierszu, żadna strona nie przewija się w bok i żaden przycisk nie ma uciętego napisu (ADR 0004 §4). Wymagają wcześniejszego `pnpm build`; serwer uruchamiają same.
+```bash
+pnpm exec playwright install chromium --only-shell   # raz, pobiera przeglądarkę
+pnpm test:e2e
+```
+
 ### Zarządzanie bazą danych (Drizzle ORM):
 ```bash
 # Generowanie migracji na podstawie zmian w src/db/schema.ts

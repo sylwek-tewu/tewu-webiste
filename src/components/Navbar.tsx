@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Box, Container, Group, Burger, Drawer, Stack, Button, Text, Anchor, Paper } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import classes from './layout/Layout.module.css';
 import { TewuLogo } from './icons';
 import { useCallbackWidget } from './callback-widget';
@@ -13,6 +13,7 @@ import { LanguageSwitcher } from './layout/LanguageSwitcher';
 
 const Navbar: React.FC = () => {
   const [opened, { toggle, close }] = useDisclosure(false);
+  const isPhone = useMediaQuery('(max-width: 47.99em)');
   const pathname = usePathname();
   const { openWidget } = useCallbackWidget();
   const { t, locale } = useLocale();
@@ -85,11 +86,12 @@ const Navbar: React.FC = () => {
         </Group>
       </Container>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer – full screen on phones, a side panel on tablets and narrow laptops (768–1199px) */}
       <Drawer
         opened={opened}
         onClose={close}
-        size="100%"
+        position="right"
+        size={isPhone ? '100%' : 400}
         padding="md"
         title={t.nav.menu}
         hiddenFrom="lg"

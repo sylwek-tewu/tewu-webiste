@@ -30,11 +30,11 @@ Reklamy Google Ads mają kierować na podstronę odpowiadającą wyszukiwanej fr
 ### 4. Nawigacja i SEO
 - Menu główne: „Inkubator” po „Usługi” – krótka etykieta, bo w menu brakuje miejsca. Pozostałe podstrony linkuje stopka, karty na `/uslugi` i karty na stronie głównej.
 - Siódma pozycja nie mieściła się w jednym wierszu nagłówka (80 px wysokości): wersja ukraińska potrzebowała ok. 1366 px przy kontenerze 1288 px, polska łamała się poniżej ok. 1180 px. Dlatego:
-  - menu desktopowe pokazuje się od `lg` (1200 px), a poniżej jest burger z szufladą;
+  - menu desktopowe pokazuje się od `lg` (1200 px), a poniżej jest burger z szufladą: na telefonach na cały ekran, od `sm` (768 px) jako panel 400 px z prawej. „Desktop” w ADR 0002 §3 (przełącznik języka obok CTA) oznacza więc teraz ≥ 1200 px;
   - odstęp między linkami to `md` zamiast `lg`;
-  - nazwa biura obok logo jest ukryta między `lg` a `xl` (1200–1407 px);
-  - przycisk w nagłówku wersji ukraińskiej to „Безкоштовна оцінка” (bez „вартості”), tak jak CTA podstron.
-  Każda nowa pozycja menu lub dłuższa etykieta wymaga ponownego sprawdzenia nagłówka w obu językach przy 1200, 1280 i 1440 px.
+  - nazwa biura obok logo jest ukryta między `lg` a `xl` (1200–1407 px) w obu językach. W polskim by się zmieściła, ale nagłówek ma wyglądać tak samo w obu wersjach;
+  - przyciski „Bezpłatna wycena” w nagłówku i pływający przycisk widżetu w wersji ukraińskiej to „Безкоштовна оцінка” (bez „вартості”), tak jak CTA podstron.
+  Każda nowa pozycja menu lub dłuższa etykieta wymaga ponownego sprawdzenia nagłówka w obu językach przy 1200, 1280, 1408 i 1440 px. Najciaśniej jest po ukraińsku przy 1408 px, gdy wraca nazwa biura (zapas ok. 48 px). Test `e2e/layout.spec.ts` sprawdza wysokość nagłówka i brak przewijania w bok.
 - `src/app/sitemap.ts` obejmuje wszystkie strony w obu językach z alternatywami hreflang.
 
 ## Konsekwencje
@@ -48,4 +48,4 @@ Reklamy Google Ads mają kierować na podstronę odpowiadającą wyszukiwanej fr
 - **Treść ukraińską musi przed wydaniem sprawdzić osoba z TEWU.** Wersje ukraińskie są tłumaczeniem szkicu i mogą zawierać błędy terminologiczne.
 
 ## Odchylenia od pierwotnego planu implementacji
-- **Kontrast przycisku CTA w nagłówku Hero (`ServiceLandingPage`):** Pierwotny plan zakładał użycie klasy `layoutClasses.primaryButton` (kolor tła `slate.9`). Ponieważ sekcja Hero ma również ciemne tło `slate.9`, ciemny przycisk na ciemnym tle zlewał się z otoczeniem (brak kontrastu obrysu). Podczas implementacji Task 6 zamieniono stylizację przycisku w Hero na brandowy błękit (zmienne `--button-bg`/`--button-hover` w `style`, bo motyw ustawia kolor przycisków tymi zmiennymi, a prop `bg` wyłączał kolor po najechaniu), co zapewnia wymagany kontrast dostępności (a11y) i wyrazistą hierarchię wizualną głównego CTA.
+- **Kontrast przycisku CTA w nagłówku Hero (`ServiceLandingPage`):** Pierwotny plan zakładał użycie klasy `layoutClasses.primaryButton` (kolor tła `slate.9`). Ponieważ sekcja Hero ma również ciemne tło `slate.9`, ciemny przycisk na ciemnym tle zlewał się z otoczeniem (brak kontrastu obrysu). Podczas implementacji Task 6 zamieniono stylizację przycisku w Hero na brandowy błękit (`variant="filled"`: jawny wariant nadpisuje domyślny `slate.9` z motywu i daje kolor po najechaniu; prop `bg` ustawiał tło inline i wyłączał ten kolor), co zapewnia wymagany kontrast dostępności (a11y) i wyrazistą hierarchię wizualną głównego CTA.
