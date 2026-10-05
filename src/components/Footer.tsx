@@ -130,8 +130,8 @@ const Footer: React.FC = () => {
                   <Anchor href={`tel:${CONTACT_DETAILS.phoneE164 || '+48914824190'}`} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
                     {CONTACT_DETAILS.phone}
                   </Anchor>
-                  <Anchor href="tel:+48501482555" c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                    501 482 555
+                  <Anchor href={`tel:${CONTACT_DETAILS.mobilePhoneE164}`} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
+                    {CONTACT_DETAILS.mobilePhone}
                   </Anchor>
                 </Stack>
               </Group>

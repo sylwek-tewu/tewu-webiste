@@ -144,6 +144,9 @@ export const CONTACT_DETAILS: ContactInfo = {
   address: "Al. Powstańców Wielkopolskich 78A LU2, 70-110 Szczecin",
   phone: "91 48 24 190",
   phoneE164: "+48914824190",
+  // The number on the service landing pages (TEWU answer A6)
+  mobilePhone: "501 482 555",
+  mobilePhoneE164: "+48501482555",
   email: "biuro@tewu.szczecin.pl",
   hours: "Pon - Pt: 8:00 - 16:00"
 };

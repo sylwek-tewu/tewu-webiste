@@ -289,6 +289,7 @@ export const ukTranslations: Translations = {
     ctaButton: 'Безкоштовна оцінка – передзвонимо',
     phonePrompt: 'Бажаєте зателефонувати?',
     trust: {
+      directContact: 'Прямий контакт з керівництвом бюро',
       insurance: 'Страхування відповідальності (OC)',
       certificates: 'Сертифікати MF і SKwP',
     },

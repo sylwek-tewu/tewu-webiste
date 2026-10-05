@@ -31,7 +31,7 @@ Podstrona usługowa pod `/uslugi/<slug>` (i `/uk/uslugi/<slug>`), będąca stron
 _Avoid_: „landing” jako nazwa samej podstrony, lejek, mikrostrona (pole `landingPage` i termin „Landing Page Attribution” zostają)
 
 **Inkubator spółek**:
-Usługa TEWU dla zakładanych spółek z o.o., jedyna podstrona usługowa z linkiem w menu głównym (etykieta „Inkubator”). Dokładny zakres do potwierdzenia przez TEWU.
+Usługa TEWU dla zakładanych spółek z o.o., jedyna podstrona usługowa z linkiem w menu głównym (etykieta „Inkubator”). Obejmuje informacje pomagające zdecydować o formie działalności, założenie spółki z notariuszem (KRS lub S24), adres siedziby oraz wsparcie na starcie (doradztwo, w razie potrzeby lokal). „Inkubacja” trwa zwykle do trzech miesięcy, potem spółka przechodzi na stałą obsługę księgową.
 _Avoid_: Akcelerator, start-up
 
 **Landing Page Attribution**:

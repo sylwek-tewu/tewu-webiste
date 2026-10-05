@@ -1,12 +1,12 @@
 import type { ServicePageContent } from '../types';
-import { PRICING_PROCESS, SWITCH_FROM_ANOTHER_OFFICE } from './shared';
+import { PRICING_FACTORS, PRICING_PROCESS, SWITCH_FROM_ANOTHER_OFFICE, priceFaq } from './shared';
 
 export const kpir: ServicePageContent = {
   slug: 'kpir',
   locale: 'pl',
   meta: {
     title: 'Księgowość KPiR Szczecin – Biuro Rachunkowe TEWU',
-    description: 'Podatkowa księga przychodów i rozchodów dla firm i spółek cywilnych w Szczecinie: VAT, ZUS, PIT. Bezpłatna wycena – oddzwonimy.',
+    description: 'Podatkowa księga przychodów i rozchodów dla firm i spółek cywilnych w Szczecinie: VAT, ZUS, PIT, ulgi. Bezpłatna wycena – oddzwonimy.',
   },
   hero: {
     title: 'Księga przychodów i rozchodów (KPiR) w Szczecinie',
@@ -30,16 +30,12 @@ export const kpir: ServicePageContent = {
       'Obliczanie zaliczek na podatek dochodowy',
       'Rozliczenia ZUS przedsiębiorcy',
       'Zeznania roczne PIT-36 i PIT-36L',
+      'Ulgi podatkowe i wspólne rozliczenie z małżonkiem (na skali podatkowej)',
     ],
   },
   pricing: {
     title: 'Ile kosztuje prowadzenie KPiR?',
-    factors: [
-      'Liczba dokumentów w miesiącu',
-      'Czy firma jest czynnym podatnikiem VAT',
-      'Forma opodatkowania',
-      'Liczba pracowników, jeśli zlecasz też kadry i płace',
-    ],
+    factors: PRICING_FACTORS,
     process: PRICING_PROCESS,
   },
   steps: SWITCH_FROM_ANOTHER_OFFICE,
@@ -48,23 +44,24 @@ export const kpir: ServicePageContent = {
     items: [
       {
         question: 'Skala podatkowa czy podatek liniowy – co wybrać?',
-        answer: 'To zależy od wysokości dochodu, ulg, z których korzystasz, oraz składki zdrowotnej. Pomożemy porównać obie formy na Twoich liczbach.',
+        answer: 'To zależy m.in. od wysokości dochodu, ulg i składki zdrowotnej. Najlepiej omówić to w rozmowie – na podstawie Twoich przychodów, kosztów i planów pomożemy podjąć właściwą decyzję.',
       },
       {
         question: 'Czy mogę zmienić formę opodatkowania w trakcie roku?',
-        answer: 'Co do zasady formę opodatkowania wybiera się na cały rok podatkowy, a zmianę zgłasza do 20. dnia miesiąca po miesiącu, w którym osiągnięto pierwszy przychód w roku. Pomożemy sprawdzić, czy zmiana się opłaca.',
+        answer: 'Nie – formę opodatkowania można zmienić tylko na przełomie roku, ze skutkiem od 1 stycznia. Zmianę zgłasza się do 20. dnia miesiąca po miesiącu, w którym osiągnięto pierwszy przychód w nowym roku. Przed zmianą warto porozmawiać – pomożemy ocenić, czy się opłaca.',
       },
       {
-        question: 'Ile kosztuje prowadzenie KPiR?',
-        answer: 'Cena zależy od liczby dokumentów, rozliczeń VAT i zakresu usług. Wycenę przygotowujemy indywidualnie i bezpłatnie – zostaw numer telefonu, a oddzwonimy.',
+        question: 'Czy rozliczycie mnie wspólnie z małżonkiem?',
+        answer: 'Tak, jeśli rozliczasz się na skali podatkowej. Przy podatku liniowym wspólne rozliczenie nie jest możliwe. W zeznaniu rocznym uwzględnimy też ulgi, z których możesz skorzystać.',
       },
+      priceFaq('Ile kosztuje prowadzenie KPiR?'),
       {
-        question: 'Jakie dokumenty muszę przekazywać?',
-        answer: 'Przede wszystkim faktury sprzedaży i zakupu oraz inne dowody przychodów i wydatków firmy. Dokładną listę i terminy przekazywania ustalimy na początku współpracy.',
+        question: 'Jakie dokumenty muszę przekazywać i jak?',
+        answer: 'Faktury sprzedaży i zakupu oraz inne dowody przychodów i wydatków firmy. Podstawą jest KSeF – faktury pobieramy bezpośrednio z systemu. Pozostałe dokumenty możesz przesyłać e-mailem albo przez WhatsApp.',
       },
       {
         question: 'Czy rozliczacie też moje składki ZUS?',
-        answer: 'Tak, przygotowujemy deklaracje rozliczeniowe ZUS przedsiębiorcy i pilnujemy terminów płatności składek.',
+        answer: 'Tak, rozliczamy ZUS: przygotowujemy deklaracje rozliczeniowe ZUS przedsiębiorcy i pilnujemy terminów płatności składek.',
       },
     ],
   },

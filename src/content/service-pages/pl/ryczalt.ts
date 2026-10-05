@@ -1,16 +1,16 @@
 import type { ServicePageContent } from '../types';
-import { PRICING_PROCESS, SWITCH_FROM_ANOTHER_OFFICE } from './shared';
+import { PRICING_FACTORS, PRICING_PROCESS, SWITCH_FROM_ANOTHER_OFFICE, priceFaq } from './shared';
 
 export const ryczalt: ServicePageContent = {
   slug: 'ryczalt',
   locale: 'pl',
   meta: {
     title: 'Księgowość na ryczałcie Szczecin – Biuro Rachunkowe TEWU',
-    description: 'Obsługa ryczałtu ewidencjonowanego w Szczecinie: ewidencja przychodów, stawki ryczałtu, PIT-28, ZUS. Bezpłatna wycena – oddzwonimy.',
+    description: 'Obsługa ryczałtu ewidencjonowanego w Szczecinie: ewidencja przychodów, stawki, PIT-28, ZUS, także najem prywatny. Bezpłatna wycena.',
   },
   hero: {
     title: 'Ryczałt ewidencjonowany – księgowość w Szczecinie',
-    lead: 'Prowadzimy ewidencję przychodów i rozliczenia przedsiębiorców na ryczałcie – od właściwej stawki po zeznanie roczne.',
+    lead: 'Prowadzimy ewidencję przychodów i rozliczenia przedsiębiorców na ryczałcie – od właściwej stawki po zeznanie roczne. Rozliczamy też ryczałt od najmu prywatnego.',
   },
   audience: {
     title: 'Dla kogo?',
@@ -18,6 +18,7 @@ export const ryczalt: ServicePageContent = {
       'Jednoosobowe działalności gospodarcze na ryczałcie ewidencjonowanym',
       'Spółki cywilne rozliczające się ryczałtem',
       'Przedsiębiorcy, którzy rozważają przejście na ryczałt',
+      'Osoby wynajmujące prywatnie mieszkania lub lokale',
     ],
   },
   scope: {
@@ -29,16 +30,12 @@ export const ryczalt: ServicePageContent = {
       'Rejestry VAT i pliki JPK_V7 dla czynnych podatników VAT',
       'Rozliczenia ZUS przedsiębiorcy, w tym składki zdrowotnej',
       'Zeznanie roczne PIT-28',
+      'Rozliczenie ryczałtu od najmu prywatnego',
     ],
   },
   pricing: {
     title: 'Ile kosztuje obsługa ryczałtu?',
-    factors: [
-      'Liczba dokumentów w miesiącu',
-      'Czy firma jest czynnym podatnikiem VAT',
-      'Liczba stawek ryczałtu, które stosujesz',
-      'Liczba pracowników, jeśli zlecasz też kadry i płace',
-    ],
+    factors: PRICING_FACTORS,
     process: PRICING_PROCESS,
   },
   steps: SWITCH_FROM_ANOTHER_OFFICE,
@@ -51,16 +48,17 @@ export const ryczalt: ServicePageContent = {
       },
       {
         question: 'Czy na ryczałcie mogę odliczać koszty?',
-        answer: 'Nie – ryczałt płaci się od przychodu, bez pomniejszania go o koszty. Przy wysokich kosztach korzystniejsza może być KPiR; pomożemy to porównać.',
+        answer: 'Nie – ryczałt płaci się od przychodu, bez pomniejszania go o koszty. Przy wysokich kosztach korzystniejsza może być KPiR. W rozmowie poznamy Twoje potrzeby i oczekiwania i pomożemy podjąć właściwą decyzję.',
       },
       {
         question: 'Jak liczona jest składka zdrowotna na ryczałcie?',
         answer: 'Jej wysokość zależy od rocznego przychodu – są trzy progi. Uwzględnimy ją przy porównaniu form opodatkowania.',
       },
       {
-        question: 'Ile kosztuje obsługa ryczałtu?',
-        answer: 'Cena zależy od liczby dokumentów, rozliczeń VAT i zakresu usług. Wycenę przygotowujemy indywidualnie i bezpłatnie – zostaw numer telefonu, a oddzwonimy.',
+        question: 'Czy rozliczacie najem prywatny?',
+        answer: 'Tak, rozliczamy ryczałt od najmu prywatnego – obliczamy podatek i przygotowujemy zeznanie roczne PIT-28.',
       },
+      priceFaq('Ile kosztuje obsługa ryczałtu?'),
     ],
   },
 };

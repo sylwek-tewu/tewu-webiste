@@ -281,6 +281,7 @@ export const plTranslations: Translations = {
     ctaButton: 'Bezpłatna wycena – oddzwonimy',
     phonePrompt: 'Wolisz zadzwonić?',
     trust: {
+      directContact: 'Bezpośredni kontakt z szefostwem biura',
       insurance: 'Polisa OC biura',
       certificates: 'Certyfikaty MF i SKwP',
     },

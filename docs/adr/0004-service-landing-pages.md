@@ -18,7 +18,10 @@ Reklamy Google Ads mają kierować na podstronę odpowiadającą wyszukiwanej fr
 - Treść podstron jest w typowanych modułach `src/content/service-pages/{pl,uk}/<slug>.ts`, a nie w słownikach i18n. Słownik trafia do bundla każdej strony, a sześć podstron z FAQ to dużo tekstu.
 - Serwerowy `page.tsx` przekazuje treść jednej podstrony do wspólnego komponentu `ServiceLandingPage`. Dodanie podstrony to wpis w rejestrze i plik treści w każdym języku.
 - Etykiety wspólne (CTA, nagłówki sekcji ceny, pasek zaufania) i krótkie nazwy podstron są w słowniku (`servicePages`).
-- Widełki cenowe są polem opcjonalnym. Sekcja z kwotami pokazuje się tylko wtedy, gdy pole jest wypełnione.
+- Widełki cenowe są polem opcjonalnym. Sekcja z kwotami pokazuje się tylko wtedy, gdy pole jest wypełnione. TEWU nie publikuje cen (odpowiedź A1 w `docs/pytania-do-tewu-podstrony-uslugowe-odp.md`), więc pole zostaje puste.
+- Treść opiera się na odpowiedziach TEWU z tego pliku. Wspólne fragmenty (czynniki ceny A2, przebieg wyceny A3, zmiana biura A4, przekazywanie dokumentów A8, odpowiedź o cenie) są w `{pl,uk}/shared.ts`, żeby każda podstrona mówiła to samo, co klient usłyszy przez telefon.
+- Numer telefonu na podstronach to numer komórkowy 501 482 555 (A6, `CONTACT_DETAILS.mobilePhone`). Przycisk „Zadzwoń” w pasku widżetu na telefonach używa numeru z `NEXT_PUBLIC_CALLBACK_CALL_NUMBER` (domyślnie stacjonarny).
+- Pasek zaufania zaczyna się od „Bezpośredni kontakt z szefostwem biura” – wyróżnika wskazanego przez TEWU (A9).
 - FAQ jest w natywnych elementach `<details>`, żeby odpowiedzi były w HTML także po zwinięciu. Bez danych strukturalnych `FAQPage` – Google pokazuje dziś FAQ rich results prawie wyłącznie stronom rządowym i medycznym.
 
 ### 3. Atrybucja leadów
@@ -44,7 +47,7 @@ Reklamy Google Ads mają kierować na podstronę odpowiadającą wyszukiwanej fr
 - Next 16 przy `dynamicParams = false` loguje każde żądanie nieznanego slugu jako `Error: Internal: NoFallbackError`, choć odpowiedź to poprawne 404. Boty sprawdzające `/uslugi/*` mogą więc zaśmiecać logi błędów; jeśli logi zasilają alerty, ten komunikat trzeba odfiltrować.
 
 ## Przed wydaniem
-- Gałąź z podstronami nie trafia na produkcję przed odpowiedziami TEWU i akceptacją treści.
+- Gałąź z podstronami nie trafia na produkcję przed akceptacją treści przez TEWU na podglądzie. Odpowiedzi TEWU na pytania są już w treści (`docs/pytania-do-tewu-podstrony-uslugowe-odp.md`).
 - **Treść ukraińską musi przed wydaniem sprawdzić osoba z TEWU.** Wersje ukraińskie są tłumaczeniem szkicu i mogą zawierać błędy terminologiczne.
 
 ## Odchylenia od pierwotnego planu implementacji

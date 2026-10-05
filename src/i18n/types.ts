@@ -162,7 +162,7 @@ export interface Translations {
     links: Record<ServicePageSlug, string>;
     ctaButton: string;
     phonePrompt: string;
-    trust: { insurance: string; certificates: string };
+    trust: { directContact: string; insurance: string; certificates: string };
     pricing: { factorsTitle: string; processTitle: string; rangeTitle: string };
     finalCta: { title: string; description: string };
   };

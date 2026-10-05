@@ -52,11 +52,12 @@ describe('ServiceLandingPage', () => {
     expect(screen.getByRole('status')).toHaveTextContent('open:service');
   });
 
-  it('links the office phone number', () => {
+  it('links the mobile number TEWU chose for the service pages', () => {
     renderPage(getServicePageContent('pl', 'kpir'));
-    const phones = screen.getAllByRole('link', { name: CONTACT_DETAILS.phone });
+    const phones = screen.getAllByRole('link', { name: CONTACT_DETAILS.mobilePhone });
     expect(phones.length).toBeGreaterThanOrEqual(2);
-    for (const phone of phones) expect(phone).toHaveAttribute('href', `tel:${CONTACT_DETAILS.phoneE164}`);
+    for (const phone of phones) expect(phone).toHaveAttribute('href', `tel:${CONTACT_DETAILS.mobilePhoneE164}`);
+    expect(screen.queryByRole('link', { name: CONTACT_DETAILS.phone })).toBeNull();
   });
 
   it('keeps every FAQ answer in the page, also while collapsed', () => {

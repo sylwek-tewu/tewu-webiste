@@ -47,7 +47,8 @@ describe.each(PAGES_BY_LOCALE)('service page content (%s)', (locale, pages) => {
     expect(pages[slug].meta.description.length).toBeLessThanOrEqual(160);
   });
 
-  it.each(SERVICE_PAGE_SLUGS)('%s: publishes no price range until TEWU decides to', (slug) => {
+  // TEWU answer A1: prices are set individually, there is no price list to publish.
+  it.each(SERVICE_PAGE_SLUGS)('%s: publishes no price range', (slug) => {
     expect(pages[slug].pricing.range).toBeUndefined();
   });
 
