@@ -249,6 +249,31 @@ export const plTranslations: Translations = {
       modernityDesc: 'E-księgowość i elektroniczny obieg dokumentów.',
     },
   },
+  servicePages: {
+    links: {
+      'pelna-ksiegowosc': 'Pełna księgowość',
+      kpir: 'Księga przychodów i rozchodów (KPiR)',
+      ryczalt: 'Ryczałt',
+      'kadry-i-place': 'Kadry i płace',
+      ksef: 'KSeF',
+      'inkubator-spolek': 'Inkubator spółek z o.o.',
+    },
+    ctaButton: 'Bezpłatna wycena – oddzwonimy',
+    phonePrompt: 'Wolisz zadzwonić?',
+    trust: {
+      insurance: 'Polisa OC biura',
+      certificates: 'Certyfikaty MF i SKwP',
+    },
+    pricing: {
+      factorsTitle: 'Od czego zależy cena',
+      processTitle: 'Jak wygląda wycena',
+      rangeTitle: 'Orientacyjne ceny',
+    },
+    finalCta: {
+      title: 'Porozmawiajmy o Twojej firmie',
+      description: 'Zostaw numer telefonu – oddzwonimy w wybranej przez Ciebie porze i przygotujemy bezpłatną wycenę.',
+    },
+  },
   outsourcing: {
     header: {
       title: 'Outsourcing Procesów Biznesowych (BPO)',

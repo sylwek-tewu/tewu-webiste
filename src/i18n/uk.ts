@@ -257,6 +257,31 @@ export const ukTranslations: Translations = {
       modernityDesc: 'Зручна е-бухгалтерія та повністю електронний дистанційний документообіг.',
     },
   },
+  servicePages: {
+    links: {
+      'pelna-ksiegowosc': 'Повна бухгалтерія',
+      kpir: 'Книга доходів і витрат (KPiR)',
+      ryczalt: 'Паушальний податок (ryczałt)',
+      'kadry-i-place': 'Кадри та заробітна плата',
+      ksef: 'KSeF',
+      'inkubator-spolek': 'Інкубатор компаній Sp. z o.o.',
+    },
+    ctaButton: 'Безкоштовна оцінка – передзвонимо',
+    phonePrompt: 'Бажаєте зателефонувати?',
+    trust: {
+      insurance: 'Страхування відповідальності (OC)',
+      certificates: 'Сертифікати MF і SKwP',
+    },
+    pricing: {
+      factorsTitle: 'Від чого залежить ціна',
+      processTitle: 'Як ми готуємо оцінку вартості',
+      rangeTitle: 'Орієнтовні ціни',
+    },
+    finalCta: {
+      title: 'Поговорімо про вашу компанію',
+      description: 'Залиште номер телефону – ми передзвонимо у зручний для вас час і підготуємо безкоштовну оцінку вартості.',
+    },
+  },
   outsourcing: {
     header: {
       title: 'Аутсорсинг бізнес-процесів (BPO)',

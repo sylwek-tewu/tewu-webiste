@@ -1,4 +1,5 @@
 import type { CallbackSlot, CallbackTopic } from '@/lib/callback/types';
+import type { ServicePageSlug } from '@/lib/service-pages';
 
 export type Locale = 'pl' | 'uk';
 
@@ -159,6 +160,14 @@ export interface Translations {
       modernityTitle: string;
       modernityDesc: string;
     };
+  };
+  servicePages: {
+    links: Record<ServicePageSlug, string>;
+    ctaButton: string;
+    phonePrompt: string;
+    trust: { insurance: string; certificates: string };
+    pricing: { factorsTitle: string; processTitle: string; rangeTitle: string };
+    finalCta: { title: string; description: string };
   };
   outsourcing: {
     header: {
