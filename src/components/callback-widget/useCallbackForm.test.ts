@@ -343,4 +343,56 @@ describe('useCallbackForm', () => {
     expect(result.current.topic).toBe('');
     expect(result.current.submitSuccess).toBe(false);
   });
+
+  it('presets the topic of the landing page when the form opens there', () => {
+    const { result } = renderHook(() => useCallbackForm(createOptions({ landingPage: 'kadry-i-place' })));
+    expect(result.current.topic).toBe('kadry-place');
+  });
+
+  it('keeps the topic the visitor chose when the form opens again on another page', () => {
+    const { result, rerender } = renderHook((props: UseCallbackFormOptions) => useCallbackForm(props), {
+      initialProps: createOptions({ landingPage: 'kpir' }),
+    });
+    act(() => result.current.setTopic('fundacja'));
+    rerender(createOptions({ isOpen: false, landingPage: 'kpir' }));
+    rerender(createOptions({ isOpen: true, landingPage: 'pelna-ksiegowosc' }));
+    expect(result.current.topic).toBe('fundacja');
+  });
+
+  it('drops an untouched preset when the form opens off the landing pages', () => {
+    const { result, rerender } = renderHook((props: UseCallbackFormOptions) => useCallbackForm(props), {
+      initialProps: createOptions({ landingPage: 'kpir' }),
+    });
+    rerender(createOptions({ isOpen: false, landingPage: null }));
+    rerender(createOptions({ isOpen: true, landingPage: null }));
+    expect(result.current.topic).toBe('');
+  });
+
+  it('sends the landing page with the request and to analytics', async () => {
+    mockFetchResponse({ success: true, id: 'A1B2C3', delivery: 'direct' });
+    const { result } = renderHook(() => useCallbackForm(createOptions({ source: 'service', landingPage: 'ksef' })));
+    act(() => result.current.setPhone('501 482 555'));
+    now += 5000;
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+      await vi.runAllTimersAsync();
+    });
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body as string);
+    expect(body).toMatchObject({ source: 'service', landingPage: 'ksef', topic: 'inne' });
+    expect(window.dataLayer).toContainEqual(expect.objectContaining({ event: 'callback_request_submit', landing_page: 'ksef' }));
+  });
+
+  it('sends no landing page off the landing pages', async () => {
+    mockFetchResponse({ success: true, id: 'A1B2C3', delivery: 'direct' });
+    const { result } = renderHook(() => useCallbackForm(createOptions()));
+    act(() => result.current.setPhone('501 482 555'));
+    now += 5000;
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+      await vi.runAllTimersAsync();
+    });
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body as string)).not.toHaveProperty('landingPage');
+    expect(window.dataLayer).toContainEqual(expect.objectContaining({ landing_page: 'none' }));
+  });
 });
+

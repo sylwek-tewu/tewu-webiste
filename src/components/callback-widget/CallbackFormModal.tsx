@@ -28,7 +28,7 @@ import classes from './CallbackWidget.module.css';
  * so Modal/Select/Radio and the phone metadata stay out of the initial page bundle.
  */
 export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCallNumber }) {
-  const { isOpen, source, closeWidget } = useCallbackWidget();
+  const { isOpen, source, landingPage, closeWidget } = useCallbackWidget();
   const { t, locale } = useLocale();
 
   const {
@@ -50,6 +50,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
   } = useCallbackForm({
     isOpen,
     source,
+    landingPage,
     closeWidget,
     t: t.callbackWidget,
     locale,

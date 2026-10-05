@@ -1,12 +1,16 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import { usePathname } from 'next/navigation';
+import { servicePageSlugOfPath } from '@/lib/service-pages';
 import { CallbackContextType, WidgetTriggerSource } from './types';
 import { pushCallbackWidgetOpen } from './analytics';
 
 const CallbackContext = createContext<CallbackContextType | null>(null);
 
 export const CallbackProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const pathname = usePathname();
+  const landingPage = servicePageSlugOfPath(pathname || '/');
   const [isOpen, setIsOpen] = useState(false);
   const [source, setSource] = useState<WidgetTriggerSource>('floating');
 
@@ -24,10 +28,11 @@ export const CallbackProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     () => ({
       isOpen,
       source,
+      landingPage,
       openWidget,
       closeWidget,
     }),
-    [isOpen, source, openWidget, closeWidget]
+    [isOpen, source, landingPage, openWidget, closeWidget]
   );
 
   return <CallbackContext.Provider value={value}>{children}</CallbackContext.Provider>;

@@ -23,6 +23,7 @@ export function pushCallbackRequestSubmit(params: {
   topic?: string;
   time_slot: string;
   delivery: CallbackDelivery;
+  landing_page?: string;
 }): void {
   if (typeof window === 'undefined') return;
   window.dataLayer = window.dataLayer || [];
@@ -32,6 +33,7 @@ export function pushCallbackRequestSubmit(params: {
     topic: params.topic || 'none',
     time_slot: params.time_slot,
     delivery: params.delivery,
+    landing_page: params.landing_page || 'none',
   });
 }
 

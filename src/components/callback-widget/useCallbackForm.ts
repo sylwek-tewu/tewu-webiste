@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef, useTransition } from 'react';
 import type React from 'react';
 import type { CallbackSlot, CallbackSource, CallbackTopic } from '@/lib/callback/types';
+import type { ServicePageSlug } from '@/lib/service-pages';
+import { servicePageTopic } from '@/lib/service-pages';
 import type { Translations, Locale } from '@/i18n';
 import { normalizePhoneNumberForForm } from '@/lib/callback/phone-client';
 import { getCallbackCommitment } from '@/lib/calendar';
@@ -14,6 +16,7 @@ import { isPhoneErrorCode, phoneErrorMessage, submitErrorMessage } from './error
 export interface UseCallbackFormOptions {
   isOpen: boolean;
   source: CallbackSource;
+  landingPage?: ServicePageSlug | null;
   closeWidget: () => void;
   t: Translations['callbackWidget'];
   locale: Locale;
@@ -36,11 +39,13 @@ export function useCallbackForm(options: UseCallbackFormOptions): {
   handleSubmit: (e: React.FormEvent) => void;
   handleClose: () => void;
 } {
-  const { isOpen, source, closeWidget, t, locale } = options;
+  const { isOpen, source, landingPage = null, closeWidget, t, locale } = options;
 
   const [phone, setPhoneState] = useState('');
   const [slot, setSlot] = useState<CallbackSlot>('asap');
-  const [topic, setTopic] = useState<CallbackTopic | ''>('');
+  const [topic, setTopicState] = useState<CallbackTopic | ''>(() => servicePageTopic(landingPage));
+  // Once the visitor picks a topic, a service page's preset no longer replaces it.
+  const topicChosenRef = useRef(false);
   const [honeypot, setHoneypot] = useState('');
   const [formOpenedAt, setFormOpenedAt] = useState<number>(() => Date.now());
 
@@ -61,8 +66,9 @@ export function useCallbackForm(options: UseCallbackFormOptions): {
       setFormOpenedAt(Date.now());
       setSubmitError(null);
       setPhoneError(null);
+      if (!topicChosenRef.current) setTopicState(servicePageTopic(landingPage));
     }
-  }, [isOpen]);
+  }, [isOpen, landingPage]);
 
   useEffect(() => {
     return () => {
@@ -79,10 +85,16 @@ export function useCallbackForm(options: UseCallbackFormOptions): {
     setPhoneError((prev) => (prev ? null : prev));
   };
 
+  const setTopic = (value: CallbackTopic | '') => {
+    topicChosenRef.current = true;
+    setTopicState(value);
+  };
+
   const resetForm = () => {
     setPhoneState('');
     setSlot('asap');
-    setTopic('');
+    topicChosenRef.current = false;
+    setTopicState('');
     setHoneypot('');
     setPhoneError(null);
     setSubmitError(null);
@@ -128,6 +140,7 @@ export function useCallbackForm(options: UseCallbackFormOptions): {
             slot,
             topic: topic || undefined,
             source,
+            landingPage: landingPage ?? undefined,
             locale,
             honeypot,
             elapsedMs: elapsed + delay,
@@ -144,6 +157,7 @@ export function useCallbackForm(options: UseCallbackFormOptions): {
               topic: topic || undefined,
               time_slot: slot,
               delivery,
+              landing_page: landingPage ?? undefined,
             });
           }
           setSubmitSuccess(true);
