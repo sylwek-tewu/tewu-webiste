@@ -3,9 +3,12 @@ import { SERVICE_PAGE_SLUGS } from '@/lib/service-pages';
 import type { Locale } from '@/i18n/types';
 import type { ServicePageContent, ServicePageSlugMap } from './types';
 import { PL_SERVICE_PAGES } from './pl';
+import { UK_SERVICE_PAGES } from './uk';
 
-// Task 5 adds the Ukrainian pages here.
-const PAGES_BY_LOCALE: [Locale, ServicePageSlugMap][] = [['pl', PL_SERVICE_PAGES]];
+const PAGES_BY_LOCALE: [Locale, ServicePageSlugMap][] = [
+  ['pl', PL_SERVICE_PAGES],
+  ['uk', UK_SERVICE_PAGES],
+];
 const CITY: Record<Locale, string> = { pl: 'Szczecin', uk: 'Щецин' };
 
 function allText(content: ServicePageContent): string[] {
@@ -53,5 +56,17 @@ describe.each(PAGES_BY_LOCALE)('service page content (%s)', (locale, pages) => {
       expect(text.trim()).not.toBe('');
       expect(text).not.toMatch(/TODO|TBD|lorem|\?\?\?/i);
     }
+  });
+});
+
+describe('Ukrainian service page content', () => {
+  it.each(SERVICE_PAGE_SLUGS)('%s: mirrors the Polish structure, so the language switch lands on the same page', (slug) => {
+    const pl = PL_SERVICE_PAGES[slug];
+    const uk = UK_SERVICE_PAGES[slug];
+    expect(uk.audience.items).toHaveLength(pl.audience.items.length);
+    expect(uk.scope.items).toHaveLength(pl.scope.items.length);
+    expect(uk.pricing.factors).toHaveLength(pl.pricing.factors.length);
+    expect(uk.pricing.process).toHaveLength(pl.pricing.process.length);
+    expect(uk.faq.items).toHaveLength(pl.faq.items.length);
   });
 });
