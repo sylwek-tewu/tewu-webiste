@@ -101,8 +101,13 @@ export default function ServicesClient() {
                             size="xl"
                             radius="lg"
                             fw={800}
-                            px={40}
+                            px={{ base: 'lg', sm: 40 }}
                             py={20}
+                            // Mantine labels never wrap; on phones the label must wrap instead of overflowing.
+                            styles={{
+                                root: { height: 'auto', minHeight: 'var(--button-height)', maxWidth: '100%' },
+                                label: { whiteSpace: 'normal', height: 'auto', textAlign: 'center', lineHeight: 1.3 },
+                            }}
                             rightSection={<ArrowRight size={20} />}
                             className={classes.ctaButton}
                         >

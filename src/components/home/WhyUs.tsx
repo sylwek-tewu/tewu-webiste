@@ -21,7 +21,9 @@ export function WhyUs() {
     const reasons = t.home.whyUs.reasons;
 
     return (
-        <Box component="section" py={96} bg="white" style={{ borderBottom: '1px solid var(--mantine-color-slate-1)' }}>
+        // overflow-x: clip (not hidden) keeps the sticky image column working; the gutter's negative
+        // margin is wider than the container padding and made the page scroll sideways
+        <Box component="section" py={96} bg="white" style={{ borderBottom: '1px solid var(--mantine-color-slate-1)', overflowX: 'clip' }}>
             <Container>
                 {/* Upper Section: 7/12 content + 5/12 sticky images */}
                 <Grid gutter={{ base: 48, lg: 80 }}>

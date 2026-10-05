@@ -14,8 +14,9 @@ export function Hero() {
 
     return (
         <>
-            {/* Hero Section */}
-            <Box component="section" bg="slate.0" pt={{ base: 64, md: 96 }} pb={{ base: 96, md: 128 }}>
+            {/* Hero Section – clipped sideways: the 48px gutter's negative margin is wider than the
+                container padding and the blurred circle sits 40px outside; both made the page scroll */}
+            <Box component="section" bg="slate.0" pt={{ base: 64, md: 96 }} pb={{ base: 96, md: 128 }} style={{ overflowX: 'clip' }}>
                 <Container>
                     <Grid gutter={{ base: 48, lg: 48 }} align="center">
                         <GridCol span={{ base: 12, md: 6 }}>

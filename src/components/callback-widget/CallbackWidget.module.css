@@ -48,12 +48,40 @@
   }
 }
 
+/* The left button takes the width of its label and the request button the rest. The Ukrainian
+   labels („Зателефонувати”, „Передзвоніть мені”) do not fit side by side on narrow phones, so the
+   request label may wrap to two lines and the icons go below 400px. */
 .mobileBarGrid {
   display: grid;
-  grid-template-columns: 1fr 1.3fr;
-  gap: 12px;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
   max-width: 480px;
   margin: 0 auto;
+}
+
+.mobileBarGrid :global(.mantine-Button-root) {
+  height: auto;
+  min-height: var(--button-height);
+  padding-block: 4px;
+  padding-inline: 12px;
+  font-size: var(--mantine-font-size-sm);
+}
+
+.mobileBarGrid :global(.mantine-Button-label) {
+  height: auto;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.15;
+}
+
+@media (max-width: 24.99em) {
+  .mobileBarGrid :global(.mantine-Button-root) {
+    padding-inline: 8px;
+  }
+
+  .mobileBarGrid :global(.mantine-Button-section) {
+    display: none;
+  }
 }
 
 /* Reactive Promise Message Box */
