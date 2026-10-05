@@ -77,10 +77,7 @@ export interface Translations {
     navTitle: string;
     servicesTitle: string;
     contactTitle: string;
-    fullAccounting: string;
-    revenueBook: string;
     bpoOutsourcing: string;
-    hrAndPayroll: string;
     privacyPolicy: string;
     allRightsReserved: string;
   };

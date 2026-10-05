@@ -8,13 +8,13 @@ import { Box, Container, SimpleGrid, Stack, Text, Group, Anchor } from '@mantine
 import classes from './layout/Layout.module.css';
 import { TewuLogo } from './icons';
 import { useLocale } from '@/i18n/LocaleContext';
+import { SERVICE_PAGE_SLUGS, servicePagePath } from '@/lib/service-pages';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
 const Footer: React.FC = () => {
   const { t, locale } = useLocale();
   const privacyPath = locale === 'uk' ? '/uk/polityka-prywatnosci' : '/polityka-prywatnosci';
-  const servicesPath = locale === 'uk' ? '/uk/uslugi' : '/uslugi';
   const outsourcingPath = locale === 'uk' ? '/uk/outsourcing' : '/outsourcing';
 
   return (
@@ -44,7 +44,7 @@ const Footer: React.FC = () => {
             </Text>
             <SimpleGrid cols={2} spacing={{ base: 'sm', sm: 'md' }}>
               <Stack gap="xs">
-                {t.nav.links.slice(0, 3).map((link) => (
+                {t.nav.links.slice(0, 4).map((link) => (
                   <Anchor
                     key={link.path}
                     component={Link}
@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
                 ))}
               </Stack>
               <Stack gap="xs">
-                {t.nav.links.slice(3).map((link) => (
+                {t.nav.links.slice(4).map((link) => (
                   <Anchor
                     key={link.path}
                     component={Link}
@@ -92,17 +92,13 @@ const Footer: React.FC = () => {
               {t.footer.servicesTitle}
             </Text>
             <Stack gap="xs">
-              <Anchor component={Link} href={servicesPath} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                {t.footer.fullAccounting}
-              </Anchor>
-              <Anchor component={Link} href={servicesPath} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                {t.footer.revenueBook}
-              </Anchor>
+              {SERVICE_PAGE_SLUGS.map((slug) => (
+                <Anchor key={slug} component={Link} href={servicePagePath(locale, slug)} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
+                  {t.servicePages.links[slug]}
+                </Anchor>
+              ))}
               <Anchor component={Link} href={outsourcingPath} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
                 {t.footer.bpoOutsourcing}
-              </Anchor>
-              <Anchor component={Link} href={servicesPath} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                {t.footer.hrAndPayroll}
               </Anchor>
             </Stack>
           </Stack>

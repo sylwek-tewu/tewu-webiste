@@ -3,6 +3,7 @@ import { plTranslations, ukTranslations } from '.';
 import { CALLBACK_SLOTS, CALLBACK_TOPICS } from '@/lib/callback/types';
 import { CALLBACK_SLOT_WINDOWS, formatClockTime } from '@/lib/calendar';
 import { COMPANY_FULL_NAME, CONTACT_DETAILS } from '@/constants';
+import { SERVICE_PAGE_SLUGS, SERVICE_PAGES } from '@/lib/service-pages';
 
 /** Every key path with the type of its value, arrays by length. */
 function shape(value: unknown, path = ''): string[] {
@@ -58,5 +59,23 @@ describe('dictionaries', () => {
   it('state the retention in Polish with the Polish plural', () => {
     expect(plTranslations.privacyPolicy.s5Retention(48)).toContain('**48 godzin**');
     expect(plTranslations.privacyPolicy.s4BufferDesc(72)).toContain('72 godziny');
+  });
+
+  it.each([plTranslations, ukTranslations])('put the incubator right after services in the menu ($locale)', (t) => {
+    const prefix = t.locale === 'uk' ? '/uk' : '';
+    expect(t.nav.links.map((link) => link.path)).toEqual([
+      prefix || '/',
+      `${prefix}/o-nas`,
+      `${prefix}/uslugi`,
+      `${prefix}/uslugi/inkubator-spolek`,
+      `${prefix}/outsourcing`,
+      `${prefix}/certyfikaty`,
+      `${prefix}/kontakt`,
+    ]);
+  });
+
+  it.each([plTranslations, ukTranslations])('have a service card for every landing page ($locale)', (t) => {
+    const ids = t.servicesPage.items.map((item) => item.id);
+    for (const slug of SERVICE_PAGE_SLUGS) expect(ids).toContain(SERVICE_PAGES[slug].serviceItemId);
   });
 });

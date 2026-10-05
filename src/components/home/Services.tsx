@@ -6,6 +6,8 @@ import { ArrowRight, Building2, Calculator, FileDigit, Users, ClipboardCheck, Fi
 import Link from 'next/link';
 import classes from '@/components/layout/Layout.module.css';
 import { useLocale } from '@/i18n/LocaleContext';
+import type { Locale } from '@/i18n/types';
+import { servicePagePath, servicePageSlugForServiceItem } from '@/lib/service-pages';
 
 const SERVICE_ICONS: Record<string, React.ReactNode> = {
   'pelna-ksiegowosc': <Building2 size={24} />,
@@ -17,6 +19,11 @@ const SERVICE_ICONS: Record<string, React.ReactNode> = {
   'reprezentacja': <Scale size={24} />,
   'doradztwo': <TrendingUp size={24} />,
 };
+
+function cardPath(serviceId: string, locale: Locale, fallback: string): string {
+  const slug = servicePageSlugForServiceItem(serviceId);
+  return slug ? servicePagePath(locale, slug) : fallback;
+}
 
 export function Services() {
     const { t, locale } = useLocale();
@@ -62,7 +69,7 @@ export function Services() {
                             <Text size="sm" c="slate.6" lh={1.6} mb="lg" lineClamp={2}>
                                 {service.description}
                             </Text>
-                            <Link href={servicesPath} className={classes.moreLink}>
+                            <Link href={cardPath(service.id, locale, servicesPath)} className={classes.moreLink}>
                                 {t.home.services.more} <ArrowRight size={16} />
                             </Link>
                         </Paper>

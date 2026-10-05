@@ -1,11 +1,12 @@
 "use client";
 
 import React from 'react';
-import { ArrowRight, CheckCircle2, Building2, Calculator, FileDigit, Users, ClipboardCheck, FileText, Scale, TrendingUp } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Building2, Calculator, FileDigit, Users, ClipboardCheck, FileText, Scale, TrendingUp, Receipt, Rocket } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, Button, ThemeIcon, Group, Paper } from '@mantine/core';
 import Link from 'next/link';
 import classes from './ServicesClient.module.css';
 import { useLocale } from '@/i18n/LocaleContext';
+import { servicePagePath, servicePageSlugForServiceItem } from '@/lib/service-pages';
 
 const SERVICE_ICONS: Record<string, React.ReactNode> = {
   'pelna-ksiegowosc': <Building2 size={24} />,
@@ -16,6 +17,8 @@ const SERVICE_ICONS: Record<string, React.ReactNode> = {
   'deklaracje': <FileText size={24} />,
   'reprezentacja': <Scale size={24} />,
   'doradztwo': <TrendingUp size={24} />,
+  'ksef': <Receipt size={24} />,
+  'inkubator-spolek': <Rocket size={24} />,
 };
 
 export default function ServicesClient() {
@@ -40,31 +43,45 @@ export default function ServicesClient() {
             <Box component="section" py={96} bg="white">
                 <Container size="xl" px={{ base: 'md', sm: 'xl' }}>
                     <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="lg">
-                        {t.servicesPage.items.map((service) => (
-                            <Paper
-                                key={service.id}
-                                p="xl"
-                                radius="xl"
-                                withBorder
-                                className={classes.serviceCard}
-                            >
-                                {/* Service Icon Container */}
-                                <Box
-                                    w={56}
-                                    h={56}
-                                    mb="lg"
-                                    className={classes.iconContainer}
+                        {t.servicesPage.items.map((service) => {
+                            const slug = servicePageSlugForServiceItem(service.id);
+                            const body = (
+                                <>
+                                    <Box w={56} h={56} mb="lg" className={classes.iconContainer}>
+                                        {SERVICE_ICONS[service.id] || <Building2 size={24} />}
+                                    </Box>
+                                    <Title order={3} fw={700} c="slate.9" mb="sm" lh={1.3} fz="xl">
+                                        {service.title}
+                                    </Title>
+                                    <Text size="sm" c="slate.6" lh={1.6}>
+                                        {service.description}
+                                    </Text>
+                                    {slug && (
+                                        <Group gap={4} mt="md" c="brandBlue.6" fw={700} fz="sm">
+                                            {t.home.services.more} <ArrowRight size={16} />
+                                        </Group>
+                                    )}
+                                </>
+                            );
+                            return slug ? (
+                                <Paper
+                                    key={service.id}
+                                    component={Link}
+                                    href={servicePagePath(locale, slug)}
+                                    p="xl"
+                                    radius="xl"
+                                    withBorder
+                                    className={classes.serviceCard}
+                                    style={{ textDecoration: 'none', color: 'inherit' }}
                                 >
-                                    {SERVICE_ICONS[service.id] || <Building2 size={24} />}
-                                </Box>
-                                <Title order={3} fw={700} c="slate.9" mb="sm" lh={1.3} fz="xl">
-                                    {service.title}
-                                </Title>
-                                <Text size="sm" c="slate.6" lh={1.6}>
-                                    {service.description}
-                                </Text>
-                            </Paper>
-                        ))}
+                                    {body}
+                                </Paper>
+                            ) : (
+                                <Paper key={service.id} p="xl" radius="xl" withBorder className={classes.serviceCard}>
+                                    {body}
+                                </Paper>
+                            );
+                        })}
                     </SimpleGrid>
                 </Container>
             </Box>
