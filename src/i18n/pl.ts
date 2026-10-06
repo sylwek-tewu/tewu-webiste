@@ -280,10 +280,12 @@ export const plTranslations: Translations = {
     },
     ctaButton: 'Bezpłatna wycena – oddzwonimy',
     phonePrompt: 'Wolisz zadzwonić?',
+    phoneAnswer: 'Odbiera Prezes biura, Sylwester Wrzeszcz.',
     trust: {
       directContact: 'Bezpośredni kontakt z szefostwem biura',
       insurance: 'Polisa OC biura',
       certificates: 'Certyfikaty MF i SKwP',
+      clients: 'Obsługujemy zarówno duże spółki, jak i jednoosobowe firmy z wielu branż – od IT, przez magazyny, po usługi hydrauliczne.',
     },
     pricing: {
       factorsTitle: 'Od czego zależy cena',

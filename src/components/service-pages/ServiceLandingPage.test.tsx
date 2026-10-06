@@ -58,6 +58,7 @@ describe('ServiceLandingPage', () => {
     expect(phones.length).toBeGreaterThanOrEqual(2);
     for (const phone of phones) expect(phone).toHaveAttribute('href', `tel:${CONTACT_DETAILS.mobilePhoneE164}`);
     expect(screen.queryByRole('link', { name: CONTACT_DETAILS.phone })).toBeNull();
+    expect(screen.getAllByText(/Sylwester Wrzeszcz/).length).toBeGreaterThanOrEqual(2);
   });
 
   it('keeps every FAQ answer in the page, also while collapsed', () => {

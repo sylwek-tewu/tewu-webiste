@@ -288,10 +288,12 @@ export const ukTranslations: Translations = {
     },
     ctaButton: 'Безкоштовна оцінка – передзвонимо',
     phonePrompt: 'Бажаєте зателефонувати?',
+    phoneAnswer: 'Відповідає голова бюро (Prezes) Sylwester Wrzeszcz.',
     trust: {
       directContact: 'Прямий контакт з керівництвом бюро',
       insurance: 'Страхування відповідальності (OC)',
       certificates: 'Сертифікати MF і SKwP',
+      clients: 'Обслуговуємо як великі компанії (spółki), так і ФОП (JDG) з різних галузей – від IT і складів до сантехнічних послуг.',
     },
     pricing: {
       factorsTitle: 'Від чого залежить ціна',

@@ -38,13 +38,16 @@ function QuoteActions({ variant }: { variant: 'primary' | 'white' }) {
       >
         {t.servicePages.ctaButton}
       </Button>
-      <Group gap={8} justify="center" c="white">
-        <Phone size={20} aria-hidden="true" />
-        <Text span c="slate.2" style={{ whiteSpace: 'nowrap' }}>{t.servicePages.phonePrompt}</Text>
-        <Anchor href={`tel:${CONTACT_DETAILS.mobilePhoneE164}`} c="white" fw={800} fz="lg" underline="hover" style={{ whiteSpace: 'nowrap' }}>
-          {CONTACT_DETAILS.mobilePhone}
-        </Anchor>
-      </Group>
+      <Stack gap={4} align="center">
+        <Group gap={8} justify="center" c="white">
+          <Phone size={20} aria-hidden="true" />
+          <Text span c="slate.2" style={{ whiteSpace: 'nowrap' }}>{t.servicePages.phonePrompt}</Text>
+          <Anchor href={`tel:${CONTACT_DETAILS.mobilePhoneE164}`} c="white" fw={800} fz="lg" underline="hover" style={{ whiteSpace: 'nowrap' }}>
+            {CONTACT_DETAILS.mobilePhone}
+          </Anchor>
+        </Group>
+        <Text size="sm" c="slate.2" ta="center">{t.servicePages.phoneAnswer}</Text>
+      </Stack>
     </Group>
   );
 }
@@ -131,6 +134,9 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
               }
             />
           </SimpleGrid>
+          <Text size="sm" c="slate.6" ta="center" mt="lg">
+            {t.servicePages.trust.clients}
+          </Text>
         </Container>
       </Box>
 

@@ -162,7 +162,15 @@ export interface Translations {
     links: Record<ServicePageSlug, string>;
     ctaButton: string;
     phonePrompt: string;
-    trust: { directContact: string; insurance: string; certificates: string };
+    /** Who answers the mobile number shown on the service pages. */
+    phoneAnswer: string;
+    trust: {
+      directContact: string;
+      insurance: string;
+      certificates: string;
+      /** One line under the trust bar: company sizes and industries TEWU serves. */
+      clients: string;
+    };
     pricing: { factorsTitle: string; processTitle: string; rangeTitle: string };
     finalCta: { title: string; description: string };
   };

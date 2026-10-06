@@ -355,3 +355,12 @@ cudzoziemcy (niezależnie od obywatelstwa) mogą zakładać w Polsce Spółkę z
 ## H. Co dalej
 
 Po otrzymaniu odpowiedzi uzupełnimy teksty obu wersji językowych i pokażemy je Państwu na podglądzie do akceptacji. Podstrony trafią na stronę i do reklam dopiero po tej akceptacji.
+
+---
+
+## Uzupełnienia (6 października 2026 r.)
+
+Informacje przekazane po odpowiedziach na pytania:
+
+- **A6:** numer komórkowy +48 501 482 555 odbiera Prezes biura, Sylwester Wrzeszcz.
+- **A9:** TEWU obsługuje zarówno duże firmy (spółki), jak i małe (jednoosobowe działalności), z różnych branż – od IT, przez magazyny, po hydraulików i wiele innych.
