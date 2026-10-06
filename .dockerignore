@@ -1,0 +1,11 @@
+.git
+.worktrees
+node_modules
+.next
+*.log
+# Any env file would be read by `next build` and baked into the image
+.env*
+.DS_Store
+README.md
+mantine_cr_results*.md
+biuro-rachunkowe-tewu-2026-prototype
