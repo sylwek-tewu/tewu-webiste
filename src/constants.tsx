@@ -21,6 +21,9 @@ import {
 export const COMPANY_NAME = "TEWU";
 export const COMPANY_FULL_NAME = "Biuro Rachunkowe TEWU Sp. z o.o.";
 
+/** Production origin; makes canonical and hreflang URLs absolute (metadataBase). */
+export const SITE_URL = "https://tewu.szczecin.pl";
+
 export const NAV_LINKS: NavItem[] = [
   { label: 'Start', path: '/' },
   { label: 'O nas', path: '/o-nas' },
@@ -140,6 +143,10 @@ export const SERVICES: Service[] = [
 export const CONTACT_DETAILS: ContactInfo = {
   address: "Al. Powstańców Wielkopolskich 78A LU2, 70-110 Szczecin",
   phone: "91 48 24 190",
+  phoneE164: "+48914824190",
+  // The number on the service landing pages (TEWU answer A6)
+  mobilePhone: "501 482 555",
+  mobilePhoneE164: "+48501482555",
   email: "biuro@tewu.szczecin.pl",
   hours: "Pon - Pt: 8:00 - 16:00"
 };

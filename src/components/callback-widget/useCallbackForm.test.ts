@@ -1,0 +1,398 @@
+// @vitest-environment jsdom
+import React from 'react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { renderHook, act } from '@testing-library/react';
+import { useCallbackForm, type UseCallbackFormOptions } from './useCallbackForm';
+import { plTranslations } from '@/i18n';
+
+describe('useCallbackForm', () => {
+  let now: number;
+  let fetchMock: ReturnType<typeof vi.fn>;
+  let closeWidgetMock: ReturnType<typeof vi.fn<() => void>>;
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    now = 1_000_000;
+    vi.spyOn(Date, 'now').mockImplementation(() => now);
+    fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    closeWidgetMock = vi.fn();
+    window.dataLayer = [];
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+    vi.useRealTimers();
+  });
+
+  function createOptions(overrides?: Partial<UseCallbackFormOptions>): UseCallbackFormOptions {
+    return {
+      isOpen: true,
+      source: 'floating',
+      closeWidget: closeWidgetMock,
+      t: plTranslations.callbackWidget,
+      locale: 'pl',
+      ...overrides,
+    };
+  }
+
+  function mockFetchResponse(body: object, status = 200, ok = true) {
+    fetchMock.mockResolvedValue({
+      ok,
+      status,
+      json: async () => body,
+    });
+  }
+
+  it('initializes with default values', () => {
+    const { result } = renderHook(() => useCallbackForm(createOptions()));
+
+    expect(result.current.phone).toBe('');
+    expect(result.current.slot).toBe('asap');
+    expect(result.current.topic).toBe('');
+    expect(result.current.honeypot).toBe('');
+    expect(result.current.phoneError).toBeNull();
+    expect(result.current.submitError).toBeNull();
+    expect(result.current.submitSuccess).toBe(false);
+    expect(result.current.isPending).toBe(false);
+    expect(result.current.promiseMessage).toBeTruthy();
+  });
+
+  it('updates slot and updates promiseMessage accordingly', () => {
+    const { result } = renderHook(() => useCallbackForm(createOptions()));
+    const initialMessage = result.current.promiseMessage;
+
+    act(() => {
+      result.current.setSlot('17-18');
+    });
+
+    expect(result.current.slot).toBe('17-18');
+    expect(result.current.promiseMessage).not.toBe(initialMessage);
+    expect(result.current.promiseMessage).toContain('17:00–18:00');
+  });
+
+  it('validates invalid phone number without calling fetch', async () => {
+    const { result } = renderHook(() => useCallbackForm(createOptions()));
+
+    act(() => {
+      result.current.setPhone('123'); // too short / invalid
+    });
+
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    });
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(result.current.phoneError).toBe(plTranslations.callbackWidget.phoneErrorInvalid);
+    expect(result.current.submitSuccess).toBe(false);
+  });
+
+  it('clears phone error when phone changes', async () => {
+    const { result } = renderHook(() => useCallbackForm(createOptions()));
+
+    act(() => {
+      result.current.setPhone('');
+    });
+
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    });
+
+    expect(result.current.phoneError).toBe(plTranslations.callbackWidget.phoneErrorRequired);
+
+    act(() => {
+      result.current.setPhone('5');
+    });
+
+    expect(result.current.phoneError).toBeNull();
+  });
+
+  it('submits valid phone after normal elapsed time, posts normalized payload and sets submitSuccess', async () => {
+    mockFetchResponse({ success: true, id: 'REQ-123', delivery: 'direct' });
+    const { result } = renderHook(() => useCallbackForm(createOptions()));
+
+    act(() => {
+      result.current.setPhone('501 482 555');
+      result.current.setTopic('spolka');
+      result.current.setHoneypot('bot-value');
+    });
+
+    // Simulate 3 seconds have passed (greater than MIN_FILL_TIME_MS 2000)
+    now += 3000;
+
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    });
+
+    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(fetchMock).toHaveBeenCalledWith('/api/callback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        phone: '+48501482555',
+        slot: 'asap',
+        topic: 'spolka',
+        source: 'floating',
+        locale: 'pl',
+        honeypot: 'bot-value',
+        elapsedMs: 3000,
+      }),
+    });
+
+    expect(result.current.submitSuccess).toBe(true);
+    expect(result.current.submitError).toBeNull();
+    expect(result.current.phoneError).toBeNull();
+
+    // Verify dataLayer push
+    expect(window.dataLayer).toContainEqual(
+      expect.objectContaining({
+        event: 'callback_request_submit',
+        delivery: 'direct',
+        time_slot: 'asap',
+        topic: 'spolka',
+      })
+    );
+  });
+
+  it('anti-bot fast submission waits out delay without dropping', async () => {
+    mockFetchResponse({ success: true, id: 'REQ-FAST', delivery: 'direct' });
+    const { result } = renderHook(() => useCallbackForm(createOptions()));
+
+    act(() => {
+      result.current.setPhone('501 482 555');
+    });
+
+    // Only 500ms elapsed -> delay should be 1500ms
+    now += 500;
+
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    });
+
+    // Should not have fetched yet
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    // Advance by 1400ms (still within delay)
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1400);
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    // Advance the remaining 100ms
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(100);
+    });
+
+    expect(fetchMock).toHaveBeenCalledOnce();
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(body.elapsedMs).toBe(2000);
+    expect(result.current.submitSuccess).toBe(true);
+  });
+
+  it('form close cancels pending submission (cancelledRef)', async () => {
+    mockFetchResponse({ success: true, id: 'REQ-CANCEL', delivery: 'direct' });
+    const { result, rerender } = renderHook(
+      (props: UseCallbackFormOptions) => useCallbackForm(props),
+      { initialProps: createOptions() }
+    );
+
+    act(() => {
+      result.current.setPhone('501 482 555');
+    });
+
+    now += 500; // 1500ms delay needed
+
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    });
+
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    // Close the widget via handleClose
+    act(() => {
+      result.current.handleClose();
+    });
+
+    expect(closeWidgetMock).toHaveBeenCalledOnce();
+
+    // Also rerender with isOpen: false to simulate parent state update
+    rerender(createOptions({ isOpen: false }));
+
+    // Now advance past the delay
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2000);
+    });
+
+    // Fetch was cancelled, so it was never called
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(result.current.submitSuccess).toBe(false);
+  });
+
+  it('still handles the response when the form closes while the request is in flight', async () => {
+    let respond!: (value: unknown) => void;
+    fetchMock.mockReturnValue(new Promise((resolve) => (respond = resolve)));
+    const { result, rerender } = renderHook(
+      (props: UseCallbackFormOptions) => useCallbackForm(props),
+      { initialProps: createOptions() }
+    );
+
+    act(() => {
+      result.current.setPhone('501 482 555');
+    });
+    now += 3000;
+
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    });
+    expect(fetchMock).toHaveBeenCalledOnce();
+
+    act(() => {
+      result.current.handleClose();
+    });
+    rerender(createOptions({ isOpen: false }));
+
+    // The server already has the lead, so the conversion counts and reopening shows the confirmation
+    await act(async () => {
+      respond({ ok: true, status: 200, json: async () => ({ success: true, id: 'REQ-LATE', delivery: 'direct' }) });
+    });
+
+    expect(window.dataLayer).toContainEqual(
+      expect.objectContaining({ event: 'callback_request_submit', delivery: 'direct' })
+    );
+    rerender(createOptions({ isOpen: true }));
+    expect(result.current.submitSuccess).toBe(true);
+  });
+
+  it('maps server error codes to localized phone error or submit error', async () => {
+    mockFetchResponse({ error: 'Server says bad phone', code: 'phone_invalid' }, 400, false);
+    const { result } = renderHook(() => useCallbackForm(createOptions()));
+
+    act(() => {
+      result.current.setPhone('501 482 555');
+    });
+    now += 2500;
+
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    });
+
+    expect(result.current.phoneError).toBe(plTranslations.callbackWidget.phoneErrorInvalid);
+    expect(result.current.submitError).toBeNull();
+    expect(result.current.submitSuccess).toBe(false);
+  });
+
+  it('maps server delivery_failed to localized submit error', async () => {
+    mockFetchResponse({ error: 'Delivery failed', code: 'delivery_failed' }, 502, false);
+    const { result } = renderHook(() => useCallbackForm(createOptions()));
+
+    act(() => {
+      result.current.setPhone('501 482 555');
+    });
+    now += 2500;
+
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    });
+
+    expect(result.current.submitError).toBe(plTranslations.callbackWidget.errors.deliveryFailed);
+    expect(result.current.phoneError).toBeNull();
+    expect(result.current.submitSuccess).toBe(false);
+  });
+
+  it('handles network / connection failure gracefully', async () => {
+    fetchMock.mockRejectedValue(new TypeError('Failed to fetch'));
+    const { result } = renderHook(() => useCallbackForm(createOptions()));
+
+    act(() => {
+      result.current.setPhone('501 482 555');
+    });
+    now += 2500;
+
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    });
+
+    expect(result.current.submitError).toBe(plTranslations.callbackWidget.errors.connection);
+    expect(result.current.submitSuccess).toBe(false);
+  });
+
+  it('resets form state on handleClose after successful submit', async () => {
+    mockFetchResponse({ success: true, id: 'REQ-123', delivery: 'direct' });
+    const { result } = renderHook(() => useCallbackForm(createOptions()));
+
+    act(() => {
+      result.current.setPhone('501 482 555');
+      result.current.setSlot('12-16');
+      result.current.setTopic('fundacja');
+    });
+    now += 2500;
+
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    });
+
+    expect(result.current.submitSuccess).toBe(true);
+
+    act(() => {
+      result.current.handleClose();
+    });
+
+    expect(result.current.phone).toBe('');
+    expect(result.current.slot).toBe('asap');
+    expect(result.current.topic).toBe('');
+    expect(result.current.submitSuccess).toBe(false);
+  });
+
+  it('presets the topic of the landing page when the form opens there', () => {
+    const { result } = renderHook(() => useCallbackForm(createOptions({ landingPage: 'kadry-i-place' })));
+    expect(result.current.topic).toBe('kadry-place');
+  });
+
+  it('keeps the topic the visitor chose when the form opens again on another page', () => {
+    const { result, rerender } = renderHook((props: UseCallbackFormOptions) => useCallbackForm(props), {
+      initialProps: createOptions({ landingPage: 'kpir' }),
+    });
+    act(() => result.current.setTopic('fundacja'));
+    rerender(createOptions({ isOpen: false, landingPage: 'kpir' }));
+    rerender(createOptions({ isOpen: true, landingPage: 'pelna-ksiegowosc' }));
+    expect(result.current.topic).toBe('fundacja');
+  });
+
+  it('drops an untouched preset when the form opens off the landing pages', () => {
+    const { result, rerender } = renderHook((props: UseCallbackFormOptions) => useCallbackForm(props), {
+      initialProps: createOptions({ landingPage: 'kpir' }),
+    });
+    rerender(createOptions({ isOpen: false, landingPage: null }));
+    rerender(createOptions({ isOpen: true, landingPage: null }));
+    expect(result.current.topic).toBe('');
+  });
+
+  it('sends the landing page with the request and to analytics', async () => {
+    mockFetchResponse({ success: true, id: 'A1B2C3', delivery: 'direct' });
+    const { result } = renderHook(() => useCallbackForm(createOptions({ source: 'service', landingPage: 'ksef' })));
+    act(() => result.current.setPhone('501 482 555'));
+    now += 5000;
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+      await vi.runAllTimersAsync();
+    });
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body as string);
+    expect(body).toMatchObject({ source: 'service', landingPage: 'ksef', topic: 'inne' });
+    expect(window.dataLayer).toContainEqual(expect.objectContaining({ event: 'callback_request_submit', landing_page: 'ksef' }));
+  });
+
+  it('sends no landing page off the landing pages', async () => {
+    mockFetchResponse({ success: true, id: 'A1B2C3', delivery: 'direct' });
+    const { result } = renderHook(() => useCallbackForm(createOptions()));
+    act(() => result.current.setPhone('501 482 555'));
+    now += 5000;
+    await act(async () => {
+      result.current.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+      await vi.runAllTimersAsync();
+    });
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body as string)).not.toHaveProperty('landingPage');
+    expect(window.dataLayer).toContainEqual(expect.objectContaining({ landing_page: 'none' }));
+  });
+});
+

@@ -1,20 +1,28 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
 import { Container, Title, Text, Button, Group, Badge, Grid, GridCol, Box, Stack, Image, SimpleGrid } from '@mantine/core';
 import { ArrowRight } from 'lucide-react';
 import classes from '@/components/layout/Layout.module.css';
+import { useLocale } from '@/i18n/LocaleContext';
 
 export function Hero() {
+    const { t, locale } = useLocale();
+    const contactPath = locale === 'uk' ? '/uk/kontakt' : '/kontakt';
+    const servicesPath = locale === 'uk' ? '/uk/uslugi' : '/uslugi';
+
     return (
         <>
-            {/* Hero Section */}
-            <Box component="section" bg="slate.0" pt={{ base: 64, md: 96 }} pb={{ base: 96, md: 128 }}>
+            {/* Hero Section – clipped sideways: the 48px gutter's negative margin is wider than the
+                container padding and the blurred circle sits 40px outside; both made the page scroll */}
+            <Box component="section" bg="slate.0" pt={{ base: 64, md: 96 }} pb={{ base: 96, md: 128 }} style={{ overflowX: 'clip' }}>
                 <Container>
                     <Grid gutter={{ base: 48, lg: 48 }} align="center">
                         <GridCol span={{ base: 12, md: 6 }}>
                             <Stack gap="xl">
                                 <Badge>
-                                    Ponad 25 lat na rynku
+                                    {t.home.hero.badge}
                                 </Badge>
 
                                 <Title
@@ -23,16 +31,16 @@ export function Hero() {
                                     className={classes.heroTitle}
                                     style={{ letterSpacing: '-0.025em', lineHeight: 1.1 }}
                                 >
-                                    Księgowość <br />
-                                    <span>bez stresu.</span>
+                                    {t.home.hero.titleNormal}<br />
+                                    <span>{t.home.hero.titleAccent}</span>
                                 </Title>
 
                                 <Text size="xl" c="slate.6" lh={1.6} maw={512}>
-                                    Zajmij się rozwojem swojej firmy, a my weźmiemy na siebie formalności. Profesjonalne wsparcie księgowe dla biznesu w TEWU.
+                                    {t.home.hero.description}
                                 </Text>
 
                                 <Group gap="md" pt="md">
-                                    <Link href="/kontakt" style={{ textDecoration: 'none' }}>
+                                    <Link href={contactPath} style={{ textDecoration: 'none' }}>
                                         <Button
                                             component="span"
                                             size="xl"
@@ -42,10 +50,10 @@ export function Hero() {
                                             className={classes.primaryButton}
                                             style={{ boxShadow: '0 25px 50px -12px var(--mantine-color-slate-2)' }}
                                         >
-                                            Skontaktuj się z nami
+                                            {t.home.hero.ctaContact}
                                         </Button>
                                     </Link>
-                                    <Link href="/uslugi" style={{ textDecoration: 'none' }}>
+                                    <Link href={servicesPath} style={{ textDecoration: 'none' }}>
                                         <Button
                                             component="span"
                                             size="xl"
@@ -54,7 +62,7 @@ export function Hero() {
                                             fw={700}
                                             className={classes.outlineButton}
                                         >
-                                            Poznaj ofertę
+                                            {t.home.hero.ctaOffer}
                                         </Button>
                                     </Link>
                                 </Group>
@@ -82,7 +90,7 @@ export function Hero() {
                                     style={{ borderRadius: '9999px', filter: 'blur(48px)' }}
                                 />
                                 <Image
-                                    src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                                    src="/img/stock/hero-office.jpg"
                                     alt="Biuro rachunkowe"
                                     radius="xl"
                                     style={{
@@ -104,20 +112,20 @@ export function Hero() {
                 <Container>
                     <SimpleGrid cols={{ base: 2, md: 4 }} spacing="lg">
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>150+</Text>
-                            <Text c="slate.5" fw={500}>Zadowolonych firm</Text>
+                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>{t.home.hero.stats.companiesCount}</Text>
+                            <Text c="slate.5" fw={500}>{t.home.hero.stats.companiesLabel}</Text>
                         </Box>
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>25+</Text>
-                            <Text c="slate.5" fw={500}>Lat doświadczenia</Text>
+                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>{t.home.hero.stats.yearsCount}</Text>
+                            <Text c="slate.5" fw={500}>{t.home.hero.stats.yearsLabel}</Text>
                         </Box>
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>100%</Text>
-                            <Text c="slate.5" fw={500}>Bezpieczeństwa</Text>
+                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>{t.home.hero.stats.securityCount}</Text>
+                            <Text c="slate.5" fw={500}>{t.home.hero.stats.securityLabel}</Text>
                         </Box>
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>24h</Text>
-                            <Text c="slate.5" fw={500}>Czas reakcji</Text>
+                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>{t.home.hero.stats.reactionCount}</Text>
+                            <Text c="slate.5" fw={500}>{t.home.hero.stats.reactionLabel}</Text>
                         </Box>
                     </SimpleGrid>
                 </Container>

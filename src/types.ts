@@ -24,6 +24,9 @@ export interface Testimonial {
 export interface ContactInfo {
   address: string;
   phone: string;
+  phoneE164?: string;
+  mobilePhone: string;
+  mobilePhoneE164: string;
   email: string;
   hours: string;
 }

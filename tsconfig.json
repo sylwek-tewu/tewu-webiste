@@ -36,7 +36,6 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "biuro-rachunkowe-tewu-2026-prototype"
+    "node_modules"
   ]
 }

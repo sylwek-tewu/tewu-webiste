@@ -3,42 +3,51 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
-import { NAV_LINKS } from '../constants';
 import { Box, Container, Group, Burger, Drawer, Stack, Button, Text, Anchor, Paper } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import classes from './layout/Layout.module.css';
 import { TewuLogo } from './icons';
+import { useCallbackWidget } from './callback-widget';
+import { useLocale } from '@/i18n/LocaleContext';
+import { LanguageSwitcher } from './layout/LanguageSwitcher';
 
 const Navbar: React.FC = () => {
   const [opened, { toggle, close }] = useDisclosure(false);
+  const isPhone = useMediaQuery('(max-width: 47.99em)');
   const pathname = usePathname();
+  const { openWidget } = useCallbackWidget();
+  const { t, locale } = useLocale();
+
+  const homePath = locale === 'uk' ? '/uk' : '/';
+  const contactPath = locale === 'uk' ? '/uk/kontakt' : '/kontakt';
 
   return (
     <Paper component="nav" pos="sticky" top={0} bg="white" shadow="sm" withBorder radius={0} style={{ zIndex: 50 }}>
       <Container size="xl" px="md">
         <Group justify="space-between" h={80}>
           <Group gap="xs">
-            <Link href="/" onClick={close} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, textDecoration: 'none' }}>
+            <Link href={homePath} onClick={close} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, textDecoration: 'none' }}>
               <Box component={TewuLogo} w="7em" c="slate.5" />
-              <Box visibleFrom="sm" h={32} w={2} bg="slate.2" mx={8} />
+              <Box visibleFrom="sm" className={classes.officeName} h={32} w={2} bg="slate.2" mx={8} />
               <Text
                 span
                 visibleFrom="sm"
+                className={classes.officeName}
                 tt="uppercase"
                 fw="bold"
                 c="slate.5"
                 lh={1.25}
                 size="xs"
+                style={{ whiteSpace: 'pre-line' }}
               >
-                Biuro<br />Rachunkowe
+                {t.common.officeText}
               </Text>
             </Link>
           </Group>
 
-          {/* Desktop Menu */}
-          <Group gap="xl" visibleFrom="md">
-            {NAV_LINKS.map((link) => (
+          {/* Desktop Menu – from lg, because the Ukrainian row does not fit narrower (ADR 0004 §4) */}
+          <Group gap="md" visibleFrom="lg">
+            {t.nav.links.map((link) => (
               <Anchor
                 key={link.path}
                 component={Link}
@@ -51,36 +60,49 @@ const Navbar: React.FC = () => {
                 {link.label}
               </Anchor>
             ))}
+
+            <LanguageSwitcher size="sm" />
+
             <Button
               component={Link}
-              href="/kontakt"
+              href={contactPath}
+              onClick={(e) => {
+                e.preventDefault();
+                openWidget('header');
+              }}
               size="md"
               fw={700}
               radius={12}
               className={classes.primaryButton}
               style={{ boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)' }}
             >
-              Bezpłatna wycena
+              {t.nav.freeQuote}
             </Button>
           </Group>
 
-          {/* Mobile menu button */}
-          <Burger opened={opened} onClick={toggle} hiddenFrom="md" size="sm" />
+          {/* Mobile controls */}
+          {/* Language switcher lives in the drawer on mobile (ADR 0002 §3) */}
+          <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="lg" aria-label="Toggle navigation" />
         </Group>
       </Container>
 
-      {/* Mobile Menu */}
+      {/* Mobile Drawer – full screen on phones, a side panel on tablets and narrow laptops (768–1199px) */}
       <Drawer
         opened={opened}
         onClose={close}
-        size="100%"
+        position="right"
+        size={isPhone ? '100%' : 400}
         padding="md"
-        title="Menu"
-        hiddenFrom="md"
+        title={t.nav.menu}
+        hiddenFrom="lg"
         zIndex={100}
       >
         <Stack gap="sm">
-          {NAV_LINKS.map((link) => (
+          <Box mb="xs">
+            <LanguageSwitcher fullWidth size="md" />
+          </Box>
+
+          {t.nav.links.map((link) => (
             <Anchor
               key={link.path}
               component={Link}
@@ -101,8 +123,12 @@ const Navbar: React.FC = () => {
           ))}
           <Button
             component={Link}
-            href="/kontakt"
-            onClick={close}
+            href={contactPath}
+            onClick={(e) => {
+              e.preventDefault();
+              close();
+              openWidget('header');
+            }}
             fullWidth
             size="lg"
             radius="md"
@@ -110,7 +136,7 @@ const Navbar: React.FC = () => {
             mt="md"
             className={classes.primaryButton}
           >
-            Bezpłatna wycena
+            {t.nav.freeQuote}
           </Button>
         </Stack>
       </Drawer>

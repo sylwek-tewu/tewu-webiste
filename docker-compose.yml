@@ -1,0 +1,35 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Baked into the image at build time (see Dockerfile); changing them requires a rebuild
+      args:
+        - CALLBACK_OUTBOX_TTL_HOURS=${CALLBACK_OUTBOX_TTL_HOURS:-}
+        - NEXT_PUBLIC_CALLBACK_CALL_NUMBER=${NEXT_PUBLIC_CALLBACK_CALL_NUMBER:-}
+        - NEXT_PUBLIC_EXTRA_CLOSED_DATES=${NEXT_PUBLIC_EXTRA_CLOSED_DATES:-}
+    restart: unless-stopped
+    # Local access only; in production the TLS reverse proxy (Coolify / Traefik) is the entry point
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - tewu-data:/app/data
+    # Container logs (json-file) are deleted after 7 days, as the privacy policy promises, by the
+    # host logrotate config in deploy/logrotate (see README). Docker itself has no time-based retention.
+    environment:
+      - NODE_ENV=production
+      - OUTBOX_DB_PATH=/app/data/outbox.db
+      - OUTBOX_ENCRYPTION_KEY=${OUTBOX_ENCRYPTION_KEY}
+      - CRON_SECRET=${CRON_SECRET}
+      - CALLBACK_OUTBOX_TTL_HOURS=${CALLBACK_OUTBOX_TTL_HOURS:-}
+      - CALLBACK_SMTP_HOST=${CALLBACK_SMTP_HOST}
+      - CALLBACK_SMTP_PORT=${CALLBACK_SMTP_PORT}
+      - CALLBACK_SMTP_USER=${CALLBACK_SMTP_USER}
+      - CALLBACK_SMTP_PASS=${CALLBACK_SMTP_PASS}
+      - CALLBACK_FROM=${CALLBACK_FROM}
+      - CALLBACK_TO=${CALLBACK_TO}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+
+volumes:
+  tewu-data:
