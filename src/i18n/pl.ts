@@ -36,7 +36,8 @@ export const plTranslations: Translations = {
       badge: 'Ponad 25 lat na rynku',
       titleNormal: 'Księgowość ',
       titleAccent: 'bez stresu.',
-      description: 'Zajmij się rozwojem swojej firmy, a my weźmiemy na siebie formalności. Profesjonalne wsparcie księgowe dla biznesu w TEWU.',
+      description: 'Zajmij się rozwojem swojej firmy, a my weźmiemy na siebie formalności.',
+      signature: '**Dyskrecja** i **Profesjonalizm** do Twojej dyspozycji',
       ctaContact: 'Skontaktuj się z nami',
       ctaOffer: 'Poznaj ofertę',
       stats: {

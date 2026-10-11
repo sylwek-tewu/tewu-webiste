@@ -49,6 +49,35 @@
     color: var(--mantine-primary-color-6);
 }
 
+/* Hero differentiator: a card with a gradient accent bar, emphasized words in gradient text */
+.heroSignature {
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+    padding: 14px 22px 14px 18px;
+    background-color: white;
+    border: 1px solid var(--mantine-color-slate-1);
+    border-radius: 16px;
+    box-shadow: 0 18px 40px -20px color-mix(in srgb, var(--mantine-primary-color-6) 45%, transparent);
+    overflow: hidden;
+}
+
+.heroSignature::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--mantine-primary-color-6), var(--mantine-color-indigo-6));
+}
+
+.heroSignature strong {
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--mantine-primary-color-6), var(--mantine-color-indigo-6));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
 /* Service card - includes base styles */
 .serviceCard {
     background-color: white;

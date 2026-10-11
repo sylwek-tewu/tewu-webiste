@@ -87,6 +87,8 @@ export interface Translations {
       titleNormal: string;
       titleAccent: string;
       description: string;
+      /** The office's differentiator under the description; `**phrase**` is emphasized */
+      signature: string;
       ctaContact: string;
       ctaOffer: string;
       stats: {

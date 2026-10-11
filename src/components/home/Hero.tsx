@@ -2,10 +2,11 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Container, Title, Text, Button, Group, Badge, Grid, GridCol, Box, Stack, Image, SimpleGrid } from '@mantine/core';
-import { ArrowRight } from 'lucide-react';
+import { Container, Title, Text, Button, Group, Badge, Grid, GridCol, Box, Stack, Image, SimpleGrid, ThemeIcon } from '@mantine/core';
+import { ArrowRight, ShieldCheck } from 'lucide-react';
 import classes from '@/components/layout/Layout.module.css';
 import { useLocale } from '@/i18n/LocaleContext';
+import { Emphasis } from '@/i18n/Emphasis';
 
 export function Hero() {
     const { t, locale } = useLocale();
@@ -38,6 +39,15 @@ export function Hero() {
                                 <Text size="xl" c="slate.6" lh={1.6} maw={512}>
                                     {t.home.hero.description}
                                 </Text>
+
+                                <Group gap="md" wrap="nowrap" className={classes.heroSignature}>
+                                    <ThemeIcon size={44} radius={12} variant="light" aria-hidden>
+                                        <ShieldCheck size={24} />
+                                    </ThemeIcon>
+                                    <Text c="slate.8" fw={600} fz={{ base: 'lg', md: 'xl' }} lh={1.35}>
+                                        <Emphasis text={t.home.hero.signature} />
+                                    </Text>
+                                </Group>
 
                                 <Group gap="md" pt="md">
                                     <Link href={contactPath} style={{ textDecoration: 'none' }}>
