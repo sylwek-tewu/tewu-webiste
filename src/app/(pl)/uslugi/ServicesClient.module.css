@@ -5,6 +5,11 @@
     background-color: var(--mantine-color-slate-0);
 }
 
+/* Cards that open a service page */
+a.serviceCard {
+    cursor: pointer;
+}
+
 .serviceCard:hover {
     background-color: var(--mantine-color-white);
     box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, var(--mantine-color-blue-1) 0px 25px 50px -12px;
