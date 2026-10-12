@@ -16,7 +16,7 @@ export function localeOfPath(pathname: string): Locale {
 
 /**
  * Request header set by the proxy: the locale of the requested path, for global-not-found.
- * The proxy always overwrites it, so it is only trustworthy on paths the proxy matcher covers;
+ * The proxy always overwrites it on pages, so it is only trustworthy there;
  * elsewhere a client could send it, which only changes the language of that client's own 404.
  */
 export const SITE_LOCALE_HEADER = 'x-site-locale';

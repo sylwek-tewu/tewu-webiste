@@ -41,6 +41,13 @@ Dotychczas serwis Biura Rachunkowego TEWU wdrażany był na platformie Netlify. 
   ```
 - Endpoint zwraca szczegółowy obiekt JSON `ProcessResult` (liczba przetworzonych, wysłanych, przeterminowanych, uszkodzonych i błędnych wpisów) i zapisuje go jedną linią w logach aplikacji (same liczby, bez danych osobowych). Nieudany przebieg (np. niedostępna baza) zgłaszany jest alarmem na Telegram.
 
+### 3a. Hasło do Preview Deployment
+- Coolify pozwala chronić hasłem (HTTP Basic Auth) tylko całą aplikację – razem z Production Deployment albo wcale. Dlatego hasło do Preview Deployment (wdrożenia pull requesta pod `<nr PR>.<domena>`) sprawdza aplikacja w `src/proxy.ts` (`src/lib/preview-auth.ts`).
+- Ochronę włącza zmienna `PREVIEW_BASIC_AUTH` (`uzytkownik:haslo`, runtime), ustawiona w Coolify wyłącznie jako zmienna Preview. Bez niej strona jest publiczna – brak zmiennej oznacza otwarty podgląd (fail-open), w zamian za brak zależności od wewnętrznych zmiennych Coolify.
+- Hasła wymaga każda ścieżka: podstrony, `/api/*` (preview ma prawdziwe dane SMTP, więc otwarte `/api/callback` pozwalałoby wysyłać zgłoszenia do biura) i pliki statyczne. Wyjątki: `/api/health` (healthcheck kontenera `HEALTHCHECK` w `Dockerfile`, tylko żywotność procesu, bez bazy) oraz `/api/internal/*` (chronione `CRON_SECRET`; oba mechanizmy używają nagłówka `Authorization`).
+- Szablon adresu preview w Coolify (*Preview URL Template*) należy ustawić na sztywno na `{{pr_id}}.test-tewu-website.projekty-tewu.it` najpóźniej przy przepięciu aplikacji na `tewu.szczecin.pl`. Domyślny `{{pr_id}}.{{domain}}` przeniósłby podglądy do domeny klienta (wildcard DNS, wspólne ciasteczka).
+- Odpowiedzi po zalogowaniu mają nagłówki pozwalające na cache współdzielony (`s-maxage`, `public` dla `_next/static`). Dziś przed aplikacją stoi tylko Traefik bez cache, ale dodanie CDN lub proxy z cache wymagałoby wyłączenia cache dla preview, inaczej podgląd byłby dostępny bez hasła.
+
 ### 4. Polityka Prywatności i zgodność z RODO
 - Zaktualizowano treści polityki w języku polskim i ukraińskim (`src/i18n/pl.ts`, `src/i18n/uk.ts`, `PrivacyPolicyClient.tsx`):
   - Wskazano hostingodawcę: **OVHcloud – OVH Sp. z o.o. (Wrocław)**, strona umowy powierzenia (DPA), z infrastrukturą w centrum danych w EOG.
@@ -70,5 +77,6 @@ Dotychczas serwis Biura Rachunkowego TEWU wdrażany był na platformie Netlify. 
    - `OUTBOX_ENCRYPTION_KEY` – 32-bajtowy klucz szyfrowania danych osobowych w buforze SQLite,
    - Standardowe zmienne SMTP (`CALLBACK_SMTP_*`, `CALLBACK_FROM`, `CALLBACK_TO`) oraz opcjonalne zmienne Telegrama (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`).
    - `CALLBACK_OUTBOX_TTL_HOURS`, `NEXT_PUBLIC_CALLBACK_CALL_NUMBER`, `NEXT_PUBLIC_EXTRA_CLOSED_DATES` – oznaczone jako *Build Variable*.
+   - `PREVIEW_BASIC_AUTH` – tylko w sekcji zmiennych Preview (sekcja 3a); HTTP Basic Auth w ustawieniach aplikacji Coolify pozostaje wyłączone, a *Preview URL Template* wskazuje domenę `test-tewu-website.projekty-tewu.it`. Ścieżka healthchecka Coolify (jeśli zostanie włączony) to `/api/health`.
 3. **Konfiguracja Scheduled Task:** Dodać w Coolify zadanie cron z interwałem `*/10 * * * *` wywołujące `POST /api/internal/process-outbox` poleceniem `wget` (powyżej) i jednorazowo uruchomić je ręcznie, aby sprawdzić wynik.
 4. **Retencja logów:** Zainstalować na VPS `deploy/logrotate/docker-containers` w `/etc/logrotate.d/` (usuwanie logów kontenerów po 7 dniach).

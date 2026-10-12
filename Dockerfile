@@ -64,8 +64,9 @@ USER nextjs
 EXPOSE 3000
 
 # busybox wget is the only HTTP client in the image (no curl); Coolify waits for this before
-# switching traffic during a rolling update.
+# switching traffic during a rolling update. /api/health stays open on a password-protected
+# Preview Deployment, where / answers 401.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD wget -q --spider http://127.0.0.1:3000/ || exit 1
+  CMD wget -q --spider http://127.0.0.1:3000/api/health || exit 1
 
 CMD ["node", "server.js"]

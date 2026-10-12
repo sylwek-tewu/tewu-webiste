@@ -1,6 +1,17 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { detectLocaleFromAcceptLanguage } from './i18n/detect-locale';
 import { LOCALE_COOKIE_NAME, SITE_LOCALE_HEADER, isSupportedLocale, localeOfPath } from './i18n/config';
+import { rejectWithoutPreviewPassword } from './lib/preview-auth';
+
+/**
+ * Language handling covers pages only: not API routes, Next.js assets or static files (paths with
+ * a dot), except everything under /uk, dotted paths too (no static files live there), so a missing
+ * /uk/old.php still gets the Ukrainian 404.
+ */
+function isPage(pathname: string): boolean {
+  if (localeOfPath(pathname) === 'uk') return true;
+  return !/^\/(api\/|_next\/static|_next\/image|favicon\.ico)/.test(pathname) && !pathname.includes('.');
+}
 
 function continueWithLocale(request: NextRequest) {
   const headers = new Headers(request.headers);
@@ -10,6 +21,11 @@ function continueWithLocale(request: NextRequest) {
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  const unauthorized = rejectWithoutPreviewPassword(request);
+  if (unauthorized) return unauthorized;
+
+  if (!isPage(pathname)) return NextResponse.next();
 
   // 1. An explicit, valid preference stored in the cookie: respect the requested URL
   const preferredLocaleCookie = request.cookies.get(LOCALE_COOKIE_NAME)?.value;
@@ -34,16 +50,6 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static, _next/image (Next.js assets)
-     * - api routes
-     * - static files with extensions (e.g. .svg, .png, .jpg, .ico, .pdf), except under /uk (see below)
-     */
-    '/((?!api/|_next/static|_next/image|favicon.ico|.*\\..*).*)',
-    // Everything under /uk, dotted paths too (no static files live there), so a missing
-    // /uk/old.php still gets the Ukrainian 404.
-    '/uk/:path*',
-  ],
+  // Every path: on a Preview Deployment assets and API routes need the password too
+  matcher: '/:path*',
 };

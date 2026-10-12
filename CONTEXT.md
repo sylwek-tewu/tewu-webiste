@@ -56,3 +56,12 @@ _Avoid_: Moduł świąt, biblioteka dat
 Trwały bufor zgłoszeń oparty o lokalną bazę SQLite na wolumenie serwera, zapewniający transakcyjne kolejkowanie z szyfrowaniem AES-256-GCM przy awarii bezpośredniej wysyłki poczty e-mail.
 _Avoid_: Kolejka zadań, baza tymczasowa
 
+## Deployment
+
+**Production Deployment**:
+Wdrożenie gałęzi `main` pod główną domeną serwisu `tewu.szczecin.pl`, publicznie dostępne dla klientów biura.
+_Avoid_: Deployment główny, wersja live
+
+**Preview Deployment** (deployment testowy):
+Wdrożenie dla pull requesta pod `<nr PR>.<domena>`, dostępne tylko dla zespołu po podaniu hasła.
+_Avoid_: Staging, środowisko testowe
