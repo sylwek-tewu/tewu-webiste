@@ -8,7 +8,7 @@ import { CallbackProvider, useCallbackWidget } from '@/components/callback-widge
 import { getServicePageContent } from '@/content/service-pages';
 import type { ServicePageContent } from '@/content/service-pages/types';
 import { plTranslations, ukTranslations } from '@/i18n';
-import { CONTACT_DETAILS } from '@/constants';
+import { COMPANY, telHref } from '@/lib/company';
 import ServiceLandingPage from './ServiceLandingPage';
 
 function WidgetProbe() {
@@ -54,10 +54,10 @@ describe('ServiceLandingPage', () => {
 
   it('links the mobile number TEWU chose for the service pages', () => {
     renderPage(getServicePageContent('pl', 'kpir'));
-    const phones = screen.getAllByRole('link', { name: CONTACT_DETAILS.mobilePhone });
+    const phones = screen.getAllByRole('link', { name: COMPANY.phones.mobile[0].display });
     expect(phones.length).toBeGreaterThanOrEqual(2);
-    for (const phone of phones) expect(phone).toHaveAttribute('href', `tel:${CONTACT_DETAILS.mobilePhoneE164}`);
-    expect(screen.queryByRole('link', { name: CONTACT_DETAILS.phone })).toBeNull();
+    for (const phone of phones) expect(phone).toHaveAttribute('href', telHref(COMPANY.phones.mobile[0]));
+    expect(screen.queryByRole('link', { name: COMPANY.phones.landline.display })).toBeNull();
     expect(screen.getAllByText(/Sylwester Wrzeszcz/).length).toBeGreaterThanOrEqual(2);
   });
 

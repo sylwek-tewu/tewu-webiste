@@ -1,6 +1,7 @@
 import { Translations } from './types';
 import { formatHoursPl } from '@/lib/polish-plural';
-import { COMPANY_FULL_NAME, CONTACT_DETAILS } from '@/constants';
+import { COMPANY_FULL_NAME } from '@/constants';
+import { COMPANY } from '@/lib/company';
 
 export const plTranslations: Translations = {
   locale: 'pl',
@@ -383,6 +384,7 @@ export const plTranslations: Translations = {
     bankAccountLabel: 'Numer rachunku bankowego',
     mapTitle: 'Nasza lokalizacja w Szczecinie',
     mapSubtitle: 'Al. Powstańców Wielkopolskich 78A LU2',
+    mapIframeTitle: 'Mapa dojazdu do Biura Rachunkowego TEWU w Szczecinie',
   },
   privacyPolicy: {
     metaTitle: 'Polityka Prywatności | Biuro Rachunkowe TEWU',
@@ -390,9 +392,9 @@ export const plTranslations: Translations = {
     headerTitle: 'Polityka Prywatności',
     headerSubtitle: 'Biuro Rachunkowe TEWU Sp. z o.o. • Ostatnia aktualizacja: 3 października 2026',
     s1Title: '1. Administrator Danych Osobowych',
-    s1Content: `Administratorem Twoich danych osobowych jest **${COMPANY_FULL_NAME}** z siedzibą w Szczecinie przy ${CONTACT_DETAILS.address}, wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS: 0000320281, NIP: 9552249417, REGON: 320601499.`,
+    s1Content: `Administratorem Twoich danych osobowych jest **${COMPANY_FULL_NAME}** z siedzibą w Szczecinie przy ${COMPANY.address.line}, wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS: 0000320281, NIP: 9552249417, REGON: 320601499.`,
     s1Location: 'Szczecin, Polska',
-    s1NoDpo: `Nie wyznaczyliśmy inspektora ochrony danych. W sprawach dotyczących danych osobowych pisz na adres **${CONTACT_DETAILS.email}**.`,
+    s1NoDpo: `Nie wyznaczyliśmy inspektora ochrony danych. W sprawach dotyczących danych osobowych pisz na adres **${COMPANY.emails.main}**.`,
     s2Title: '2. Cele i podstawy prawne przetwarzania danych',
     s2Intro: 'Dane osobowe zbierane za pośrednictwem serwisu przetwarzane są w następujących celach:',
     s2Bullets: [
@@ -437,7 +439,7 @@ export const plTranslations: Translations = {
     ],
     s6Objection: '**Prawo do sprzeciwu:** w każdej chwili możesz wnieść sprzeciw wobec przetwarzania Twoich danych opartego na naszym prawnie uzasadnionym interesie (art. 6 ust. 1 lit. f RODO), z przyczyn związanych z Twoją szczególną sytuacją.',
     s6Automated: 'Nie podejmujemy wobec Ciebie decyzji opartych wyłącznie na zautomatyzowanym przetwarzaniu danych, w tym profilowaniu.',
-    s6Contact: `W celu realizacji swoich praw skontaktuj się z nami mailowo: **${CONTACT_DETAILS.email}**.`,
+    s6Contact: `W celu realizacji swoich praw skontaktuj się z nami mailowo: **${COMPANY.emails.main}**.`,
     s6Puodo: 'Przysługuje Ci również prawo wniesienia skargi do organu nadzorczego: **Prezes Urzędu Ochrony Danych Osobowych (PUODO)**, ul. Stawki 2, 00-193 Warszawa.',
     s7Title: '7. Pliki cookie',
     s7Content: 'Serwis zapisuje jeden plik cookie: preferred_locale – zapamiętuje wybraną przez Ciebie wersję językową strony. Jest zapisywany wyłącznie po ręcznej zmianie języka i ważny przez 1 rok. Jest niezbędny do świadczenia usługi, o którą prosisz (art. 399 ust. 3 Prawa komunikacji elektronicznej), dlatego nie wymaga zgody; możesz go usunąć w ustawieniach przeglądarki. Jeśli język nie został wybrany ręcznie, a Twoja przeglądarka wskazuje język ukraiński (lub rosyjski) jako preferowany, automatycznie wyświetlimy ukraińską wersję strony – tej informacji nie zapisujemy. Formularz oddzwonienia nie ładuje zewnętrznych skryptów śledzących (m.in. brak zewnętrznych systemów CAPTCHA).',

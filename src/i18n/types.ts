@@ -234,6 +234,7 @@ export interface Translations {
     bankAccountLabel: string;
     mapTitle: string;
     mapSubtitle: string;
+    mapIframeTitle: string;
   };
   privacyPolicy: {
     headerTitle: string;

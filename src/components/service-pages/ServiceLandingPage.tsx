@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, Award, Briefcase, Building2, CheckCircle2, Handshake, Phone, ShieldCheck } from 'lucide-react';
 import { Anchor, Box, Button, Container, Flex, Group, List, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
-import { CONTACT_DETAILS } from '@/constants';
+import { COMPANY, telHref } from '@/lib/company';
 import { useLocale } from '@/i18n/LocaleContext';
 import { useCallbackWidget } from '@/components/callback-widget';
 import { wrappingButtonStyles } from '@/components/layout/wrappingButtonStyles';
@@ -42,8 +42,8 @@ function QuoteActions({ variant }: { variant: 'primary' | 'white' }) {
         <Group gap={8} justify="center" c="white">
           <Phone size={20} aria-hidden="true" />
           <Text span c="slate.2" style={{ whiteSpace: 'nowrap' }}>{t.servicePages.phonePrompt}</Text>
-          <Anchor href={`tel:${CONTACT_DETAILS.mobilePhoneE164}`} c="white" fw={800} fz="lg" underline="hover" style={{ whiteSpace: 'nowrap' }}>
-            {CONTACT_DETAILS.mobilePhone}
+          <Anchor href={telHref(COMPANY.phones.mobile[0])} c="white" fw={800} fz="lg" underline="hover" style={{ whiteSpace: 'nowrap' }}>
+            {COMPANY.phones.mobile[0].display}
           </Anchor>
         </Group>
         <Text size="sm" c="slate.2" ta="center">{t.servicePages.phoneAnswer}</Text>
