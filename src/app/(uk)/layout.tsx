@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import SiteLayout from "@/components/layout/SiteLayout";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { SITE_URL } from "@/constants";
 import { UkLocaleProvider } from "@/i18n/UkLocaleProvider";
+import { buildSiteJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
     metadataBase: new URL(SITE_URL),
@@ -13,6 +15,7 @@ export const metadata: Metadata = {
 export default function UkrainianRootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <SiteLayout lang="uk" LocaleProvider={UkLocaleProvider}>
+            <JsonLd data={buildSiteJsonLd("uk")} />
             {children}
         </SiteLayout>
     );

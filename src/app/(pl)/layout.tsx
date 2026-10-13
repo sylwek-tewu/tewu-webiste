@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import SiteLayout from "@/components/layout/SiteLayout";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { SITE_URL } from "@/constants";
 import { PlLocaleProvider } from "@/i18n/PlLocaleProvider";
+import { buildSiteJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
     metadataBase: new URL(SITE_URL),
@@ -13,6 +15,7 @@ export const metadata: Metadata = {
 export default function PolishRootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <SiteLayout lang="pl" LocaleProvider={PlLocaleProvider}>
+            <JsonLd data={buildSiteJsonLd("pl")} />
             {children}
         </SiteLayout>
     );

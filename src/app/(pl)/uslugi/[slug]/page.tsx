@@ -1,9 +1,11 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { JsonLd } from '@/components/seo/JsonLd';
 import ServiceLandingPage from '@/components/service-pages/ServiceLandingPage';
 import { buildServicePageMetadata, getServicePageContent } from '@/content/service-pages';
 import { SERVICE_PAGE_SLUGS, isServicePageSlug } from '@/lib/service-pages';
+import { buildServicePageJsonLd } from '@/lib/structured-data';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -22,5 +24,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ServicePage({ params }: Props) {
   const { slug } = await params;
   if (!isServicePageSlug(slug)) notFound();
-  return <ServiceLandingPage content={getServicePageContent('pl', slug)} />;
+  const content = getServicePageContent('pl', slug);
+  return (
+    <>
+      <JsonLd data={buildServicePageJsonLd(content)} />
+      <ServiceLandingPage content={content} />
+    </>
+  );
 }
