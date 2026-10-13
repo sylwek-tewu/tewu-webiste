@@ -1,0 +1,23 @@
+.faqItem summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-md);
+  font-weight: 700;
+  color: var(--mantine-color-slate-9);
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::after {
+  content: '+';
+  font-weight: 400;
+  color: var(--mantine-color-brandBlue-6);
+}
+
+.faqItem[open] summary::after {
+  content: '−';
+}

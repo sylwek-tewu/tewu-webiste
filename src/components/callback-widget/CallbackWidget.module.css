@@ -1,0 +1,104 @@
+/* Desktop Floating Trigger Button */
+.floatingButton {
+  position: fixed;
+  bottom: calc(24px + var(--callback-bottom-offset, 0px));
+  right: 24px;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  background-color: var(--mantine-color-brandBlue-6);
+  color: #ffffff;
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4), 0 8px 10px -6px rgba(37, 99, 235, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.floatingButton:hover {
+  transform: translateY(-2px);
+  background-color: var(--mantine-color-brandBlue-7);
+  box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.5), 0 8px 10px -6px rgba(37, 99, 235, 0.3);
+}
+
+.floatingButton:active {
+  transform: translateY(0);
+}
+
+/* Mobile Fixed Bottom Action Bar */
+.mobileBar {
+  position: fixed;
+  bottom: var(--callback-bottom-offset, 0px);
+  left: 0;
+  right: 0;
+  z-index: 90;
+  background: #ffffff;
+  border-top: 1px solid var(--mantine-color-slate-2);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+  padding: 10px 16px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Reserve room under the page so the fixed bar never covers the footer (shown below Mantine's sm = 48em) */
+@media (max-width: 47.99em) {
+  :global(body) {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + var(--callback-bottom-offset, 0px));
+  }
+}
+
+/* The left button takes the width of its label and the request button the rest. The Ukrainian
+   labels („Подзвонити”, „Передзвоніть мені”) do not fit side by side on narrow phones, so the
+   request label may wrap to two lines and the icons go below 400px. */
+.mobileBarGrid {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Two-class selectors so these win over Mantine's single-class Button rules whatever the
+   stylesheet order. Label wrapping itself comes from wrappingButtonStyles (inline). */
+.mobileBarGrid .barButton {
+  padding-block: 4px;
+  padding-inline: 12px;
+  font-size: var(--mantine-font-size-sm);
+}
+
+@media (max-width: 24.99em) {
+  .mobileBarGrid .barButton {
+    padding-inline: 8px;
+  }
+
+  .mobileBarGrid .barButtonSection {
+    display: none;
+  }
+}
+
+/* Reactive Promise Message Box */
+.promiseBox {
+  background-color: var(--mantine-color-blue-0);
+  border-left: 3px solid var(--mantine-color-brandBlue-6);
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--mantine-color-slate-8);
+}
+
+/* Legal Disclaimer */
+.rodoDisclaimer {
+  font-size: 11px;
+  color: var(--mantine-color-slate-5);
+  line-height: 1.4;
+}
+
+.rodoLink {
+  color: var(--mantine-color-brandBlue-6);
+  text-decoration: underline;
+}
+
+.rodoLink:hover {
+  color: var(--mantine-color-brandBlue-7);
+}

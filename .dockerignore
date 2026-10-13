@@ -2,10 +2,13 @@
 .worktrees
 node_modules
 .next
+data
 *.log
 # Any env file would be read by `next build` and baked into the image
 .env*
+!.env.example
 .DS_Store
 README.md
+docs
+deploy
 mantine_cr_results*.md
-biuro-rachunkowe-tewu-2026-prototype

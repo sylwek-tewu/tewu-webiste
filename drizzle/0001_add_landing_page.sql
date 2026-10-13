@@ -1,0 +1,1 @@
+ALTER TABLE `outbox_records` ADD `landing_page` text;

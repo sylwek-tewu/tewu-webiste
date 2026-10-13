@@ -20,7 +20,14 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Local Env Files
+.env
 .env*.local
+.env.development
+.env.production
+!.env.example
+
+# Netlify
+.netlify
 
 # Vercel
 .vercel
@@ -36,3 +43,15 @@ next-env.d.ts
 *.suo
 *.sln
 *.sw?
+
+# Worktrees
+.worktrees/
+
+# Database & SQLite
+data/
+*.db
+*.db-*
+
+# Playwright
+/test-results/
+/playwright-report/

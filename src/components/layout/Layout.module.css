@@ -6,6 +6,14 @@
     letter-spacing: 0.05em;
 }
 
+/* Office name next to the logo: hidden from lg (desktop menu appears) until xl,
+   where the menu leaves no room for it, especially in Ukrainian */
+@media (min-width: $mantine-breakpoint-lg) and (max-width: 87.99em) {
+    .officeName {
+        display: none !important;
+    }
+}
+
 /* Navigation link - color controlled via Mantine CSS variables */
 .navLink {
     --anchor-text-color: var(--mantine-color-slate-6);
@@ -39,6 +47,35 @@
 .heroTitle span {
     font-style: italic;
     color: var(--mantine-primary-color-6);
+}
+
+/* Hero differentiator: a card with a gradient accent bar, emphasized words in gradient text */
+.heroSignature {
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+    padding: 14px 22px 14px 18px;
+    background-color: white;
+    border: 1px solid var(--mantine-color-slate-1);
+    border-radius: 16px;
+    box-shadow: 0 18px 40px -20px color-mix(in srgb, var(--mantine-primary-color-6) 45%, transparent);
+    overflow: hidden;
+}
+
+.heroSignature::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--mantine-primary-color-6), var(--mantine-color-indigo-6));
+}
+
+.heroSignature strong {
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--mantine-primary-color-6), var(--mantine-color-indigo-6));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 /* Service card - includes base styles */

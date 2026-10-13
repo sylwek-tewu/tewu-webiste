@@ -42,7 +42,8 @@ export function PDFViewer({
     useEffect(() => {
         async function loadPdfjs() {
             const pdfjs = await import('pdfjs-dist');
-            pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+            // Bundled with the site instead of loaded from a CDN, so no visitor IP goes to a third party
+            pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
             setPdfjsLib(pdfjs);
         }
         loadPdfjs();
@@ -112,9 +113,10 @@ export function PDFViewer({
                 });
 
                 await renderTask.promise;
-            } catch (err: any) {
+            } catch (err) {
                 // Ignore cancellation errors
-                if (err?.name !== 'RenderingCancelledException') {
+                const errorName = err instanceof Error ? err.name : (err as { name?: string })?.name;
+                if (errorName !== 'RenderingCancelledException') {
                     console.error('Page rendering error:', err);
                 }
             }

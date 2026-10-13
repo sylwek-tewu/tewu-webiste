@@ -1,16 +1,22 @@
 "use client";
 
 import React from 'react';
-
-const CURRENT_YEAR = new Date().getFullYear();
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Facebook, Linkedin } from 'lucide-react';
-import { CONTACT_DETAILS, COMPANY_FULL_NAME, NAV_LINKS } from '../constants';
-import { Box, Container, SimpleGrid, Stack, Text, Group, Anchor, ThemeIcon } from '@mantine/core';
+import { CONTACT_DETAILS } from '../constants';
+import { Box, Container, SimpleGrid, Stack, Text, Group, Anchor } from '@mantine/core';
 import classes from './layout/Layout.module.css';
 import { TewuLogo } from './icons';
+import { useLocale } from '@/i18n/LocaleContext';
+import { SERVICE_PAGE_SLUGS, servicePagePath } from '@/lib/service-pages';
+
+const CURRENT_YEAR = new Date().getFullYear();
 
 const Footer: React.FC = () => {
+  const { t, locale } = useLocale();
+  const privacyPath = locale === 'uk' ? '/uk/polityka-prywatnosci' : '/polityka-prywatnosci';
+  const outsourcingPath = locale === 'uk' ? '/uk/outsourcing' : '/outsourcing';
+
   return (
     <Box component="footer" bg="slate.9" c="slate.3">
       <Container size="xl" py={{ base: 'xl', md: 80 }} px="md">
@@ -19,7 +25,7 @@ const Footer: React.FC = () => {
           <Stack gap="md">
             <Box component={TewuLogo} w="4.5em" c="white" />
             <Text size="sm" lh={1.6}>
-              Twój zaufany partner w biznesie. Profesjonalna księgowość, kadry i płace oraz doradztwo dla firm każdej wielkości.
+              {t.footer.description}
             </Text>
             <Group gap="md">
               <Anchor href="#" c="white" className={classes.footerLink} aria-label="Facebook">
@@ -34,42 +40,65 @@ const Footer: React.FC = () => {
           {/* Quick Links */}
           <Stack gap="md">
             <Text fw={700} size="sm" c="white" tt="uppercase" className={classes.logoSubtext}>
-              Nawigacja
+              {t.footer.navTitle}
             </Text>
-            <Stack gap="xs">
-              {NAV_LINKS.map(link => (
+            <SimpleGrid cols={2} spacing={{ base: 'sm', sm: 'md' }}>
+              <Stack gap="xs">
+                {t.nav.links.slice(0, 4).map((link) => (
+                  <Anchor
+                    key={link.path}
+                    component={Link}
+                    href={link.path}
+                    size="sm"
+                    underline="hover"
+                    className={classes.footerLink}
+                    c="slate.3"
+                  >
+                    {link.label}
+                  </Anchor>
+                ))}
+              </Stack>
+              <Stack gap="xs">
+                {t.nav.links.slice(4).map((link) => (
+                  <Anchor
+                    key={link.path}
+                    component={Link}
+                    href={link.path}
+                    size="sm"
+                    underline="hover"
+                    className={classes.footerLink}
+                    c="slate.3"
+                  >
+                    {link.label}
+                  </Anchor>
+                ))}
                 <Anchor
-                  key={link.path}
                   component={Link}
-                  href={link.path}
+                  href={privacyPath}
                   size="sm"
                   underline="hover"
                   className={classes.footerLink}
                   c="slate.3"
                 >
-                  {link.label}
+                  {t.footer.privacyPolicy}
                 </Anchor>
-              ))}
-            </Stack>
+              </Stack>
+            </SimpleGrid>
           </Stack>
 
           {/* Services */}
           <Stack gap="md">
             <Text fw={700} size="sm" c="white" tt="uppercase" className={classes.logoSubtext}>
-              Usługi
+              {t.footer.servicesTitle}
             </Text>
             <Stack gap="xs">
-              <Anchor component={Link} href="/uslugi" c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                Pełna Księgowość
-              </Anchor>
-              <Anchor component={Link} href="/uslugi" c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                Księga Przychodów
-              </Anchor>
-              <Anchor component={Link} href="/outsourcing" c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                Outsourcing BPO
-              </Anchor>
-              <Anchor component={Link} href="/uslugi" c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                Kadry i Płace
+              {SERVICE_PAGE_SLUGS.map((slug) => (
+                <Anchor key={slug} component={Link} href={servicePagePath(locale, slug)} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
+                  {t.servicePages.links[slug]}
+                </Anchor>
+              ))}
+              <Anchor component={Link} href={outsourcingPath} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
+                {t.footer.bpoOutsourcing}
               </Anchor>
             </Stack>
           </Stack>
@@ -77,7 +106,7 @@ const Footer: React.FC = () => {
           {/* Contact */}
           <Stack gap="md">
             <Text fw={700} size="sm" c="white" tt="uppercase" className={classes.logoSubtext}>
-              Kontakt
+              {t.footer.contactTitle}
             </Text>
             <Stack gap="sm">
               <Group align="flex-start" gap="xs" wrap="nowrap">
@@ -98,11 +127,11 @@ const Footer: React.FC = () => {
               <Group align="flex-start" gap="xs" wrap="nowrap">
                 <Phone size={18} color="var(--mantine-color-brandBlue-4)" style={{ flexShrink: 0, marginTop: 4 }} />
                 <Stack gap={4}>
-                  <Anchor href={`tel:${CONTACT_DETAILS.phone.replace(/\s/g, '')}`} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
+                  <Anchor href={`tel:${CONTACT_DETAILS.phoneE164 || '+48914824190'}`} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
                     {CONTACT_DETAILS.phone}
                   </Anchor>
-                  <Anchor href="tel:+48501482555" c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                    501 482 555
+                  <Anchor href={`tel:${CONTACT_DETAILS.mobilePhoneE164}`} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
+                    {CONTACT_DETAILS.mobilePhone}
                   </Anchor>
                 </Stack>
               </Group>
@@ -117,9 +146,17 @@ const Footer: React.FC = () => {
         </SimpleGrid>
 
         <Box mt={64} pt="lg" ta="center" c="slate.5" className={classes.footerBorder}>
-          <Text size="xs">
-            © {CURRENT_YEAR} {COMPANY_FULL_NAME}. Wszelkie prawa zastrzeżone.
-          </Text>
+          <Group justify="center" gap="md" wrap="wrap">
+            <Text size="xs">
+              © {CURRENT_YEAR} {t.common.companyFullName}. {t.footer.allRightsReserved}
+            </Text>
+            <Text size="xs" c="slate.6" visibleFrom="xs">
+              •
+            </Text>
+            <Anchor component={Link} href={privacyPath} size="xs" c="slate.4" underline="hover">
+              {t.footer.privacyPolicy}
+            </Anchor>
+          </Group>
         </Box>
       </Container>
     </Box>
