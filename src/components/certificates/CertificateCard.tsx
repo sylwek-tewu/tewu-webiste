@@ -31,7 +31,8 @@ export default function CertificateCard({ cert, onClick }: CertificateCardProps)
             <Box h="100%" w="100%" className={classes.imageWrapper}>
                 <Image
                     src={cert.url}
-                    alt={`${cert.title} – ${cert.desc}`}
+                    // Decorative: the thumbnail is a stock photo, and the card text and button name the certificate.
+                    alt=""
                     className={classes.image}
                 />
             </Box>

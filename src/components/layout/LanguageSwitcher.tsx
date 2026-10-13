@@ -50,6 +50,10 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ size = 'sm',
           <Link
             key={option.locale}
             href={getLocalizedPath(option.locale)}
+            // A prefetch goes out without the locale cookie; the proxy would redirect "/" to "/uk" for an
+            // Accept-Language: uk visitor and Next would then cache that for the PL link. The target is another
+            // root layout anyway, so it loads as a full page.
+            prefetch={false}
             hrefLang={option.locale}
             aria-current={isCurrent ? 'page' : undefined}
             // The proxy redirects by this cookie; the link itself does the navigation.

@@ -49,22 +49,11 @@ describe.each(['pl', 'uk'] as Locale[])('image alt texts (%s)', (locale) => {
     expect(altsOf(container)['/img/stock/team.jpg']).toBe(expected.team);
   });
 
-  it('names each certificate by its title and holder', () => {
+  // cert.png and library.png are stock photos, not scans, so describing them would mislead;
+  // the card's own text and button already name the certificate.
+  it('leaves the certificate thumbnails decorative', () => {
     const { container } = renderWithMantine(<CertificatesClient />, { locale });
     const { items } = getDictionary(locale).certificates;
-    expect(altsOf(container)).toEqual({
-      [items[0].url]: `${items[0].title} – ${items[0].desc}`,
-      [items[1].url]: `${items[1].title} – ${items[1].desc}`,
-    });
-  });
-});
-
-describe('certificate alt texts in Polish', () => {
-  it('read "Certyfikat Księgowy – <holder>"', () => {
-    const { container } = renderWithMantine(<CertificatesClient />);
-    expect(Object.values(altsOf(container))).toEqual([
-      'Certyfikat Księgowy – Sylwester Wrzeszcz',
-      'Certyfikat Księgowy – Tamara Ugha',
-    ]);
+    expect(altsOf(container)).toEqual({ [items[0].url]: '', [items[1].url]: '' });
   });
 });

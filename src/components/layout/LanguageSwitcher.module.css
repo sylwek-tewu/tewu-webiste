@@ -17,6 +17,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: 1;
     gap: 6px;
     padding: 4px 10px;
     border-radius: var(--mantine-radius-xl);
@@ -31,10 +32,6 @@
 
 .root[data-size='xs'] .item {
     font-size: 0.75rem;
-}
-
-.root[data-full-width] .item {
-    flex: 1;
 }
 
 @media (hover: hover) {
