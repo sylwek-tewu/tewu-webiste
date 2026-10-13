@@ -61,6 +61,10 @@ export default function AboutClient() {
                                 <Image
                                     src="/img/stock/team.jpg"
                                     alt={t.about.intro.imageAlt}
+                                    width={1200}
+                                    height={800}
+                                    loading="lazy"
+                                    decoding="async"
                                     w="100%"
                                     h="100%"
                                     fit="cover"

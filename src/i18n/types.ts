@@ -39,7 +39,12 @@ export interface StepItemTranslation {
 export interface CertificateItemTranslation {
   title: string;
   desc: string;
+  /** PNG fallback; `avifUrl` is the same picture, offered first to browsers that support it */
   url: string;
+  avifUrl: string;
+  /** Intrinsic pixel size of `url`, so the layout does not shift while the thumbnail loads */
+  width: number;
+  height: number;
   pdfUrl: string;
 }
 

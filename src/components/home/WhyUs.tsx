@@ -77,6 +77,10 @@ export function WhyUs() {
                                 <Image
                                     src="/img/stock/team-at-work.jpg"
                                     alt={t.home.whyUs.teamImageAlt}
+                                    width={800}
+                                    height={533}
+                                    loading="lazy"
+                                    decoding="async"
                                     radius="xl"
                                     w="100%"
                                     h="100%"
@@ -95,6 +99,10 @@ export function WhyUs() {
                                 <Image
                                     src="/img/stock/business-meeting.jpg"
                                     alt={t.home.whyUs.meetingImageAlt}
+                                    width={800}
+                                    height={533}
+                                    loading="lazy"
+                                    decoding="async"
                                     radius="xl"
                                     w="100%"
                                     h="100%"

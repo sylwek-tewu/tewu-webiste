@@ -2,13 +2,16 @@
 
 import React from 'react';
 import { FileText } from 'lucide-react';
-import { Box, Paper, Image, Text, VisuallyHidden } from '@mantine/core';
+import { Box, Paper, Text, VisuallyHidden } from '@mantine/core';
 import classes from './CertificateCard.module.css';
 import { useLocale } from '@/i18n/LocaleContext';
 
 interface CertificateCardProps {
     cert: {
         url: string;
+        avifUrl: string;
+        width: number;
+        height: number;
         title: string;
         desc: string;
         pdfUrl: string;
@@ -29,12 +32,19 @@ export default function CertificateCard({ cert, onClick }: CertificateCardProps)
             className={classes.card}
         >
             <Box h="100%" w="100%" className={classes.imageWrapper}>
-                <Image
-                    src={cert.url}
-                    // Decorative: the thumbnail is a stock photo, and the card text and button name the certificate.
-                    alt=""
-                    className={classes.image}
-                />
+                <picture className={classes.picture}>
+                    <source type="image/avif" srcSet={cert.avifUrl} />
+                    <img
+                        src={cert.url}
+                        // Decorative: the thumbnail is a stock photo, and the card text and button name the certificate.
+                        alt=""
+                        width={cert.width}
+                        height={cert.height}
+                        loading="lazy"
+                        decoding="async"
+                        className={classes.image}
+                    />
+                </picture>
             </Box>
 
             <Box

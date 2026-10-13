@@ -93,7 +93,7 @@ export default function ServicesClient() {
                     <Title order={2} c="white" fw={900} mb="lg" fz={{ base: 'xl', md: '2.25rem' }}>
                         {t.servicesPage.cta.title}
                     </Title>
-                    <Text c="blue.1" size="lg" mb="xl" maw={600} mx="auto">
+                    <Text c="blue.0" size="lg" mb="xl" maw={600} mx="auto">
                         {t.servicesPage.cta.description}
                     </Text>
                     <Link href={contactPath} style={{ textDecoration: 'none' }}>

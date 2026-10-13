@@ -119,7 +119,7 @@ export default function ContactClient() {
                                     }}
                                 >
                                     <Box>
-                                        <Text c="blue.1" size="sm" fw={700} tt="uppercase" style={{ letterSpacing: '0.05em' }} mb={8}>
+                                        <Text c="white" size="sm" fw={700} tt="uppercase" style={{ letterSpacing: '0.05em' }} mb={8}>
                                             {t.contact.hoursLabel}
                                         </Text>
                                         <Text size="xl" fw={900} style={{ fontSize: '1.5rem' }}>{t.contact.hoursValue}</Text>

@@ -102,7 +102,13 @@ export function Hero() {
                                 <Image
                                     src="/img/stock/hero-office.jpg"
                                     alt={t.home.hero.imageAlt}
+                                    width={1200}
+                                    height={689}
+                                    loading="lazy"
+                                    decoding="async"
                                     radius="xl"
+                                    // The height attribute reserves space, but it would override the 1:1 ratio below.
+                                    h="auto"
                                     style={{
                                         position: 'relative',
                                         zIndex: 10,
