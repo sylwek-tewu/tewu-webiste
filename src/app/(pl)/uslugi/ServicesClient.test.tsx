@@ -11,7 +11,11 @@ const card = (id: string) => plTranslations.servicesPage.items.find((item) => it
 describe('ServicesClient', () => {
   it('shows ten service cards', () => {
     renderWithMantine(<ServicesClient />);
-    expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(10);
+    // directly under the page's h1: the card titles are h2, the three values at the bottom h3
+    const titles = plTranslations.servicesPage.items.map((item) => item.title);
+    expect(titles).toHaveLength(10);
+    const cardHeadings = screen.getAllByRole('heading', { level: 2 }).filter((h) => titles.includes(h.textContent ?? ''));
+    expect(cardHeadings).toHaveLength(10);
   });
 
   it('links cards that have a landing page to it', () => {

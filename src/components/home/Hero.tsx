@@ -101,7 +101,7 @@ export function Hero() {
                                 />
                                 <Image
                                     src="/img/stock/hero-office.jpg"
-                                    alt="Biuro rachunkowe"
+                                    alt={t.home.hero.imageAlt}
                                     radius="xl"
                                     style={{
                                         position: 'relative',

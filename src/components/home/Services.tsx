@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Box, Container, SimpleGrid, Paper, ThemeIcon, Text, Title } from '@mantine/core';
+import { Box, Container, SimpleGrid, Paper, ThemeIcon, Text, Title, VisuallyHidden } from '@mantine/core';
 import { ArrowRight, Building2, Calculator, FileDigit, Users, ClipboardCheck, FileText, Scale, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import classes from '@/components/layout/Layout.module.css';
@@ -63,14 +63,15 @@ export function Services() {
                             >
                                 {SERVICE_ICONS[service.id] || <Building2 size={24} />}
                             </ThemeIcon>
-                            <Title order={4} fw={700} c="slate.9" mb="sm" lh={1.3}>
+                            <Title order={3} size="h4" fw={700} c="slate.9" mb="sm" lh={1.3}>
                                 {service.title}
                             </Title>
                             <Text size="sm" c="slate.6" lh={1.6} mb="lg" lineClamp={2}>
                                 {service.description}
                             </Text>
                             <Link href={cardPath(service.id, locale, servicesPath)} className={classes.moreLink}>
-                                {t.home.services.more} <ArrowRight size={16} />
+                                {t.home.services.more}
+                                <VisuallyHidden>: {service.title}</VisuallyHidden> <ArrowRight size={16} />
                             </Link>
                         </Paper>
                     ))}

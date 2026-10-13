@@ -91,6 +91,8 @@ export interface Translations {
       signature: string;
       ctaContact: string;
       ctaOffer: string;
+      /** The hero stock photo shows tax papers, a phone calculator and a pen */
+      imageAlt: string;
       stats: {
         companiesCount: string;
         companiesLabel: string;
@@ -112,6 +114,10 @@ export interface Translations {
       title: string;
       description: string;
       reasons: ReasonItemTranslation[];
+      /** team-at-work.jpg: a group around a conference table with laptops and a screen */
+      teamImageAlt: string;
+      /** business-meeting.jpg: three smiling people at a table with laptops */
+      meetingImageAlt: string;
     };
   };
   about: {
@@ -129,6 +135,8 @@ export interface Translations {
       expNumber: string;
       expTitle: string;
       expDesc: string;
+      /** team.jpg: people working at laptops around a table */
+      imageAlt: string;
     };
     values: {
       label: string;
@@ -208,6 +216,8 @@ export interface Translations {
     securityDesc: string;
     items: CertificateItemTranslation[];
     viewPdfButton: string;
+    /** Caption on a certificate card on hover; also the start of the card button's accessible name */
+    previewLabel: string;
   };
   contact: {
     header: {

@@ -1,0 +1,55 @@
+/* Looks like the Mantine SegmentedControl it replaced: a pill with two options, the current one raised. */
+.root {
+    display: inline-flex;
+    align-items: stretch;
+    padding: 3px;
+    border: 1px solid var(--mantine-color-slate-2);
+    border-radius: var(--mantine-radius-xl);
+    background-color: var(--mantine-color-slate-1);
+    overflow: hidden;
+}
+
+.root[data-full-width] {
+    display: flex;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: var(--mantine-radius-xl);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--mantine-color-gray-7);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 200ms ease;
+}
+
+.root[data-size='xs'] .item {
+    font-size: 0.75rem;
+}
+
+.root[data-full-width] .item {
+    flex: 1;
+}
+
+@media (hover: hover) {
+    .item:hover {
+        color: var(--mantine-color-black);
+    }
+}
+
+.item[aria-current] {
+    background-color: var(--mantine-color-white);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    color: var(--mantine-color-black);
+}
+
+.item:focus-visible {
+    outline: 2px solid var(--mantine-color-blue-6);
+    outline-offset: -2px;
+}

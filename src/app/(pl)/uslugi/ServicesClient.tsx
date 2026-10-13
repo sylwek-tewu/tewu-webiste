@@ -51,7 +51,7 @@ export default function ServicesClient() {
                                     <Box w={56} h={56} mb="lg" className={classes.iconContainer}>
                                         {SERVICE_ICONS[service.id] || <Building2 size={24} />}
                                     </Box>
-                                    <Title order={3} fw={700} c="slate.9" mb="sm" lh={1.3} fz="xl">
+                                    <Title order={2} fw={700} c="slate.9" mb="sm" lh={1.3} fz="xl">
                                         {service.title}
                                     </Title>
                                     <Text size="sm" c="slate.6" lh={1.6}>
@@ -123,7 +123,7 @@ export default function ServicesClient() {
                                 <CheckCircle2 size={32} />
                             </ThemeIcon>
                             <Box>
-                                <Title order={4} fw={700} c="slate.9" mb="xs" fz="lg">
+                                <Title order={3} size="h4" fw={700} c="slate.9" mb="xs" fz="lg">
                                     {t.servicesPage.values.securityTitle}
                                 </Title>
                                 <Text size="sm" c="slate.6">
@@ -136,7 +136,7 @@ export default function ServicesClient() {
                                 <CheckCircle2 size={32} />
                             </ThemeIcon>
                             <Box>
-                                <Title order={4} fw={700} c="slate.9" mb="xs" fz="lg">
+                                <Title order={3} size="h4" fw={700} c="slate.9" mb="xs" fz="lg">
                                     {t.servicesPage.values.timelinessTitle}
                                 </Title>
                                 <Text size="sm" c="slate.6">
@@ -149,7 +149,7 @@ export default function ServicesClient() {
                                 <CheckCircle2 size={32} />
                             </ThemeIcon>
                             <Box>
-                                <Title order={4} fw={700} c="slate.9" mb="xs" fz="lg">
+                                <Title order={3} size="h4" fw={700} c="slate.9" mb="xs" fz="lg">
                                     {t.servicesPage.values.modernityTitle}
                                 </Title>
                                 <Text size="sm" c="slate.6">

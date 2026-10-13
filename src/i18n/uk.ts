@@ -49,6 +49,7 @@ export const ukTranslations: Translations = {
       signature: '**Конфіденційність** і **професіоналізм** у вашому розпорядженні',
       ctaContact: 'Звʼяжіться з нами',
       ctaOffer: 'Переглянути послуги',
+      imageAlt: 'Податкові документи, телефон із калькулятором і ручка',
       stats: {
         companiesCount: '150+',
         companiesLabel: 'Задоволених компаній',
@@ -69,6 +70,8 @@ export const ukTranslations: Translations = {
     whyUs: {
       title: 'Чому варто довірити бухгалтерію нам?',
       description: 'У TEWU ми переконані, що бухгалтерія — це значно більше, ніж сухі цифри. Це міцний фундамент вашого бізнесу, який вимагає надійності, сучасного підходу та повної прозорості.',
+      teamImageAlt: 'Команда за роботою в офісі',
+      meetingImageAlt: 'Троє усміхнених людей за столом із ноутбуками',
       reasons: [
         {
           title: 'Багаторічний досвід і професіоналізм',
@@ -116,6 +119,7 @@ export const ukTranslations: Translations = {
       expNumber: '25+',
       expTitle: 'Років на ринку',
       expDesc: 'Знаємо польські закони до дрібниць та вміємо надійно захистити ваш бізнес.',
+      imageAlt: 'Команда за роботою в офісі',
     },
     values: {
       label: 'Наші цінності',
@@ -366,6 +370,7 @@ export const ukTranslations: Translations = {
       },
     ],
     viewPdfButton: 'Переглянути сертифікат (PDF, польською)',
+    previewLabel: 'Перегляд документа',
   },
   contact: {
     header: {

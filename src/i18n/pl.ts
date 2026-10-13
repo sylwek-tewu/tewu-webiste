@@ -41,6 +41,7 @@ export const plTranslations: Translations = {
       signature: '**Dyskrecja** i **Profesjonalizm** do Twojej dyspozycji',
       ctaContact: 'Skontaktuj się z nami',
       ctaOffer: 'Poznaj ofertę',
+      imageAlt: 'Dokumenty podatkowe, telefon z kalkulatorem i długopis',
       stats: {
         companiesCount: '150+',
         companiesLabel: 'Zadowolonych firm',
@@ -61,6 +62,8 @@ export const plTranslations: Translations = {
     whyUs: {
       title: 'Dlaczego warto nam zaufać?',
       description: 'W TEWU wierzymy, że księgowość to co więcej niż tylko liczby. To fundament Twojego biznesu, który wymaga solidności, nowoczesnego podejścia i pełnej transparentności.',
+      teamImageAlt: 'Zespół przy pracy w biurze',
+      meetingImageAlt: 'Troje uśmiechniętych osób przy stole z laptopami',
       reasons: [
         {
           title: 'Wieloletnie doświadczenie i profesjonalizm',
@@ -108,6 +111,7 @@ export const plTranslations: Translations = {
       expNumber: '25+',
       expTitle: 'Lat na rynku',
       expDesc: 'Znamy przepisy od podszewki i wiemy, jak chronić Twój biznes.',
+      imageAlt: 'Zespół przy pracy w biurze',
     },
     values: {
       label: 'Nasze wartości',
@@ -358,6 +362,7 @@ export const plTranslations: Translations = {
       },
     ],
     viewPdfButton: 'Zobacz certyfikat PDF',
+    previewLabel: 'Podgląd Dokumentu',
   },
   contact: {
     header: {
