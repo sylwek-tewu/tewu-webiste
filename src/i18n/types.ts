@@ -189,6 +189,10 @@ export interface Translations {
       clients: string;
     };
     pricing: { factorsTitle: string; processTitle: string; rangeTitle: string };
+    /** Heading of the block of links to related service pages. */
+    seeAlsoTitle: string;
+    /** Link texts of that block, keyed by slug (the footer's `links` are shorter). */
+    seeAlsoNames: Record<ServicePageSlug, string>;
     finalCta: { title: string; description: string };
   };
   outsourcing: {

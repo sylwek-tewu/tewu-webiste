@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, Award, Briefcase, Building2, CheckCircle2, Handshake, Phone, ShieldCheck } from 'lucide-react';
 import { Anchor, Box, Button, Container, Flex, Group, List, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { COMPANY, telHref } from '@/lib/company';
+import { RELATED_SERVICE_PAGES, SERVICE_PAGES, servicePagePath, type ServicePageSlug } from '@/lib/service-pages';
 import { useLocale } from '@/i18n/LocaleContext';
 import { useCallbackWidget } from '@/components/callback-widget';
 import { wrappingButtonStyles } from '@/components/layout/wrappingButtonStyles';
@@ -72,6 +73,38 @@ function CheckList({ title, items }: { title: string; items: string[] }) {
           </List.Item>
         ))}
       </List>
+    </Box>
+  );
+}
+
+function SeeAlso({ slug }: { slug: ServicePageSlug }) {
+  const { t, locale } = useLocale();
+
+  return (
+    <Box component="section" py={{ base: 64, md: 96 }}>
+      <Container size="lg" px="md">
+        <Title order={2} fw={900} c="slate.9" mb="xl" ta="center" fz={{ base: 'xl', md: '2rem' }}>
+          {t.servicePages.seeAlsoTitle}
+        </Title>
+        <SimpleGrid cols={{ base: 1, md: RELATED_SERVICE_PAGES[slug].length }} spacing="lg">
+          {RELATED_SERVICE_PAGES[slug].map((related) => {
+            // The same one-sentence description as on the /uslugi card, so the copy has one source.
+            const description = t.servicesPage.items.find((item) => item.id === SERVICE_PAGES[related].serviceItemId)?.description;
+            return (
+              <Paper key={related} p="xl" radius="lg" withBorder>
+                <Anchor component={Link} href={servicePagePath(locale, related)} c="brandBlue.7" fw={700} fz="lg" underline="hover">
+                  {t.servicePages.seeAlsoNames[related]}
+                </Anchor>
+                {description && (
+                  <Text c="slate.6" mt="xs">
+                    {description}
+                  </Text>
+                )}
+              </Paper>
+            );
+          })}
+        </SimpleGrid>
+      </Container>
     </Box>
   );
 }
@@ -235,6 +268,8 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
           </Stack>
         </Container>
       </Box>
+
+      <SeeAlso slug={content.slug} />
 
       <Box component="section" py={{ base: 64, md: 96 }} bg="brandBlue.6" ta="center">
         <Container size="md" px="md">

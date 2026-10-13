@@ -287,6 +287,15 @@ export const plTranslations: Translations = {
       processTitle: 'Jak wygląda wycena',
       rangeTitle: 'Orientacyjne ceny',
     },
+    seeAlsoTitle: 'Zobacz też',
+    seeAlsoNames: {
+      'pelna-ksiegowosc': 'Pełna księgowość spółek',
+      kpir: 'Księga przychodów i rozchodów (KPiR)',
+      ryczalt: 'Ryczałt ewidencjonowany',
+      'kadry-i-place': 'Kadry i płace',
+      ksef: 'KSeF',
+      'inkubator-spolek': 'Inkubator spółek z o.o.',
+    },
     finalCta: {
       title: 'Porozmawiajmy o Twojej firmie',
       description: 'Zostaw numer telefonu – oddzwonimy w wybranej przez Ciebie porze i przygotujemy bezpłatną wycenę.',

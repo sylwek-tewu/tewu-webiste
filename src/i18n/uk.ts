@@ -295,6 +295,15 @@ export const ukTranslations: Translations = {
       processTitle: 'Як ми готуємо оцінку вартості',
       rangeTitle: 'Орієнтовні ціни',
     },
+    seeAlsoTitle: 'Дивіться також',
+    seeAlsoNames: {
+      'pelna-ksiegowosc': 'Повна бухгалтерія компаній',
+      kpir: 'Книга доходів і витрат (KPiR)',
+      ryczalt: 'Податок з продажу (ryczałt)',
+      'kadry-i-place': 'Кадри та заробітна плата',
+      ksef: 'KSeF',
+      'inkubator-spolek': 'Інкубатор товариств (Sp. z o.o.)',
+    },
     finalCta: {
       title: 'Поговорімо про вашу компанію',
       description: 'Залиште номер телефону – ми передзвонимо у зручний для вас час і підготуємо безкоштовну оцінку вартості.',
