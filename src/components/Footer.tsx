@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Mail, Phone, MapPin, Facebook, Linkedin } from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react';
 import { COMPANY, telHref } from '@/lib/company';
 import { Box, Container, SimpleGrid, Stack, Text, Group, Anchor } from '@mantine/core';
 import classes from './layout/Layout.module.css';
@@ -27,14 +27,6 @@ const Footer: React.FC = () => {
             <Text size="sm" lh={1.6}>
               {t.footer.description}
             </Text>
-            <Group gap="md">
-              <Anchor href="#" c="white" className={classes.footerLink} aria-label="Facebook">
-                <Facebook size={20} />
-              </Anchor>
-              <Anchor href="#" c="white" className={classes.footerLink} aria-label="LinkedIn">
-                <Linkedin size={20} />
-              </Anchor>
-            </Group>
           </Stack>
 
           {/* Quick Links */}

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Box, Container, SimpleGrid, Paper, ThemeIcon, Text, Title, VisuallyHidden } from '@mantine/core';
-import { ArrowRight, Building2, Calculator, FileDigit, Users, ClipboardCheck, FileText, Scale, TrendingUp } from 'lucide-react';
+import { ArrowRight, Building2, Calculator, FileDigit, Users, ClipboardCheck, FileText, Scale } from 'lucide-react';
 import Link from 'next/link';
 import classes from '@/components/layout/Layout.module.css';
 import { useLocale } from '@/i18n/LocaleContext';
@@ -17,7 +17,6 @@ const SERVICE_ICONS: Record<string, React.ReactNode> = {
   'zus-us': <ClipboardCheck size={24} />,
   'deklaracje': <FileText size={24} />,
   'reprezentacja': <Scale size={24} />,
-  'doradztwo': <TrendingUp size={24} />,
 };
 
 function cardPath(serviceId: string, locale: Locale, fallback: string): string {

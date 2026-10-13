@@ -43,8 +43,8 @@
     border-top: 1px solid var(--mantine-color-slate-8);
 }
 
-/* Hero Title variant - applies to nested span */
-.heroTitle span {
+/* The slogan's accent words; the small line above it is a span too, so a bare `span` selector would restyle it */
+.heroTitle .heroAccent {
     font-style: italic;
     color: var(--mantine-primary-color-6);
 }

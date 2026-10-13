@@ -19,6 +19,28 @@ describe('home Services', () => {
   });
 });
 
+describe.each([
+  ['pl', 'Kompleksowa obsługa spółek prawa handlowego zgodnie z ustawą o rachunkowości.', 'Doradztwo podatkowe'],
+  ['uk', 'Комплексне обслуговування господарських (комерційних) товариств (Sp. z o.o., S.A.) відповідно до Закону про бухгалтерський облік Польщі.', 'Податкове консультування'],
+] as [Locale, string, string][])('home Services content (%s)', (locale, firstDescription, removedTitle) => {
+  it('shows the approved description of the first card, without foundations', () => {
+    renderWithMantine(<Services />, { locale });
+    expect(screen.getByText(firstDescription)).toBeInTheDocument();
+    expect(document.body.textContent ?? '').not.toMatch(/fundacj|фундац/i);
+  });
+
+  it('counts nine offers in the link to the full list and has no tax advisory card', () => {
+    renderWithMantine(<Services />, { locale });
+    expect(screen.getByRole('link', { name: getDictionary(locale).home.services.viewAll(9) })).toBeInTheDocument();
+    expect(screen.queryByText(removedTitle)).not.toBeInTheDocument();
+  });
+});
+
+it('links to the full offer as "Zobacz pełną ofertę (9 pozycji)" in Polish', () => {
+  renderWithMantine(<Services />);
+  expect(screen.getByRole('link', { name: 'Zobacz pełną ofertę (9 pozycji)' })).toBeInTheDocument();
+});
+
 describe.each(['pl', 'uk'] as Locale[])('home Services "more" links (%s)', (locale) => {
   const t = getDictionary(locale);
 

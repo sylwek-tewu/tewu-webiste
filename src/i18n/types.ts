@@ -89,6 +89,8 @@ export interface Translations {
   home: {
     hero: {
       badge: string;
+      /** Small line above the slogan, inside the H1 */
+      titleKicker: string;
       titleNormal: string;
       titleAccent: string;
       description: string;

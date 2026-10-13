@@ -87,3 +87,13 @@ describe('ServiceLandingPage', () => {
     expect(screen.getAllByRole('link', { name: new RegExp(ukTranslations.servicePages.ctaButton) }).length).toBeGreaterThan(0);
   });
 });
+
+describe.each([
+  ['pl', 'Certyfikaty MF'],
+  ['uk', 'Сертифікати MF'],
+] as const)('ServiceLandingPage trust badge (%s)', (locale, label) => {
+  it('links the certificates page under the approved label', () => {
+    renderPage(getServicePageContent(locale, 'kpir'));
+    expect(screen.getByRole('link', { name: label })).toHaveAttribute('href', locale === 'uk' ? '/uk/certyfikaty' : '/certyfikaty');
+  });
+});

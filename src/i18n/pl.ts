@@ -35,6 +35,7 @@ export const plTranslations: Translations = {
   home: {
     hero: {
       badge: 'Ponad 25 lat na rynku',
+      titleKicker: 'Biuro rachunkowe w Szczecinie',
       titleNormal: 'Księgowość ',
       titleAccent: 'bez stresu.',
       description: 'Zajmij się rozwojem swojej firmy, a my weźmiemy na siebie formalności.',
@@ -139,13 +140,13 @@ export const plTranslations: Translations = {
   servicesPage: {
     header: {
       title: 'Pełna oferta usług księgowych',
-      subtitle: 'Dostarczamy kompleksowe rozwiązania dla biznesu, od prostych ewidencji po zaawansowane doradztwo podatkowe.',
+      subtitle: 'Dostarczamy kompleksowe rozwiązania dla biznesu, od prostych ewidencji po pełną księgowość spółek.',
     },
     items: [
       {
         id: 'pelna-ksiegowosc',
         title: 'Prowadzenie ksiąg rachunkowych',
-        description: 'Kompleksowa obsługa spółek prawa handlowego, fundacji i stowarzyszeń zgodnie z ustawą o rachunkowości.',
+        description: 'Kompleksowa obsługa spółek prawa handlowego zgodnie z ustawą o rachunkowości.',
         features: [
           'Prowadzenie ksiąg rachunkowych (pełna księgowość)',
           'Sporządzanie rocznych sprawozdań finansowych',
@@ -227,18 +228,6 @@ export const plTranslations: Translations = {
         ],
       },
       {
-        id: 'doradztwo',
-        title: 'Doradztwo podatkowe',
-        description: 'Profesjonalne wsparcie w rozliczeniach zobowiązań podatkowych.',
-        features: [
-          'Wybór optymalnej formy opodatkowania',
-          'Analiza umów pod kątem podatkowym',
-          'Konsultacje w zakresie bieżącej działalności',
-          'Audyty podatkowe',
-          'Wnioski o interpretacje indywidualne',
-        ],
-      },
-      {
         id: 'ksef',
         title: 'KSeF – Krajowy System e-Faktur',
         description: 'Pomoc w przejściu na e-faktury i księgowanie faktur pobieranych bezpośrednio z KSeF.',
@@ -290,7 +279,7 @@ export const plTranslations: Translations = {
     trust: {
       directContact: 'Bezpośredni kontakt z szefostwem biura',
       insurance: 'Polisa OC biura',
-      certificates: 'Certyfikaty MF i SKwP',
+      certificates: 'Certyfikaty MF',
       clients: 'Obsługujemy zarówno duże spółki, jak i jednoosobowe firmy z wielu branż – od IT, przez magazyny, po usługi hydrauliczne.',
     },
     pricing: {

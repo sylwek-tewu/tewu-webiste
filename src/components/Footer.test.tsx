@@ -32,6 +32,13 @@ describe.each(['pl', 'uk'] as Locale[])('Footer (%s)', (locale) => {
     expect(links.map((a) => a.textContent)).toEqual(['602 235 736', '91 48 24 190', '501 482 555']);
   });
 
+  it('has no social media links', () => {
+    const { container } = renderWithMantine(<Footer />, { locale });
+    expect(container.querySelector('[aria-label="Facebook"]')).toBeNull();
+    expect(container.querySelector('[aria-label="LinkedIn"]')).toBeNull();
+    expect(container.querySelector('a[href="#"]')).toBeNull();
+  });
+
   it('keeps the mailto: link', () => {
     const { container } = renderWithMantine(<Footer />, { locale });
     expect(container.querySelector('a[href="mailto:biuro@tewu.szczecin.pl"]')).not.toBeNull();

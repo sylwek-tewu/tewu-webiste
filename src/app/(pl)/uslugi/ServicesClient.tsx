@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { ArrowRight, CheckCircle2, Building2, Calculator, FileDigit, Users, ClipboardCheck, FileText, Scale, TrendingUp, Receipt, Rocket } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Building2, Calculator, FileDigit, Users, ClipboardCheck, FileText, Scale, Receipt, Rocket } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, Button, ThemeIcon, Group, Paper } from '@mantine/core';
 import Link from 'next/link';
 import classes from './ServicesClient.module.css';
@@ -17,7 +17,6 @@ const SERVICE_ICONS: Record<string, React.ReactNode> = {
   'zus-us': <ClipboardCheck size={24} />,
   'deklaracje': <FileText size={24} />,
   'reprezentacja': <Scale size={24} />,
-  'doradztwo': <TrendingUp size={24} />,
   'ksef': <Receipt size={24} />,
   'inkubator-spolek': <Rocket size={24} />,
 };
