@@ -17,7 +17,7 @@ Wszystkie ustalenia pochodzą z HTML zwracanego przez serwer (`curl`, bez wykony
 
 **Trasy (26 stron = 13 × 2 języki):** `/`, `/o-nas`, `/uslugi`, `/uslugi/{pelna-ksiegowosc, kpir, ryczalt, kadry-i-place, ksef, inkubator-spolek}`, `/outsourcing`, `/certyfikaty`, `/kontakt`, `/polityka-prywatnosci` oraz te same ścieżki pod `/uk`. Do tego `/sitemap.xml`, ikony i `/api/*` (callback, health, internal).
 
-**Żywa strona w dniu audytu:** `tewu.szczecin.pl` wskazywała jeszcze na Netlify z poprzednią wersją strony (bez podstron usługowych i `/uk`, `robots.txt` i `sitemap.xml` zwracały 404). `www` → domena bez `www` (301), `http` → `https` (301), ukośnik na końcu → 308. Domena jest w trakcie przepinania na Coolify. Kontrole po przepięciu: [sekcja niżej](#do-sprawdzenia-po-przepięciu-domeny).
+**Żywa strona w dniu audytu:** `tewu.szczecin.pl` wskazywała jeszcze na Netlify z poprzednią wersją strony (bez podstron usługowych i `/uk`, `robots.txt` i `sitemap.xml` zwracały 404). `www` → domena bez `www` (301), `http` → `https` (301), ukośnik na końcu → 308. Tego samego dnia domenę przepięto na Coolify. Wyniki kontroli: [sekcja niżej](#po-przepięciu-domeny-13102026).
 
 ### Legacy URL (stare adresy)
 
@@ -59,7 +59,7 @@ Waga: **krytyczna** (blokuje indeksację lub kampanię), **wysoka**, **średnia*
 
 | # | Problem | Waga | Gdzie | Proponowana poprawka | Widoczna treść? |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Szablon adresu Preview Deployment w Coolify to `{{pr_id}}.{{domain}}`. Po dodaniu `tewu.szczecin.pl` podglądy PR trafią pod domenę klienta | krytyczna | Coolify, aplikacja `vove4fk84fv8vr6plcgwrgeo` | Ustawić na sztywno `{{pr_id}}.test-tewu-website.projekty-tewu.it` (ADR 0003, sekcja 3a) | nie |
+| 1 | Szablon adresu Preview Deployment w Coolify to `{{pr_id}}.{{domain}}`. Po dodaniu `tewu.szczecin.pl` podglądy PR trafią pod domenę klienta | krytyczna | Coolify, aplikacja `vove4fk84fv8vr6plcgwrgeo` | Ustawić na sztywno `{{pr_id}}.test-tewu-website.projekty-tewu.it` (ADR 0003, sekcja 3a). **Rozwiązane 13.10 przy przepięciu** | nie |
 | 2 | Brak danych strukturalnych (JSON-LD) na wszystkich stronach | wysoka | `src/app/(pl)/layout.tsx`, `(uk)/layout.tsx`, podstrony usługowe | Komponent `JsonLd` z escapowaniem `<`. W layoucie `AccountingService` (`@id` `https://tewu.szczecin.pl/#firma`) i `WebSite`. Na podstronach usługowych `Service` (`provider` → `@id`), `BreadcrumbList` i `FAQPage` (pytania są widoczne na stronie) | nie |
 | 3 | Brak `robots.txt` (404), więc brak wskazania mapy strony | wysoka | brak `src/app/robots.ts` | `robots.ts`: `Allow: /`, `Sitemap: https://tewu.szczecin.pl/sitemap.xml`. Bez blokowania robotów AI | nie |
 | 4 | `noindex` poza produkcją zależy tylko od ustawienia w Coolify (`noindex_domains` dla domeny testowej). Uruchomienie lokalne i każda nowa domena są indeksowalne | wysoka | `next.config.mjs` | Nagłówek `X-Robots-Tag: noindex` dla każdego hosta innego niż dokładnie `tewu.szczecin.pl` (`headers()` z warunkiem `missing: host`) | nie |
@@ -76,7 +76,7 @@ Waga: **krytyczna** (blokuje indeksację lub kampanię), **wysoka**, **średnia*
 | 15 | Obrazy jako zwykłe `<img>` bez `width`/`height`/`srcset`, w JPEG/PNG. Na mobile pobierane są ukryte zdjęcia (ok. 280 KB na `/`). Na `/certyfikaty` karta ładuje `library.png` (948 KB), choć w repozytorium jest `library.avif` (299 KB) | średnia | `Hero.tsx`, `WhyUs.tsx`, `AboutClient.tsx`, `CertificateCard.tsx` | `next/image` z `sizes` (AVIF/WebP, `srcset`, lazy) dla zdjęć poniżej pierwszego ekranu i ukrytych na mobile. Na certyfikatach pliki AVIF. Do sprawdzenia: `sharp` w obrazie Alpine | nie |
 | 16 | LCP na mobile 3,6–4,3 s (symulacja), opóźnienie renderowania przez blokujący CSS i podmianę czcionki | średnia | layout, CSS Mantine | Najpierw poprawki z pkt 15, potem ponowny pomiar. Dalsze kroki (np. `display: 'optional'` dla czcionki) tylko jeśli dane terenowe CrUX będą słabe | nie |
 | 17 | Dane firmy rozproszone: `CONTACT_DETAILS` w `constants.tsx`, ale trzy numery na stronie Kontakt są wpisane na sztywno, godziny i adres powtórzone w słownikach, zapasowe `\|\| '+48914824190'` w kilku miejscach | średnia | `ContactClient.tsx`, `Footer.tsx`, `i18n/pl.ts`, `uk.ts` | Jeden moduł danych firmy (nazwa, adres w częściach, telefony, e-mail, godziny, domena, obszar działania), używany przez stopkę, Kontakt, metadane i JSON-LD | nie |
-| 18 | Coolify ma `redirect: both` (adres z `www` i bez `www` działa bez przekierowania). Przekierowania `www` brak też w kodzie | średnia | Coolify, `next.config.mjs` | Coolify: „non-www”. Kod: 308 z `www.tewu.szczecin.pl` na `https://tewu.szczecin.pl` jako zapas | nie |
+| 18 | Coolify ma `redirect: both` (adres z `www` i bez `www` działa bez przekierowania). Przekierowania `www` brak też w kodzie | średnia | Coolify, `next.config.mjs` | Coolify: „non-www”. Kod: 308 z `www.tewu.szczecin.pl` na `https://tewu.szczecin.pl` jako zapas. **Po stronie Coolify rozwiązane 13.10** (301 w jednym skoku, etykiety Traefika). W kodzie zostaje sam zapas | nie |
 | 19 | Anchory „Więcej” (×4) na kartach usług na stronie głównej nie mówią, dokąd prowadzą | średnia | `src/components/home/Services.tsx` | Dopisać nazwę usługi jako tekst dla czytników ekranu (`visually hidden`): „Więcej: Księga przychodów i rozchodów”. Wygląd bez zmian | nie |
 | 20 | Opis karty pełnej księgowości wymienia „fundacje i stowarzyszenia”, które według ustaleń z 12.10 nie są grupą docelową | niska | `src/i18n/pl.ts`, `uk.ts` (strona główna i `/uslugi`). Nieużywana kopia listy usług w `constants.tsx` (`SERVICES`) do usunięcia przy okazji | Usunąć z opisu. **Do akceptacji TEWU** | tak |
 | 21 | Linki Facebook i LinkedIn w stopce mają `href="#"` (na każdej stronie) | niska | `src/components/Footer.tsx` | Podać adresy profili (trafią też do `sameAs` w JSON-LD) albo usunąć ikony. **Do decyzji TEWU** | tak |
@@ -141,23 +141,47 @@ Dane są spójne między stopką, stroną Kontakt i słownikami. Nie znalazłem 
 10. **`scripts/seo-check.mjs`** + `pnpm seo:check` i uruchomienie na zbudowanej wersji. Skrypt wysyła `Host: tewu.szczecin.pl`.
 11. **Raport „Wdrożone”** w tym pliku.
 
-## Do sprawdzenia po przepięciu domeny
+## Po przepięciu domeny (13.10.2026)
 
-Lista kontrolna Coolify (ustalona 13.10):
+Domenę przepięto na Coolify 13.10 ok. 16:00. Konfigurację odczytano przez Coolify MCP, a wyniki `curl` sprawdzono dwukrotnie: w osobnej sesji i ponownie przy dopisywaniu do raportu.
 
-- [ ] Preview URL Template: `{{pr_id}}.test-tewu-website.projekty-tewu.it` (pkt 1).
-- [ ] Domains: `https://tewu.szczecin.pl,https://www.tewu.szczecin.pl`, bez `test-tewu-website.projekty-tewu.it`.
-- [ ] Redirect: „non-www” (pkt 18).
-- [ ] `tewu.szczecin.pl` nie jest na liście `noindex_domains`.
-- [ ] DNS: `www` na serwer Coolify. Wildcard `*.test-tewu-website.projekty-tewu.it` zostaje dla podglądów.
+**Coolify (aplikacja `vove4fk84fv8vr6plcgwrgeo`):**
 
-Polecenia do sprawdzenia (wyniki dopiszę, gdy domena będzie podpięta):
+- [x] Preview URL Template: `{{pr_id}}.test-tewu-website.projekty-tewu.it` (pkt 1).
+- [x] Domains: `https://tewu.szczecin.pl,https://www.tewu.szczecin.pl`, bez `test-tewu-website.projekty-tewu.it`.
+- [x] Redirect: „non-www” (pkt 18).
+- [x] `noindex_domains` puste, więc produkcja nie ma `noindex`.
+- [x] DNS (nazwa.pl): `A tewu.szczecin.pl → 57.131.199.28` (Coolify), `www` to CNAME na domenę główną. Wildcard `*.test-tewu-website.projekty-tewu.it` zostaje dla podglądów.
 
-```bash
-curl -sI https://tewu.szczecin.pl/ | grep -iE '^(HTTP|x-robots-tag|server)'      # 200, bez noindex
-curl -sI https://www.tewu.szczecin.pl/ | grep -iE '^(HTTP|location)'              # 301/308 → https://tewu.szczecin.pl/
-curl -sI http://tewu.szczecin.pl/ | grep -iE '^(HTTP|location)'                   # 301/308 → https://
-curl -sI https://tewu.szczecin.pl/uslugi/kpir | grep -iE '^HTTP'                  # 200
-curl -s -o /dev/null -w '%{http_code}\n' https://tewu.szczecin.pl/sitemap.xml     # 200
-curl -s -o /dev/null -w '%{http_code}\n' https://test-tewu-website.projekty-tewu.it/  # 404 albo brak odpowiedzi
-```
+**Przekierowania:** Coolify domyślnie zwracał 307 (middleware `redirectscheme`/`redirectregex` bez `permanent`). Dlatego w etykietach Traefika dodano:
+
+- middleware `vove4fk84fv8vr6plcgwrgeo-to-https` (`redirectscheme`, `permanent=true`) na routerze `http-0`;
+- middleware `1-vove4fk84fv8vr6plcgwrgeo-to-non-www` (`permanent=true`, `replacement=https://${2}`) na routerach `http-1` i `https-1`, więc `http://www…` przechodzi na docelowy adres w jednym skoku.
+
+Wspólnego middleware `redirect-to-https` nie zmieniano, bo definiują go wszystkie aplikacje na serwerze (konflikt w Traefiku).
+
+**Ryzyko:** w aplikacji wyłączono „Readonly labels”. Przy każdej zmianie domen w Coolify trzeba ręcznie poprawić te etykiety, inaczej przekierowania wrócą do 307 albo przestaną działać. Warto dopisać to do ADR 0003.
+
+**Wyniki `curl`:**
+
+| Adres | Wynik |
+| --- | --- |
+| `https://tewu.szczecin.pl/`, `/uslugi/kpir`, `/uk` | 200, bez `X-Robots-Tag` i bez `meta robots`. `canonical` `/uslugi/kpir` → `https://tewu.szczecin.pl/uslugi/kpir` |
+| `https://tewu.szczecin.pl/sitemap.xml` | 200, 26 adresów |
+| `https://tewu.szczecin.pl/robots.txt` | 404 (do poprawy w planie, pkt 3) |
+| `/nie-ma`, `/uk/nema` | 404 |
+| `/uslugi/` | 308 → `/uslugi` |
+| `http://tewu.szczecin.pl/uslugi` | 301 → `https://tewu.szczecin.pl/uslugi` |
+| `https://www.tewu.szczecin.pl/uslugi` | 301 → `https://tewu.szczecin.pl/uslugi` |
+| `http://www.tewu.szczecin.pl/uslugi/kpir?utm_source=test` | 301 → `https://tewu.szczecin.pl/uslugi/kpir?utm_source=test` (jeden skok, parametry zachowane, ważne dla Ads) |
+| `https://test-tewu-website.projekty-tewu.it/` | 503 (`http`: 404), kopia produkcji niedostępna |
+| `https://2.test-tewu-website.projekty-tewu.it/` (podgląd PR #2) | 401, wymaga hasła |
+
+Certyfikaty Let's Encrypt są osobne dla `tewu.szczecin.pl` i `www.tewu.szczecin.pl` (ważne do 11.01.2027). Kompresja gzip działa.
+
+**Wnioski dla planu:**
+
+- Pkt 1 rozwiązany.
+- Pkt 18 rozwiązany po stronie Coolify. Przekierowanie `www` w `next.config.mjs` będzie tylko zapasem, bo proxy przekierowuje wcześniej.
+- Pkt 26 bez zmian: wildcard `*.tewu.szczecin.pl` u nazwa.pl nadal wskazuje stronę parkingową.
+- Rekord DNS samej nazwy `test-tewu-website.projekty-tewu.it` można usunąć ręcznie (bez wildcardu).
