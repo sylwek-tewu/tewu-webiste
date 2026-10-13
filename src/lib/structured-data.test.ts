@@ -90,7 +90,8 @@ describe.each(LOCALES)('buildSiteJsonLd (%s)', (locale) => {
       inLanguage: locale === 'pl' ? 'pl-PL' : 'uk-UA',
       publisher: { '@id': FIRMA_ID },
     });
-    expect(site.url).toBe(locale === 'pl' ? 'https://tewu.szczecin.pl/' : 'https://tewu.szczecin.pl/uk');
+    // One website (one @id) in both languages, so one url
+    expect(site.url).toBe('https://tewu.szczecin.pl/');
   });
 
   it('publishes no rating, review, social, price or other unlisted facts', () => {
@@ -117,8 +118,11 @@ describe.each(LOCALES)('buildServicePageJsonLd (%s)', (locale) => {
         url,
         provider: { '@id': FIRMA_ID },
         areaServed: { '@type': 'City', name: 'Szczecin' },
-        inLanguage: locale === 'pl' ? 'pl-PL' : 'uk-UA',
       });
+    });
+
+    it('has no inLanguage on the Service, as schema.org does not define it there', () => {
+      expect(byType(nodes, 'Service')).not.toHaveProperty('inLanguage');
     });
 
     it('names the service type in the page language', () => {

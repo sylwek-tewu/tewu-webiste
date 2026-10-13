@@ -1,14 +1,13 @@
 "use client";
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import type { Locale, Translations } from './types';
 import { LOCALE_COOKIE_NAME, localizePath } from './config';
 
 interface LocaleContextValue {
   locale: Locale;
   t: Translations;
-  switchLocale: (targetLocale: Locale) => void;
   getLocalizedPath: (targetLocale: Locale) => string;
 }
 
@@ -37,7 +36,6 @@ export function LocaleProvider({
   children: React.ReactNode;
 }) {
   const pathname = usePathname() || '/';
-  const router = useRouter();
 
   const value = useMemo(() => {
     const getLocalizedPath = (targetLocale: Locale) => localizePath(pathname, targetLocale);
@@ -45,13 +43,8 @@ export function LocaleProvider({
       locale,
       t,
       getLocalizedPath,
-      switchLocale: (targetLocale: Locale) => {
-        setLocaleCookie(targetLocale);
-        // The other locale has its own root layout, so Next.js loads the target as a full page.
-        router.push(getLocalizedPath(targetLocale));
-      },
     };
-  }, [locale, t, pathname, router]);
+  }, [locale, t, pathname]);
 
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
 }

@@ -22,7 +22,7 @@ export function Hero() {
                     <Grid gutter={{ base: 48, lg: 48 }} align="center">
                         <GridCol span={{ base: 12, md: 6 }}>
                             <Stack gap="xl">
-                                <Badge>
+                                <Badge c="brandBlue.7">
                                     {t.home.hero.badge}
                                 </Badge>
 

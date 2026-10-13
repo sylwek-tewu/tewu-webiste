@@ -42,12 +42,12 @@ function QuoteActions({ variant }: { variant: 'primary' | 'white' }) {
       <Stack gap={4} align="center">
         <Group gap={8} justify="center" c="white">
           <Phone size={20} aria-hidden="true" />
-          <Text span c="slate.2" style={{ whiteSpace: 'nowrap' }}>{t.servicePages.phonePrompt}</Text>
+          <Text span c="blue.0" style={{ whiteSpace: 'nowrap' }}>{t.servicePages.phonePrompt}</Text>
           <Anchor href={telHref(COMPANY.phones.mobile[0])} c="white" fw={800} fz="lg" underline="hover" style={{ whiteSpace: 'nowrap' }}>
             {COMPANY.phones.mobile[0].display}
           </Anchor>
         </Group>
-        <Text size="sm" c="slate.2" ta="center">{t.servicePages.phoneAnswer}</Text>
+        <Text size="sm" c="blue.0" ta="center">{t.servicePages.phoneAnswer}</Text>
       </Stack>
     </Group>
   );

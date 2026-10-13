@@ -92,7 +92,8 @@ export function buildSiteJsonLd(locale: Locale) {
       {
         '@type': 'WebSite',
         '@id': WEBSITE_ID,
-        url: homeUrl(locale),
+        // One website for both languages (one @id), so one url; inLanguage tells the page's language
+        url: `${SITE_URL}/`,
         name: COMPANY.shortName,
         inLanguage: IN_LANGUAGE[locale],
         publisher: { '@id': COMPANY_ID },
@@ -116,7 +117,6 @@ export function buildServicePageJsonLd({ locale, slug, meta, hero, faq }: Servic
         serviceType: locale === 'pl' ? SERVICE_PAGES[slug].label : UK_SERVICE_TYPE[slug],
         provider: { '@id': COMPANY_ID },
         areaServed: AREA_SERVED,
-        inLanguage: IN_LANGUAGE[locale],
       },
       {
         '@type': 'BreadcrumbList',

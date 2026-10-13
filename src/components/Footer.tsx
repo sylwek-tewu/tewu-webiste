@@ -136,12 +136,12 @@ const Footer: React.FC = () => {
           </Stack>
         </SimpleGrid>
 
-        <Box mt={64} pt="lg" ta="center" c="slate.5" className={classes.footerBorder}>
+        <Box mt={64} pt="lg" ta="center" c="slate.4" className={classes.footerBorder}>
           <Group justify="center" gap="md" wrap="wrap">
             <Text size="xs">
               © {CURRENT_YEAR} {t.common.companyFullName}. {t.footer.allRightsReserved}
             </Text>
-            <Text size="xs" c="slate.6" visibleFrom="xs">
+            <Text size="xs" c="slate.4" visibleFrom="xs">
               •
             </Text>
             <Anchor component={Link} href={privacyPath} size="xs" c="slate.4" underline="hover">
