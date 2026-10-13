@@ -16,6 +16,13 @@ export default tseslint.config(
     ],
   },
   {
+    // Plain Node scripts (no TypeScript, no bundler): declare the Node globals they use.
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {
+      globals: { process: 'readonly', console: 'readonly', Buffer: 'readonly', URL: 'readonly' },
+    },
+  },
+  {
     rules: {
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
