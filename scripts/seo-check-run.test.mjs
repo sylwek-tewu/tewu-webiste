@@ -7,7 +7,7 @@ import { ORIGIN, page } from './seo-check-fixtures.mjs';
 const PROD_HOST = 'tewu.szczecin.pl';
 
 // A fake site on a local port that records the Host header of every request.
-const state = { pages: new Set(), sitemap: [], broken: new Set(), requests: [] };
+const state = { pages: new Set(), sitemap: [], broken: new Set(), requests: [], redirectUkImage: false };
 let server;
 let baseUrl;
 
@@ -15,7 +15,7 @@ beforeAll(async () => {
   server = http.createServer((req, res) => {
     const host = req.headers.host;
     const path = req.url;
-    state.requests.push({ host, path });
+    state.requests.push({ host, path, acceptLanguage: req.headers['accept-language'] });
     if (state.broken.has(path)) return req.socket.destroy();
     if (path === '/sitemap.xml') {
       res.writeHead(200, { 'content-type': 'application/xml' });
@@ -27,6 +27,11 @@ beforeAll(async () => {
       return res.end();
     }
     if (path === '/opengraph-image-35ziip') {
+      // Like src/proxy.ts before the fix: a Ukrainian browser was sent to a missing /uk copy
+      if (state.redirectUkImage && req.headers['accept-language']?.startsWith('uk')) {
+        res.writeHead(307, { location: `${ORIGIN}/uk/opengraph-image-35ziip` });
+        return res.end();
+      }
       res.writeHead(200, { 'content-type': 'image/png' });
       return res.end('png');
     }
@@ -52,6 +57,7 @@ beforeEach(() => {
   state.sitemap = [`${ORIGIN}/`, `${ORIGIN}/o-nas`];
   state.broken = new Set();
   state.requests = [];
+  state.redirectUkImage = false;
 });
 
 const errorsOf = (result) => result.results.flatMap((r) => r.findings).filter((f) => f.level === 'error');
@@ -76,6 +82,18 @@ describe('runSeoCheck', () => {
     expect([...hostsOf('/')].sort()).toEqual(['example.test', PROD_HOST, PROD_HOST]);
     // 308 is returned as it is: a single request, no second one to the Location
     expect(hostsOf(WWW_REDIRECT_PATH)).toEqual([`www.${PROD_HOST}`]);
+  });
+
+  it('requests the share image as a Ukrainian browser, so a language redirect on it is caught', async () => {
+    await runSeoCheck(baseUrl);
+    const probes = state.requests.filter((r) => r.path === '/opengraph-image-35ziip');
+    expect(probes.map((r) => r.acceptLanguage)).toEqual(['uk']);
+  });
+
+  it('reports a share image that the language redirect sends away', async () => {
+    state.redirectUkImage = true;
+    const result = await runSeoCheck(baseUrl);
+    expect(errorsOf(result).map((f) => f.check)).toContain('og:image-file');
   });
 
   it('reports an empty sitemap as an error', async () => {

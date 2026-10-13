@@ -10,9 +10,10 @@ const PROD_HOST = new URL(SITE_ORIGIN).host;
  * GET without following redirects. node:http instead of fetch: fetch (undici) silently drops a
  * custom Host header. Rejects on network errors.
  */
-export function httpGet(baseUrl, path, { host = PROD_HOST, binary = false } = {}) {
+export function httpGet(baseUrl, path, { host = PROD_HOST, binary = false, acceptLanguage } = {}) {
   return new Promise((resolve, reject) => {
-    const req = http.get(new URL(path, baseUrl), { headers: { host } }, (res) => {
+    const headers = acceptLanguage ? { host, 'accept-language': acceptLanguage } : { host };
+    const req = http.get(new URL(path, baseUrl), { headers }, (res) => {
       const done = (text) => resolve({ status: res.statusCode, headers: res.headers, text });
       if (binary) {
         // Only the status and headers of an image matter.
@@ -92,13 +93,14 @@ export async function runSeoCheck(baseUrl) {
   const failures = [];
   const get = (path, options) => safeGet(failures, baseUrl, path, options);
   const home = await get('/');
+  // The share image is fetched as a Ukrainian browser: the language redirect must not touch it.
   const ogImageUrl = parseDocument(home.text).metas.find((m) => m.property === 'og:image')?.content ?? '';
   const [robots, previewHost, wwwRedirect, notFound, ogImage] = await Promise.all([
     get('/robots.txt'),
     get('/', { host: 'example.test' }),
     get(WWW_REDIRECT_PATH, { host: `www.${PROD_HOST}` }),
     get('/nie-istnieje-seo-check'),
-    isSiteUrl(ogImageUrl) ? get(toPath(ogImageUrl), { binary: true }) : { status: 0, headers: {}, text: '' },
+    isSiteUrl(ogImageUrl) ? get(toPath(ogImageUrl), { binary: true, acceptLanguage: 'uk' }) : { status: 0, headers: {}, text: '' },
   ]);
   results.push({
     label: 'site checks (robots.txt, preview noindex, www redirect, 404, og:image file)',

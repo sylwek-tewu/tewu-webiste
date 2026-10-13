@@ -4,11 +4,19 @@ import { LOCALE_COOKIE_NAME, SITE_LOCALE_HEADER, isSupportedLocale, localeOfPath
 import { rejectWithoutPreviewPassword } from './lib/preview-auth';
 
 /**
+ * Next serves generated metadata files (share image, icons) at hashed paths without a dot, so they
+ * look like pages. A language redirect would send them to /uk/..., which does not exist (404) and
+ * breaks link previews and the JSON-LD image for visitors with a Ukrainian or Russian browser.
+ */
+const METADATA_ROUTE = /^(\/uk)?\/(opengraph-image|twitter-image|icon|apple-icon)(-[a-z0-9]+)?$/;
+
+/**
  * Language handling covers pages only: not API routes, Next.js assets or static files (paths with
  * a dot), except everything under /uk, dotted paths too (no static files live there), so a missing
  * /uk/old.php still gets the Ukrainian 404.
  */
 function isPage(pathname: string): boolean {
+  if (METADATA_ROUTE.test(pathname)) return false;
   if (localeOfPath(pathname) === 'uk') return true;
   return !/^\/(api\/|_next\/static|_next\/image|favicon\.ico)/.test(pathname) && !pathname.includes('.');
 }
