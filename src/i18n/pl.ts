@@ -474,7 +474,6 @@ export const plTranslations: Translations = {
     topicPlaceholder: 'Wybierz rodzaj działalności',
     topics: {
       spolka: 'Spółka z o.o. / S.A. / komandytowa',
-      fundacja: 'Fundacja lub stowarzyszenie',
       dzialalnosc: 'Jednoosobowa działalność (JDG / spółka cywilna)',
       'kadry-place': 'Kadry i płace / ZUS',
       inne: 'Inne sprawy księgowe / doradztwo',

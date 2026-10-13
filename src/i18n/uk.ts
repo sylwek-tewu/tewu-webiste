@@ -483,7 +483,6 @@ export const ukTranslations: Translations = {
     topicPlaceholder: 'Оберіть форму діяльності або питання',
     topics: {
       spolka: 'Spółka z o.o. (ТОВ) / S.A. (АТ) / komandytowa (командитне товариство)',
-      fundacja: 'Фундація (fundacja) або асоціація (stowarzyszenie)',
       dzialalnosc: 'Одноосібна підприємницька діяльність (JDG, аналог ФОП) / spółka cywilna',
       'kadry-place': 'Кадри та нарахування зарплати / ZUS',
       inne: 'Інші бухгалтерські питання / консультації',

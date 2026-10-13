@@ -324,7 +324,7 @@ describe('useCallbackForm', () => {
     act(() => {
       result.current.setPhone('501 482 555');
       result.current.setSlot('12-16');
-      result.current.setTopic('fundacja');
+      result.current.setTopic('spolka');
     });
     now += 2500;
 
@@ -353,10 +353,10 @@ describe('useCallbackForm', () => {
     const { result, rerender } = renderHook((props: UseCallbackFormOptions) => useCallbackForm(props), {
       initialProps: createOptions({ landingPage: 'kpir' }),
     });
-    act(() => result.current.setTopic('fundacja'));
+    act(() => result.current.setTopic('inne'));
     rerender(createOptions({ isOpen: false, landingPage: 'kpir' }));
     rerender(createOptions({ isOpen: true, landingPage: 'pelna-ksiegowosc' }));
-    expect(result.current.topic).toBe('fundacja');
+    expect(result.current.topic).toBe('inne');
   });
 
   it('drops an untouched preset when the form opens off the landing pages', () => {

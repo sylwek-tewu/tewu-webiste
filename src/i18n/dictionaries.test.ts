@@ -25,6 +25,8 @@ describe('dictionaries', () => {
   it.each([plTranslations, ukTranslations])('label every callback slot and topic ($locale)', (t) => {
     for (const slot of CALLBACK_SLOTS) expect(t.callbackWidget.slots[slot.id]).toBeTruthy();
     for (const topic of CALLBACK_TOPICS) expect(t.callbackWidget.topics[topic.id]).toBeTruthy();
+    // No label for a topic the form no longer offers
+    expect(Object.keys(t.callbackWidget.topics)).toEqual(CALLBACK_TOPICS.map((topic) => topic.id));
   });
 
   it.each([plTranslations, ukTranslations])('show the hours of each fixed slot ($locale)', (t) => {
