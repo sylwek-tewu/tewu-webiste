@@ -22,8 +22,11 @@ const NAMED_ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp:
 
 export function decodeEntities(text) {
   return text.replace(/&(?:#x([0-9a-f]+)|#(\d+)|([a-z]+));/gi, (match, hex, dec, name) => {
-    if (hex) return String.fromCodePoint(parseInt(hex, 16));
-    if (dec) return String.fromCodePoint(parseInt(dec, 10));
+    if (hex || dec) {
+      const codePoint = parseInt(hex ?? dec, hex ? 16 : 10);
+      // A malformed entity such as &#99999999; stays as it is
+      return codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : match;
+    }
     return NAMED_ENTITIES[name.toLowerCase()] ?? match;
   });
 }
@@ -61,7 +64,6 @@ export function parseDocument(html) {
   const headNoScripts = head.replace(/<script\b[\s\S]*?<\/script>/gi, '');
 
   return {
-    hasHead: Boolean(headMatch),
     titles: [...headNoScripts.matchAll(/<title\b[^>]*>([\s\S]*?)<\/title>/gi)].map((m) => stripTags(m[1])),
     metas: (headNoScripts.match(startTags('meta')) ?? []).map(parseAttributes),
     links: (headNoScripts.match(startTags('link')) ?? []).map(parseAttributes),

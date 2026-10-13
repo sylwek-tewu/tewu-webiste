@@ -7,33 +7,7 @@ import {
   parseDocument,
   parseSitemapUrls,
 } from './seo-check-lib.mjs';
-
-const ORIGIN = 'https://tewu.szczecin.pl';
-const DESC = 'Prowadzimy księgi rachunkowe, kadry i płace oraz rozliczenia podatkowe dla firm ze Szczecina. Zapraszamy do kontaktu z biurem rachunkowym.';
-
-const firmJsonLd = { '@context': 'https://schema.org', '@graph': [{ '@type': 'AccountingService', '@id': `${ORIGIN}/#firma` }, { '@type': 'WebSite' }] };
-
-/** A fully valid page; every test overrides one piece of it. */
-function page({ path = '/', head = {}, body = {} } = {}) {
-  const url = ORIGIN + path;
-  const jsonLd = head.jsonLd ?? [firmJsonLd];
-  const html = `<!DOCTYPE html><html lang="pl"><head>
-<title>${head.title ?? 'Biuro rachunkowe w Szczecinie'}</title>
-${head.description === null ? '' : `<meta name="description" content="${head.description ?? DESC}"/>`}
-${head.extra ?? ''}
-${head.canonical === null ? '' : `<link rel="canonical" href="${head.canonical ?? url}"/>`}
-<link hrefLang="pl" rel="alternate" href="${ORIGIN}/"/>
-<link rel="alternate" hrefLang="uk" href="${ORIGIN}/uk"/>
-<link rel="alternate" hrefLang="x-default" href="${ORIGIN}/"/>
-<meta property="og:title" content="Biuro rachunkowe"/>
-<meta property="og:description" content="${DESC}"/>
-<meta property="og:url" content="${url}"/>
-<meta property="og:image" content="${ORIGIN}/opengraph-image-35ziip"/>
-<meta name="twitter:card" content="summary_large_image"/>
-${jsonLd.map((d) => `<script type="application/ld+json">${typeof d === 'string' ? d : JSON.stringify(d)}</script>`).join('\n')}
-</head><body><svg><title>TEWU logo</title></svg>${body.html ?? '<h1>Księgowość</h1><h2>Usługi</h2><img src="/a.png" alt=""/>'}</body></html>`;
-  return { url, status: 200, headers: {}, html };
-}
+import { DESC, ORIGIN, firmJsonLd, page } from './seo-check-fixtures.mjs';
 
 const errors = (findings) => findings.filter((f) => f.level === 'error').map((f) => f.check);
 const warnings = (findings) => findings.filter((f) => f.level === 'warning').map((f) => f.check);
@@ -45,6 +19,12 @@ describe('parseAttributes', () => {
 
   it('decodes the entities Next.js emits in attribute values', () => {
     expect(parseAttributes('<meta content="Tom &amp; Jerry &quot;q&quot;"/>').content).toBe('Tom & Jerry "q"');
+  });
+});
+
+describe('decodeEntities', () => {
+  it('leaves a malformed numeric entity as it is instead of throwing', () => {
+    expect(parseAttributes('<meta content="a &#99999999; b &#xFFFFFFFF; c"/>').content).toBe('a &#99999999; b &#xFFFFFFFF; c');
   });
 });
 
@@ -197,6 +177,37 @@ describe('evaluatePage', () => {
     expect(errors(evaluatePage(page({ head: { jsonLd: [firmJsonLd, ld] } })))).toEqual(['forbidden-phrase']);
   });
 
+  it('errors on the reversed word order of the forbidden phrases, Polish and Ukrainian', () => {
+    const pl = page({ body: { html: '<h1>A</h1><h2>Podatkowe doradztwo dla firm</h2>' } });
+    expect(errors(evaluatePage(pl))).toEqual(['forbidden-phrase']);
+    const uk = page({ body: { html: '<h1>A</h1><h2>Консультації податкові для фірм</h2>' } });
+    expect(errors(evaluatePage(uk))).toEqual(['forbidden-phrase']);
+  });
+
+  it('errors on a forbidden phrase in og:title', () => {
+    const p = page();
+    p.html = p.html.replace('og:title" content="Biuro rachunkowe"', 'og:title" content="Doradztwo podatkowe Szczecin"');
+    expect(errors(evaluatePage(p))).toEqual(['forbidden-phrase']);
+  });
+
+  it('parses JSON-LD whose "<" is escaped, as the site emits it', () => {
+    // Same escaping as serializeJsonLd in src/components/seo/JsonLd.tsx
+    const escaped = JSON.stringify({ '@type': 'Service', description: 'a </script> b' }).replace(/</g, '\\' + 'u003c');
+    expect(escaped).not.toContain('<');
+    expect(errors(evaluatePage(page({ head: { jsonLd: [firmJsonLd, escaped] } })))).toEqual([]);
+  });
+
+  it('errors when the canonical differs from the sitemap URL only by a trailing slash', () => {
+    const p = page({ path: '/x', head: { canonical: `${ORIGIN}/x/` } });
+    expect(errors(evaluatePage(p))).toEqual(['canonical', 'og:url']);
+  });
+
+  it('errors on a missing og:title and og:description', () => {
+    const p = page();
+    p.html = p.html.replace(/<meta property="og:title"[^>]*>/, '').replace(/<meta property="og:description"[^>]*>/, '');
+    expect(errors(evaluatePage(p)).sort()).toEqual(['og:description', 'og:title']);
+  });
+
   it('errors on an <img> without alt but accepts alt=""', () => {
     expect(errors(evaluatePage(page({ body: { html: '<h1>A</h1><img src="/a.png">' } })))).toEqual(['img-alt']);
     expect(errors(evaluatePage(page({ body: { html: '<h1>A</h1><img src="/a.png" alt="">' } })))).toEqual([]);
@@ -224,6 +235,10 @@ describe('evaluateSite', () => {
 
   it('errors on a robots.txt without the Sitemap line', () => {
     expect(errors(evaluateSite({ ...ok, robots: { status: 200, body: 'User-Agent: *\nAllow: /' } }))).toEqual(['robots.txt']);
+  });
+
+  it('errors on a robots.txt that is not 200', () => {
+    expect(errors(evaluateSite({ ...ok, robots: { status: 404, body: ok.robots.body } }))).toEqual(['robots.txt']);
   });
 
   it('errors when a foreign host is not noindex', () => {
