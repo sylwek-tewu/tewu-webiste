@@ -51,6 +51,7 @@ describe('global-not-found', () => {
 
     const metadata = await notFoundMetadata();
     expect(metadata.title).toBe(`404 – ${title} | TEWU`);
-    expect(metadata.robots).toEqual({ index: false });
+    // Next.js adds its own noindex to every not-found response; a second one would be a duplicate
+    expect(metadata.robots).toBeUndefined();
   });
 });
