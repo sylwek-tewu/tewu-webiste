@@ -105,7 +105,7 @@ Ocena według mapy tematów z promptu. Treść każdej strony odpowiada tematowi
 | `/uslugi/ksef` | KSeF, biuro rachunkowe Szczecin | KSeF – e-faktury i księgowość Szczecin – Biuro TEWU | KSeF – obsługa e-faktur w Szczecinie | trafia |
 | `/uslugi/inkubator-spolek` | założenie spółki z o.o. / przekształcenie JDG, Szczecin | Inkubator spółek z o.o. Szczecin – Biuro Rachunkowe TEWU | Inkubator spółek z o.o. w Szczecinie | częściowo: title poprawia pkt 13. H1 bez zmian: lead mówi o zakładaniu spółki, sekcja „Dla kogo” o przekształceniu JDG |
 | `/kontakt` | dane kontaktowe, dojazd | Kontakt - Biuro Rachunkowe TEWU | Kontakt | H1 wystarcza, title: pkt 11 |
-| `/uk` | obsługa księgowa po ukraińsku w Szczecinie | Бухгалтерське бюро TEWU \| Польща, Щецин | Бухгалтерія без стресу. | jak `/`: pkt 6. Zdanie o rozmowach po ukraińsku dopiero po potwierdzeniu przez TEWU (Do decyzji, pkt 2) |
+| `/uk` | obsługa księgowa po ukraińsku w Szczecinie | Бухгалтерське бюро TEWU \| Польща, Щецин | Бухгалтерія без стресу. | jak `/`: pkt 6. TEWU potwierdziło rozmowy po ukraińsku (Decyzje, pkt 2), trafia to do JSON-LD |
 
 ### Propozycje title i description (PL)
 
@@ -131,19 +131,22 @@ Dane są spójne między stopką, stroną Kontakt i słownikami. Nie znalazłem 
 | --- | --- |
 | Nazwa | Biuro Rachunkowe TEWU Sp. z o.o. |
 | Adres | Al. Powstańców Wielkopolskich 78A LU2, 70-110 Szczecin |
-| Telefon główny | 91 48 24 190 (`+48914824190`), w stopce i jako numer widżetu |
+| Telefon główny | 91 48 24 190 (`+48914824190`), w stopce i jako numer widżetu. Od 13.10 TEWU wskazuje jako pierwszy wybór 602 235 736 (Decyzje, pkt 4) |
 | Inne telefony | 602 235 736 (sekretariat), 501 482 555 (komórkowy, w stopce i na podstronach usługowych), 886 543 973 (komórkowy) |
 | E-mail | biuro@tewu.szczecin.pl, sw@tewu.szczecin.pl |
 | Godziny | pon–pt 8:00–16:00 |
 | NIP / REGON / KRS | 9552249417 / 320601499 / 0000320281 |
 
-## Do decyzji (Ty lub TEWU)
+## Decyzje (odpowiedzi TEWU i Twoje z 13.10.2026)
 
-1. **Zmiany widocznej treści** (pkt 6, 8, 9, 20, 21, 23): akceptacja propozycji albo wskazanie innych tekstów.
-2. **`knowsLanguage: uk` w JSON-LD:** prompt zakłada obsługę po ukraińsku, a ukraińska polityka prywatności obiecuje oddzwonienie „відповідною мовою”. Jawnego zdania „rozmawiamy po ukraińsku” na stronie nie ma, a TEWU nie wymieniło tego w odpowiedzi A9. Czy potwierdzasz, że biuro prowadzi rozmowy po ukraińsku?
-3. **Profile społecznościowe** (pkt 21): adresy albo usunięcie ikon.
-4. **Obraz Open Graph** (pkt 10): generowany z logo i nazwy firmy przez `next/og`, czy masz gotową grafikę 1200×630?
-5. **`next/image`** (pkt 15): wymaga `sharp` w obrazie Alpine. Sprawdzę to przy budowie obrazu Dockera. Jeśli nie zadziała, zostanę przy `<img>` z `loading="lazy"`, wymiarami i plikami AVIF.
+1. **Widoczna treść:** TEWU akceptuje pkt 6 (H1 strony głównej), 8 (nowy podtytuł `/uslugi`, karta „Doradztwo podatkowe” **usunięta**, wariant A), 9 (blok „Zobacz też”), 20 (opis bez fundacji), 23 (tłumaczenie „Podgląd dokumentu”) i wersję ukraińską tych zmian.
+2. **Język obsługi:** biuro prowadzi rozmowy z klientami po polsku i po ukraińsku (zatrudnia osoby dwujęzyczne). Trafia to tylko do JSON-LD (`knowsLanguage`, `availableLanguage`). Na stronie nie dodajemy nowego zdania.
+3. **Profile społecznościowe** (pkt 21): biuro ich nie prowadzi. Ikony Facebook i LinkedIn usunięte ze stopki, w JSON-LD brak `sameAs`.
+4. **Telefon główny:** 602 235 736 jako pierwszy wybór (tak ma być w wizytówce Google). W JSON-LD to `telephone`, 91 48 24 190 drugi. W stopce i na `/kontakt` 602 235 736 stoi przed 91 48 24 190, wszystkie numery zostają linkami `tel:`. Numer przycisku „Zadzwoń” w widżecie oddzwonienia bez zmian (`NEXT_PUBLIC_CALLBACK_CALL_NUMBER`). Do wiadomości specjalisty od pomiaru: w stopce pierwszy link `tel:` zmienia numer.
+5. **Wizytówka Google:** https://maps.app.goo.gl/5mcixYfd5ZfvRMJZ6, czyli miejsce „Biuro Rachunkowe TEWU Sp. z o.o.” (CID `12155973943651028905`, 53.4136901, 14.5328745). Adres potwierdzony: Al. Powstańców Wielkopolskich 78A LU2, 70-110 Szczecin. Link w stopce (pkt 27), `hasMap` i `geo` w JSON-LD prowadzą do tej wizytówki. Przy okazji: mapa osadzona na `/kontakt` wskazywała punkt ok. 770 m dalej (53.40715, 14.53674) z identyfikatorem miejsca innym niż wizytówka. Mapa ustawiona na wizytówkę.
+6. **Certyfikaty** (pkt 31): oba wydał Minister Finansów. Odznaka „Certyfikaty MF i SKwP” zmieniona na „Certyfikaty MF” („Сертифікати MF”), za Twoją zgodą.
+7. **Obraz Open Graph** (pkt 10): brak gotowej grafiki, generowany przez `next/og` (PL i UK).
+8. **`next/image`** (pkt 15): zostaję przy `<img>` z `loading="lazy"`, wymiarami i plikami AVIF. LCP to tekst, więc zysk z `srcset` jest mały, a `next/image` w obrazie Alpine wymaga `sharp` w wersji musl, czego nie da się sprawdzić bez budowy obrazu Dockera.
 
 ## Plan poprawek (kolejność wdrożenia, jeden commit na obszar)
 
