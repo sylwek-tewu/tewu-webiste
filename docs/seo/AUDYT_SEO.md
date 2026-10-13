@@ -206,3 +206,105 @@ Certyfikaty Let's Encrypt są osobne dla `tewu.szczecin.pl` i `www.tewu.szczecin
 - Pkt 18 rozwiązany po stronie Coolify. Przekierowanie `www` w `next.config.mjs` będzie tylko zapasem, bo proxy przekierowuje wcześniej.
 - Pkt 26 rozwiązany: wildcard `*.tewu.szczecin.pl` zwraca po przepięciu NXDOMAIN (wcześniej strona parkingowa nazwa.pl).
 - Rekord DNS samej nazwy `test-tewu-website.projekty-tewu.it` można usunąć ręcznie (bez wildcardu).
+
+## Wdrożone (13.10.2026, gałąź `seo/audyt-poprawki`)
+
+Poprawki z planu (`docs/superpowers/plans/2026-10-13-seo-fixes.md`). Każda zaczynała się od testu, przeszła osobną recenzję zadania, a na końcu recenzję całej gałęzi. Nic nie zostało wdrożone na produkcję.
+
+### Co zmieniono
+
+| Obszar | Pkt audytu | Commit | Co |
+| --- | --- | --- | --- |
+| Dane firmy | 17, 27, Decyzje 4–5 | `c04c8b7` | Jeden moduł `src/lib/company.ts` (nazwa, adres w częściach, telefony, e-maile, godziny, NIP/REGON/KRS, konto, wizytówka, współrzędne, języki). W stopce i na `/kontakt` 602 235 736 przed 91 48 24 190. Link adresu w stopce prowadzi do wizytówki Google, mapa na `/kontakt` wskazuje wizytówkę (wcześniej punkt ok. 770 m dalej). Tytuł mapy po ukraińsku na `/uk/kontakt`. Usunięta nieużywana lista `SERVICES` |
+| Indeksacja | 3, 4, 18, 24 | `1530ec5` | `robots.txt` z adresem mapy strony. `X-Robots-Tag: noindex` dla każdego hosta innego niż dokładnie `tewu.szczecin.pl` (test na prawdziwym `matchHas` z Next.js). Zapasowe 308 z `www`. Strona 404 ma jeden znacznik `noindex` zamiast dwóch |
+| Metadane | 5, 7, 11, 12, 13 | `7ac0828` | Wspólna funkcja `buildPageMetadata`: title, description, canonical, hreflang, Open Graph, Twitter. Nowe teksty z tabeli propozycji (PL i UK) |
+| Obraz do udostępnień | 10 | `871cae5` | Generowany przez `next/og` (1200×630, PL i UK), czcionka Inter (OFL) w repozytorium |
+| JSON-LD | 2, Decyzje 2–5 | `94985d8` | `AccountingService` (`@id` `https://tewu.szczecin.pl/#firma`, telefon główny 602 235 736, drugi w `contactPoint`, `knowsLanguage` pl/uk, `geo` i `hasMap` z wizytówki) i `WebSite` na każdej stronie. `Service`, `BreadcrumbList`, `FAQPage` na podstronach usług. Bez `sameAs`, ocen, opinii i cen |
+| Nagłówki, alt, linki | 14, 19, 22, 23, 30 | `1e31867`, `9fad19d` | Kolejność nagłówków bez zmiany wyglądu. Linki „Więcej” z nazwą usługi dla czytników ekranu. Teksty alternatywne ze słowników (PL i UK). Karta certyfikatu jako `<button>`, napis „Перегляд документа” na `/uk`. Przełącznik języka jako prawdziwe linki `<a href>`, bez wstępnego pobierania (pobranie bez ciasteczka zapamiętywało przekierowanie na `/uk`) |
+| Obrazy i kontrast | 15, 16, 28 | `b55125f` | Wymiary, `decoding="async"`, `loading="lazy"` na wszystkich zdjęciach. Miniatury certyfikatów w AVIF (PNG jako zapas). Jaśniejszy tekst w sekcjach CTA |
+| Treść zaakceptowana przez TEWU | 6, 8, 20, 21, 31 | `d62f684` | Linijka „Biuro rachunkowe w Szczecinie” w H1 strony głównej. Nowy podtytuł `/uslugi`. Usunięta karta „Doradztwo podatkowe” (9 usług). Opis pełnej księgowości bez fundacji. Usunięte ikony Facebook i LinkedIn. Odznaka „Certyfikaty MF” |
+| Formularz oddzwonienia | 20 | `fda8849` | Usunięty temat „Fundacja lub stowarzyszenie”. Stare zgłoszenia z tym tematem dochodzą jako „Nie określono” (testy trasy API, potoku i powiadomień). ADR 0001 zaktualizowany |
+| Zobacz też | 9 | `70570d5` | Blok z 2–3 powiązanymi usługami przed sekcją „Porozmawiajmy o Twojej firmie” na sześciu podstronach (PL i UK) |
+| Kontrola | – | `b2239df`, `4185915` | `pnpm seo:check [adres]` (opis niżej) |
+| Poprawki po recenzji gałęzi | – | `31b1b14`, `4f3ac9b` | Przekierowanie językowe pomija adresy obrazów i ikon (wcześniej obraz udostępnień polskich stron trafiał na 404 dla przeglądarek po ukraińsku). Bez `inLanguage` w `Service`, jeden adres `WebSite`. Kontrast: odznaka w hero, tekst telefonu w CTA, stopka |
+
+Bez zmian URL-i i bez przekierowań poza zapasowym `www`. Bez nowych zależności i skryptów zewnętrznych.
+
+### Pomiar (dataLayer, `tel:`, `mailto:`)
+
+Porównałem HTML obecnej produkcji z buildem gałęzi (`/`, `/kontakt`, `/uslugi/kpir`, `/uk/kontakt`) i diff kodu:
+
+- zdarzenia `dataLayer`, ich nazwy i pola, identyfikatory i atrybuty `data-*`: bez zmian (doszły tylko `data-size` i `data-full-width` w przełączniku języka);
+- stopka: `tel:+48602235736`, `tel:+48914824190`, `tel:+48501482555` (wcześniej bez 602, pierwszy był 91 48 24 190);
+- `/kontakt`, karta „Telefon biuro”: 602 235 736 przed 91 48 24 190. Pozostałe linki w tej samej kolejności;
+- zdarzenie `callback_request_submit` nie dostanie już wartości `topic: 'fundacja'`.
+
+**Do przekazania specjaliście od pomiaru:** jeśli wyzwalacze liczą kliknięcia w konkretny numer, w stopce pierwszy link to teraz 602 235 736. Temat „fundacja” znika z raportów zgłoszeń.
+
+### Weryfikacja
+
+- `pnpm test` (867 testów), `pnpm check:types`, `pnpm lint`, `pnpm test:e2e` (16): zielone.
+- `pnpm build`: wszystkie strony statyczne, oba obrazy do udostępnień prerenderowane.
+- `pnpm seo:check` na zbudowanej wersji: **26 stron, 0 błędów, 2 ostrzeżenia** (opisy polityki prywatności PL 98 i UK 99 znaków, teksty TEWU bez zmian).
+- Lighthouse 12.8.2 (lokalny build, `tewu.szczecin.pl` zmapowany na serwer lokalny, HTTP):
+
+| Strona | Wydajność przed → po | LCP przed → po | Dostępność przed → po | SEO |
+| --- | --- | --- | --- | --- |
+| `/` (mobile) | 85 → 89 | 4,3 s → 3,6 s | 93 → 100 | 100 |
+| `/uslugi/kpir` (mobile) | 89 → 89 | 3,6 s → 3,6 s | 96 → 100 | 100 |
+| `/uslugi/inkubator-spolek` (mobile) | 89 → 89 | 3,6 s → 3,6 s | 96 → 100 | 100 |
+| `/` (desktop) | nie mierzono → 100 | nie mierzono → 0,8 s | nie mierzono → 100 | 100 |
+
+„Dobre praktyki” 79 wynikają tylko z pomiaru przez HTTP na serwerze lokalnym (produkcja działa na HTTPS). LCP na mobile to nadal tekst w hero, opóźniony przez blokujący CSS i czcionkę (pkt 16). Dalsze kroki dopiero po danych terenowych z CrUX.
+
+### `pnpm seo:check`
+
+`pnpm seo:check [adres]`, domyślnie `http://127.0.0.1:3000`, na zbudowanej i uruchomionej aplikacji (tylko HTTP, więc lokalnie albo w kontenerze, nie na produkcji przez HTTPS). Wysyła `Host: tewu.szczecin.pl`, czyta `sitemap.xml` i dla każdego adresu sprawdza:
+- status 200 i brak `noindex`;
+- jeden `<title>` w `<head>` (≤ 60 znaków);
+- opis (120–160 znaków, poza zakresem ostrzeżenie);
+- jeden canonical równy adresowi z mapy;
+- hreflang `pl`/`uk`/`x-default`;
+- jeden H1;
+- Open Graph i Twitter;
+- poprawny JSON-LD: z `AccountingService`, a na usługach także z `Service`, `BreadcrumbList` i `FAQPage`; bez `Review`/`AggregateRating`;
+- brak „doradztwa podatkowego” w metadanych, nagłówkach i JSON-LD;
+- `alt` przy obrazach;
+- przeskoki nagłówków (ostrzeżenie).
+
+Dodatkowo sprawdza `robots.txt`, `noindex` dla obcego hosta, 308 z `www` z zachowaniem parametrów, 404 z jednym `noindex` i obraz do udostępnień (także z `Accept-Language: uk`). Przy błędzie kończy się kodem wyjścia 1.
+
+### Teksty ukraińskie do sprawdzenia (tłumaczenie automatyczne)
+
+- tytuły i opisy stron `/uk`, `/uk/o-nas`, `/uk/uslugi`, `/uk/outsourcing`, `/uk/certyfikaty`, `/uk/kontakt`, `/uk/uslugi/kpir`, `/uk/uslugi/inkubator-spolek` (`src/app/(uk)/uk/**/page.tsx`, `src/content/service-pages/uk/`);
+- H1 „Бухгалтерське бюро в Щецині”, podtytuł `/uk/uslugi`, opis pierwszej karty, odznaka „Сертифікати MF”, „Перегляд документа”, tytuł mapy „Карта проїзду до бюро TEWU у Щецині” (`src/i18n/uk.ts`);
+- teksty alternatywne zdjęć (`uk.ts`, klucze `imageAlt`, `teamImageAlt`, `meetingImageAlt`);
+- blok „Дивіться також” i nazwy usług w nim (`servicePages.seeAlsoNames`);
+- obraz do udostępnień: „Бухгалтерське бюро в Щецині”, „Бухгалтерія · Кадри та зарплата · KSeF” (`src/lib/og-image-meta.ts`);
+- JSON-LD: nazwy usług `UK_SERVICE_TYPE` i okruszki „Головна”, „Послуги” (`src/lib/structured-data.ts`). Ryczałt ma tu nazwę „Спрощене оподаткування (ryczałt)”. W stopce i w bloku „Дивіться також” jest „Податок з продажу (ryczałt)”, co brzmi jak podatek od sprzedaży. Warto ujednolicić po decyzji osoby znającej ukraiński.
+
+### Decyzje podjęte w trakcie (do Twojej weryfikacji)
+
+- **Bez `next/image`:** zostały `<img>` z wymiarami, `lazy` i AVIF. LCP to tekst, a działania `sharp` w Alpine nie da się sprawdzić bez budowy obrazu Dockera.
+- **Zdjęcie w hero ładuje się leniwie:** na telefonie jest ukryte. Na desktopie jest elementem LCP, ale LCP wynosi 0,8 s (Lighthouse desktop 100).
+- **Tekst alternatywny zdjęcia w hero** opisuje to, co widać („Dokumenty podatkowe, telefon z kalkulatorem i długopis”), a nie „Wnętrze nowoczesnego biura”.
+- **Miniatury certyfikatów mają pusty `alt`:** `cert.png` i `library.png` to zdjęcia stockowe (anglojęzyczny dyplom i biblioteka), a nie skany. Opis „Certyfikat Księgowy – imię i nazwisko” byłby nieprawdziwy, a imię i tytuł są w tekście karty.
+- **Adresy obrazów do udostępnień** zawierają dopisek, który Next.js nadaje przy grupach tras (`/opengraph-image-35ziip`, `/uk/opengraph-image-1xrru2`). Są wpisane w `src/lib/og-image-meta.ts`, a pilnuje ich test w CI i `seo:check`. Jeśli po aktualizacji Next.js dopisek się zmieni, test pokaże nową wartość.
+- **`inLanguage` usunięte z `Service`:** plan go wymagał, ale schema.org nie zna tej właściwości dla `Service`.
+
+### Propozycje (nie wdrożone)
+
+1. **Miniatury certyfikatów:** zamiast zdjęć stockowych miniatury prawdziwych certyfikatów (z PDF-ów, które już są na stronie). Do decyzji TEWU.
+2. **Kontrast na `/kontakt`:** etykieta „Godziny otwarcia” na karcie `blue.6` ma 3,56:1. Zmiana tła karty na `brandBlue.6` da 5,17:1. To widoczna zmiana koloru.
+3. **Opisy polityki prywatności** (PL 98, UK 99 znaków) są krótsze niż zalecane 120 znaków. To teksty TEWU, zostawione bez zmian.
+4. **Porządki w kodzie:** nieużywane `REASONS_TO_TRUST`, `NAV_LINKS`, `COMPANY_NAME` w `src/constants.tsx`. NIP/REGON/KRS w tekstach polityki prywatności są wciąż wpisane w słownikach, a nie brane z `COMPANY`.
+5. **ADR 0003:** dopisać ryzyko ręcznych etykiet Traefika (sekcja „Po przepięciu domeny”).
+
+### Po wdrożeniu (lista kontrolna)
+
+1. `curl -sI https://tewu.szczecin.pl/` i `curl -sI https://tewu.szczecin.pl/uslugi/kpir`: odpowiedź **bez** `x-robots-tag`. To jedyny dowód, że Traefik przekazuje aplikacji niezmieniony nagłówek `Host`. Jeśli pojawi się `noindex`, trzeba od razu wycofać wdrożenie.
+2. Adres podglądu PR: `x-robots-tag: noindex`.
+3. `curl -s https://tewu.szczecin.pl/robots.txt`: linia `Sitemap: https://tewu.szczecin.pl/sitemap.xml`.
+4. Google Search Console: zgłosić `sitemap.xml`, sprawdzić stronę główną i jedną usługę w „Sprawdzaniu adresu URL”, a `/uslugi/kpir` w teście wyników z elementami rozszerzonymi.
+5. Podgląd linku (np. w komunikatorze) dla `/` i `/uk`: obraz i tytuł.
+6. Przekazać specjaliście od pomiaru zmiany z sekcji „Pomiar”.
