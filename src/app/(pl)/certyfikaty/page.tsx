@@ -1,19 +1,13 @@
 import React from 'react';
-import { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/metadata';
 import CertificatesClient from './CertificatesClient';
 
-export const metadata: Metadata = {
-    title: "Certyfikaty - Biuro Rachunkowe TEWU",
+export const metadata = buildPageMetadata({
+    locale: 'pl',
+    path: '/certyfikaty',
+    title: "Certyfikaty księgowe – Biuro Rachunkowe TEWU w Szczecinie",
     description: "Certyfikaty Ministerstwa Finansów potwierdzające kwalifikacje i uprawnienia do usługowego prowadzenia ksiąg rachunkowych TEWU w Szczecinie.",
-    alternates: {
-        canonical: '/certyfikaty',
-        languages: {
-            'pl': '/certyfikaty',
-            'x-default': '/certyfikaty',
-            'uk': '/uk/certyfikaty',
-        },
-    },
-};
+});
 
 export default function Certificates() {
     return <CertificatesClient />;

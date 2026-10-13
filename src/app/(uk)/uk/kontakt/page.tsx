@@ -1,19 +1,13 @@
 import React from 'react';
-import { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/metadata';
 import ContactClient from '@/app/(pl)/kontakt/ContactClient';
 
-export const metadata: Metadata = {
-    title: "Контакти | Бухгалтерське бюро TEWU в Щецині",
-    description: "Зв'яжіться з Biuro Rachunkowe TEWU. Телефон, електронна адреса, години роботи, реквізити та карта доїзду до нашого офісу в Щецині.",
-    alternates: {
-        canonical: '/uk/kontakt',
-        languages: {
-            'pl': '/kontakt',
-            'x-default': '/kontakt',
-            'uk': '/uk/kontakt',
-        },
-    },
-};
+export const metadata = buildPageMetadata({
+    locale: 'uk',
+    path: '/kontakt',
+    title: "Контакти та як доїхати – Бюро TEWU у Щецині",
+    description: "Biuro Rachunkowe TEWU, Al. Powstańców Wielkopolskich 78A LU2, Щецин. Телефон 602 235 736, e-mail, години роботи (пн–пт 8–16) і карта доїзду.",
+});
 
 export default function UkrainianContact() {
     return <ContactClient />;

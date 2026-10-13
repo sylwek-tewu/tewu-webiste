@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import type { Locale, Translations } from './types';
-import { LOCALE_COOKIE_NAME, localeOfPath } from './config';
+import { LOCALE_COOKIE_NAME, localizePath } from './config';
 
 interface LocaleContextValue {
   locale: Locale;
@@ -20,16 +20,8 @@ export function setLocaleCookie(locale: Locale) {
   document.cookie = `${LOCALE_COOKIE_NAME}=${locale}; path=/; max-age=${maxAge}; SameSite=Lax`;
 }
 
-/** The same page's path in the other language: "/kontakt" <-> "/uk/kontakt", "/" <-> "/uk". */
-export function localizePath(pathname: string, targetLocale: Locale): string {
-  const isUk = localeOfPath(pathname) === 'uk';
-  if (targetLocale === 'uk') {
-    if (isUk) return pathname;
-    return pathname === '/' ? '/uk' : `/uk${pathname}`;
-  }
-  if (!isUk) return pathname;
-  return pathname === '/uk' ? '/' : pathname.slice('/uk'.length);
-}
+// Lives in config.ts so server code (page metadata) can import it; re-exported for existing callers.
+export { localizePath };
 
 /**
  * The locale comes from the root layout ((pl) or (uk) route group), which also sets <html lang>,
