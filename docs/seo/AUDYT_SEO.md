@@ -181,7 +181,7 @@ Domenę przepięto na Coolify 13.10 ok. 16:00. Konfigurację odczytano przez Coo
 
 Wspólnego middleware `redirect-to-https` nie zmieniano, bo definiują go wszystkie aplikacje na serwerze (konflikt w Traefiku).
 
-**Ryzyko:** w aplikacji wyłączono „Readonly labels”. Przy każdej zmianie domen w Coolify trzeba ręcznie poprawić te etykiety, inaczej przekierowania wrócą do 307 albo przestaną działać. Warto dopisać to do ADR 0003.
+**Ryzyko:** w aplikacji wyłączono „Readonly labels”. Przy każdej zmianie domen w Coolify trzeba ręcznie poprawić te etykiety, inaczej przekierowania wrócą do 307 albo przestaną działać. Opisane w ADR 0003, sekcja 3b, z listą kontrolną w „Wymaganiach operacyjnych” (pkt 5).
 
 **Wyniki `curl`:**
 
@@ -298,7 +298,7 @@ Dodatkowo sprawdza `robots.txt`, `noindex` dla obcego hosta, 308 z `www` z zacho
 2. **Kontrast na `/kontakt`:** etykieta „Godziny otwarcia” na karcie `blue.6` ma 3,56:1. Zmiana tła karty na `brandBlue.6` da 5,17:1. To widoczna zmiana koloru.
 3. **Opisy polityki prywatności** (PL 98, UK 99 znaków) są krótsze niż zalecane 120 znaków. To teksty TEWU, zostawione bez zmian.
 4. **Porządki w kodzie:** nieużywane `REASONS_TO_TRUST`, `NAV_LINKS`, `COMPANY_NAME` w `src/constants.tsx`. NIP/REGON/KRS w tekstach polityki prywatności są wciąż wpisane w słownikach, a nie brane z `COMPANY`.
-5. **ADR 0003:** dopisać ryzyko ręcznych etykiet Traefika (sekcja „Po przepięciu domeny”).
+5. **ADR 0003:** ryzyko ręcznych etykiet Traefika dopisane (sekcja 3b i wymaganie operacyjne 5).
 
 ### Po wdrożeniu (lista kontrolna)
 
