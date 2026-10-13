@@ -59,9 +59,13 @@ _Avoid_: Kolejka zadań, baza tymczasowa
 ## Deployment
 
 **Production Deployment**:
-Wdrożenie gałęzi `main` pod główną domeną serwisu `tewu.szczecin.pl`, publicznie dostępne dla klientów biura.
+Wdrożenie gałęzi `main` pod główną domeną serwisu `tewu.szczecin.pl`, publicznie dostępne dla klientów biura. Jedyne wdrożenie, które wyszukiwarki mogą indeksować: pod każdą inną domeną (adres testowy aplikacji, Preview Deployment, uruchomienie lokalne) strona ma `noindex`.
 _Avoid_: Deployment główny, wersja live
 
+**Legacy URL** (stary adres):
+Adres z poprzednich wersji strony (serwis na Netlify do października 2026, wcześniej serwis w Laravelu), który wyszukiwarki lub linki zewnętrzne mogą jeszcze znać. Adres z odpowiednikiem w obecnej stronie dostaje stałe przekierowanie do tego odpowiednika, a adres bez odpowiednika zwraca 404. Nie przekierowujemy hurtowo na stronę główną.
+_Avoid_: Martwy link, stara podstrona
+
 **Preview Deployment** (deployment testowy):
-Wdrożenie dla pull requesta pod `<nr PR>.<domena>`, dostępne tylko dla zespołu po podaniu hasła.
+Wdrożenie dla pull requesta pod `<nr PR>.test-tewu-website.projekty-tewu.it`, dostępne tylko dla zespołu po podaniu hasła. Nigdy pod domeną klienta `tewu.szczecin.pl`.
 _Avoid_: Staging, środowisko testowe
