@@ -1,6 +1,21 @@
 import { describe, it, expect } from 'vitest';
 import { buildPageMetadata } from './metadata';
 
+// Page-level openGraph replaces the images of the opengraph-image file of the parent segment,
+// so every page names the share image itself.
+const PL_IMAGE = {
+  url: '/opengraph-image-35ziip',
+  width: 1200,
+  height: 630,
+  alt: 'Biuro Rachunkowe TEWU – biuro rachunkowe w Szczecinie',
+};
+const UK_IMAGE = {
+  url: '/uk/opengraph-image-1xrru2',
+  width: 1200,
+  height: 630,
+  alt: 'Бухгалтерське бюро TEWU у Щецині',
+};
+
 describe('buildPageMetadata', () => {
   it('sets the canonical, hreflang links and social tags of a Polish page', () => {
     expect(buildPageMetadata({ locale: 'pl', path: '/kontakt', title: 'Tytuł', description: 'Opis' })).toEqual({
@@ -18,8 +33,9 @@ describe('buildPageMetadata', () => {
         alternateLocale: 'uk_UA',
         title: 'Tytuł',
         description: 'Opis',
+        images: [PL_IMAGE],
       },
-      twitter: { card: 'summary_large_image', title: 'Tytuł', description: 'Opis' },
+      twitter: { card: 'summary_large_image', title: 'Tytuł', description: 'Opis', images: [PL_IMAGE] },
     });
   });
 
@@ -40,9 +56,14 @@ describe('buildPageMetadata', () => {
     });
   });
 
-  it('leaves Open Graph images to the file-based opengraph-image routes', () => {
-    const metadata = buildPageMetadata({ locale: 'pl', path: '/', title: 'T', description: 'D' });
-    expect(metadata.openGraph).not.toHaveProperty('images');
-    expect(metadata.twitter).not.toHaveProperty('images');
+  it.each([
+    ['pl', '/', PL_IMAGE],
+    ['pl', '/uslugi/kpir', PL_IMAGE],
+    ['uk', '/', UK_IMAGE],
+    ['uk', '/uslugi/kpir', UK_IMAGE],
+  ] as const)('names the %s share image on %s for Open Graph and Twitter', (locale, path, image) => {
+    const metadata = buildPageMetadata({ locale, path, title: 'T', description: 'D' });
+    expect(metadata.openGraph).toMatchObject({ images: [image] });
+    expect(metadata.twitter).toMatchObject({ images: [image] });
   });
 });

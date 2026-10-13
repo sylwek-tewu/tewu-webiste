@@ -1,7 +1,7 @@
 import { createTheme, MantineColorsTuple, CSSVariablesResolver } from "@mantine/core";
 
 // Tailwind blue-600 #2563eb
-const brandBlue: MantineColorsTuple = [
+export const brandBlue: MantineColorsTuple = [
     "#eff6ff", // blue-50
     "#dbeafe", // blue-100
     "#bfdbfe", // blue-200
@@ -15,7 +15,7 @@ const brandBlue: MantineColorsTuple = [
 ];
 
 // Tailwind slate palette
-const slate: MantineColorsTuple = [
+export const slate: MantineColorsTuple = [
     "#f8fafc", // slate-50
     "#f1f5f9", // slate-100
     "#e2e8f0", // slate-200

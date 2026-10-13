@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { localizePath } from '@/i18n/config';
 import type { Locale } from '@/i18n/types';
 import { COMPANY } from '@/lib/company';
+import { OG_COPY, OG_IMAGE_PATH, OG_SIZE } from '@/lib/og-image-meta';
 
 const OPEN_GRAPH_LOCALE: Record<Locale, string> = { pl: 'pl_PL', uk: 'uk_UA' };
 
@@ -15,11 +16,12 @@ interface PageMetadataInput {
 
 /**
  * Title, description, canonical, hreflang, Open Graph and Twitter tags for one page.
- * Open Graph images come from the opengraph-image files of the route segments, not from here.
+ * The share image is named here because a page-level openGraph replaces the file-based one.
  */
 export function buildPageMetadata({ locale, path, title, description }: PageMetadataInput): Metadata {
   const polishPath = localizePath(path, 'pl');
   const canonical = localizePath(path, locale);
+  const images = [{ url: OG_IMAGE_PATH[locale], ...OG_SIZE, alt: OG_COPY[locale].alt }];
   return {
     title,
     description,
@@ -39,7 +41,8 @@ export function buildPageMetadata({ locale, path, title, description }: PageMeta
       alternateLocale: OPEN_GRAPH_LOCALE[locale === 'pl' ? 'uk' : 'pl'],
       title,
       description,
+      images,
     },
-    twitter: { card: 'summary_large_image', title, description },
+    twitter: { card: 'summary_large_image', title, description, images },
   };
 }
