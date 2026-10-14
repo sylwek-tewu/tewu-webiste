@@ -7,7 +7,7 @@ import nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { CallbackNotificationData } from './types';
 import { getCallbackRecipients, getSmtpConfig } from './config';
-import { CALLBACK_SLOTS, CALLBACK_TOPICS, toKnownSource } from '../callback/types';
+import { CALLBACK_SLOTS, CALLBACK_TOPICS, getSourceLabel } from '../callback/types';
 import { getWarsawTime } from '../calendar';
 import { SERVICE_PAGES, isServicePageSlug, servicePagePath } from '@/lib/service-pages';
 
@@ -46,7 +46,7 @@ export function formatWarsawDateTime(isoString: string): string {
 export function buildCallbackEmail(data: CallbackNotificationData): { subject: string; text: string; html: string } {
   const slotLabel = getSlotLabel(data.slot);
   const topicLabel = getTopicLabel(data.topic);
-  const source = toKnownSource(data.source);
+  const sourceLabel = getSourceLabel(data.source);
   const landingPageLabel = getLandingPageLabel(data);
   const dateFormatted = formatWarsawDateTime(data.createdAt);
   const h = {
@@ -54,7 +54,7 @@ export function buildCallbackEmail(data: CallbackNotificationData): { subject: s
     phone: escapeHtml(data.phone),
     slot: escapeHtml(slotLabel),
     topic: escapeHtml(topicLabel),
-    source: escapeHtml(source),
+    source: escapeHtml(sourceLabel),
     landingPage: escapeHtml(landingPageLabel),
   };
 
@@ -72,7 +72,7 @@ Język strony: ${langLabel}
 Telefon: ${data.phone}
 Preferowana pora kontaktu: ${slotLabel}
 Czego dotyczy: ${topicLabel}
-Źródło zgłoszenia: ${source}
+Miejsce wywołania: ${sourceLabel}
 Podstrona usługowa: ${landingPageLabel}
 Data i godzina: ${dateFormatted} (czas polski)
 `.trim();
@@ -109,7 +109,7 @@ Data i godzina: ${dateFormatted} (czas polski)
     </tr>
     <tr>
       <td style="padding: 8px 0; color: #64748b;">Miejsce wywołania:</td>
-      <td style="padding: 8px 0; font-family: monospace; color: #475569;">${h.source}</td>
+      <td style="padding: 8px 0;">${h.source}</td>
     </tr>
     <tr>
       <td style="padding: 8px 0; color: #64748b;">Podstrona usługowa:</td>

@@ -1,10 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import { servicePageSlugOfPath } from '@/lib/service-pages';
 import { CallbackContextType, WidgetTriggerSource } from './types';
 import { pushCallbackWidgetOpen } from './analytics';
+
+const CALLBACK_LINK_PARAM = 'callback';
 
 const CallbackContext = createContext<CallbackContextType | null>(null);
 
@@ -19,6 +21,16 @@ export const CallbackProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setIsOpen(true);
     pushCallbackWidgetOpen(triggerSource);
   }, []);
+
+  // A Callback Link (?callback) opens the widget on arrival. The parameter is dropped from the
+  // address so a reload does not reopen it; other parameters (UTM, gclid) and the hash stay.
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has(CALLBACK_LINK_PARAM)) return;
+    url.searchParams.delete(CALLBACK_LINK_PARAM);
+    window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
+    openWidget('link');
+  }, [openWidget]);
 
   const closeWidget = useCallback(() => {
     setIsOpen(false);

@@ -18,7 +18,8 @@ describe('Telegram Ping PII Leak Prevention', () => {
     expect(text).toContain('#C9F1A2');
     expect(text).toContain('12:00–16:00');
     expect(text).toContain('Kadry i płace');
-    expect(text).toContain('hero');
+    expect(text).toContain('Przycisk na górze strony głównej');
+    expect(text).not.toContain('hero');
   });
 
   it('strictly verifies NO phone digits or substrings are present in the telegram text', () => {
@@ -57,7 +58,7 @@ describe('Telegram Ping PII Leak Prevention', () => {
     } as unknown as CallbackNotificationData);
     expect(text).not.toMatch(/60[1-3]|[789]00/);
     expect(text).toContain('temat: ogólny');
-    expect(text).toContain('źródło: unknown');
+    expect(text).toContain('źródło: Nieznane');
   });
 
   it('includes [UA] indicator when locale is uk', () => {
