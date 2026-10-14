@@ -20,7 +20,8 @@ import {
 } from './types';
 import { DELIVERY_BUDGET } from './delivery-budget';
 import { MIN_FILL_TIME_MS } from './time-trap';
-import { getSmtpConfig, sendCallbackEmail } from '@/lib/notify/email';
+import { sendCallbackEmail } from '@/lib/notify/email';
+import { getSmtpConfig } from '@/lib/notify/config';
 import { sendTelegramPing, sendTelegramAlert } from '@/lib/notify/telegram';
 import { getOutboxStore } from '@/lib/outbox/store';
 import type { OutboxStore } from '@/lib/outbox/types';

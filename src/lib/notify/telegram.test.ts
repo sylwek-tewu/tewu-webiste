@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import { buildTelegramPingText } from './telegram';
 import { CallbackNotificationData } from './types';
 
@@ -80,6 +80,30 @@ describe('Telegram Ping PII Leak Prevention', () => {
   it('names the landing page by its fixed label', () => {
     const text = buildTelegramPingText({ ...sampleData, landingPage: 'kadry-i-place' });
     expect(text).toContain('podstrona: Kadry i płace');
+  });
+
+  describe('mailbox pointer', () => {
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it('points at the mailbox configured in CALLBACK_TO, not a fixed address', () => {
+      vi.stubEnv('CALLBACK_TO', 'zgloszenia@example.pl');
+      const text = buildTelegramPingText(sampleData);
+      expect(text).toContain('w skrzynce zgloszenia@example.pl');
+      expect(text).not.toContain('biuro@tewu.szczecin.pl');
+    });
+
+    it('lists every recipient when CALLBACK_TO holds several addresses', () => {
+      vi.stubEnv('CALLBACK_TO', 'jeden@example.pl, drugi@example.pl ,');
+      const text = buildTelegramPingText(sampleData);
+      expect(text).toContain('w skrzynce jeden@example.pl, drugi@example.pl (');
+    });
+
+    it('falls back to the default office mailbox when CALLBACK_TO is unset', () => {
+      vi.stubEnv('CALLBACK_TO', '');
+      expect(buildTelegramPingText(sampleData)).toContain('w skrzynce biuro@tewu.szczecin.pl ');
+    });
   });
 
   it('leaves the landing page out when there is none or it is not a known page', () => {

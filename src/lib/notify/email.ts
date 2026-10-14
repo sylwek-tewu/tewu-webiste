@@ -6,6 +6,7 @@ import net from 'node:net';
 import nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { CallbackNotificationData } from './types';
+import { getCallbackRecipients, getSmtpConfig } from './config';
 import { CALLBACK_SLOTS, CALLBACK_TOPICS, toKnownSource } from '../callback/types';
 import { getWarsawTime } from '../calendar';
 import { SERVICE_PAGES, isServicePageSlug, servicePagePath } from '@/lib/service-pages';
@@ -40,22 +41,6 @@ export function formatWarsawDateTime(isoString: string): string {
   const wt = getWarsawTime(date);
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${pad(wt.day)}.${pad(wt.month)}.${wt.year}, ${pad(wt.hour)}:${pad(wt.minute)}`;
-}
-
-export function getSmtpConfig() {
-  const host = process.env.CALLBACK_SMTP_HOST;
-  const port = parseInt(process.env.CALLBACK_SMTP_PORT || '587', 10);
-  const user = process.env.CALLBACK_SMTP_USER;
-  const pass = process.env.CALLBACK_SMTP_PASS;
-  const from = process.env.CALLBACK_FROM || 'Biuro Rachunkowe TEWU <biuro@tewu.szczecin.pl>';
-  const to = process.env.CALLBACK_TO || 'biuro@tewu.szczecin.pl';
-
-  const missing: string[] = [];
-  if (!host) missing.push('CALLBACK_SMTP_HOST');
-  if (!user) missing.push('CALLBACK_SMTP_USER');
-  if (!pass) missing.push('CALLBACK_SMTP_PASS');
-
-  return { host, port, user, pass, from, to, missing };
 }
 
 export function buildCallbackEmail(data: CallbackNotificationData): { subject: string; text: string; html: string } {
@@ -236,11 +221,9 @@ export async function sendCallbackEmail(
       },
     });
 
-    const recipients = config.to.split(',').map((email) => email.trim()).filter(Boolean);
-
     await transporter.sendMail({
       from: config.from,
-      to: recipients,
+      to: getCallbackRecipients(),
       subject,
       text: textBody,
       html: htmlBody,
