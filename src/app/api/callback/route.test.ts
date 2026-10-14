@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { POST } from './route';
 import * as emailModule from '@/lib/notify/email';
+import * as configModule from '@/lib/notify/config';
 import * as telegramModule from '@/lib/notify/telegram';
 import * as storeModule from '@/lib/outbox/store';
 import { DELIVERY_BUDGET } from '@/lib/callback/delivery-budget';
@@ -235,7 +236,7 @@ describe('POST /api/callback route handler', () => {
   });
 
   it('returns 500 with office call details when an unexpected exception occurs in pipeline', async () => {
-    vi.spyOn(emailModule, 'getSmtpConfig').mockImplementation(() => {
+    vi.spyOn(configModule, 'getSmtpConfig').mockImplementation(() => {
       throw new Error('Pipeline explosion');
     });
 

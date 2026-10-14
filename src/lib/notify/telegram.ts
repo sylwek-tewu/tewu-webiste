@@ -3,7 +3,8 @@
  */
 
 import { CallbackNotificationData } from './types';
-import { CALLBACK_SLOTS, CALLBACK_TOPICS, toKnownSource } from '../callback/types';
+import { getCallbackRecipients } from './config';
+import { CALLBACK_SLOTS, CALLBACK_TOPICS, getSourceLabel } from '../callback/types';
 import { getWarsawTime } from '../calendar';
 import { SERVICE_PAGES, isServicePageSlug } from '@/lib/service-pages';
 
@@ -41,8 +42,8 @@ export function buildTelegramPingText(data: CallbackNotificationData): string {
   return (
     `${langPrefix}Nowa prośba o oddzwonienie #${data.id} · ` +
     langTag +
-    `pora: ${slotLabel} · temat: ${topicLabel} · ${landingPageTag}źródło: ${toKnownSource(data.source)} · ${dateStr}. ` +
-    `Szczegóły i numer: w skrzynce biuro@tewu.szczecin.pl (temat maila zawiera #${data.id}).`
+    `pora: ${slotLabel} · temat: ${topicLabel} · ${landingPageTag}źródło: ${getSourceLabel(data.source)} · ${dateStr}. ` +
+    `Szczegóły i numer: w skrzynce ${getCallbackRecipients().join(', ')} (temat maila zawiera #${data.id}).`
   );
 }
 

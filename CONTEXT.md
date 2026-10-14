@@ -48,6 +48,10 @@ _Avoid_: Rekord, zapytanie ofertowe, wiersz bazy, formularz kontaktowy
 Obietnica terminu kontaktu składana klientowi na podstawie wybranego slotu, bieżącego czasu w strefie `Europe/Warsaw`, dni roboczych oraz godzin pracy biura.
 _Avoid_: Czas odpowiedzi, SLA, slot oddzwonienia
 
+**Callback Link**:
+Adres strony serwisu z parametrem `callback` (np. `tewu.szczecin.pl/?callback`, `/uk?callback`), który po wejściu otwiera widżet call-back bez klikania przycisku. Przeznaczony do udostępniania (reklamy, e-mail, SMS, QR, social media). Zgłoszenie z takiego otwarcia ma źródło (`source`) `link`. Sam parametr jest zdejmowany z adresu po otwarciu, a pozostałe parametry (UTM, `gclid`) zostają.
+_Avoid_: Deep link, link do formularza, osobna strona oddzwaniania
+
 **Office Hours & Calendar**:
 Zasady wyliczania dostępności biura i terminów kontaktu w oparciu o strefę `Europe/Warsaw`, polskie dni ustawowo wolne od pracy oraz dodatkowe dni zamknięte.
 _Avoid_: Moduł świąt, biblioteka dat

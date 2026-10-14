@@ -47,12 +47,27 @@ export const CALLBACK_TOPICS: { id: CallbackTopic; label: string }[] = [
 ];
 
 /** Where the widget was opened from. Anything else is recorded as 'unknown'. */
-export const CALLBACK_SOURCES = ['header', 'floating', 'contact', 'hero', 'service'] as const;
+export const CALLBACK_SOURCES = ['header', 'floating', 'contact', 'hero', 'service', 'link'] as const;
 
 export type CallbackSource = (typeof CALLBACK_SOURCES)[number];
 
 export function toKnownSource(value: unknown): CallbackSource | 'unknown' {
   return (CALLBACK_SOURCES as readonly unknown[]).includes(value) ? (value as CallbackSource) : 'unknown';
+}
+
+/** What the office reads in notifications instead of the technical source value. */
+export const CALLBACK_SOURCE_LABELS: Record<CallbackSource | 'unknown', string> = {
+  header: 'Przycisk „Bezpłatna wycena” w górnym menu strony',
+  floating: 'Pływający przycisk „Bezpłatna wycena” (na telefonie: przycisk „Oddzwońcie” w dolnym pasku)',
+  service: 'Przycisk „Bezpłatna wycena – oddzwonimy” na podstronie usługowej',
+  contact: 'Przycisk na stronie Kontakt',
+  hero: 'Przycisk na górze strony głównej',
+  link: 'Udostępniony link (klient wszedł z adresu otwierającego formularz, np. z reklamy, maila lub QR)',
+  unknown: 'Nieznane',
+};
+
+export function getSourceLabel(value: unknown): string {
+  return CALLBACK_SOURCE_LABELS[toKnownSource(value)];
 }
 
 /**

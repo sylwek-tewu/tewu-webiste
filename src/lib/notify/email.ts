@@ -6,7 +6,8 @@ import net from 'node:net';
 import nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { CallbackNotificationData } from './types';
-import { CALLBACK_SLOTS, CALLBACK_TOPICS, toKnownSource } from '../callback/types';
+import { getCallbackRecipients, getSmtpConfig } from './config';
+import { CALLBACK_SLOTS, CALLBACK_TOPICS, getSourceLabel } from '../callback/types';
 import { getWarsawTime } from '../calendar';
 import { SERVICE_PAGES, isServicePageSlug, servicePagePath } from '@/lib/service-pages';
 
@@ -42,26 +43,10 @@ export function formatWarsawDateTime(isoString: string): string {
   return `${pad(wt.day)}.${pad(wt.month)}.${wt.year}, ${pad(wt.hour)}:${pad(wt.minute)}`;
 }
 
-export function getSmtpConfig() {
-  const host = process.env.CALLBACK_SMTP_HOST;
-  const port = parseInt(process.env.CALLBACK_SMTP_PORT || '587', 10);
-  const user = process.env.CALLBACK_SMTP_USER;
-  const pass = process.env.CALLBACK_SMTP_PASS;
-  const from = process.env.CALLBACK_FROM || 'Biuro Rachunkowe TEWU <biuro@tewu.szczecin.pl>';
-  const to = process.env.CALLBACK_TO || 'biuro@tewu.szczecin.pl';
-
-  const missing: string[] = [];
-  if (!host) missing.push('CALLBACK_SMTP_HOST');
-  if (!user) missing.push('CALLBACK_SMTP_USER');
-  if (!pass) missing.push('CALLBACK_SMTP_PASS');
-
-  return { host, port, user, pass, from, to, missing };
-}
-
 export function buildCallbackEmail(data: CallbackNotificationData): { subject: string; text: string; html: string } {
   const slotLabel = getSlotLabel(data.slot);
   const topicLabel = getTopicLabel(data.topic);
-  const source = toKnownSource(data.source);
+  const sourceLabel = getSourceLabel(data.source);
   const landingPageLabel = getLandingPageLabel(data);
   const dateFormatted = formatWarsawDateTime(data.createdAt);
   const h = {
@@ -69,7 +54,7 @@ export function buildCallbackEmail(data: CallbackNotificationData): { subject: s
     phone: escapeHtml(data.phone),
     slot: escapeHtml(slotLabel),
     topic: escapeHtml(topicLabel),
-    source: escapeHtml(source),
+    source: escapeHtml(sourceLabel),
     landingPage: escapeHtml(landingPageLabel),
   };
 
@@ -87,7 +72,7 @@ Język strony: ${langLabel}
 Telefon: ${data.phone}
 Preferowana pora kontaktu: ${slotLabel}
 Czego dotyczy: ${topicLabel}
-Źródło zgłoszenia: ${source}
+Miejsce wywołania: ${sourceLabel}
 Podstrona usługowa: ${landingPageLabel}
 Data i godzina: ${dateFormatted} (czas polski)
 `.trim();
@@ -124,7 +109,7 @@ Data i godzina: ${dateFormatted} (czas polski)
     </tr>
     <tr>
       <td style="padding: 8px 0; color: #64748b;">Miejsce wywołania:</td>
-      <td style="padding: 8px 0; font-family: monospace; color: #475569;">${h.source}</td>
+      <td style="padding: 8px 0;">${h.source}</td>
     </tr>
     <tr>
       <td style="padding: 8px 0; color: #64748b;">Podstrona usługowa:</td>
@@ -236,11 +221,9 @@ export async function sendCallbackEmail(
       },
     });
 
-    const recipients = config.to.split(',').map((email) => email.trim()).filter(Boolean);
-
     await transporter.sendMail({
       from: config.from,
-      to: recipients,
+      to: getCallbackRecipients(),
       subject,
       text: textBody,
       html: htmlBody,

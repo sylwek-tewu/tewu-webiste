@@ -51,10 +51,20 @@ describe('buildCallbackEmail', () => {
     expect(email.html).toContain('&quot;&gt;&lt;img src=x onerror=alert(1)&gt;');
   });
 
-  it('shows an unknown source as "unknown"', () => {
+  it('shows an unknown source as "Nieznane"', () => {
     const email = buildCallbackEmail({ ...base, source: '<b>601 602 603</b>' as unknown as CallbackNotificationData['source'] });
     expect(email.html).not.toContain('601');
-    expect(email.text).toContain('Źródło zgłoszenia: unknown');
+    expect(email.text).toContain('Miejsce wywołania: Nieznane');
+  });
+
+  it.each([
+    ['header', 'Przycisk „Bezpłatna wycena” w górnym menu strony'],
+    ['floating', 'Pływający przycisk „Bezpłatna wycena” (na telefonie: przycisk „Oddzwońcie” w dolnym pasku)'],
+    ['link', 'Udostępniony link'],
+  ] as const)('describes the source %s in words the office understands', (source, label) => {
+    const email = buildCallbackEmail({ ...base, source });
+    expect(email.text).toContain(`Miejsce wywołania: ${label}`);
+    expect(email.html).toContain(label);
   });
 
   it('never echoes an unknown topic id', () => {

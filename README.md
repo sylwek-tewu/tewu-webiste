@@ -22,6 +22,7 @@ A modern web application for "Biuro Rachunkowe TEWU Sp. z o.o.", an accounting o
 - **Widżet Call-Back „Bezpłatna wycena – oddzwonimy”**:
   - Globalny pływający widżet w prawym dolnym rogu (desktop) oraz dwuprzyciskowy pasek akcji „Zadzwoń” / „Oddzwońcie” (mobile).
   - Otwierany ze wszystkich przycisków „Bezpłatna wycena” w nagłówku menu (desktop i mobile Drawer).
+  - **Callback Link**: adres z parametrem `callback` (np. `/?callback`) otwiera stronę z już rozwiniętym formularzem. Do reklam, maili, SMS-ów i QR. Opis i gotowe adresy: [docs/callback-link.md](docs/callback-link.md).
   - Inteligentne wyliczanie obietnicy kontaktu w strefie `Europe/Warsaw`: uwzględnia godziny pracy biura (8:00–16:00), 15-minutowy bufor, dyżur telefoniczny (17:00–18:00) oraz polskie dni ustawowo wolne od pracy (w tym Wigilię i święta ruchome).
   - Zabezpieczenia antyspamowe: honeypot oraz time-trap (bez zewnętrznych skryptów śledzących i captcha).
   - Podwójny tor powiadomień:
