@@ -108,7 +108,9 @@ Oznaczenia: [D] z draftu TEWU bez zmian merytorycznych, [D*] z draftu po zmianie
 > Osobom zakładającym spółkę z o.o. proponujemy [Inkubator spółek](/uslugi/inkubator-spolek): założenie spółki u notariusza albo przez S24, adres siedziby i wsparcie na starcie.
 
 **`zalozenie-przez-internet`** – Czy działalność można założyć przez Internet? [D*]
-> Tak. Jednoosobową działalność rejestrujesz bezpłatnie w CEIDG przez serwis biznes.gov.pl. Wniosek podpisujesz profilem zaufanym, podpisem osobistym (e-dowód) albo kwalifikowanym podpisem elektronicznym – bez tego podpisu wniosek trzeba potwierdzić w urzędzie gminy.
+> Tak. Jednoosobową działalność rejestrujesz bezpłatnie w CEIDG przez serwis biznes.gov.pl. Wniosek podpisujesz profilem zaufanym, podpisem osobistym (e-dowód) albo kwalifikowanym podpisem elektronicznym.
+
+(Zdanie o potwierdzeniu w urzędzie gminy usunięte przy weryfikacji: biznes.gov.pl zapowiada od 1.11.2026 zmianę zasad składania wniosków papierowych, więc ta informacja szybko by się zdezaktualizowała.)
 >
 > Spółkę z o.o. można założyć online w systemie S24, na wzorcu umowy.
 
@@ -126,7 +128,7 @@ Oznaczenia: [D] z draftu TEWU bez zmian merytorycznych, [D*] z draftu po zmianie
 >
 > Do wyboru są: **skala podatkowa** (12% i 32% od nadwyżki dochodu ponad 120 000 zł, z kwotą wolną 30 000 zł), **podatek liniowy** (19% bez względu na wysokość dochodu) i **ryczałt od przychodów ewidencjonowanych** (od 2% do 17% przychodu, bez odliczania kosztów). Na wybór wpływa też składka zdrowotna, liczona w każdej formie inaczej. Więcej: [KPiR](/uslugi/kpir) i [ryczałt](/uslugi/ryczalt).
 
-Źródło: [biznes.gov.pl – jak wybrać formę opodatkowania](https://www.biznes.gov.pl/pl/portal/00172)
+Źródła: [biznes.gov.pl – jak wybrać formę opodatkowania](https://www.biznes.gov.pl/pl/portal/00172), [biznes.gov.pl – skala podatkowa](https://www.biznes.gov.pl/pl/portal/00264) (kwota wolna 30 000 zł jest tylko na tej drugiej stronie)
 
 **`zwolnienie-z-vat`** – Czy warto korzystać ze zwolnienia z VAT? [D*]
 > Każdy przypadek należy indywidualnie przeanalizować – wszystko zależy od branży i potencjalnych odbiorców. Zwolnienie zwykle się opłaca, gdy sprzedajesz osobom prywatnym, które nie odliczają VAT. Gdy Twoimi klientami są firmy, a Ty masz duże zakupy z VAT, rejestracja jako podatnik VAT bywa korzystniejsza.
@@ -155,7 +157,7 @@ Oznaczenia: [D] z draftu TEWU bez zmian merytorycznych, [D*] z draftu po zmianie
 Źródła: [biznes.gov.pl – ulga na start](https://www.biznes.gov.pl/pl/portal/00285), [biznes.gov.pl – obniżone składki przez 24 miesiące](https://www.biznes.gov.pl/pl/portal/00286), [biznes.gov.pl – Mały ZUS Plus](https://www.biznes.gov.pl/pl/portal/00284)
 
 **`wakacje-skladkowe`** – Czym są wakacje składkowe? [L]
-> To zwolnienie z opłacania składek społecznych za siebie przez jeden wybrany miesiąc w roku. Skorzystasz z niego, jeśli jesteś wpisany do CEIDG, w miesiącu przed złożeniem wniosku zgłaszałeś do ubezpieczeń najwyżej 10 osób (łącznie z sobą), a Twój przychód w co najmniej jednym z dwóch poprzednich lat nie przekroczył równowartości 2 mln euro.
+> To zwolnienie z opłacania składek społecznych za siebie przez jeden wybrany miesiąc w roku. Skorzystasz z niego, jeśli prowadzisz działalność gospodarczą, w miesiącu przed złożeniem wniosku zgłaszałeś do ubezpieczeń najwyżej 10 osób (łącznie z sobą), a Twój przychód w co najmniej jednym z dwóch poprzednich lat nie przekroczył równowartości 2 mln euro.
 >
 > Składkę zdrowotną za ten miesiąc trzeba zapłacić. Wniosek RWS składasz elektronicznie przez PUE/eZUS w miesiącu poprzedzającym miesiąc zwolnienia. Zwolnienie jest pomocą de minimis.
 
@@ -164,16 +166,20 @@ Oznaczenia: [D] z draftu TEWU bez zmian merytorycznych, [D*] z draftu po zmianie
 ### 5. Rachunek firmowy (`rachunek-firmowy`, ikona `Landmark`)
 
 **`osobny-rachunek`** – Czy muszę mieć osobny rachunek bankowy dla firmy? [D*: „zobowiązany” zmiękczone do „w praktyce”, bo obowiązek wynika z progu 15 000 zł i białej listy]
-> Jeśli jesteś podatnikiem VAT – w praktyce tak. Rachunek firmowy jest obowiązkowy, gdy płacisz innej firmie albo otrzymujesz od niej więcej niż 15 000 zł za jedną transakcję, także rozłożoną na raty.
+> Jeśli jesteś czynnym podatnikiem VAT – w praktyce tak. Na białej liście podatników VAT publikowane są tylko rachunki firmowe, a prywatne konta nie. Kontrahent, który zapłaci Ci ponad 15 000 zł na rachunek spoza listy, nie zaliczy tej kwoty do kosztów i ryzykuje solidarną odpowiedzialność za Twój VAT.
 >
-> Na białej liście podatników VAT widać tylko rachunki firmowe. Kontrahent, który zapłaci Ci ponad 15 000 zł na rachunek spoza listy, nie zaliczy tej kwoty do kosztów i ryzykuje odpowiedzialność solidarną. Przy mniejszych transakcjach możesz używać prywatnego konta, ale osobny rachunek ułatwia porządek w rozliczeniach.
+> Płatności między firmami powyżej 15 000 zł brutto – także rozłożone na raty – muszą przechodzić przez rachunek płatniczy, nie gotówką. Jeśli nie jesteś podatnikiem VAT, przepisy nie nakazują osobnego konta, ale osobny rachunek ułatwia porządek w rozliczeniach.
 
-Źródła: [biznes.gov.pl – płatności między przedsiębiorcami](https://www.biznes.gov.pl/pl/portal/001266), [biznes.gov.pl – biała lista podatników VAT](https://www.biznes.gov.pl/pl/portal/00226)
+Źródła: [biznes.gov.pl – biała lista podatników VAT](https://www.biznes.gov.pl/pl/portal/00226), [biznes.gov.pl – płatności między przedsiębiorcami](https://www.biznes.gov.pl/pl/portal/001266)
+
+(Przepisane przy weryfikacji: strony urzędowe mówią o obowiązku płatności przez **rachunek płatniczy** powyżej 15 000 zł brutto, a nie o obowiązku rachunku **firmowego**; ten wynika w praktyce z białej listy.)
 
 **`zglaszanie-rachunkow`** – Czy jeśli mam kilka rachunków firmowych, muszę je wszystkie zgłaszać? [D*]
 > Tak, podatnik musi zgłosić wszystkie rachunki firmowe, prowadzone zarówno w Polsce, jak i w innych krajach. Zgłoszeniem objęte są również rachunki prowadzone w walutach obcych.
 >
-> Przy jednoosobowej działalności zgłaszasz je we wniosku do CEIDG, który przekazuje dane do urzędu skarbowego i ZUS. Spółka wpisana do KRS zgłasza rachunki w urzędzie skarbowym na formularzu NIP-8. Nowy lub zmieniony rachunek trzeba zgłosić w ciągu 7 dni – za spóźnienie grozi grzywna.
+> Przy jednoosobowej działalności rachunki zgłaszasz we wniosku o zmianę danych w CEIDG, a CEIDG przekazuje je do urzędu skarbowego i ZUS. Spółka wpisana do KRS zgłasza zmiany w wykazie rachunków na formularzu NIP-8 w ciągu 7 dni – za spóźnienie grozi grzywna jak za wykroczenie skarbowe.
+
+(Przepisane przy weryfikacji: na stronie CEIDG rachunek bankowy nie jest na liście zmian z terminem 7 dni; termin 7 dni i grzywna dotyczą NIP-8.)
 
 Źródła: [biznes.gov.pl – zmiana danych w CEIDG](https://www.biznes.gov.pl/pl/portal/ou737), [biznes.gov.pl – aktualizacja NIP-8](https://www.biznes.gov.pl/pl/portal/ou349)
 
@@ -181,7 +187,8 @@ Oznaczenia: [D] z draftu TEWU bez zmian merytorycznych, [D*] z draftu po zmianie
 
 1. Cała treść UK (tłumaczenie Claude).
 2. Nowe pytania [N] i [L]: przekazywanie dokumentów, cena, zmiana biura, reprezentacja, kadry i płace, rozmowa po ukraińsku, wakacje składkowe.
-3. Zmiany merytoryczne [D*]: tytuł „JDG czy spółka z o.o. – jaką formę działalności wybrać?”, pełna ścieżka ulg ZUS z kwotami 2026, limit VAT 240 000 zł, rachunek firmowy („w praktyce tak” zamiast „jest zobowiązany”), CEIDG / NIP-8 i 7 dni, opis OC (obowiązek z ustawy o rachunkowości), zdanie o RODO.
+3. Zmiany merytoryczne [D*]: tytuł „JDG czy spółka z o.o. – jaką formę działalności wybrać?”, pełna ścieżka ulg ZUS z kwotami 2026, limit VAT 240 000 zł, rachunek firmowy („w praktyce tak” zamiast „jest zobowiązany”; obowiązek płatności przez rachunek płatniczy powyżej 15 000 zł brutto; „bez VAT przepisy nie nakazują osobnego konta”), CEIDG / NIP-8 (termin 7 dni tylko dla NIP-8), opis OC (obowiązek z ustawy o rachunkowości), zdanie o RODO.
+5. Fakt z draftu TEWU, którego nie znalazłem na stronach urzędowych: obowiązek zgłaszania rachunków zagranicznych i walutowych (zostawiony w brzmieniu TEWU).
 4. Zdjęcia: kadr budynku i opis zdjęcia Prezesa.
 
 ## Poza zakresem

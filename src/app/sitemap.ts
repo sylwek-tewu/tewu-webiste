@@ -4,7 +4,7 @@ import { SERVICE_PAGE_SLUGS } from '@/lib/service-pages';
 
 // Polish paths; each page also exists under /uk with the same slug (ADR 0002).
 // sitemap.test.ts compares this list with the page routes in src/app.
-const PAGE_PATHS = [
+export const PAGE_PATHS = [
   '/',
   '/o-nas',
   '/uslugi',
