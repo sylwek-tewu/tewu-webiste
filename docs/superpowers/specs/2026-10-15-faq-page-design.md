@@ -170,7 +170,7 @@ Oznaczenia: [D] z draftu TEWU bez zmian merytorycznych, [D*] z draftu po zmianie
 **`osobny-rachunek`** – Czy muszę mieć osobny rachunek bankowy dla firmy? [D*: „zobowiązany” zmiękczone do „w praktyce”, bo obowiązek wynika z progu 15 000 zł i białej listy]
 > Jeśli jesteś czynnym podatnikiem VAT – w praktyce tak. Na białej liście podatników VAT publikowane są tylko rachunki firmowe, a prywatne konta nie. Kontrahent, który zapłaci Ci ponad 15 000 zł na rachunek spoza listy, nie zaliczy tej kwoty do kosztów i ryzykuje solidarną odpowiedzialność za Twój VAT.
 >
-> Płatności między firmami powyżej 15 000 zł brutto – także rozłożone na raty – muszą przechodzić przez rachunek płatniczy, nie gotówką. Jeśli nie jesteś podatnikiem VAT, przepisy nie nakazują osobnego konta, ale osobny rachunek ułatwia porządek w rozliczeniach.
+> Płatności między firmami powyżej 15 000 zł brutto – także rozłożone na raty – muszą przechodzić przez rachunek płatniczy, nie gotówką. Jeśli nie jesteś czynnym podatnikiem VAT (np. korzystasz ze zwolnienia), przepisy nie nakazują osobnego konta, ale osobny rachunek ułatwia porządek w rozliczeniach.
 
 Źródła: [biznes.gov.pl – biała lista podatników VAT](https://www.biznes.gov.pl/pl/portal/00226), [biznes.gov.pl – płatności między przedsiębiorcami](https://www.biznes.gov.pl/pl/portal/001266)
 
@@ -189,9 +189,9 @@ Oznaczenia: [D] z draftu TEWU bez zmian merytorycznych, [D*] z draftu po zmianie
 
 1. Cała treść UK (tłumaczenie Claude).
 2. Nowe pytania [N] i [L]: przekazywanie dokumentów, cena, zmiana biura, reprezentacja, kadry i płace, rozmowa po ukraińsku, wakacje składkowe.
-3. Zmiany merytoryczne [D*]: tytuł „JDG czy spółka z o.o. – jaką formę działalności wybrać?”, pełna ścieżka ulg ZUS z kwotami 2026, limit VAT 240 000 zł, rachunek firmowy („w praktyce tak” zamiast „jest zobowiązany”; obowiązek płatności przez rachunek płatniczy powyżej 15 000 zł brutto; „bez VAT przepisy nie nakazują osobnego konta”), CEIDG / NIP-8 (termin 7 dni dla JDG i spółek – zakwestionowane w przeglądzie kodu, potwierdzić z ustawą o ewidencji i identyfikacji podatników), daty KSeF ze źródłem MF, opis OC (obowiązek z ustawy o rachunkowości), zdanie o RODO.
-5. Fakt z draftu TEWU, którego nie znalazłem na stronach urzędowych: obowiązek zgłaszania rachunków zagranicznych i walutowych (zostawiony w brzmieniu TEWU).
+3. Zmiany merytoryczne [D*]: tytuł „JDG czy spółka z o.o. – jaką formę działalności wybrać?”, pełna ścieżka ulg ZUS z kwotami 2026, limit VAT 240 000 zł, rachunek firmowy („w praktyce tak” zamiast „jest zobowiązany”; obowiązek płatności przez rachunek płatniczy powyżej 15 000 zł brutto; „jeśli nie jesteś czynnym podatnikiem VAT (np. korzystasz ze zwolnienia), przepisy nie nakazują osobnego konta”), CEIDG / NIP-8 (termin 7 dni dla JDG i spółek – zakwestionowane w przeglądzie kodu, potwierdzić z ustawą o ewidencji i identyfikacji podatników), daty KSeF ze źródłem MF, opis OC (obowiązek z ustawy o rachunkowości), zdanie o RODO.
 4. Zdjęcia: kadr budynku i opis zdjęcia Prezesa.
+5. Fakt z draftu TEWU, którego nie znalazłem na stronach urzędowych: obowiązek zgłaszania rachunków zagranicznych i walutowych (zostawiony w brzmieniu TEWU).
 
 ## Poza zakresem
 

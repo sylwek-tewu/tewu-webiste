@@ -231,7 +231,7 @@ export const PL_FAQ: FaqPageContent = {
           question: 'Czy muszę mieć osobny rachunek bankowy dla firmy?',
           answer: [
             'Jeśli jesteś czynnym podatnikiem VAT – w praktyce tak. Na białej liście podatników VAT publikowane są tylko rachunki firmowe, a prywatne konta nie. Kontrahent, który zapłaci Ci ponad 15 000 zł na rachunek spoza listy, nie zaliczy tej kwoty do kosztów i ryzykuje solidarną odpowiedzialność za Twój VAT.',
-            'Płatności między firmami powyżej 15 000 zł brutto – także rozłożone na raty – muszą przechodzić przez rachunek płatniczy, nie gotówką. Jeśli nie jesteś podatnikiem VAT, przepisy nie nakazują osobnego konta, ale osobny rachunek ułatwia porządek w rozliczeniach.',
+            'Płatności między firmami powyżej 15 000 zł brutto – także rozłożone na raty – muszą przechodzić przez rachunek płatniczy, nie gotówką. Jeśli nie jesteś czynnym podatnikiem VAT (np. korzystasz ze zwolnienia), przepisy nie nakazują osobnego konta, ale osobny rachunek ułatwia porządek w rozliczeniach.',
           ],
           sources: [
             { label: 'biznes.gov.pl – biała lista podatników VAT', href: 'https://www.biznes.gov.pl/pl/portal/00226' },
