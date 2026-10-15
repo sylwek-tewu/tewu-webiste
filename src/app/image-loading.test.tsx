@@ -7,6 +7,9 @@ import { Hero } from '@/components/home/Hero';
 import { WhyUs } from '@/components/home/WhyUs';
 import AboutClient from './(pl)/o-nas/AboutClient';
 import CertificatesClient from './(pl)/certyfikaty/CertificatesClient';
+import { CallbackProvider } from '@/components/callback-widget';
+import FaqPage from '@/components/faq/FaqPage';
+import { FAQ_UPDATED_AT, getFaqContent } from '@/content/faq';
 
 type Size = { width: string; height: string };
 
@@ -19,6 +22,7 @@ function imgsOf(container: HTMLElement): Record<string, HTMLImageElement> {
 // Intrinsic pixel sizes of the files in public/img (read with `file`), so the browser reserves
 // the space before the file arrives. Every image is lazy: none is in the first mobile viewport,
 // and the hero and "Why us" photos are hidden on mobile (a lazy image hidden by CSS is not fetched).
+// The exception is the FAQ building photo, the LCP element of that page, which loads first.
 const PHOTOS: Record<string, Size> = {
   '/img/stock/hero-office.jpg': { width: '1200', height: '689' },
   '/img/stock/team-at-work.jpg': { width: '800', height: '533' },
@@ -52,6 +56,27 @@ describe.each(['pl', 'uk'] as Locale[])('image dimensions and lazy loading (%s)'
     for (const path of ['/img/stock/team-at-work.jpg', '/img/stock/business-meeting.jpg']) {
       expectLoadingAttributes(imgs[path], PHOTOS[path]);
     }
+  });
+
+  it('loads the FAQ building photo first (LCP) and the reception photo lazily, AVIF first', () => {
+    const { container } = renderWithMantine(
+      <CallbackProvider>
+        <FaqPage content={getFaqContent(locale)} updatedAt={FAQ_UPDATED_AT} />
+      </CallbackProvider>,
+      { locale }
+    );
+    const imgs = imgsOf(container);
+    const building = imgs['/img/biuro/budynek.jpg'];
+    expect(building).toHaveAttribute('width', '960');
+    expect(building).toHaveAttribute('height', '720');
+    expect(building).toHaveAttribute('loading', 'eager');
+    expect(building).toHaveAttribute('fetchpriority', 'high');
+    expectLoadingAttributes(imgs['/img/biuro/recepcja.jpg'], { width: '1200', height: '900' });
+    const sources = [...container.querySelectorAll('picture source')].map((s) => [s.getAttribute('type'), s.getAttribute('srcset')]);
+    expect(sources).toEqual([
+      ['image/avif', '/img/biuro/budynek.avif'],
+      ['image/avif', '/img/biuro/recepcja.avif'],
+    ]);
   });
 
   it('sizes the team photo on the about page and loads it lazily', () => {

@@ -1,0 +1,56 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Large faint speech bubble behind the hero text; decoration only */
+.heroMotif {
+  position: absolute;
+  top: -4rem;
+  left: -5rem;
+  width: 24rem;
+  height: 24rem;
+  color: var(--mantine-color-brandBlue-5);
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--mantine-radius-xl);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+}
+
+.tile {
+  display: block;
+  height: 100%;
+  text-decoration: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+.tile:hover,
+.tile:focus-visible {
+  border-color: var(--mantine-color-brandBlue-4);
+  box-shadow: var(--mantine-shadow-md);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    transition: none;
+  }
+
+  .tile:hover,
+  .tile:focus-visible {
+    transform: none;
+  }
+}
+
+/* Clear of the sticky 80 px header when a tile scrolls to its category */
+.category {
+  scroll-margin-top: 96px;
+}
