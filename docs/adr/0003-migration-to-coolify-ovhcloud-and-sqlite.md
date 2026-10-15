@@ -66,6 +66,23 @@ Dotychczas serwis Biura Rachunkowego TEWU wdrażany był na platformie Netlify. 
 - **Zmiana nazw routerów lub UUID aplikacji** (np. przy odtworzeniu aplikacji) wymaga dopasowania nazw middleware w etykietach.
 - **Etykiety nie mogą zmieniać nagłówka `Host` przekazywanego do aplikacji.** `X-Robots-Tag: noindex` zależy od `Host`. Gdyby proxy przepisywało go na inną wartość, produkcja dostałaby `noindex` i wypadłaby z indeksu.
 
+### 3c. HTTP/3 i wymagany port UDP/443
+- Proxy Coolify (Traefik) ma domyślnie włączone HTTP/3. Nasłuchuje na `443/udp` i w każdej odpowiedzi wysyła nagłówek `alt-svc: h3=":443"; ma=2592000`. Przeglądarka zapamiętuje go na 30 dni i kolejne połączenia próbuje nawiązać przez QUIC (UDP).
+- Dlatego port **UDP/443 musi być otwarty na obu poziomach**:
+  - **lokalny firewall VPS:** w ufw reguła `443/udp ALLOW`. Porty publikowane przez Dockera omijają reguły ufw i przechodzą przez łańcuchy `DOCKER` i `DOCKER-USER`, więc reguła blokująca w `DOCKER-USER` też odcina UDP/443;
+  - **Edge Network Firewall OVH** dla adresu IP serwera (panel OVHcloud → Network → IP): reguła `permit udp` na port 443 przed końcową regułą `deny`. Reguły przepuszczające tylko TCP 80/443 blokują HTTP/3, choć strona przez HTTP/1.1 i HTTP/2 działa normalnie.
+- **Skutek blokady:** gdy HTTP/3 jest ogłaszane, a pakiety UDP/443 są po cichu gubione (DROP), Chrome i Firefox wracają do TCP, ale Safari może w ogóle nie otworzyć strony.
+- Wyłączenie HTTP/3 w Traefiku nie jest równoważną poprawką: przeglądarki, które zapamiętały `alt-svc`, próbują HTTP/3 jeszcze do 30 dni. Jeśli HTTP/3 ma zostać wyłączone, UDP/443 trzeba odrzucać z odpowiedzią (REJECT), a nie gubić (DROP), żeby przeglądarka od razu wróciła do TCP.
+
+**Incydent z 15.10.2026: strona nie otwierała się w Safari.**
+- Przez TCP strona działała, a silnik WebKit (Playwright, profile desktop i iPhone) renderował ją bez błędów. Połączenie HTTP/3 z zewnątrz kończyło się timeoutem, a kontrolne połączenia HTTP/3 do innych serwisów działały.
+- Na serwerze konfiguracja była poprawna: `coolify-proxy` z HTTP/3 i portem `443/udp`, ufw z `443/udp ALLOW`, a `DOCKER-USER` i nftables nie blokowały UDP/443.
+- Pakiety gubił **Edge Network Firewall OVH**. Przy włączonym firewallu `tcpdump` na interfejsie serwera nie pokazywał żadnych pakietów UDP/443, a licznik reguły DNAT `udp dpt:443` stał na 0. Po wyłączeniu firewalla pakiety dochodziły i QUIC działał.
+- Reguła `permit udp` na port 443, dodana przed regułą `deny`, miała w API OVH stan `ok`, ale nie była stosowana, także po wyłączeniu i ponownym włączeniu firewalla. Zgłoszono to do supportu OVH.
+- **Stan tymczasowy:** Edge Network Firewall OVH jest **wyłączony** (reguły bez zmian). Serwer chroni ufw (domyślnie `deny`) i `DOCKER-USER`, który blokuje porty 8000, 8080, 6001 i 6002 z zewnątrz. Po odpowiedzi OVH firewall trzeba włączyć i powtórzyć test z punktu 6 wymagań operacyjnych.
+- Diagnostyka na serwerze: `tcpdump -ni <interfejs> udp port 443` oraz licznik `iptables -t nat -L DOCKER -v -n -x | grep 'udp dpt:443'`. Jeśli pakiety nie dochodzą do interfejsu, blokada jest przed serwerem.
+- Zgłaszający jeszcze nie potwierdził, że Safari działa. Nie znamy też komunikatu błędu ani wersji systemu.
+
 ### 4. Polityka Prywatności i zgodność z RODO
 - Zaktualizowano treści polityki w języku polskim i ukraińskim (`src/i18n/pl.ts`, `src/i18n/uk.ts`, `PrivacyPolicyClient.tsx`):
   - Wskazano hostingodawcę: **OVHcloud – OVH Sp. z o.o. (Wrocław)**, strona umowy powierzenia (DPA), z infrastrukturą w centrum danych w EOG.
@@ -102,3 +119,5 @@ Dotychczas serwis Biura Rachunkowego TEWU wdrażany był na platformie Netlify. 
    - `curl -sI http://www.tewu.szczecin.pl/uslugi/kpir?utm_source=test` → jedno `301` na `https://tewu.szczecin.pl/uslugi/kpir?utm_source=test`;
    - `curl -sI http://tewu.szczecin.pl/` → `301` na `https://tewu.szczecin.pl/`;
    - `curl -sI https://tewu.szczecin.pl/` → `200` **bez** `x-robots-tag`.
+6. **HTTP/3 (sekcja 3c):** po każdej zmianie lokalnego firewalla, Edge Network Firewall OVH lub konfiguracji proxy sprawdzić z maszyny spoza serwera (z samego VPS test przejdzie mimo blokady na Edge Network Firewall OVH):
+   - `docker run --rm alpine/curl-http3 curl -sS --http3-only -o /dev/null --max-time 15 -w '%{http_version}\n' https://tewu.szczecin.pl/` → `3`; timeout oznacza, że UDP/443 jest po drodze blokowany.
