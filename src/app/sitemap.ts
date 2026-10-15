@@ -12,6 +12,7 @@ export const PAGE_PATHS = [
   '/outsourcing',
   '/certyfikaty',
   '/kontakt',
+  '/faq',
   '/polityka-prywatnosci',
 ];
 

@@ -19,6 +19,8 @@ import { metadata as ukOutsourcing } from './(uk)/uk/outsourcing/page';
 import { metadata as ukCertificates } from './(uk)/uk/certyfikaty/page';
 import { metadata as ukContact } from './(uk)/uk/kontakt/page';
 import { metadata as ukPrivacy } from './(uk)/uk/polityka-prywatnosci/page';
+import { metadata as plFaq } from './(pl)/faq/page';
+import { metadata as ukFaq } from './(uk)/uk/faq/page';
 
 // SiteLayout loads next/font, which needs the Next.js compiler; the layouts are only read for their metadata.
 vi.mock('@/components/layout/SiteLayout', () => ({ default: () => null }));
@@ -62,6 +64,7 @@ const pages: PageCase[] = [
   { locale: 'pl', path: '/outsourcing', metadata: plOutsourcing, title: 'Outsourcing księgowości i back-office w Szczecinie – TEWU', description: 'Zredukuj koszty operacyjne i skup się na rozwoju. Outsourcing księgowy i procesów back-office w Biurze Rachunkowym TEWU w Szczecinie. Bezpłatna wycena.' },
   { locale: 'pl', path: '/certyfikaty', metadata: plCertificates, title: 'Certyfikaty księgowe – Biuro Rachunkowe TEWU w Szczecinie' },
   { locale: 'pl', path: '/kontakt', metadata: plContact, title: 'Kontakt i dojazd – Biuro Rachunkowe TEWU w Szczecinie', description: 'Biuro Rachunkowe TEWU, Al. Powstańców Wielkopolskich 78A LU2, Szczecin. Telefon 602 235 736, e-mail, godziny otwarcia (pn–pt 8–16) i mapa dojazdu.' },
+  { locale: 'pl', path: '/faq', metadata: plFaq, title: 'FAQ – pytania o księgowość, podatki i ZUS | TEWU Szczecin', description: 'Biuro rachunkowe TEWU ze Szczecina odpowiada na częste pytania: JDG czy spółka, forma opodatkowania, zwolnienie z VAT, ulgi w ZUS, rachunek firmowy, KSeF.' },
   { locale: 'pl', path: '/polityka-prywatnosci', metadata: plPrivacy },
   UK_HOME,
   { locale: 'uk', path: '/o-nas', metadata: ukAbout, title: 'Про нас – бухгалтерське бюро в Щецині понад 25 років | TEWU', description: 'Biuro Rachunkowe TEWU у Щецині: понад 25 років на ринку, уповноваження Міністерства фінансів і прямий контакт з керівництвом бюро. Познайомтеся з нами.' },
@@ -69,6 +72,7 @@ const pages: PageCase[] = [
   { locale: 'uk', path: '/outsourcing', metadata: ukOutsourcing, title: 'Аутсорсинг бухгалтерії та бек-офісу в Щецині – TEWU', description: 'Знизьте операційні витрати й зосередьтеся на розвитку. Аутсорсинг бухгалтерії та процесів бек-офісу в бюро TEWU у Щецині. Безкоштовна оцінка.' },
   { locale: 'uk', path: '/certyfikaty', metadata: ukCertificates, title: 'Бухгалтерські сертифікати – Бюро TEWU у Щецині' },
   { locale: 'uk', path: '/kontakt', metadata: ukContact, title: 'Контакти та як доїхати – Бюро TEWU у Щецині', description: 'Biuro Rachunkowe TEWU, Al. Powstańców Wielkopolskich 78A LU2, Щецин. Телефон 602 235 736, e-mail, години роботи (пн–пт 8–16) і карта доїзду.' },
+  { locale: 'uk', path: '/faq', metadata: ukFaq, title: 'FAQ – питання про бухгалтерію, податки та ZUS | TEWU Щецин', description: 'Бухгалтерське бюро TEWU у Щецині відповідає на поширені запитання: JDG чи Sp. z o.o., форма оподаткування, звільнення від VAT, пільги ZUS, рахунок, KSeF.' },
   { locale: 'uk', path: '/polityka-prywatnosci', metadata: ukPrivacy },
   ...(['pl', 'uk'] as const).flatMap((locale) => SERVICE_PAGE_SLUGS.map((slug) => servicePageCase(locale, slug))),
 ];

@@ -5,6 +5,9 @@ import { COMPANY } from '@/lib/company';
 import { OG_IMAGE_PATH } from '@/lib/og-image-meta';
 import { SERVICE_PAGES, servicePagePath, type ServicePageSlug } from '@/lib/service-pages';
 import type { ServicePageContent } from '@/content/service-pages/types';
+import type { FaqPageContent, FaqQuestion } from '@/content/faq/types';
+import { OFFICE_PHOTOS } from '@/lib/office-photos';
+import { richTextToHtml } from '@/lib/rich-text';
 
 /**
  * schema.org JSON-LD (Google structured data). Facts come from COMPANY only; no ratings,
@@ -49,7 +52,8 @@ function companyNode() {
     url: `${SITE_URL}/`,
     // Raster logo of 180 x 180 px (Google asks for at least 112 x 112)
     logo: absolute('/apple-icon.png'),
-    image: absolute(OG_IMAGE_PATH.pl),
+    // A real photo of the office first (Google's advice for local businesses), then the share image
+    image: [absolute(OFFICE_PHOTOS.exterior.jpg), absolute(OG_IMAGE_PATH.pl)],
     telephone: phones.office[0].e164,
     email: COMPANY.emails.main,
     address: {
@@ -133,6 +137,54 @@ export function buildServicePageJsonLd({ locale, slug, meta, hero, faq }: Servic
           name: question,
           acceptedAnswer: { '@type': 'Answer', text: answer },
         })),
+      },
+    ],
+  };
+}
+
+function faqAnswerHtml({ answer, sources }: FaqQuestion, sourcesLabel: FaqPageContent['sourcesLabel']): string {
+  const paragraphs = answer.map((paragraph) => `<p>${richTextToHtml(paragraph, SITE_URL)}</p>`);
+  if (sources?.length) {
+    const label = sources.length === 1 ? sourcesLabel.one : sourcesLabel.many;
+    const links = sources.map(({ label: text, href }) => richTextToHtml(`[${text}](${href})`, SITE_URL)).join(', ');
+    paragraphs.push(`<p>${label}: ${links}</p>`);
+  }
+  return paragraphs.join('');
+}
+
+/**
+ * The FAQ page and its breadcrumbs. FAQPage is itself a WebPage, so one node carries the page's
+ * address, language and date as well as the questions.
+ */
+export function buildFaqPageJsonLd(content: FaqPageContent, updatedAt: string) {
+  const { locale } = content;
+  const url = absolute(localizePath('/faq', locale));
+  const questions = content.categories.flatMap((category) => category.questions);
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'FAQPage',
+        url,
+        name: content.hero.title,
+        description: content.meta.description,
+        inLanguage: IN_LANGUAGE[locale],
+        dateModified: updatedAt,
+        isPartOf: { '@id': WEBSITE_ID },
+        about: { '@id': COMPANY_ID },
+        mainEntity: questions.map((question) => ({
+          '@type': 'Question',
+          name: question.question,
+          url: `${url}#${question.id}`,
+          acceptedAnswer: { '@type': 'Answer', text: faqAnswerHtml(question, content.sourcesLabel) },
+        })),
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: BREADCRUMB_LABELS[locale].home, item: homeUrl(locale) },
+          { '@type': 'ListItem', position: 2, name: content.breadcrumb, item: url },
+        ],
       },
     ],
   };
