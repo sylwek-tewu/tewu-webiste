@@ -29,6 +29,7 @@ export const plTranslations: Translations = {
     servicesTitle: 'Usługi',
     contactTitle: 'Kontakt',
     bpoOutsourcing: 'Outsourcing BPO',
+    faq: 'Częste pytania (FAQ)',
     privacyPolicy: 'Polityka prywatności',
     allRightsReserved: 'Wszelkie prawa zastrzeżone.',
   },

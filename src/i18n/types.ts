@@ -83,6 +83,8 @@ export interface Translations {
     servicesTitle: string;
     contactTitle: string;
     bpoOutsourcing: string;
+    /** The FAQ page's only link on the site (ADR 0005). */
+    faq: string;
     privacyPolicy: string;
     allRightsReserved: string;
   };

@@ -16,6 +16,7 @@ const Footer: React.FC = () => {
   const { t, locale } = useLocale();
   const privacyPath = locale === 'uk' ? '/uk/polityka-prywatnosci' : '/polityka-prywatnosci';
   const outsourcingPath = locale === 'uk' ? '/uk/outsourcing' : '/outsourcing';
+  const faqPath = locale === 'uk' ? '/uk/faq' : '/faq';
 
   return (
     <Box component="footer" bg="slate.9" c="slate.3">
@@ -64,6 +65,16 @@ const Footer: React.FC = () => {
                     {link.label}
                   </Anchor>
                 ))}
+                <Anchor
+                  component={Link}
+                  href={faqPath}
+                  size="sm"
+                  underline="hover"
+                  className={classes.footerLink}
+                  c="slate.3"
+                >
+                  {t.footer.faq}
+                </Anchor>
                 <Anchor
                   component={Link}
                   href={privacyPath}

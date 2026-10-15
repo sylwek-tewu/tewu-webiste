@@ -37,6 +37,7 @@ export const ukTranslations: Translations = {
     servicesTitle: 'Послуги',
     contactTitle: 'Контакти',
     bpoOutsourcing: 'Аутсорсинг BPO',
+    faq: 'Поширені запитання (FAQ)',
     privacyPolicy: 'Політика конфіденційності',
     allRightsReserved: 'Усі права захищені.',
   },
