@@ -24,7 +24,9 @@ const CATEGORY_ICONS: Record<FaqCategoryId, LucideIcon> = {
 function useOpenQuestionFromHash() {
   useEffect(() => {
     const openFromHash = () => {
-      const id = decodeURIComponent(window.location.hash.slice(1));
+      // No decodeURIComponent: question ids are ASCII kebab-case (content test), and decoding a
+      // stray "%" (/faq#100%) would throw and take the whole page down.
+      const id = window.location.hash.slice(1);
       const target = id ? document.getElementById(id) : null;
       if (!(target instanceof HTMLDetailsElement)) return;
       target.open = true;

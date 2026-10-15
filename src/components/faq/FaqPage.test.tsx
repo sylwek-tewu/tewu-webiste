@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import React from 'react';
 import { afterEach, describe, it, expect } from 'vitest';
-import { screen, within } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithMantine } from '@/test/render';
 import { CallbackProvider, useCallbackWidget } from '@/components/callback-widget';
@@ -78,6 +78,27 @@ describe('FaqPage', () => {
     const { container } = renderFaq();
     expect((container.querySelector('details#ulga-na-start') as HTMLDetailsElement).open).toBe(true);
     expect((container.querySelector('details#certyfikat-ksiegowy') as HTMLDetailsElement).open).toBe(false);
+  });
+
+  it('opens the question when the hash changes after the page has loaded', () => {
+    const { container } = renderFaq();
+    const details = container.querySelector('details#wakacje-skladkowe') as HTMLDetailsElement;
+    expect(details.open).toBe(false);
+    act(() => {
+      window.history.replaceState(null, '', '/faq#wakacje-skladkowe');
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+    });
+    expect(details.open).toBe(true);
+  });
+
+  it('survives a hash that is not valid percent-encoding', () => {
+    for (const hash of ['#100%', '#%', '#%2']) {
+      window.history.replaceState(null, '', `/faq${hash}`);
+      const { container, unmount } = renderFaq();
+      expect(container.querySelector('h1')).toHaveTextContent(content.hero.title);
+      expect([...container.querySelectorAll('details')].some((d) => (d as HTMLDetailsElement).open)).toBe(false);
+      unmount();
+    }
   });
 
   it('ignores a hash that names no question', () => {
