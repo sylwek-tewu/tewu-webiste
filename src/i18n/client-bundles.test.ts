@@ -32,13 +32,13 @@ function runtimeImports(file: string): string[] {
     .filter((resolved): resolved is string => resolved !== null);
 }
 
-/** The import chain from `entry` to the first dictionary it reaches, or null. */
-function chainToDictionary(entry: string): string[] | null {
+/** The import chain from `entry` to the first of `targets` it reaches, or null. */
+function chainTo(entry: string, targets: string[]): string[] | null {
   const parent = new Map<string, string | null>([[entry, null]]);
   const queue = [entry];
   while (queue.length > 0) {
     const file = queue.shift()!;
-    if (DICTIONARIES.includes(file)) {
+    if (targets.includes(file)) {
       const chain: string[] = [];
       for (let step: string | null = file; step; step = parent.get(step) ?? null) {
         chain.unshift(path.relative(SRC, step));
@@ -67,6 +67,17 @@ const clientModules = sourceFiles(SRC).filter((file) =>
   /^\s*(?:\/\/[^\n]*\n\s*)*['"]use client['"]/.test(fs.readFileSync(file, 'utf8'))
 );
 
+// The copy of the service pages and the FAQ page (ADR 0004 §2, ADR 0005): server pages read it and
+// pass one page's copy as props. Only the type modules may be imported (type-only) by client code.
+const PAGE_CONTENT = sourceFiles(path.join(SRC, 'content')).filter((file) => path.basename(file) !== 'types.ts');
+
+const leaksTo = (targets: string[], allowed: string[] = []) =>
+  clientModules
+    .filter((file) => !allowed.includes(file))
+    .map((file) => chainTo(file, targets))
+    .filter((chain): chain is string[] => chain !== null)
+    .map((chain) => chain.join(' -> '));
+
 describe('client bundles (ADR 0002)', () => {
   it('finds the client modules to check', () => {
     expect(clientModules).toEqual(expect.arrayContaining(PROVIDERS));
@@ -74,11 +85,11 @@ describe('client bundles (ADR 0002)', () => {
   });
 
   it('import a dictionary only through the locale providers', () => {
-    const leaks = clientModules
-      .filter((file) => !PROVIDERS.includes(file))
-      .map(chainToDictionary)
-      .filter((chain): chain is string[] => chain !== null)
-      .map((chain) => chain.join(' -> '));
-    expect(leaks).toEqual([]);
+    expect(leaksTo(DICTIONARIES, PROVIDERS)).toEqual([]);
+  });
+
+  it('never import the page content modules, only receive one page as props', () => {
+    expect(PAGE_CONTENT).toEqual(expect.arrayContaining([path.join(SRC, 'content/faq/pl.ts'), path.join(SRC, 'content/service-pages/index.ts')]));
+    expect(leaksTo(PAGE_CONTENT)).toEqual([]);
   });
 });
