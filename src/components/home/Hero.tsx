@@ -22,7 +22,7 @@ export function Hero() {
                     <Grid gutter={{ base: 48, lg: 48 }} align="center">
                         <GridCol span={{ base: 12, md: 6 }}>
                             <Stack gap="xl">
-                                <Badge>
+                                <Badge c="brandBlue.7">
                                     {t.home.hero.badge}
                                 </Badge>
 
@@ -32,8 +32,13 @@ export function Hero() {
                                     className={classes.heroTitle}
                                     style={{ letterSpacing: '-0.025em', lineHeight: 1.1 }}
                                 >
+                                    {/* The small line is part of the H1 so that the heading carries the offer's keyword;
+                                        the slogan below keeps its size. The space keeps the text content from running together. */}
+                                    <Text span display="block" size="xl" fw={700} c="slate.6" lh={1.3} mb="xs" style={{ letterSpacing: 0 }}>
+                                        {t.home.hero.titleKicker}
+                                    </Text>{' '}
                                     {t.home.hero.titleNormal}<br />
-                                    <span>{t.home.hero.titleAccent}</span>
+                                    <span className={classes.heroAccent}>{t.home.hero.titleAccent}</span>
                                 </Title>
 
                                 <Text size="xl" c="slate.6" lh={1.6} maw={512}>
@@ -101,8 +106,14 @@ export function Hero() {
                                 />
                                 <Image
                                     src="/img/stock/hero-office.jpg"
-                                    alt="Biuro rachunkowe"
+                                    alt={t.home.hero.imageAlt}
+                                    width={1200}
+                                    height={689}
+                                    loading="lazy"
+                                    decoding="async"
                                     radius="xl"
+                                    // The height attribute reserves space, but it would override the 1:1 ratio below.
+                                    h="auto"
                                     style={{
                                         position: 'relative',
                                         zIndex: 10,

@@ -48,6 +48,24 @@ Dotychczas serwis Biura Rachunkowego TEWU wdrażany był na platformie Netlify. 
 - Szablon adresu preview w Coolify (*Preview URL Template*) należy ustawić na sztywno na `{{pr_id}}.test-tewu-website.projekty-tewu.it` najpóźniej przy przepięciu aplikacji na `tewu.szczecin.pl`. Domyślny `{{pr_id}}.{{domain}}` przeniósłby podglądy do domeny klienta (wildcard DNS, wspólne ciasteczka).
 - Odpowiedzi po zalogowaniu mają nagłówki pozwalające na cache współdzielony (`s-maxage`, `public` dla `_next/static`). Dziś przed aplikacją stoi tylko Traefik bez cache, ale dodanie CDN lub proxy z cache wymagałoby wyłączenia cache dla preview, inaczej podgląd byłby dostępny bez hasła.
 
+### 3b. Domeny i stałe przekierowania (ręczne etykiety Traefika)
+- Production Deployment ma domeny `https://tewu.szczecin.pl` i `https://www.tewu.szczecin.pl` z ustawieniem *Redirect* „non-www” (od 13.10.2026).
+- Coolify generuje przekierowania `http` → `https` i `www` → domena główna jako tymczasowe (307). Dla SEO i kampanii Ads potrzebne są stałe przekierowania w jednym skoku, z zachowaniem ścieżki i parametrów. Dlatego etykiety Traefika aplikacji poprawiono ręcznie:
+  - middleware `vove4fk84fv8vr6plcgwrgeo-to-https` (`redirectscheme`, `permanent=true`) na routerze `http-0`;
+  - middleware `1-vove4fk84fv8vr6plcgwrgeo-to-non-www` (`redirectregex`, `permanent=true`, `replacement=https://${2}`) na routerach `http-1` i `https-1`, więc `http://www…` trafia na `https://tewu.szczecin.pl/…` jednym przekierowaniem 301.
+- Wspólnego middleware `redirect-to-https` nie zmieniano. Definiują go wszystkie aplikacje na serwerze, więc zmiana w jednej powodowałaby konflikt w Traefiku.
+- Żeby Coolify nie nadpisywał tych etykiet, w aplikacji wyłączono *Readonly labels*.
+- Aplikacja ma własne zabezpieczenia na wypadek utraty etykiet (`next.config.mjs`):
+  - przekierowanie 308 z `www.tewu.szczecin.pl` na domenę główną;
+  - nagłówek `X-Robots-Tag: noindex` dla każdego hosta innego niż dokładnie `tewu.szczecin.pl`.
+
+  Przekierowania `http` → `https` aplikacja nie przejmuje, bo nie widzi schematu połączenia z przeglądarką.
+
+**Ryzyko:** etykiety są stanem ręcznym, którego nie ma w repozytorium.
+- **Zmiana domen, ustawienia *Redirect* albo ponowne włączenie *Readonly labels*:** Coolify generuje etykiety od nowa i usuwa poprawki. Przekierowania wracają wtedy do 307 albo przestają działać.
+- **Zmiana nazw routerów lub UUID aplikacji** (np. przy odtworzeniu aplikacji) wymaga dopasowania nazw middleware w etykietach.
+- **Etykiety nie mogą zmieniać nagłówka `Host` przekazywanego do aplikacji.** `X-Robots-Tag: noindex` zależy od `Host`. Gdyby proxy przepisywało go na inną wartość, produkcja dostałaby `noindex` i wypadłaby z indeksu.
+
 ### 4. Polityka Prywatności i zgodność z RODO
 - Zaktualizowano treści polityki w języku polskim i ukraińskim (`src/i18n/pl.ts`, `src/i18n/uk.ts`, `PrivacyPolicyClient.tsx`):
   - Wskazano hostingodawcę: **OVHcloud – OVH Sp. z o.o. (Wrocław)**, strona umowy powierzenia (DPA), z infrastrukturą w centrum danych w EOG.
@@ -80,3 +98,7 @@ Dotychczas serwis Biura Rachunkowego TEWU wdrażany był na platformie Netlify. 
    - `PREVIEW_BASIC_AUTH` – tylko w sekcji zmiennych Preview (sekcja 3a); HTTP Basic Auth w ustawieniach aplikacji Coolify pozostaje wyłączone, a *Preview URL Template* wskazuje domenę `test-tewu-website.projekty-tewu.it`. Ścieżka healthchecka Coolify (jeśli zostanie włączony) to `/api/health`.
 3. **Konfiguracja Scheduled Task:** Dodać w Coolify zadanie cron z interwałem `*/10 * * * *` wywołujące `POST /api/internal/process-outbox` poleceniem `wget` (powyżej) i jednorazowo uruchomić je ręcznie, aby sprawdzić wynik.
 4. **Retencja logów:** Zainstalować na VPS `deploy/logrotate/docker-containers` w `/etc/logrotate.d/` (usuwanie logów kontenerów po 7 dniach).
+5. **Etykiety Traefika (sekcja 3b):** po każdej zmianie domen, ustawienia *Redirect* lub *Readonly labels* w Coolify ponownie nanieść ręczne middleware i sprawdzić:
+   - `curl -sI http://www.tewu.szczecin.pl/uslugi/kpir?utm_source=test` → jedno `301` na `https://tewu.szczecin.pl/uslugi/kpir?utm_source=test`;
+   - `curl -sI http://tewu.szczecin.pl/` → `301` na `https://tewu.szczecin.pl/`;
+   - `curl -sI https://tewu.szczecin.pl/` → `200` **bez** `x-robots-tag`.

@@ -60,7 +60,11 @@ export default function AboutClient() {
                             <Box style={{ aspectRatio: '4/5', borderRadius: 'var(--mantine-radius-xl)', overflow: 'hidden', boxShadow: 'var(--mantine-shadow-2xl)' }}>
                                 <Image
                                     src="/img/stock/team.jpg"
-                                    alt="Zespół TEWU"
+                                    alt={t.about.intro.imageAlt}
+                                    width={1200}
+                                    height={800}
+                                    loading="lazy"
+                                    decoding="async"
                                     w="100%"
                                     h="100%"
                                     fit="cover"
@@ -100,7 +104,7 @@ export default function AboutClient() {
                         <Text fw={900} c="blue.6" tt="uppercase" style={{ letterSpacing: '0.1em' }} size="sm" mb="xs">
                             {t.about.values.label}
                         </Text>
-                        <Title order={3} fw={900} c="slate.9" style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)', letterSpacing: '-0.025em' }}>
+                        <Title order={2} size="h3" fw={900} c="slate.9" style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)', letterSpacing: '-0.025em' }}>
                             {t.about.values.title}
                         </Title>
                     </Box>
@@ -110,7 +114,7 @@ export default function AboutClient() {
                                 <ThemeIcon size={56} radius="lg" bg="blue.0" c="blue.6" mb="lg">
                                     {VALUE_ICONS[i]}
                                 </ThemeIcon>
-                                <Title order={4} fw={700} c="slate.9" mb="md" size="h4">{item.title}</Title>
+                                <Title order={3} fw={700} c="slate.9" mb="md" size="h4">{item.title}</Title>
                                 <Text c="slate.6" lh={1.6}>{item.desc}</Text>
                             </Paper>
                         ))}

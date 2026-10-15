@@ -1,22 +1,16 @@
 import React from 'react';
-import { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/metadata';
 import { Stack } from '@mantine/core';
 import { Hero } from '@/components/home/Hero';
 import { Services } from '@/components/home/Services';
 import { WhyUs } from '@/components/home/WhyUs';
 
-export const metadata: Metadata = {
-    title: "Бухгалтерське бюро TEWU | Польща, Щецин",
-    description: "Професійні бухгалтерські послуги, кадри, зарплата та податкові консультації для бізнесу в Польщі. Понад 25 років досвіду.",
-    alternates: {
-        canonical: '/uk',
-        languages: {
-            'pl': '/',
-            'x-default': '/',
-            'uk': '/uk',
-        },
-    },
-};
+export const metadata = buildPageMetadata({
+    locale: 'uk',
+    path: '/',
+    title: "Бухгалтерське бюро в Щецині – облік, кадри, зарплата | TEWU",
+    description: "Бухгалтерське бюро в Щецині: повна бухгалтерія компаній, KPiR, ryczałt, кадри та зарплата, KSeF. Понад 25 років на ринку. Безкоштовна оцінка.",
+});
 
 export default function UkrainianHome() {
     return (

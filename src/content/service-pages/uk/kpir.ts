@@ -5,7 +5,7 @@ export const kpir: ServicePageContent = {
   slug: 'kpir',
   locale: 'uk',
   meta: {
-    title: 'Бухгалтерія KPiR у Щецині – Бюро TEWU',
+    title: 'Книга доходів і витрат (KPiR) у Щецині – TEWU',
     description: 'Книга доходів і витрат (KPiR) для підприємців і spółka cywilna у Щецині: VAT, ZUS, PIT, пільги. Безкоштовна оцінка – передзвонимо.',
   },
   hero: {

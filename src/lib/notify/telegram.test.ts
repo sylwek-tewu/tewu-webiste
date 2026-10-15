@@ -61,6 +61,15 @@ describe('Telegram Ping PII Leak Prevention', () => {
     expect(text).toContain('źródło: Nieznane');
   });
 
+  it('shows an outbox record saved with the removed topic "fundacja" as general', () => {
+    const text = buildTelegramPingText({
+      ...sampleData,
+      topic: 'fundacja',
+    } as unknown as CallbackNotificationData);
+    expect(text).toContain('temat: ogólny');
+    expect(text).not.toMatch(/fundacj/i);
+  });
+
   it('includes [UA] indicator when locale is uk', () => {
     const ukData: CallbackNotificationData = {
       id: 'UA42',

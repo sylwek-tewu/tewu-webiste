@@ -1,19 +1,13 @@
 import React from 'react';
-import { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/metadata';
 import ServicesClient from './ServicesClient';
 
-export const metadata: Metadata = {
-    title: "Usługi - Biuro Rachunkowe TEWU",
-    description: "Pełna oferta usług księgowych, kadrowo-płacowych i doradztwa podatkowego dla firm w Szczecinie.",
-    alternates: {
-        canonical: '/uslugi',
-        languages: {
-            'pl': '/uslugi',
-            'x-default': '/uslugi',
-            'uk': '/uk/uslugi',
-        },
-    },
-};
+export const metadata = buildPageMetadata({
+    locale: 'pl',
+    path: '/uslugi',
+    title: "Usługi księgowe i kadrowe w Szczecinie – Biuro TEWU",
+    description: "Usługi biura rachunkowego TEWU w Szczecinie: pełna księgowość, KPiR, ryczałt, kadry i płace, KSeF oraz zakładanie spółek z o.o. Bezpłatna wycena.",
+});
 
 export default function Services() {
     return <ServicesClient />;

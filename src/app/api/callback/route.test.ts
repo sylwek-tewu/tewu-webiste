@@ -163,6 +163,18 @@ describe('POST /api/callback route handler', () => {
       expect(pingSpy.mock.calls[0][0]).toMatchObject({ topic: '', source: 'unknown' });
     });
 
+    it('accepts the removed topic "fundacja" from an old tab and delivers it without a topic', async () => {
+      const emailSpy = vi.spyOn(emailModule, 'sendCallbackEmail').mockResolvedValue(true);
+      const pingSpy = vi.spyOn(telegramModule, 'sendTelegramPing');
+
+      const res = await POST(makeRequest({ ...validBody, topic: 'fundacja' }));
+      expect(res.status).toBe(200);
+      expect((await res.json()).success).toBe(true);
+
+      expect(emailSpy.mock.calls[0][0].topic).toBe('');
+      expect(pingSpy.mock.calls[0][0].topic).toBe('');
+    });
+
     it('passes the Ukrainian locale to email and Telegram', async () => {
       const emailSpy = vi.spyOn(emailModule, 'sendCallbackEmail').mockResolvedValue(true);
       const pingSpy = vi.spyOn(telegramModule, 'sendTelegramPing');

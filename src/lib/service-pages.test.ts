@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   SERVICE_PAGE_SLUGS,
+  RELATED_SERVICE_PAGES,
   SERVICE_PAGES,
   isServicePageSlug,
   servicePagePath,
@@ -63,5 +64,29 @@ describe('service page registry', () => {
   it('gives the preset topic of a page, or none off the landing pages', () => {
     expect(servicePageTopic('kpir')).toBe('dzialalnosc');
     expect(servicePageTopic(null)).toBe('');
+  });
+});
+
+describe('related service pages', () => {
+  it('links every page to two or three others, never to itself', () => {
+    for (const slug of SERVICE_PAGE_SLUGS) {
+      const related = RELATED_SERVICE_PAGES[slug];
+      expect(related.length).toBeGreaterThanOrEqual(2);
+      expect(related.length).toBeLessThanOrEqual(3);
+      expect(related).not.toContain(slug);
+      expect(new Set(related).size).toBe(related.length);
+      for (const target of related) expect(isServicePageSlug(target)).toBe(true);
+    }
+  });
+
+  it('uses the mapping approved by TEWU', () => {
+    expect(RELATED_SERVICE_PAGES).toEqual({
+      'pelna-ksiegowosc': ['inkubator-spolek', 'kadry-i-place', 'ksef'],
+      kpir: ['ryczalt', 'inkubator-spolek', 'ksef'],
+      ryczalt: ['kpir', 'inkubator-spolek', 'ksef'],
+      'kadry-i-place': ['pelna-ksiegowosc', 'kpir'],
+      ksef: ['pelna-ksiegowosc', 'kpir', 'ryczalt'],
+      'inkubator-spolek': ['pelna-ksiegowosc', 'kadry-i-place'],
+    });
   });
 });

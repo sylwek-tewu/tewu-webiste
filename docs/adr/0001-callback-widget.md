@@ -29,7 +29,7 @@ Wycena usług w TEWU jest indywidualna i powstaje w rozmowie. Strona nie liczy c
     - `8-12` („8:00–12:00”),
     - `12-16` („12:00–16:00”),
     - `17-18` („17:00–18:00” – dyżur telefoniczny po godzinach biura, z informacją pomocniczą pod wyborem).
-  - Temat zapytania (opcjonalny): spółka / fundacja lub stowarzyszenie / działalność gospodarcza / kadry i płace / inne.
+  - Temat zapytania (opcjonalny): spółka / działalność gospodarcza / kadry i płace / inne. Temat „Fundacja lub stowarzyszenie” (`fundacja`) usunięto 13.10.2026, bo fundacje i stowarzyszenia nie są grupą docelową biura; zgłoszenia z tym tematem (stara karta przeglądarki, wpis w buforze sprzed wdrożenia) są nadal przyjmowane i dostarczane bez tematu.
   - Klauzula RODO: zwięzła notka informacyjna nad przyciskiem wyślij z linkiem do `/polityka-prywatnosci` (bez konieczności zaznaczania checkboxa, art. 6 ust. 1 lit. b RODO).
   - Antyspam: niewidoczne pole-pułapka (honeypot) oraz time-trap (odrzucenie zgłoszeń przesłanych szybciej niż 2 sekundy od otwarcia formularza). Brak zewnętrznych captcha/reCAPTCHA.
 

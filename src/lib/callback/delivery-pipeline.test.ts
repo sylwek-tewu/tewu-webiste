@@ -219,6 +219,15 @@ describe('submitCallbackLead delivery pipeline', () => {
       );
     });
 
+    it('delivers a request from an old tab with the removed topic "fundacja" without a topic', async () => {
+      const result = await submitCallbackLead({ ...validPayload, topic: 'fundacja' }, mockDeps);
+      expect(result.status).toBe('delivered');
+      expect(mockDeps.sendEmail).toHaveBeenCalledWith(
+        expect.objectContaining({ topic: '' }),
+        expect.any(Object)
+      );
+    });
+
     it('passes known topic and source through', async () => {
       await submitCallbackLead(
         { ...validPayload, topic: 'spolka', source: 'floating' },

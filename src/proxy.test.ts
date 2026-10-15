@@ -94,6 +94,23 @@ describe('Proxy language detection and routing', () => {
     expect(res.headers.get('location')).toBe('https://tewu.szczecin.pl/uk/ukryte');
   });
 
+  describe('metadata routes', () => {
+    // Next serves the share image without a dot in the path, so it looks like a page
+    it.each(['/opengraph-image-35ziip', '/uk/opengraph-image-1xrru2', '/twitter-image-abc123', '/icon-1a2b3c', '/apple-icon.png'])(
+      'passes %s through without a language redirect',
+      (path) => {
+        const res = proxy(createRequest(path, { 'accept-language': 'uk-UA,uk;q=0.9' }));
+        expect(res.status).toBe(200);
+        expect(res.headers.get('location')).toBeNull();
+      },
+    );
+
+    it('still redirects pages whose name only starts like a metadata route', () => {
+      const res = proxy(createRequest('/iconografia', { 'accept-language': 'uk' }));
+      expect(res.headers.get('location')).toBe('https://tewu.szczecin.pl/uk/iconografia');
+    });
+  });
+
   describe('locale header for the 404 page', () => {
     // NextResponse.next({ request: { headers } }) exposes overridden request headers this way
     const forwarded = (res: Response) => res.headers.get(`x-middleware-request-${SITE_LOCALE_HEADER}`);

@@ -73,6 +73,13 @@ describe('buildCallbackEmail', () => {
     expect(email.html).not.toContain('free text');
   });
 
+  it('shows an outbox record saved with the removed topic "fundacja" as unspecified', () => {
+    const email = buildCallbackEmail({ ...base, topic: 'fundacja' as unknown as CallbackNotificationData['topic'] });
+    expect(email.text).toContain('Czego dotyczy: Nie określono');
+    expect(email.text).not.toMatch(/fundacj/i);
+    expect(email.html).not.toMatch(/fundacj/i);
+  });
+
   it('names the landing page the request came from', () => {
     const email = buildCallbackEmail({ ...base, source: 'service', landingPage: 'kpir' });
     expect(email.text).toContain('Podstrona usługowa: Księga przychodów i rozchodów (KPiR) (/uslugi/kpir)');

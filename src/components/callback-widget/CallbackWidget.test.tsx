@@ -73,6 +73,19 @@ describe('CallbackWidget', () => {
     });
   });
 
+  it('offers four topics in the form, none for foundations or associations', async () => {
+    const user = await openForm();
+    await user.click(screen.getByRole('textbox', { name: /Czego dotyczy rozmowa/ }));
+
+    const options = await screen.findAllByRole('option', { hidden: true });
+    expect(options.map((o) => o.textContent)).toEqual([
+      'Spółka z o.o. / S.A. / komandytowa',
+      'Jednoosobowa działalność (JDG / spółka cywilna)',
+      'Kadry i płace / ZUS',
+      'Inne sprawy księgowe / doradztwo',
+    ]);
+  });
+
   it('holds a fast submission until 2 s have passed instead of letting the server drop it', async () => {
     respondWith({ success: true, id: 'C9F1A2', delivery: 'direct' });
     const user = await openForm();

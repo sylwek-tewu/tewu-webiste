@@ -42,7 +42,7 @@ describe.each(PAGES_BY_LOCALE)('service page content (%s)', (locale, pages) => {
   });
 
   it.each(SERVICE_PAGE_SLUGS)('%s: keeps the title and description within search result limits', (slug) => {
-    expect(pages[slug].meta.title.length).toBeLessThanOrEqual(70);
+    expect(pages[slug].meta.title.length).toBeLessThanOrEqual(60);
     expect(pages[slug].meta.description.length).toBeGreaterThanOrEqual(70);
     expect(pages[slug].meta.description.length).toBeLessThanOrEqual(160);
   });

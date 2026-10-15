@@ -6,7 +6,7 @@
 // Pulls in libphonenumber metadata: call this on the server (the root layout passes the result
 // to the widget as a prop) or in lazily loaded code, not in the always-loaded client bundle.
 import { normalizePhoneNumber } from './phone';
-import { CONTACT_DETAILS } from '@/constants';
+import { COMPANY } from '@/lib/company';
 
 export const DEFAULT_OFFICE_CALL_NUMBER = '+48914824190'; // TEWU Sekretariat
 
@@ -18,7 +18,7 @@ export interface ResolvedCallNumber {
 
 // The office's own number keeps the house style used across the site.
 function formatDisplay(e164: string, libraryDisplay: string): string {
-  return e164 === DEFAULT_OFFICE_CALL_NUMBER ? CONTACT_DETAILS.phone : libraryDisplay;
+  return e164 === DEFAULT_OFFICE_CALL_NUMBER ? COMPANY.phones.landline.display : libraryDisplay;
 }
 
 export function getCallNumber(envValue?: string): ResolvedCallNumber {
@@ -43,6 +43,6 @@ export function getCallNumber(envValue?: string): ResolvedCallNumber {
   return {
     raw: DEFAULT_OFFICE_CALL_NUMBER,
     telUri: `tel:${DEFAULT_OFFICE_CALL_NUMBER}`,
-    display: CONTACT_DETAILS.phone,
+    display: COMPANY.phones.landline.display,
   };
 }

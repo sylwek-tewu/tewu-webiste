@@ -1,22 +1,16 @@
 import React from 'react';
-import { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/metadata';
 import { Stack } from '@mantine/core';
 import { Hero } from '@/components/home/Hero';
 import { Services } from '@/components/home/Services';
 import { WhyUs } from '@/components/home/WhyUs';
 
-export const metadata: Metadata = {
-    title: "Strona główna - Biuro Rachunkowe TEWU",
-    description: "Twój zaufany partner w biznesie. Profesjonalna księgowość, kadry i płace oraz doradztwo dla firm każdej wielkości. Biuro rachunkowe TEWU w Szczecinie.",
-    alternates: {
-        canonical: '/',
-        languages: {
-            'pl': '/',
-            'x-default': '/',
-            'uk': '/uk',
-        },
-    },
-};
+export const metadata = buildPageMetadata({
+    locale: 'pl',
+    path: '/',
+    title: "Biuro rachunkowe Szczecin – księgowość, kadry i płace | TEWU",
+    description: "Biuro rachunkowe w Szczecinie: pełna księgowość spółek, KPiR, ryczałt, kadry i płace, KSeF. Ponad 25 lat na rynku. Bezpłatna wycena – oddzwonimy.",
+});
 
 export default function Home() {
     return (

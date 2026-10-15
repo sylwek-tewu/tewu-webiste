@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 import React from 'react';
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { COMPANY_FULL_NAME, CONTACT_DETAILS } from '@/constants';
+import { COMPANY_FULL_NAME } from '@/constants';
+import { COMPANY } from '@/lib/company';
 
 // Imported after each module reset, so the page and the render helper share one LocaleContext.
 async function renderPage(locale: 'pl' | 'uk' = 'pl') {
@@ -36,7 +37,7 @@ describe('Privacy policy page', () => {
     const strong = strongTexts(container);
     expect(strong).toContain(COMPANY_FULL_NAME);
     expect(strong).toContain('72 godziny');
-    expect(strong).toContain(CONTACT_DETAILS.email);
+    expect(strong).toContain(COMPANY.emails.main);
     expect(strong).toContain('Prezes Urzędu Ochrony Danych Osobowych (PUODO)');
     expect(container.textContent).not.toContain('**');
   });
@@ -66,7 +67,7 @@ describe('Privacy policy page', () => {
     it('takes the company name and address from the shared constants', async () => {
       const { container } = await renderPage('uk');
       expect(strongTexts(container)).toContain(COMPANY_FULL_NAME);
-      expect(container.textContent).toContain(CONTACT_DETAILS.address);
+      expect(container.textContent).toContain(COMPANY.address.line);
       expect(container.textContent).not.toContain('**');
     });
   });

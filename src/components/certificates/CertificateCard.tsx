@@ -2,12 +2,16 @@
 
 import React from 'react';
 import { FileText } from 'lucide-react';
-import { Box, Paper, Image, Text } from '@mantine/core';
+import { Box, Paper, Text, VisuallyHidden } from '@mantine/core';
 import classes from './CertificateCard.module.css';
+import { useLocale } from '@/i18n/LocaleContext';
 
 interface CertificateCardProps {
     cert: {
         url: string;
+        avifUrl: string;
+        width: number;
+        height: number;
         title: string;
         desc: string;
         pdfUrl: string;
@@ -16,9 +20,11 @@ interface CertificateCardProps {
 }
 
 export default function CertificateCard({ cert, onClick }: CertificateCardProps) {
+    const { t } = useLocale();
+    const previewLabel = t.certificates.previewLabel;
+
     return (
         <Paper
-            onClick={onClick}
             pos="relative"
             radius="lg"
             shadow="lg"
@@ -26,11 +32,19 @@ export default function CertificateCard({ cert, onClick }: CertificateCardProps)
             className={classes.card}
         >
             <Box h="100%" w="100%" className={classes.imageWrapper}>
-                <Image
-                    src={cert.url}
-                    alt={cert.title}
-                    className={classes.image}
-                />
+                <picture className={classes.picture}>
+                    <source type="image/avif" srcSet={cert.avifUrl} />
+                    <img
+                        src={cert.url}
+                        // Decorative: the thumbnail is a stock photo, and the card text and button name the certificate.
+                        alt=""
+                        width={cert.width}
+                        height={cert.height}
+                        loading="lazy"
+                        decoding="async"
+                        className={classes.image}
+                    />
+                </picture>
             </Box>
 
             <Box
@@ -52,7 +66,7 @@ export default function CertificateCard({ cert, onClick }: CertificateCardProps)
                     mt="md"
                     className={classes.label}
                 >
-                    Podgląd Dokumentu
+                    {previewLabel}
                 </Text>
             </Box>
 
@@ -67,6 +81,11 @@ export default function CertificateCard({ cert, onClick }: CertificateCardProps)
                 <Text c="white" fw={700}>{cert.title}</Text>
                 <Text c="slate.3" size="xs">{cert.desc}</Text>
             </Box>
+
+            {/* Covers the whole card, so a click anywhere opens the preview and the keyboard can reach it. */}
+            <button type="button" onClick={onClick} className={classes.trigger}>
+                <VisuallyHidden>{previewLabel}: {cert.title} – {cert.desc}</VisuallyHidden>
+            </button>
         </Paper>
     );
 }
