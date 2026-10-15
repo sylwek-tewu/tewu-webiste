@@ -121,7 +121,7 @@ export const ukTranslations: Translations = {
       expNumber: '25+',
       expTitle: 'Років на ринку',
       expDesc: 'Знаємо польські закони до дрібниць та вміємо надійно захистити ваш бізнес.',
-      imageAlt: 'Команда за роботою в офісі',
+      imageAlt: 'Голова бюро (Prezes) Sylwester Wrzeszcz за роботою в бюро TEWU, позаду команда',
     },
     values: {
       label: 'Наші цінності',
@@ -308,6 +308,7 @@ export const ukTranslations: Translations = {
     finalCta: {
       title: 'Поговорімо про вашу компанію',
       description: 'Залиште номер телефону – ми передзвонимо у зручний для вас час і підготуємо безкоштовну оцінку вартості.',
+      imageAlt: 'Голова бюро (Prezes) Sylwester Wrzeszcz у приймальні бюро TEWU',
     },
   },
   outsourcing: {
@@ -403,6 +404,8 @@ export const ukTranslations: Translations = {
     mapTitle: 'Наш офіс у Щецині',
     mapSubtitle: 'Al. Powstańców Wielkopolskich 78A LU2, Szczecin',
     mapIframeTitle: 'Карта проїзду до бюро TEWU у Щецині',
+    entrancePhotoAlt: 'Вхід до бюро TEWU на Al. Powstańców Wielkopolskich 78A у Щецині',
+    entranceCaption: 'Вхід до бюро: скляні двері з логотипом TEWU між вітринами з написом «Biuro Rachunkowe», на першому поверсі будинку 78A.',
   },
   privacyPolicy: {
     metaTitle: 'Політика конфіденційності | Biuro Rachunkowe TEWU',

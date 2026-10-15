@@ -144,7 +144,7 @@ export interface Translations {
       expNumber: string;
       expTitle: string;
       expDesc: string;
-      /** team.jpg: people working at laptops around a table */
+      /** zespol.jpg: the Prezes at his desk, two of the team behind him */
       imageAlt: string;
     };
     values: {
@@ -195,7 +195,12 @@ export interface Translations {
     seeAlsoTitle: string;
     /** Link texts of that block, keyed by slug (the footer's `links` are shorter). */
     seeAlsoNames: Record<ServicePageSlug, string>;
-    finalCta: { title: string; description: string };
+    finalCta: {
+      title: string;
+      description: string;
+      /** recepcja.jpg next to the CTA: the Prezes in the reception */
+      imageAlt: string;
+    };
   };
   outsourcing: {
     header: {
@@ -258,6 +263,10 @@ export interface Translations {
     mapTitle: string;
     mapSubtitle: string;
     mapIframeTitle: string;
+    /** budynek.jpg next to the map */
+    entrancePhotoAlt: string;
+    /** Under that photo: how to tell the office's door from the others */
+    entranceCaption: string;
   };
   privacyPolicy: {
     headerTitle: string;

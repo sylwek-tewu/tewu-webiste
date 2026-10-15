@@ -9,7 +9,10 @@ import AboutClient from './(pl)/o-nas/AboutClient';
 import CertificatesClient from './(pl)/certyfikaty/CertificatesClient';
 import { CallbackProvider } from '@/components/callback-widget';
 import FaqPage from '@/components/faq/FaqPage';
+import ServiceLandingPage from '@/components/service-pages/ServiceLandingPage';
+import ContactClient from './(pl)/kontakt/ContactClient';
 import { FAQ_UPDATED_AT, getFaqContent } from '@/content/faq';
+import { getServicePageContent } from '@/content/service-pages';
 
 function altsOf(container: HTMLElement): Record<string, string | null> {
   return Object.fromEntries(
@@ -23,15 +26,17 @@ const ALTS = {
     hero: 'Dokumenty podatkowe, telefon z kalkulatorem i długopis',
     team: 'Zespół przy pracy w biurze',
     meeting: 'Troje uśmiechniętych osób przy stole z laptopami',
-    faqBuilding: 'Wejście do Biura Rachunkowego TEWU przy Al. Powstańców Wielkopolskich 78A w Szczecinie',
-    faqReception: 'Sylwester Wrzeszcz, Prezes Biura Rachunkowego TEWU, w recepcji biura',
+    building: 'Wejście do Biura Rachunkowego TEWU przy Al. Powstańców Wielkopolskich 78A w Szczecinie',
+    reception: 'Sylwester Wrzeszcz, Prezes Biura Rachunkowego TEWU, w recepcji biura',
+    aboutTeam: 'Sylwester Wrzeszcz, Prezes Biura Rachunkowego TEWU, przy pracy w biurze, za nim zespół',
   },
   uk: {
     hero: 'Податкові документи, телефон із калькулятором і ручка',
     team: 'Команда за роботою в офісі',
     meeting: 'Троє усміхнених людей за столом із ноутбуками',
-    faqBuilding: 'Вхід до бюро TEWU на Al. Powstańców Wielkopolskich 78A у Щецині',
-    faqReception: 'Голова бюро (Prezes) Sylwester Wrzeszcz у приймальні бюро TEWU',
+    building: 'Вхід до бюро TEWU на Al. Powstańców Wielkopolskich 78A у Щецині',
+    reception: 'Голова бюро (Prezes) Sylwester Wrzeszcz у приймальні бюро TEWU',
+    aboutTeam: 'Голова бюро (Prezes) Sylwester Wrzeszcz за роботою в бюро TEWU, позаду команда',
   },
 };
 
@@ -59,14 +64,29 @@ describe.each(['pl', 'uk'] as Locale[])('image alt texts (%s)', (locale) => {
       { locale }
     );
     expect(altsOf(container)).toEqual({
-      '/img/biuro/budynek.jpg': expected.faqBuilding,
-      '/img/biuro/recepcja.jpg': expected.faqReception,
+      '/img/biuro/budynek.jpg': expected.building,
+      '/img/biuro/recepcja.jpg': expected.reception,
     });
   });
 
-  it('describes the team photo on the about page', () => {
+  it('describes the reception photo in the service page CTA', () => {
+    const { container } = renderWithMantine(
+      <CallbackProvider>
+        <ServiceLandingPage content={getServicePageContent(locale, 'kpir')} />
+      </CallbackProvider>,
+      { locale }
+    );
+    expect(altsOf(container)).toEqual({ '/img/biuro/recepcja.jpg': expected.reception });
+  });
+
+  it('describes the office photo on the about page', () => {
     const { container } = renderWithMantine(<AboutClient />, { locale });
-    expect(altsOf(container)['/img/stock/team.jpg']).toBe(expected.team);
+    expect(altsOf(container)).toEqual({ '/img/biuro/zespol.jpg': expected.aboutTeam });
+  });
+
+  it('describes the entrance photo on the contact page', () => {
+    const { container } = renderWithMantine(<ContactClient />, { locale });
+    expect(altsOf(container)).toEqual({ '/img/biuro/budynek.jpg': expected.building });
   });
 
   // cert.png and library.png are stock photos, not scans, so describing them would mislead;

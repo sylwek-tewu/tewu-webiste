@@ -113,7 +113,7 @@ export const plTranslations: Translations = {
       expNumber: '25+',
       expTitle: 'Lat na rynku',
       expDesc: 'Znamy przepisy od podszewki i wiemy, jak chronić Twój biznes.',
-      imageAlt: 'Zespół przy pracy w biurze',
+      imageAlt: 'Sylwester Wrzeszcz, Prezes Biura Rachunkowego TEWU, przy pracy w biurze, za nim zespół',
     },
     values: {
       label: 'Nasze wartości',
@@ -300,6 +300,7 @@ export const plTranslations: Translations = {
     finalCta: {
       title: 'Porozmawiajmy o Twojej firmie',
       description: 'Zostaw numer telefonu – oddzwonimy w wybranej przez Ciebie porze i przygotujemy bezpłatną wycenę.',
+      imageAlt: 'Sylwester Wrzeszcz, Prezes Biura Rachunkowego TEWU, w recepcji biura',
     },
   },
   outsourcing: {
@@ -395,6 +396,8 @@ export const plTranslations: Translations = {
     mapTitle: 'Nasza lokalizacja w Szczecinie',
     mapSubtitle: 'Al. Powstańców Wielkopolskich 78A LU2',
     mapIframeTitle: 'Mapa dojazdu do Biura Rachunkowego TEWU w Szczecinie',
+    entrancePhotoAlt: 'Wejście do Biura Rachunkowego TEWU przy Al. Powstańców Wielkopolskich 78A w Szczecinie',
+    entranceCaption: 'Wejście do biura: przeszklone drzwi z logo TEWU między witrynami z napisem „Biuro Rachunkowe”, na parterze budynku 78A.',
   },
   privacyPolicy: {
     metaTitle: 'Polityka Prywatności | Biuro Rachunkowe TEWU',

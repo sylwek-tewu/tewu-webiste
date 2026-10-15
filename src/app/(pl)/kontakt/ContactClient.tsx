@@ -6,6 +6,8 @@ import { COMPANY, telHref } from '@/lib/company';
 import { Box, Container, SimpleGrid, Stack, Title, Text, Group, ThemeIcon, Paper, Anchor } from '@mantine/core';
 import classes from './ContactClient.module.css';
 import ContactMap from '@/components/contact/ContactMap';
+import { OfficePicture } from '@/components/OfficePicture';
+import { OFFICE_PHOTOS } from '@/lib/office-photos';
 import { useLocale } from '@/i18n/LocaleContext';
 
 export default function ContactClient() {
@@ -188,15 +190,25 @@ export default function ContactClient() {
                 </Container>
             </Box>
 
-            {/* Map Section */}
+            {/* Map Section: the entrance photo shows which door is the office's, the map how to get there */}
             <Box component="section" py={96} bg="white">
-                <Container size="xl" px="md" ta="center" mb={48}>
-                    <Title order={2} fw={900} c="slate.9" style={{ fontSize: '1.875rem', letterSpacing: '-0.025em' }}>
-                        {t.contact.mapTitle}
-                    </Title>
-                    <Text c="slate.5" mt="xs">{t.contact.mapSubtitle}</Text>
+                <Container size="xl" px="md">
+                    <Box ta="center" mb={48}>
+                        <Title order={2} fw={900} c="slate.9" style={{ fontSize: '1.875rem', letterSpacing: '-0.025em' }}>
+                            {t.contact.mapTitle}
+                        </Title>
+                        <Text c="slate.5" mt="xs">{t.contact.mapSubtitle}</Text>
+                    </Box>
+                    <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: 'xl', md: 48 }}>
+                        <Box component="figure" m={0}>
+                            <OfficePicture photo={OFFICE_PHOTOS.exterior} alt={t.contact.entrancePhotoAlt} />
+                            <Text component="figcaption" c="slate.6" size="sm" mt="md">
+                                {t.contact.entranceCaption}
+                            </Text>
+                        </Box>
+                        <ContactMap />
+                    </SimpleGrid>
                 </Container>
-                <ContactMap />
             </Box>
         </Stack>
     );
