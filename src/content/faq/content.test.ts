@@ -14,11 +14,38 @@ const CONTENT: [Locale, FaqPageContent][] = [
 
 // Global Constraints: no "tax advice" wording, in any inflection and word order.
 const FORBIDDEN_PHRASES = [/doradztw\p{L}*\s+podatkow/iu, /podatkow\p{L}*\s+doradztw/iu, /податков\p{L}*\s+консульт/iu, /консульт\p{L}*\s+податков/iu];
-const OFFICIAL_SOURCE = /^https:\/\/(www\.)?(biznes\.gov\.pl|podatki\.gov\.pl|zus\.pl|gov\.pl)\//;
-// An amount or a deadline: "240 000 zł", "2 mln euro", "12%", "7 dni" / "7 днів"
-const AMOUNT_OR_DEADLINE = /\d[\d\s]*(?:mln\s|млн\s)?(?:zł|euro|злот|євро)|\d+\s?%|\d+\s(?:dni|днів)(?![\p{L}])/iu;
+// Government domains and their subdomains (www., ksef.podatki.gov.pl)
+const OFFICIAL_SOURCE = /^https:\/\/([a-z0-9-]+\.)*(biznes\.gov\.pl|podatki\.gov\.pl|zus\.pl|gov\.pl)\//;
+// An amount, a deadline or a legal date: "240 000 zł", "2 mln euro", "12%", "7 dni" / "7 днів",
+// "2026 r." / "2027 року", "6 miesięcy" / "24 місяці"
+const AMOUNT_OR_DEADLINE =
+  /\d[\d\s]*(?:mln\s|млн\s)?(?:zł|euro|злот|євро)|\d+\s?%|\d+\s(?:dni|днів)(?![\p{L}])|\b(?:19|20)\d{2}\s?(?:r\.|року)|\d+\s(?:miesi|місяц)\p{L}*/iu;
 
 const questionsOf = (content: FaqPageContent) => content.categories.flatMap((category) => category.questions);
+
+/**
+ * Markup characters the parser left in the visible text (plain text, bold text and link labels
+ * alike): the reader would see them raw, and a link hidden that way escapes the link checks.
+ * The copy uses none of [, ] or * as ordinary characters.
+ */
+function rawMarkupLeftovers(paragraph: string): string[] {
+  return parseRichText(paragraph)
+    .map((segment) => segment.text)
+    .filter((text) => /[[\]*]/.test(text));
+}
+
+describe('rawMarkupLeftovers', () => {
+  it.each(['**[KPiR](/uslugi/kpir)**', '[**KPiR**](/uslugi/kpir)', '[KPiR] (/uslugi/kpir)', '[KPiR(/uslugi/kpir)', 'Zobacz [KPiR](/uslugi/kpir', 'samotne ** tutaj'])(
+    'finds raw markup in %s',
+    (paragraph) => {
+      expect(rawMarkupLeftovers(paragraph)).not.toEqual([]);
+    }
+  );
+
+  it('accepts well-formed links and bold text', () => {
+    expect(rawMarkupLeftovers('Zobacz [KPiR](/uslugi/kpir) i **ryczałt**.')).toEqual([]);
+  });
+});
 
 function allText(content: FaqPageContent): string[] {
   const texts: string[] = [];
@@ -70,11 +97,7 @@ describe.each(CONTENT)('FAQ content (%s)', (locale, content) => {
 
   it('leaves no raw markup', () => {
     for (const question of questions) {
-      for (const paragraph of question.answer) {
-        for (const segment of parseRichText(paragraph)) {
-          if (segment.kind === 'text') expect(segment.text, question.id).not.toMatch(/\]\(|\*\*|\[[^\]]*\]$/);
-        }
-      }
+      for (const paragraph of question.answer) expect(rawMarkupLeftovers(paragraph), question.id).toEqual([]);
     }
   });
 
@@ -109,6 +132,17 @@ describe('Polish and Ukrainian FAQ', () => {
     const sourceCounts = (content: FaqPageContent) =>
       Object.fromEntries(questionsOf(content).map((question) => [question.id, question.sources?.length ?? 0]));
     expect(sourceCounts(UK_FAQ)).toEqual(sourceCounts(PL_FAQ));
+  });
+
+  // Final review: a sole trader must not read the 7-day deadline as a companies-only rule.
+  it.each([
+    ['pl', PL_FAQ, '7 dni'],
+    ['uk', UK_FAQ, '7 днів'],
+  ] as const)('%s: gives the 7-day deadline for reporting accounts to sole traders (CEIDG) and companies (NIP-8) alike', (_, content, deadline) => {
+    const answer = questionsOf(content).find((question) => question.id === 'zglaszanie-rachunkow')!.answer.join(' ');
+    const sentence = answer.split(/(?<=\.)\s+/).find((s) => s.includes(deadline));
+    expect(sentence).toMatch(/CEIDG/);
+    expect(sentence).toMatch(/NIP-8/);
   });
 
   it('put the question about talking in Ukrainian first for Ukrainian readers and last for Polish ones', () => {

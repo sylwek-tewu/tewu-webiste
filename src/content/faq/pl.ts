@@ -182,7 +182,13 @@ export const PL_FAQ: FaqPageContent = {
           question: 'Co to jest KSeF?',
           answer: [
             'KSeF (Krajowy System e-Faktur) to ogólnopolski system teleinformatyczny zarządzany przez Ministerstwo Finansów, służący do wystawiania, przesyłania, odbierania i archiwizowania tzw. faktur ustrukturyzowanych (w formacie XML).',
-            'Od 2026 r. faktury w KSeF wystawiają kolejno największe firmy i pozostali podatnicy, a od stycznia 2027 r. obowiązek obejmuje wszystkich podatników z siedzibą w Polsce. Naszym klientom pomagamy przejść na KSeF i pobieramy ich faktury bezpośrednio z systemu – [więcej o KSeF](/uslugi/ksef).',
+            'Od 1 lutego 2026 r. faktury w KSeF wystawiają największe firmy, a od 1 kwietnia 2026 r. pozostali podatnicy. Wyjątki przejściowe obowiązują do końca 2026 r. Naszym klientom pomagamy przejść na KSeF i pobieramy ich faktury bezpośrednio z systemu – [więcej o KSeF](/uslugi/ksef).',
+          ],
+          sources: [
+            {
+              label: 'ksef.podatki.gov.pl – kluczowe terminy KSeF',
+              href: 'https://ksef.podatki.gov.pl/informacje-ogolne-ksef-20/podstawy-prawne-oraz-kluczowe-terminy/',
+            },
           ],
         },
       ],
@@ -237,7 +243,7 @@ export const PL_FAQ: FaqPageContent = {
           question: 'Czy jeśli mam kilka rachunków firmowych, muszę je wszystkie zgłaszać?',
           answer: [
             'Tak, podatnik musi zgłosić wszystkie rachunki firmowe, prowadzone zarówno w Polsce, jak i w innych krajach. Zgłoszeniem objęte są również rachunki prowadzone w walutach obcych.',
-            'Przy jednoosobowej działalności rachunki zgłaszasz we wniosku o zmianę danych w CEIDG, a CEIDG przekazuje je do urzędu skarbowego i ZUS. Spółka wpisana do KRS zgłasza zmiany w wykazie rachunków na formularzu NIP-8 w ciągu 7 dni – za spóźnienie grozi grzywna jak za wykroczenie skarbowe.',
+            'Nowy lub zmieniony rachunek zgłaszasz w ciągu 7 dni: przy jednoosobowej działalności we wniosku o zmianę danych w CEIDG (CEIDG przekaże je do urzędu skarbowego i ZUS), a spółka wpisana do KRS – w urzędzie skarbowym na formularzu NIP-8. Za spóźnienie grozi grzywna jak za wykroczenie skarbowe.',
           ],
           sources: [
             { label: 'biznes.gov.pl – zmiana danych w CEIDG', href: 'https://www.biznes.gov.pl/pl/portal/ou737' },

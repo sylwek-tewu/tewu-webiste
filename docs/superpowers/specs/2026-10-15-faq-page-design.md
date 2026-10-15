@@ -143,7 +143,9 @@ Oznaczenia: [D] z draftu TEWU bez zmian merytorycznych, [D*] z draftu po zmianie
 **`co-to-jest-ksef`** – Co to jest KSeF? [D*]
 > KSeF (Krajowy System e-Faktur) to ogólnopolski system teleinformatyczny zarządzany przez Ministerstwo Finansów, służący do wystawiania, przesyłania, odbierania i archiwizowania tzw. faktur ustrukturyzowanych (w formacie XML).
 >
-> Od 2026 r. faktury w KSeF wystawiają kolejno największe firmy i pozostali podatnicy, a od stycznia 2027 r. obowiązek obejmuje wszystkich podatników z siedzibą w Polsce. Naszym klientom pomagamy przejść na KSeF i pobieramy ich faktury bezpośrednio z systemu – [więcej o KSeF](/uslugi/ksef).
+> Od 1 lutego 2026 r. faktury w KSeF wystawiają największe firmy, a od 1 kwietnia 2026 r. pozostali podatnicy. Wyjątki przejściowe obowiązują do końca 2026 r. Naszym klientom pomagamy przejść na KSeF i pobieramy ich faktury bezpośrednio z systemu – [więcej o KSeF](/uslugi/ksef).
+
+Źródło: [ksef.podatki.gov.pl – kluczowe terminy KSeF](https://ksef.podatki.gov.pl/informacje-ogolne-ksef-20/podstawy-prawne-oraz-kluczowe-terminy/) (dodane po przeglądzie kodu: odpowiedź podaje daty z przepisów, więc potrzebuje źródła)
 
 ### 4. ZUS (`zus`, ikona `HandCoins`)
 
@@ -177,9 +179,9 @@ Oznaczenia: [D] z draftu TEWU bez zmian merytorycznych, [D*] z draftu po zmianie
 **`zglaszanie-rachunkow`** – Czy jeśli mam kilka rachunków firmowych, muszę je wszystkie zgłaszać? [D*]
 > Tak, podatnik musi zgłosić wszystkie rachunki firmowe, prowadzone zarówno w Polsce, jak i w innych krajach. Zgłoszeniem objęte są również rachunki prowadzone w walutach obcych.
 >
-> Przy jednoosobowej działalności rachunki zgłaszasz we wniosku o zmianę danych w CEIDG, a CEIDG przekazuje je do urzędu skarbowego i ZUS. Spółka wpisana do KRS zgłasza zmiany w wykazie rachunków na formularzu NIP-8 w ciągu 7 dni – za spóźnienie grozi grzywna jak za wykroczenie skarbowe.
+> Nowy lub zmieniony rachunek zgłaszasz w ciągu 7 dni: przy jednoosobowej działalności we wniosku o zmianę danych w CEIDG (CEIDG przekaże je do urzędu skarbowego i ZUS), a spółka wpisana do KRS – w urzędzie skarbowym na formularzu NIP-8. Za spóźnienie grozi grzywna jak za wykroczenie skarbowe.
 
-(Przepisane przy weryfikacji: na stronie CEIDG rachunek bankowy nie jest na liście zmian z terminem 7 dni; termin 7 dni i grzywna dotyczą NIP-8.)
+(Przy weryfikacji termin 7 dni został zawężony do NIP-8, bo strona CEIDG nie wymienia rachunku wśród zmian z terminem 7 dni. Przegląd kodu to zakwestionował: strona nie mówi też, że rachunki są z terminu zwolnione, a źródła wtórne (mBank, rp.pl) podają 7 dni także dla JDG – obowiązek wynika z ustawy o ewidencji i identyfikacji podatników, CEIDG jest tylko kanałem. Przywrócone 7 dni dla obu; **do potwierdzenia przez TEWU z przepisem**.)
 
 Źródła: [biznes.gov.pl – zmiana danych w CEIDG](https://www.biznes.gov.pl/pl/portal/ou737), [biznes.gov.pl – aktualizacja NIP-8](https://www.biznes.gov.pl/pl/portal/ou349)
 
@@ -187,7 +189,7 @@ Oznaczenia: [D] z draftu TEWU bez zmian merytorycznych, [D*] z draftu po zmianie
 
 1. Cała treść UK (tłumaczenie Claude).
 2. Nowe pytania [N] i [L]: przekazywanie dokumentów, cena, zmiana biura, reprezentacja, kadry i płace, rozmowa po ukraińsku, wakacje składkowe.
-3. Zmiany merytoryczne [D*]: tytuł „JDG czy spółka z o.o. – jaką formę działalności wybrać?”, pełna ścieżka ulg ZUS z kwotami 2026, limit VAT 240 000 zł, rachunek firmowy („w praktyce tak” zamiast „jest zobowiązany”; obowiązek płatności przez rachunek płatniczy powyżej 15 000 zł brutto; „bez VAT przepisy nie nakazują osobnego konta”), CEIDG / NIP-8 (termin 7 dni tylko dla NIP-8), opis OC (obowiązek z ustawy o rachunkowości), zdanie o RODO.
+3. Zmiany merytoryczne [D*]: tytuł „JDG czy spółka z o.o. – jaką formę działalności wybrać?”, pełna ścieżka ulg ZUS z kwotami 2026, limit VAT 240 000 zł, rachunek firmowy („w praktyce tak” zamiast „jest zobowiązany”; obowiązek płatności przez rachunek płatniczy powyżej 15 000 zł brutto; „bez VAT przepisy nie nakazują osobnego konta”), CEIDG / NIP-8 (termin 7 dni dla JDG i spółek – zakwestionowane w przeglądzie kodu, potwierdzić z ustawą o ewidencji i identyfikacji podatników), daty KSeF ze źródłem MF, opis OC (obowiązek z ustawy o rachunkowości), zdanie o RODO.
 5. Fakt z draftu TEWU, którego nie znalazłem na stronach urzędowych: obowiązek zgłaszania rachunków zagranicznych i walutowych (zostawiony w brzmieniu TEWU).
 4. Zdjęcia: kadr budynku i opis zdjęcia Prezesa.
 
