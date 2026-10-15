@@ -23,6 +23,12 @@ TEWU przekazało szkic strony z odpowiedziami na częste pytania o księgowość
 - Akordeon (`FaqList`) i przyciski wyceny (`QuoteActions`) wydzielone z `ServiceLandingPage` – podstrony usług wyglądają tak samo.
 - Nagłówek dzielony: tekst na ciemnym `slate.9` i prawdziwe zdjęcie budynku (78A), ładowane od razu (`fetchpriority="high"`), bo to element LCP na desktopie. Końcowe CTA ze zdjęciem recepcji z Prezesem (`loading="lazy"`). Zdjęcia bez metadanych EXIF, AVIF z zapasowym JPG, w `public/img/biuro/` (rejestr: `src/lib/office-photos.ts`). Zgodę Prezesa na publikację wizerunku przekazał właściciel projektu (15.10.2026).
 - Przycisk w CTA otwiera widżet call-back ze źródłem `faq`.
+- Te same zdjęcia biura są też na innych stronach (plan: `docs/superpowers/plans/2026-10-15-office-photos.md`):
+  - końcowe CTA podstron usług to ten sam komponent co na FAQ (`ReceptionCta`, zdjęcie recepcji z Prezesem), ze źródłem `service`;
+  - „O nas” zamiast zdjęcia stockowego pokazuje Prezesa przy biurku i dwie osoby z zespołu w tle (`zespol.jpg`, 4:3, zdjęcie z 2012 r. z tego samego biura; twarzy zespołu nie widać);
+  - `/kontakt` ma zdjęcie wejścia obok mapy, z podpisem, które drzwi prowadzą do biura.
+
+  Wszystkie zdjęcia ładują się leniwie, bo są poza pierwszym ekranem. Wyjątkiem pozostaje budynek na `/faq` (LCP). `<picture>` z AVIF to wspólny komponent `OfficePicture`.
 
 ### 4. SEO i AI
 - JSON-LD: węzeł `FAQPage` jest zarazem węzłem strony (`url`, `inLanguage`, `dateModified`, `isPartOf` → `#strona`, `about` → `#firma`), plus `BreadcrumbList`. Odpowiedzi to HTML z bezwzględnymi linkami. `AccountingService.image` dostaje zdjęcie budynku obok obrazu do udostępnień (Google zaleca zdjęcia firmy lokalnej).
