@@ -95,15 +95,16 @@ export async function runSeoCheck(baseUrl) {
   const home = await get('/');
   // The share image is fetched as a Ukrainian browser: the language redirect must not touch it.
   const ogImageUrl = parseDocument(home.text).metas.find((m) => m.property === 'og:image')?.content ?? '';
-  const [robots, previewHost, wwwRedirect, notFound, ogImage] = await Promise.all([
+  const [robots, llms, previewHost, wwwRedirect, notFound, ogImage] = await Promise.all([
     get('/robots.txt'),
+    get('/llms.txt'),
     get('/', { host: 'example.test' }),
     get(WWW_REDIRECT_PATH, { host: `www.${PROD_HOST}` }),
     get('/nie-istnieje-seo-check'),
     isSiteUrl(ogImageUrl) ? get(toPath(ogImageUrl), { binary: true, acceptLanguage: 'uk' }) : { status: 0, headers: {}, text: '' },
   ]);
   results.push({
-    label: 'site checks (robots.txt, preview noindex, www redirect, 404, og:image file)',
+    label: 'site checks (robots.txt, llms.txt, preview noindex, www redirect, 404, og:image file)',
     findings: [
       ...failures,
       ...evaluateSite({
@@ -112,6 +113,7 @@ export async function runSeoCheck(baseUrl) {
         wwwRedirect,
         notFound: { status: notFound.status, html: notFound.text },
         ogImage,
+        llms: { status: llms.status, headers: llms.headers, body: llms.text },
       }),
     ],
   });

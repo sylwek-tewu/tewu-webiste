@@ -10,6 +10,7 @@ const PAGES = [
   '/uslugi/inkubator-spolek', '/uk/uslugi/inkubator-spolek',
   '/o-nas', '/uk/o-nas',
   '/kontakt', '/uk/kontakt',
+  '/faq', '/uk/faq',
 ];
 
 // Phones, the mobile bar's last width, the burger range, and the header's tight points
