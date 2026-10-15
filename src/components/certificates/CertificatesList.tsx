@@ -9,6 +9,9 @@ import { useLocale } from '@/i18n/LocaleContext';
 
 interface Certificate {
     url: string;
+    avifUrl: string;
+    width: number;
+    height: number;
     title: string;
     desc: string;
     pdfUrl: string;

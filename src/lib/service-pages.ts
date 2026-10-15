@@ -28,6 +28,19 @@ export const SERVICE_PAGES: Record<ServicePageSlug, ServicePageDefinition> = {
   'inkubator-spolek': { slug: 'inkubator-spolek', topic: 'spolka', serviceItemId: 'inkubator-spolek', label: 'Inkubator spółek z o.o.' },
 };
 
+/**
+ * Cross-links shown under "Zobacz też" on each landing page (accepted by TEWU), in display order:
+ * the page itself is never listed, and 2-3 targets keep the block short.
+ */
+export const RELATED_SERVICE_PAGES: Record<ServicePageSlug, readonly ServicePageSlug[]> = {
+  'pelna-ksiegowosc': ['inkubator-spolek', 'kadry-i-place', 'ksef'],
+  kpir: ['ryczalt', 'inkubator-spolek', 'ksef'],
+  ryczalt: ['kpir', 'inkubator-spolek', 'ksef'],
+  'kadry-i-place': ['pelna-ksiegowosc', 'kpir'],
+  ksef: ['pelna-ksiegowosc', 'kpir', 'ryczalt'],
+  'inkubator-spolek': ['pelna-ksiegowosc', 'kadry-i-place'],
+};
+
 // A list lookup, not `in`, so prototype keys like "__proto__" are never a slug.
 export function isServicePageSlug(value: unknown): value is ServicePageSlug {
   return (SERVICE_PAGE_SLUGS as readonly unknown[]).includes(value);

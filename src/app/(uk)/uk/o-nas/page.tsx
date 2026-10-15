@@ -1,19 +1,13 @@
 import React from 'react';
-import { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/metadata';
 import AboutClient from '@/app/(pl)/o-nas/AboutClient';
 
-export const metadata: Metadata = {
-    title: "Про нас | Бухгалтерське бюро TEWU",
-    description: "Дізнайтеся більше про Biuro Rachunkowe TEWU. Понад 25 років стабільного фінансового успіху для компаній та підприємців у Польщі.",
-    alternates: {
-        canonical: '/uk/o-nas',
-        languages: {
-            'pl': '/o-nas',
-            'x-default': '/o-nas',
-            'uk': '/uk/o-nas',
-        },
-    },
-};
+export const metadata = buildPageMetadata({
+    locale: 'uk',
+    path: '/o-nas',
+    title: "Про нас – бухгалтерське бюро в Щецині понад 25 років | TEWU",
+    description: "Biuro Rachunkowe TEWU у Щецині: понад 25 років на ринку, уповноваження Міністерства фінансів і прямий контакт з керівництвом бюро. Познайомтеся з нами.",
+});
 
 export default function UkrainianAbout() {
     return <AboutClient />;

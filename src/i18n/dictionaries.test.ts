@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { plTranslations, ukTranslations } from '.';
 import { CALLBACK_SLOTS, CALLBACK_TOPICS } from '@/lib/callback/types';
 import { CALLBACK_SLOT_WINDOWS, formatClockTime } from '@/lib/calendar';
-import { COMPANY_FULL_NAME, CONTACT_DETAILS } from '@/constants';
+import { COMPANY_FULL_NAME } from '@/constants';
+import { COMPANY } from '@/lib/company';
 import { SERVICE_PAGE_SLUGS, SERVICE_PAGES } from '@/lib/service-pages';
 
 /** Every key path with the type of its value, arrays by length. */
@@ -24,6 +25,8 @@ describe('dictionaries', () => {
   it.each([plTranslations, ukTranslations])('label every callback slot and topic ($locale)', (t) => {
     for (const slot of CALLBACK_SLOTS) expect(t.callbackWidget.slots[slot.id]).toBeTruthy();
     for (const topic of CALLBACK_TOPICS) expect(t.callbackWidget.topics[topic.id]).toBeTruthy();
+    // No label for a topic the form no longer offers
+    expect(Object.keys(t.callbackWidget.topics)).toEqual(CALLBACK_TOPICS.map((topic) => topic.id));
   });
 
   it.each([plTranslations, ukTranslations])('show the hours of each fixed slot ($locale)', (t) => {
@@ -36,8 +39,8 @@ describe('dictionaries', () => {
 
   it.each([plTranslations, ukTranslations])('take the company name, address and e-mail from constants ($locale)', (t) => {
     expect(t.privacyPolicy.s1Content).toContain(`**${COMPANY_FULL_NAME}**`);
-    expect(t.privacyPolicy.s1Content).toContain(CONTACT_DETAILS.address);
-    expect(t.privacyPolicy.s6Contact).toContain(CONTACT_DETAILS.email);
+    expect(t.privacyPolicy.s1Content).toContain(COMPANY.address.line);
+    expect(t.privacyPolicy.s6Contact).toContain(COMPANY.emails.main);
   });
 
   it.each([

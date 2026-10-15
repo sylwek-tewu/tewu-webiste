@@ -5,8 +5,8 @@ export const inkubatorSpolek: ServicePageContent = {
   slug: 'inkubator-spolek',
   locale: 'pl',
   meta: {
-    title: 'Inkubator spółek z o.o. Szczecin – Biuro Rachunkowe TEWU',
-    description: 'Zakładasz spółkę z o.o. w Szczecinie? Doradzimy, założymy spółkę z notariuszem, zapewnimy adres siedziby i poprowadzimy księgowość.',
+    title: 'Założenie spółki z o.o. w Szczecinie – Inkubator spółek TEWU',
+    description: 'Zakładasz spółkę z o.o. w Szczecinie albo przekształcasz JDG? Doradzimy, założymy spółkę z notariuszem i zapewnimy adres siedziby. Bezpłatna wycena.',
   },
   hero: {
     title: 'Inkubator spółek z o.o. w Szczecinie',

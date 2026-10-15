@@ -1,4 +1,8 @@
+import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
+import ServiceLandingPage from '@/components/service-pages/ServiceLandingPage';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { buildServicePageJsonLd } from '@/lib/structured-data';
 import { SERVICE_PAGE_SLUGS } from '@/lib/service-pages';
 import { buildServicePageMetadata, getServicePageContent } from '@/content/service-pages';
 import * as plRoute from './(pl)/uslugi/[slug]/page';
@@ -25,7 +29,14 @@ describe.each([
 
   it('passes the page copy in its language to the landing page', async () => {
     const element = await route.default(params('kpir'));
-    expect(element.props.content).toBe(getServicePageContent(locale, 'kpir'));
+    const landingPage = React.Children.toArray(element.props.children).find((child) => React.isValidElement(child) && child.type === ServiceLandingPage);
+    expect((landingPage as React.ReactElement<{ content: unknown }>).props.content).toBe(getServicePageContent(locale, 'kpir'));
+  });
+
+  it('adds the structured data of the page', async () => {
+    const element = await route.default(params('kpir'));
+    const jsonLd = React.Children.toArray(element.props.children).find((child) => React.isValidElement(child) && child.type === JsonLd);
+    expect((jsonLd as React.ReactElement<{ data: unknown }>).props.data).toEqual(buildServicePageJsonLd(getServicePageContent(locale, 'kpir')));
   });
 
   it('answers an unknown slug with 404', async () => {

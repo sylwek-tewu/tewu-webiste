@@ -13,7 +13,8 @@
     "test": "vitest run",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "seo:check": "node scripts/seo-check.mjs"
   },
   "dependencies": {
     "@mantine/core": "^8.3.14",

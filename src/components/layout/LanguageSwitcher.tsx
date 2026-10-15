@@ -1,9 +1,10 @@
 "use client";
 
 import React from 'react';
-import { SegmentedControl, Box } from '@mantine/core';
-import { useLocale } from '@/i18n/LocaleContext';
+import Link from 'next/link';
+import { setLocaleCookie, useLocale } from '@/i18n/LocaleContext';
 import type { Locale } from '@/i18n/types';
+import classes from './LanguageSwitcher.module.css';
 
 // Inline SVG, not emoji: Windows has no flag emoji glyphs and renders "🇺🇦" as the letters "UA".
 const FLAG_STRIPES: Record<Locale, [string, string]> = {
@@ -21,64 +22,50 @@ const Flag: React.FC<{ locale: Locale }> = ({ locale }) => {
   );
 };
 
-const optionLabel = (locale: Locale, code: string) => (
-  <>
-    <Flag locale={locale} />
-    {code}
-  </>
-);
+const OPTIONS: { locale: Locale; code: string }[] = [
+  { locale: 'pl', code: 'PL' },
+  { locale: 'uk', code: 'UA' },
+];
 
 interface LanguageSwitcherProps {
   size?: 'xs' | 'sm' | 'md';
   fullWidth?: boolean;
 }
 
+// Plain links, so crawlers and visitors without JavaScript can follow them to the other language.
 export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ size = 'sm', fullWidth = false }) => {
-  const { locale, switchLocale } = useLocale();
+  const { locale, getLocalizedPath } = useLocale();
 
   return (
-    <Box style={{ display: fullWidth ? 'block' : 'inline-block' }}>
-      <SegmentedControl
-        value={locale}
-        onChange={(val) => switchLocale(val as Locale)}
-        data={[
-          { label: optionLabel('pl', 'PL'), value: 'pl' },
-          { label: optionLabel('uk', 'UA'), value: 'uk' },
-        ]}
-        size={size}
-        radius="xl"
-        fullWidth={fullWidth}
-        aria-label="Wybierz język / Оберіть мову"
-        styles={{
-          root: {
-            backgroundColor: 'var(--mantine-color-slate-1)',
-            padding: 3,
-            border: '1px solid var(--mantine-color-slate-2)',
-          },
-          indicator: {
-            backgroundColor: 'var(--mantine-color-white)',
-            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-          },
-          label: {
-            fontWeight: 700,
-            fontSize: size === 'xs' ? '0.75rem' : '0.8125rem',
-            paddingTop: 4,
-            paddingBottom: 4,
-            paddingLeft: 10,
-            paddingRight: 10,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-          },
-          innerLabel: {
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-          },
-        }}
-      />
-    </Box>
+    <div
+      role="group"
+      aria-label="Wybierz język / Оберіть мову"
+      className={classes.root}
+      data-size={size}
+      data-full-width={fullWidth || undefined}
+    >
+      {OPTIONS.map((option) => {
+        const isCurrent = option.locale === locale;
+        return (
+          <Link
+            key={option.locale}
+            href={getLocalizedPath(option.locale)}
+            // A prefetch goes out without the locale cookie; the proxy would redirect "/" to "/uk" for an
+            // Accept-Language: uk visitor and Next would then cache that for the PL link. The target is another
+            // root layout anyway, so it loads as a full page.
+            prefetch={false}
+            hrefLang={option.locale}
+            aria-current={isCurrent ? 'page' : undefined}
+            // The proxy redirects by this cookie; the link itself does the navigation.
+            onClick={isCurrent ? undefined : () => setLocaleCookie(option.locale)}
+            className={classes.item}
+          >
+            <Flag locale={option.locale} />
+            {option.code}
+          </Link>
+        );
+      })}
+    </div>
   );
 };
 

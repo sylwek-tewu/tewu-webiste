@@ -3,7 +3,7 @@
 import React from 'react';
 import { Container, Title, Text, Stack, Paper, Box, Group, ThemeIcon, Divider, Alert } from '@mantine/core';
 import { Shield, Mail, Phone, MapPin, Building2, Lock, AlertTriangle, Globe } from 'lucide-react';
-import { CONTACT_DETAILS } from '@/constants';
+import { COMPANY } from '@/lib/company';
 import { useLocale } from '@/i18n/LocaleContext';
 import { Emphasis } from '@/i18n/Emphasis';
 
@@ -56,11 +56,11 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                 <Group gap="lg" wrap="wrap">
                   <Group gap="xs">
                     <Mail size={16} color="var(--mantine-color-brandBlue-6)" />
-                    <Text size="xs" fw={600} c="slate.8">{CONTACT_DETAILS.email}</Text>
+                    <Text size="xs" fw={600} c="slate.8">{COMPANY.emails.main}</Text>
                   </Group>
                   <Group gap="xs">
                     <Phone size={16} color="var(--mantine-color-brandBlue-6)" />
-                    <Text size="xs" fw={600} c="slate.8">{CONTACT_DETAILS.phone}</Text>
+                    <Text size="xs" fw={600} c="slate.8">{COMPANY.phones.landline.display}</Text>
                   </Group>
                   <Group gap="xs">
                     <MapPin size={16} color="var(--mantine-color-brandBlue-6)" />

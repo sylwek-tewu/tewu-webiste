@@ -73,6 +73,8 @@ describe('CallbackWidget in Ukrainian', () => {
 
     const options = await screen.findAllByRole('option', { hidden: true });
     expect(options.map((o) => o.textContent)).toEqual(CALLBACK_TOPICS.map((topic) => t.topics[topic.id]));
+    expect(options).toHaveLength(4);
+    expect(options.map((o) => o.textContent).join(' ')).not.toMatch(/фундац|fundacja/i);
   });
 
   it('links the privacy notice to the Ukrainian policy', async () => {

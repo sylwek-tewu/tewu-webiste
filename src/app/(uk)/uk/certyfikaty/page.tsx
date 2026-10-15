@@ -1,19 +1,13 @@
 import React from 'react';
-import { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/metadata';
 import CertificatesClient from '@/app/(pl)/certyfikaty/CertificatesClient';
 
-export const metadata: Metadata = {
-    title: "Державні сертифікати | Бухгалтерське бюро TEWU",
+export const metadata = buildPageMetadata({
+    locale: 'uk',
+    path: '/certyfikaty',
+    title: "Бухгалтерські сертифікати – Бюро TEWU у Щецині",
     description: "Сертифікати Міністерства Фінансів Польщі на право ведення бухгалтерського обліку. Кваліфікація та повна безпека клієнтів TEWU.",
-    alternates: {
-        canonical: '/uk/certyfikaty',
-        languages: {
-            'pl': '/certyfikaty',
-            'x-default': '/certyfikaty',
-            'uk': '/uk/certyfikaty',
-        },
-    },
-};
+});
 
 export default function UkrainianCertificates() {
     return <CertificatesClient />;

@@ -5,7 +5,7 @@ export const kpir: ServicePageContent = {
   slug: 'kpir',
   locale: 'pl',
   meta: {
-    title: 'Księgowość KPiR Szczecin – Biuro Rachunkowe TEWU',
+    title: 'Księga przychodów i rozchodów (KPiR) Szczecin – TEWU',
     description: 'Podatkowa księga przychodów i rozchodów dla firm i spółek cywilnych w Szczecinie: VAT, ZUS, PIT, ulgi. Bezpłatna wycena – oddzwonimy.',
   },
   hero: {

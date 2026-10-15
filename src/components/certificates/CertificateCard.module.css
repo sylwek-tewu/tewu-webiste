@@ -16,7 +16,14 @@
     aspect-ratio: 3/4;
 }
 
+.picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
 .image {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -63,4 +70,33 @@
 
 .details {
     background: linear-gradient(to top, color-mix(in srgb, var(--mantine-color-slate-9) 90%, transparent), transparent);
+}
+
+.trigger {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+/* The ring sits inside the card, which clips anything outside its rounded corners. */
+.trigger:focus-visible {
+    outline: 3px solid var(--mantine-color-blue-6);
+    outline-offset: -3px;
+    border-radius: inherit;
+}
+
+/* Keyboard focus shows the same hover caption as the mouse does. */
+.card:has(.trigger:focus-visible) .overlay,
+.card:has(.trigger:focus-visible) .label {
+    opacity: 1;
+}
+
+.card:has(.trigger:focus-visible) .icon,
+.card:has(.trigger:focus-visible) .label {
+    transform: translateY(0);
 }

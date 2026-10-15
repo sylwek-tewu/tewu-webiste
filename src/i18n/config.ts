@@ -14,6 +14,17 @@ export function localeOfPath(pathname: string): Locale {
   return pathname === '/uk' || pathname.startsWith('/uk/') ? 'uk' : 'pl';
 }
 
+/** The same page's path in the other language: "/kontakt" <-> "/uk/kontakt", "/" <-> "/uk". */
+export function localizePath(pathname: string, targetLocale: Locale): string {
+  const isUk = localeOfPath(pathname) === 'uk';
+  if (targetLocale === 'uk') {
+    if (isUk) return pathname;
+    return pathname === '/' ? '/uk' : `/uk${pathname}`;
+  }
+  if (!isUk) return pathname;
+  return pathname === '/uk' ? '/' : pathname.slice('/uk'.length);
+}
+
 /**
  * Request header set by the proxy: the locale of the requested path, for global-not-found.
  * The proxy always overwrites it on pages, so it is only trustworthy there;

@@ -8,7 +8,6 @@ export type CallbackSlot = 'asap' | '8-12' | '12-16' | '17-18';
 
 export type CallbackTopic =
   | 'spolka'
-  | 'fundacja'
   | 'dzialalnosc'
   | 'kadry-place'
   | 'inne';
@@ -40,7 +39,6 @@ export const CALLBACK_SLOTS: CallbackSlotConfig[] = [
 
 export const CALLBACK_TOPICS: { id: CallbackTopic; label: string }[] = [
   { id: 'spolka', label: 'Spółka z o.o. / partnerska / komandytowa' },
-  { id: 'fundacja', label: 'Fundacja lub stowarzyszenie' },
   { id: 'dzialalnosc', label: 'Jednoosobowa działalność gospodarcza (JDG)' },
   { id: 'kadry-place', label: 'Kadry i płace' },
   { id: 'inne', label: 'Inne zapytanie' },

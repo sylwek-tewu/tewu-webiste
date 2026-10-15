@@ -2,8 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Mail, Phone, MapPin, Facebook, Linkedin } from 'lucide-react';
-import { CONTACT_DETAILS } from '../constants';
+import { Mail, Phone, MapPin } from 'lucide-react';
+import { COMPANY, telHref } from '@/lib/company';
 import { Box, Container, SimpleGrid, Stack, Text, Group, Anchor } from '@mantine/core';
 import classes from './layout/Layout.module.css';
 import { TewuLogo } from './icons';
@@ -27,14 +27,6 @@ const Footer: React.FC = () => {
             <Text size="sm" lh={1.6}>
               {t.footer.description}
             </Text>
-            <Group gap="md">
-              <Anchor href="#" c="white" className={classes.footerLink} aria-label="Facebook">
-                <Facebook size={20} />
-              </Anchor>
-              <Anchor href="#" c="white" className={classes.footerLink} aria-label="LinkedIn">
-                <Linkedin size={20} />
-              </Anchor>
-            </Group>
           </Stack>
 
           {/* Quick Links */}
@@ -112,7 +104,7 @@ const Footer: React.FC = () => {
               <Group align="flex-start" gap="xs" wrap="nowrap">
                 <MapPin size={18} color="var(--mantine-color-brandBlue-4)" style={{ flexShrink: 0, marginTop: 4 }} />
                 <Anchor
-                  href="https://www.google.com/maps/search/?api=1&query=Biuro%20Rachunkowe%20TEWU%20Sp.%20z%20o.o.%20aleja%20Powsta%C5%84c%C3%B3w%20Wielkopolskich%2C%20Szczecin"
+                  href={COMPANY.googleBusinessProfileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   c="slate.3"
@@ -121,36 +113,35 @@ const Footer: React.FC = () => {
                   lh={1.4}
                   className={classes.footerLink}
                 >
-                  {CONTACT_DETAILS.address}
+                  {COMPANY.address.line}
                 </Anchor>
               </Group>
               <Group align="flex-start" gap="xs" wrap="nowrap">
                 <Phone size={18} color="var(--mantine-color-brandBlue-4)" style={{ flexShrink: 0, marginTop: 4 }} />
                 <Stack gap={4}>
-                  <Anchor href={`tel:${CONTACT_DETAILS.phoneE164 || '+48914824190'}`} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                    {CONTACT_DETAILS.phone}
-                  </Anchor>
-                  <Anchor href={`tel:${CONTACT_DETAILS.mobilePhoneE164}`} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                    {CONTACT_DETAILS.mobilePhone}
-                  </Anchor>
+                  {[...COMPANY.phones.office, COMPANY.phones.mobile[0]].map((phone) => (
+                    <Anchor key={phone.e164} href={telHref(phone)} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
+                      {phone.display}
+                    </Anchor>
+                  ))}
                 </Stack>
               </Group>
               <Group align="center" gap="xs" wrap="nowrap">
                 <Mail size={18} color="var(--mantine-color-brandBlue-4)" style={{ flexShrink: 0 }} />
-                <Anchor href={`mailto:${CONTACT_DETAILS.email}`} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
-                  {CONTACT_DETAILS.email}
+                <Anchor href={`mailto:${COMPANY.emails.main}`} c="slate.3" size="sm" underline="hover" className={classes.footerLink}>
+                  {COMPANY.emails.main}
                 </Anchor>
               </Group>
             </Stack>
           </Stack>
         </SimpleGrid>
 
-        <Box mt={64} pt="lg" ta="center" c="slate.5" className={classes.footerBorder}>
+        <Box mt={64} pt="lg" ta="center" c="slate.4" className={classes.footerBorder}>
           <Group justify="center" gap="md" wrap="wrap">
             <Text size="xs">
               © {CURRENT_YEAR} {t.common.companyFullName}. {t.footer.allRightsReserved}
             </Text>
-            <Text size="xs" c="slate.6" visibleFrom="xs">
+            <Text size="xs" c="slate.4" visibleFrom="xs">
               •
             </Text>
             <Anchor component={Link} href={privacyPath} size="xs" c="slate.4" underline="hover">

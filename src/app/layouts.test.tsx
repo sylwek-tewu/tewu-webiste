@@ -8,6 +8,8 @@ import { SITE_LOCALE_HEADER } from '@/i18n/config';
 import { SITE_URL } from '@/constants';
 import PolishRootLayout, { metadata as plMetadata } from './(pl)/layout';
 import UkrainianRootLayout, { metadata as ukMetadata } from './(uk)/layout';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { buildSiteJsonLd } from '@/lib/structured-data';
 import GlobalNotFound, { generateMetadata as notFoundMetadata } from './global-not-found';
 
 // SiteLayout loads next/font, which needs the Next.js compiler; these tests only check its props.
@@ -32,6 +34,20 @@ describe('root layouts', () => {
   });
 });
 
+describe('site-wide structured data', () => {
+  it.each([
+    ['Polish', PolishRootLayout, 'pl'],
+    ['Ukrainian', UkrainianRootLayout, 'uk'],
+  ] as const)('%s layout renders the company JSON-LD before the page', (_, Layout, locale) => {
+    const page = <p>page</p>;
+    const element = Layout({ children: page }) as React.ReactElement<{ children: React.ReactElement[] }>;
+    const [jsonLd, content] = element.props.children;
+    expect(jsonLd.type).toBe(JsonLd);
+    expect((jsonLd.props as { data: unknown }).data).toEqual(buildSiteJsonLd(locale));
+    expect(content).toBe(page);
+  });
+});
+
 describe('global-not-found', () => {
   beforeEach(() => {
     requestHeaders.value = new Headers();
@@ -51,6 +67,7 @@ describe('global-not-found', () => {
 
     const metadata = await notFoundMetadata();
     expect(metadata.title).toBe(`404 – ${title} | TEWU`);
-    expect(metadata.robots).toEqual({ index: false });
+    // Next.js adds its own noindex to every not-found response; a second one would be a duplicate
+    expect(metadata.robots).toBeUndefined();
   });
 });

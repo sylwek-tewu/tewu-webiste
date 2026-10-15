@@ -1,19 +1,13 @@
 import React from 'react';
-import { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/metadata';
 import ContactClient from './ContactClient';
 
-export const metadata: Metadata = {
-    title: "Kontakt - Biuro Rachunkowe TEWU",
-    description: "Skontaktuj się z Biurem Rachunkowym TEWU w Szczecinie. Dane kontaktowe, telefon, email, godziny otwarcia i mapa dojazdu.",
-    alternates: {
-        canonical: '/kontakt',
-        languages: {
-            'pl': '/kontakt',
-            'x-default': '/kontakt',
-            'uk': '/uk/kontakt',
-        },
-    },
-};
+export const metadata = buildPageMetadata({
+    locale: 'pl',
+    path: '/kontakt',
+    title: "Kontakt i dojazd – Biuro Rachunkowe TEWU w Szczecinie",
+    description: "Biuro Rachunkowe TEWU, Al. Powstańców Wielkopolskich 78A LU2, Szczecin. Telefon 602 235 736, e-mail, godziny otwarcia (pn–pt 8–16) i mapa dojazdu.",
+});
 
 export default function Contact() {
     return <ContactClient />;

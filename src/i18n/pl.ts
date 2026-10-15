@@ -1,6 +1,7 @@
 import { Translations } from './types';
 import { formatHoursPl } from '@/lib/polish-plural';
-import { COMPANY_FULL_NAME, CONTACT_DETAILS } from '@/constants';
+import { COMPANY_FULL_NAME } from '@/constants';
+import { COMPANY } from '@/lib/company';
 
 export const plTranslations: Translations = {
   locale: 'pl',
@@ -34,12 +35,14 @@ export const plTranslations: Translations = {
   home: {
     hero: {
       badge: 'Ponad 25 lat na rynku',
+      titleKicker: 'Biuro rachunkowe w Szczecinie',
       titleNormal: 'Księgowość ',
       titleAccent: 'bez stresu.',
       description: 'Zajmij się rozwojem swojej firmy, a my weźmiemy na siebie formalności.',
       signature: '**Dyskrecja** i **Profesjonalizm** do Twojej dyspozycji',
       ctaContact: 'Skontaktuj się z nami',
       ctaOffer: 'Poznaj ofertę',
+      imageAlt: 'Dokumenty podatkowe, telefon z kalkulatorem i długopis',
       stats: {
         companiesCount: '150+',
         companiesLabel: 'Zadowolonych firm',
@@ -60,6 +63,8 @@ export const plTranslations: Translations = {
     whyUs: {
       title: 'Dlaczego warto nam zaufać?',
       description: 'W TEWU wierzymy, że księgowość to co więcej niż tylko liczby. To fundament Twojego biznesu, który wymaga solidności, nowoczesnego podejścia i pełnej transparentności.',
+      teamImageAlt: 'Zespół przy pracy w biurze',
+      meetingImageAlt: 'Troje uśmiechniętych osób przy stole z laptopami',
       reasons: [
         {
           title: 'Wieloletnie doświadczenie i profesjonalizm',
@@ -107,6 +112,7 @@ export const plTranslations: Translations = {
       expNumber: '25+',
       expTitle: 'Lat na rynku',
       expDesc: 'Znamy przepisy od podszewki i wiemy, jak chronić Twój biznes.',
+      imageAlt: 'Zespół przy pracy w biurze',
     },
     values: {
       label: 'Nasze wartości',
@@ -134,13 +140,13 @@ export const plTranslations: Translations = {
   servicesPage: {
     header: {
       title: 'Pełna oferta usług księgowych',
-      subtitle: 'Dostarczamy kompleksowe rozwiązania dla biznesu, od prostych ewidencji po zaawansowane doradztwo podatkowe.',
+      subtitle: 'Dostarczamy kompleksowe rozwiązania dla biznesu, od prostych ewidencji po pełną księgowość spółek.',
     },
     items: [
       {
         id: 'pelna-ksiegowosc',
         title: 'Prowadzenie ksiąg rachunkowych',
-        description: 'Kompleksowa obsługa spółek prawa handlowego, fundacji i stowarzyszeń zgodnie z ustawą o rachunkowości.',
+        description: 'Kompleksowa obsługa spółek prawa handlowego zgodnie z ustawą o rachunkowości.',
         features: [
           'Prowadzenie ksiąg rachunkowych (pełna księgowość)',
           'Sporządzanie rocznych sprawozdań finansowych',
@@ -222,18 +228,6 @@ export const plTranslations: Translations = {
         ],
       },
       {
-        id: 'doradztwo',
-        title: 'Doradztwo podatkowe',
-        description: 'Profesjonalne wsparcie w rozliczeniach zobowiązań podatkowych.',
-        features: [
-          'Wybór optymalnej formy opodatkowania',
-          'Analiza umów pod kątem podatkowym',
-          'Konsultacje w zakresie bieżącej działalności',
-          'Audyty podatkowe',
-          'Wnioski o interpretacje indywidualne',
-        ],
-      },
-      {
         id: 'ksef',
         title: 'KSeF – Krajowy System e-Faktur',
         description: 'Pomoc w przejściu na e-faktury i księgowanie faktur pobieranych bezpośrednio z KSeF.',
@@ -285,13 +279,22 @@ export const plTranslations: Translations = {
     trust: {
       directContact: 'Bezpośredni kontakt z szefostwem biura',
       insurance: 'Polisa OC biura',
-      certificates: 'Certyfikaty MF i SKwP',
+      certificates: 'Certyfikaty MF',
       clients: 'Obsługujemy zarówno duże spółki, jak i jednoosobowe firmy z wielu branż – od IT, przez magazyny, po usługi hydrauliczne.',
     },
     pricing: {
       factorsTitle: 'Od czego zależy cena',
       processTitle: 'Jak wygląda wycena',
       rangeTitle: 'Orientacyjne ceny',
+    },
+    seeAlsoTitle: 'Zobacz też',
+    seeAlsoNames: {
+      'pelna-ksiegowosc': 'Pełna księgowość spółek',
+      kpir: 'Księga przychodów i rozchodów (KPiR)',
+      ryczalt: 'Ryczałt ewidencjonowany',
+      'kadry-i-place': 'Kadry i płace',
+      ksef: 'KSeF',
+      'inkubator-spolek': 'Inkubator spółek z o.o.',
     },
     finalCta: {
       title: 'Porozmawiajmy o Twojej firmie',
@@ -347,16 +350,23 @@ export const plTranslations: Translations = {
         title: 'Certyfikat Księgowy',
         desc: 'Sylwester Wrzeszcz',
         url: '/img/cert.png',
+        avifUrl: '/img/cert.avif',
+        width: 1200,
+        height: 761,
         pdfUrl: '/pdfs/certyfikat_sw_kolor.pdf',
       },
       {
         title: 'Certyfikat Księgowy',
         desc: 'Tamara Ugha',
         url: '/img/library.png',
+        avifUrl: '/img/library.avif',
+        width: 1200,
+        height: 1680,
         pdfUrl: '/pdfs/swiadectwo_kwalifikacyjne_t_ugha.pdf',
       },
     ],
     viewPdfButton: 'Zobacz certyfikat PDF',
+    previewLabel: 'Podgląd Dokumentu',
   },
   contact: {
     header: {
@@ -383,6 +393,7 @@ export const plTranslations: Translations = {
     bankAccountLabel: 'Numer rachunku bankowego',
     mapTitle: 'Nasza lokalizacja w Szczecinie',
     mapSubtitle: 'Al. Powstańców Wielkopolskich 78A LU2',
+    mapIframeTitle: 'Mapa dojazdu do Biura Rachunkowego TEWU w Szczecinie',
   },
   privacyPolicy: {
     metaTitle: 'Polityka Prywatności | Biuro Rachunkowe TEWU',
@@ -390,9 +401,9 @@ export const plTranslations: Translations = {
     headerTitle: 'Polityka Prywatności',
     headerSubtitle: 'Biuro Rachunkowe TEWU Sp. z o.o. • Ostatnia aktualizacja: 3 października 2026',
     s1Title: '1. Administrator Danych Osobowych',
-    s1Content: `Administratorem Twoich danych osobowych jest **${COMPANY_FULL_NAME}** z siedzibą w Szczecinie przy ${CONTACT_DETAILS.address}, wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS: 0000320281, NIP: 9552249417, REGON: 320601499.`,
+    s1Content: `Administratorem Twoich danych osobowych jest **${COMPANY_FULL_NAME}** z siedzibą w Szczecinie przy ${COMPANY.address.line}, wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS: 0000320281, NIP: 9552249417, REGON: 320601499.`,
     s1Location: 'Szczecin, Polska',
-    s1NoDpo: `Nie wyznaczyliśmy inspektora ochrony danych. W sprawach dotyczących danych osobowych pisz na adres **${CONTACT_DETAILS.email}**.`,
+    s1NoDpo: `Nie wyznaczyliśmy inspektora ochrony danych. W sprawach dotyczących danych osobowych pisz na adres **${COMPANY.emails.main}**.`,
     s2Title: '2. Cele i podstawy prawne przetwarzania danych',
     s2Intro: 'Dane osobowe zbierane za pośrednictwem serwisu przetwarzane są w następujących celach:',
     s2Bullets: [
@@ -437,7 +448,7 @@ export const plTranslations: Translations = {
     ],
     s6Objection: '**Prawo do sprzeciwu:** w każdej chwili możesz wnieść sprzeciw wobec przetwarzania Twoich danych opartego na naszym prawnie uzasadnionym interesie (art. 6 ust. 1 lit. f RODO), z przyczyn związanych z Twoją szczególną sytuacją.',
     s6Automated: 'Nie podejmujemy wobec Ciebie decyzji opartych wyłącznie na zautomatyzowanym przetwarzaniu danych, w tym profilowaniu.',
-    s6Contact: `W celu realizacji swoich praw skontaktuj się z nami mailowo: **${CONTACT_DETAILS.email}**.`,
+    s6Contact: `W celu realizacji swoich praw skontaktuj się z nami mailowo: **${COMPANY.emails.main}**.`,
     s6Puodo: 'Przysługuje Ci również prawo wniesienia skargi do organu nadzorczego: **Prezes Urzędu Ochrony Danych Osobowych (PUODO)**, ul. Stawki 2, 00-193 Warszawa.',
     s7Title: '7. Pliki cookie',
     s7Content: 'Serwis zapisuje jeden plik cookie: preferred_locale – zapamiętuje wybraną przez Ciebie wersję językową strony. Jest zapisywany wyłącznie po ręcznej zmianie języka i ważny przez 1 rok. Jest niezbędny do świadczenia usługi, o którą prosisz (art. 399 ust. 3 Prawa komunikacji elektronicznej), dlatego nie wymaga zgody; możesz go usunąć w ustawieniach przeglądarki. Jeśli język nie został wybrany ręcznie, a Twoja przeglądarka wskazuje język ukraiński (lub rosyjski) jako preferowany, automatycznie wyświetlimy ukraińską wersję strony – tej informacji nie zapisujemy. Formularz oddzwonienia nie ładuje zewnętrznych skryptów śledzących (m.in. brak zewnętrznych systemów CAPTCHA).',
@@ -472,7 +483,6 @@ export const plTranslations: Translations = {
     topicPlaceholder: 'Wybierz rodzaj działalności',
     topics: {
       spolka: 'Spółka z o.o. / S.A. / komandytowa',
-      fundacja: 'Fundacja lub stowarzyszenie',
       dzialalnosc: 'Jednoosobowa działalność (JDG / spółka cywilna)',
       'kadry-place': 'Kadry i płace / ZUS',
       inne: 'Inne sprawy księgowe / doradztwo',

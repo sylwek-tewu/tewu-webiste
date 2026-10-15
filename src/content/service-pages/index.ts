@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { Locale } from '@/i18n/types';
+import { buildPageMetadata } from '@/lib/metadata';
 import { servicePagePath, type ServicePageSlug } from '@/lib/service-pages';
 import type { ServicePageContent, ServicePageSlugMap } from './types';
 import { PL_SERVICE_PAGES } from './pl';
@@ -17,16 +18,5 @@ export function getServicePageContent(locale: Locale, slug: ServicePageSlug): Se
 
 export function buildServicePageMetadata(locale: Locale, slug: ServicePageSlug): Metadata {
   const { meta } = getServicePageContent(locale, slug);
-  return {
-    title: meta.title,
-    description: meta.description,
-    alternates: {
-      canonical: servicePagePath(locale, slug),
-      languages: {
-        pl: servicePagePath('pl', slug),
-        'x-default': servicePagePath('pl', slug),
-        uk: servicePagePath('uk', slug),
-      },
-    },
-  };
+  return buildPageMetadata({ locale, path: servicePagePath('pl', slug), title: meta.title, description: meta.description });
 }

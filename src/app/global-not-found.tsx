@@ -17,7 +17,6 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = getDictionary(await requestedLocale());
   return {
     title: `404 – ${t.notFound.title} | ${t.common.companyName}`,
-    robots: { index: false },
   };
 }
 
