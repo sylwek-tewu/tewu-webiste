@@ -19,6 +19,12 @@ describe.each(['pl', 'uk'] as Locale[])('Footer (%s)', (locale) => {
     expect(screen.getByRole('link', { name: t.footer.bpoOutsourcing })).toHaveAttribute('href', locale === 'uk' ? '/uk/outsourcing' : '/outsourcing');
   });
 
+  it('names the incubator service link as reviewed', () => {
+    renderWithMantine(<Footer />, { locale });
+    const name = locale === 'uk' ? 'Підтримка у створенні товариств з обмеженою відповідальністю' : t.servicePages.links['inkubator-spolek'];
+    expect(screen.getByRole('link', { name })).toHaveAttribute('href', servicePagePath(locale, 'inkubator-spolek'));
+  });
+
   it('lists the incubator among the navigation links', () => {
     renderWithMantine(<Footer />, { locale });
     const incubator = t.nav.links.find((link) => link.path.endsWith('/uslugi/inkubator-spolek'))!;

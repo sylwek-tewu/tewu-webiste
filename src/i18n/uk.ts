@@ -279,7 +279,7 @@ export const ukTranslations: Translations = {
       ryczalt: 'Податок з продажу (ryczałt)',
       'kadry-i-place': 'Кадри та заробітна плата',
       ksef: 'KSeF',
-      'inkubator-spolek': 'Інкубатор – підтримка у створенні товариств з обмеженою відповідальністю',
+      'inkubator-spolek': 'Підтримка у створенні товариств з обмеженою відповідальністю',
     },
     ctaButton: 'Безкоштовна оцінка – передзвонимо',
     phonePrompt: 'Бажаєте зателефонувати?',
@@ -302,7 +302,7 @@ export const ukTranslations: Translations = {
       ryczalt: 'Податок з продажу (ryczałt)',
       'kadry-i-place': 'Кадри та заробітна плата',
       ksef: 'KSeF',
-      'inkubator-spolek': 'Інкубатор товариств (Sp. z o.o.)',
+      'inkubator-spolek': 'Реєстрація Sp. z o.o.',
     },
     finalCta: {
       title: 'Поговорімо про вашу компанію',

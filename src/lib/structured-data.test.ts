@@ -132,6 +132,14 @@ describe.each(LOCALES)('buildServicePageJsonLd (%s)', (locale) => {
       else if (slug !== 'ksef') expect(serviceType).toMatch(/\p{Script=Cyrillic}/u);
     });
 
+    // Names chosen by TEWU's Ukrainian reviewer (15.10.2026), the same as in the footer and "Дивіться також"
+    if (locale === 'uk' && (slug === 'ryczalt' || slug === 'inkubator-spolek')) {
+      it('uses the reviewed Ukrainian service name', () => {
+        const expected = slug === 'ryczalt' ? 'Податок з продажу (ryczałt)' : 'Реєстрація Sp. z o.o.';
+        expect(byType(nodes, 'Service')!.serviceType).toBe(expected);
+      });
+    }
+
     it('has breadcrumbs home > services > this page with absolute URLs', () => {
       const names = locale === 'pl' ? ['Strona główna', 'Usługi'] : ['Головна', 'Послуги'];
       const base = locale === 'pl' ? '' : '/uk';

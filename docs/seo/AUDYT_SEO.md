@@ -281,7 +281,14 @@ Dodatkowo sprawdza `robots.txt`, `noindex` dla obcego hosta, 308 z `www` z zacho
 - teksty alternatywne zdjęć (`uk.ts`, klucze `imageAlt`, `teamImageAlt`, `meetingImageAlt`);
 - blok „Дивіться також” i nazwy usług w nim (`servicePages.seeAlsoNames`);
 - obraz do udostępnień: „Бухгалтерське бюро в Щецині”, „Бухгалтерія · Кадри та зарплата · KSeF” (`src/lib/og-image-meta.ts`);
-- JSON-LD: nazwy usług `UK_SERVICE_TYPE` i okruszki „Головна”, „Послуги” (`src/lib/structured-data.ts`). Ryczałt ma tu nazwę „Спрощене оподаткування (ryczałt)”. W stopce i w bloku „Дивіться також” jest „Податок з продажу (ryczałt)”, co brzmi jak podatek od sprzedaży. Warto ujednolicić po decyzji osoby znającej ukraiński.
+- JSON-LD: nazwy usług `UK_SERVICE_TYPE` i okruszki „Головна”, „Послуги” (`src/lib/structured-data.ts`).
+
+**Sprawdzone przez TEWU 15.10.2026.** Teksty bez uwag są zaakceptowane. Wprowadzone poprawki:
+
+- nazwa ryczałtu wszędzie „Податок з продажу (ryczałt)”, także w JSON-LD (wcześniej „Спрощене оподаткування (ryczałt)”);
+- inkubator: tytuł `/uk/uslugi/inkubator-spolek` „Реєстрація Sp. z o.o. у Щецині – TEWU”, a w bloku „Дивіться також” i w JSON-LD nazwa „Реєстрація Sp. z o.o.”;
+- link w stopce: „Підтримка у створенні товариств з обмеженою відповідальністю” (bez „Інкубатор –”);
+- opis `/uk/outsourcing`: „Знизьте” zamiast „Зменште”.
 
 ### Decyzje podjęte w trakcie (do Twojej weryfikacji)
 

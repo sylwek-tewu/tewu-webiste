@@ -25,14 +25,14 @@ const BREADCRUMB_LABELS: Record<Locale, { home: string; services: string }> = {
 };
 
 // UK counterparts of SERVICE_PAGES[slug].label, based on the footer links (t.servicePages.links in
-// uk.ts); the dictionary itself is off limits to server code (ADR 0002). Machine-translated.
+// uk.ts); the dictionary itself is off limits to server code (ADR 0002). Reviewed by TEWU 15.10.2026.
 const UK_SERVICE_TYPE: Record<ServicePageSlug, string> = {
   'pelna-ksiegowosc': 'Повна бухгалтерія',
   kpir: 'Книга доходів і витрат (KPiR)',
-  ryczalt: 'Спрощене оподаткування (ryczałt)',
+  ryczalt: 'Податок з продажу (ryczałt)',
   'kadry-i-place': 'Кадри та заробітна плата',
   ksef: 'KSeF',
-  'inkubator-spolek': 'Інкубатор товариств з обмеженою відповідальністю',
+  'inkubator-spolek': 'Реєстрація Sp. z o.o.',
 };
 
 const absolute = (path: string) => `${SITE_URL}${path}`;

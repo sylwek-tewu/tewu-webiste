@@ -100,7 +100,7 @@ describe.each([
 
 describe.each([
   ['pl', '', 'Zobacz też', ['Ryczałt ewidencjonowany', 'Inkubator spółek z o.o.', 'KSeF'], plTranslations],
-  ['uk', '/uk', 'Дивіться також', ['Податок з продажу (ryczałt)', 'Інкубатор товариств (Sp. z o.o.)', 'KSeF'], ukTranslations],
+  ['uk', '/uk', 'Дивіться також', ['Податок з продажу (ryczałt)', 'Реєстрація Sp. z o.o.', 'KSeF'], ukTranslations],
 ] as const)('ServiceLandingPage related services (%s)', (locale, prefix, heading, names, dictionary) => {
   function seeAlso() {
     const title = screen.getByRole('heading', { level: 2, name: heading });

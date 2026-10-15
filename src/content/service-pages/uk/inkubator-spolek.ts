@@ -5,7 +5,7 @@ export const inkubatorSpolek: ServicePageContent = {
   slug: 'inkubator-spolek',
   locale: 'uk',
   meta: {
-    title: 'Реєстрація Sp. z o.o. у Щецині – Інкубатор компаній TEWU',
+    title: 'Реєстрація Sp. z o.o. у Щецині – TEWU',
     description: 'Відкриваєте Sp. z o.o. у Щецині або перетворюєте JDG? Проконсультуємо, зареєструємо компанію з нотаріусом і надамо юридичну адресу. Безкоштовна оцінка.',
   },
   hero: {

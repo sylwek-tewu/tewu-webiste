@@ -50,7 +50,7 @@ function servicePageCase(locale: Locale, slug: (typeof SERVICE_PAGE_SLUGS)[numbe
   if (slug === 'inkubator-spolek') {
     return locale === 'pl'
       ? { ...base, title: 'Założenie spółki z o.o. w Szczecinie – Inkubator spółek TEWU', description: 'Zakładasz spółkę z o.o. w Szczecinie albo przekształcasz JDG? Doradzimy, założymy spółkę z notariuszem i zapewnimy adres siedziby. Bezpłatna wycena.' }
-      : { ...base, title: 'Реєстрація Sp. z o.o. у Щецині – Інкубатор компаній TEWU', description: 'Відкриваєте Sp. z o.o. у Щецині або перетворюєте JDG? Проконсультуємо, зареєструємо компанію з нотаріусом і надамо юридичну адресу. Безкоштовна оцінка.' };
+      : { ...base, title: 'Реєстрація Sp. z o.o. у Щецині – TEWU', description: 'Відкриваєте Sp. z o.o. у Щецині або перетворюєте JDG? Проконсультуємо, зареєструємо компанію з нотаріусом і надамо юридичну адресу. Безкоштовна оцінка.' };
   }
   return base;
 }
@@ -66,7 +66,7 @@ const pages: PageCase[] = [
   UK_HOME,
   { locale: 'uk', path: '/o-nas', metadata: ukAbout, title: 'Про нас – бухгалтерське бюро в Щецині понад 25 років | TEWU', description: 'Biuro Rachunkowe TEWU у Щецині: понад 25 років на ринку, уповноваження Міністерства фінансів і прямий контакт з керівництвом бюро. Познайомтеся з нами.' },
   { locale: 'uk', path: '/uslugi', metadata: ukServices, title: 'Бухгалтерські та кадрові послуги в Щецині – Бюро TEWU', description: 'Послуги бухгалтерського бюро TEWU у Щецині: повна бухгалтерія, KPiR, ryczałt, кадри та зарплата, KSeF, а також реєстрація Sp. z o.o. Безкоштовна оцінка.' },
-  { locale: 'uk', path: '/outsourcing', metadata: ukOutsourcing, title: 'Аутсорсинг бухгалтерії та бек-офісу в Щецині – TEWU', description: 'Зменште операційні витрати й зосередьтеся на розвитку. Аутсорсинг бухгалтерії та процесів бек-офісу в бюро TEWU у Щецині. Безкоштовна оцінка.' },
+  { locale: 'uk', path: '/outsourcing', metadata: ukOutsourcing, title: 'Аутсорсинг бухгалтерії та бек-офісу в Щецині – TEWU', description: 'Знизьте операційні витрати й зосередьтеся на розвитку. Аутсорсинг бухгалтерії та процесів бек-офісу в бюро TEWU у Щецині. Безкоштовна оцінка.' },
   { locale: 'uk', path: '/certyfikaty', metadata: ukCertificates, title: 'Бухгалтерські сертифікати – Бюро TEWU у Щецині' },
   { locale: 'uk', path: '/kontakt', metadata: ukContact, title: 'Контакти та як доїхати – Бюро TEWU у Щецині', description: 'Biuro Rachunkowe TEWU, Al. Powstańców Wielkopolskich 78A LU2, Щецин. Телефон 602 235 736, e-mail, години роботи (пн–пт 8–16) і карта доїзду.' },
   { locale: 'uk', path: '/polityka-prywatnosci', metadata: ukPrivacy },

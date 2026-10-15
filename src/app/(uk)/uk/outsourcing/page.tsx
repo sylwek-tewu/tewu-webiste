@@ -6,7 +6,7 @@ export const metadata = buildPageMetadata({
     locale: 'uk',
     path: '/outsourcing',
     title: "Аутсорсинг бухгалтерії та бек-офісу в Щецині – TEWU",
-    description: "Зменште операційні витрати й зосередьтеся на розвитку. Аутсорсинг бухгалтерії та процесів бек-офісу в бюро TEWU у Щецині. Безкоштовна оцінка.",
+    description: "Знизьте операційні витрати й зосередьтеся на розвитку. Аутсорсинг бухгалтерії та процесів бек-офісу в бюро TEWU у Щецині. Безкоштовна оцінка.",
 });
 
 export default function UkrainianOutsourcing() {
