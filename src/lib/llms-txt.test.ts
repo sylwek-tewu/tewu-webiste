@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { PAGE_PATHS } from '@/app/sitemap';
 import { SITE_URL } from '@/constants';
 import { COMPANY } from '@/lib/company';
+import { FAQ_UPDATED_AT } from '@/content/faq';
+import { formatLongDate } from '@/lib/format-date';
 import { buildLlmsTxt } from './llms-txt';
 
 describe('buildLlmsTxt', () => {
@@ -27,6 +29,11 @@ describe('buildLlmsTxt', () => {
     expect(text).toContain(COMPANY.address.line);
     expect(text).toContain(COMPANY.emails.main);
     expect(text).toContain(COMPANY.phones.office[0].display);
+  });
+
+  it('dates the FAQ amounts with the day they were checked, so the line cannot go stale silently', () => {
+    expect(text).toContain(`stan na ${formatLongDate('pl', FAQ_UPDATED_AT)}`);
+    expect(text).not.toContain('bieżący rok');
   });
 
   it('has no "tax advice" wording', () => {
