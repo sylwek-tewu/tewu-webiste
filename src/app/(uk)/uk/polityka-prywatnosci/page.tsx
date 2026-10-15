@@ -7,7 +7,7 @@ export const metadata = buildPageMetadata({
   locale: 'uk',
   path: '/polityka-prywatnosci',
   title: 'Політика конфіденційності | Biuro Rachunkowe TEWU',
-  description: 'Правила обробки та захисту персональних даних у Biuro Rachunkowe TEWU Sp. z o.o. у Щецині (Польща).',
+  description: 'Як Biuro Rachunkowe TEWU у Щецині обробляє персональні дані: адміністратор, цілі, обсяг даних, одержувачі, строк зберігання, ваші права та файли cookie.',
 });
 
 export default function UkrainianPrivacyPolicyPage() {

@@ -7,7 +7,7 @@ export const metadata = buildPageMetadata({
   locale: 'pl',
   path: '/polityka-prywatnosci',
   title: 'Polityka Prywatności | Biuro Rachunkowe TEWU',
-  description: 'Zasady przetwarzania i ochrony danych osobowych w Biurze Rachunkowym TEWU Sp. z o.o. w Szczecinie.',
+  description: 'Jak Biuro Rachunkowe TEWU w Szczecinie przetwarza dane osobowe: administrator, cele, zakres danych, odbiorcy, okres przechowywania, Twoje prawa i pliki cookie.',
 });
 
 export default function PrivacyPolicyPage() {

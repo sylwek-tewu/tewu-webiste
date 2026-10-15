@@ -398,7 +398,7 @@ export const plTranslations: Translations = {
   },
   privacyPolicy: {
     metaTitle: 'Polityka Prywatności | Biuro Rachunkowe TEWU',
-    metaDescription: 'Zasady przetwarzania i ochrony danych osobowych w Biurze Rachunkowym TEWU Sp. z o.o. w Szczecinie.',
+    metaDescription: 'Jak Biuro Rachunkowe TEWU w Szczecinie przetwarza dane osobowe: administrator, cele, zakres danych, odbiorcy, okres przechowywania, Twoje prawa i pliki cookie.',
     headerTitle: 'Polityka Prywatności',
     headerSubtitle: 'Biuro Rachunkowe TEWU Sp. z o.o. • Ostatnia aktualizacja: 3 października 2026',
     s1Title: '1. Administrator Danych Osobowych',

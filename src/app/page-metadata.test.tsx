@@ -65,7 +65,7 @@ const pages: PageCase[] = [
   { locale: 'pl', path: '/certyfikaty', metadata: plCertificates, title: 'Certyfikaty księgowe – Biuro Rachunkowe TEWU w Szczecinie' },
   { locale: 'pl', path: '/kontakt', metadata: plContact, title: 'Kontakt i dojazd – Biuro Rachunkowe TEWU w Szczecinie', description: 'Biuro Rachunkowe TEWU, Al. Powstańców Wielkopolskich 78A LU2, Szczecin. Telefon 602 235 736, e-mail, godziny otwarcia (pn–pt 8–16) i mapa dojazdu.' },
   { locale: 'pl', path: '/faq', metadata: plFaq, title: 'FAQ – pytania o księgowość, podatki i ZUS | TEWU Szczecin', description: 'Biuro rachunkowe TEWU ze Szczecina odpowiada na częste pytania: JDG czy spółka, forma opodatkowania, zwolnienie z VAT, ulgi w ZUS, rachunek firmowy, KSeF.' },
-  { locale: 'pl', path: '/polityka-prywatnosci', metadata: plPrivacy },
+  { locale: 'pl', path: '/polityka-prywatnosci', metadata: plPrivacy, description: 'Jak Biuro Rachunkowe TEWU w Szczecinie przetwarza dane osobowe: administrator, cele, zakres danych, odbiorcy, okres przechowywania, Twoje prawa i pliki cookie.' },
   UK_HOME,
   { locale: 'uk', path: '/o-nas', metadata: ukAbout, title: 'Про нас – бухгалтерське бюро в Щецині понад 25 років | TEWU', description: 'Biuro Rachunkowe TEWU у Щецині: понад 25 років на ринку, уповноваження Міністерства фінансів і прямий контакт з керівництвом бюро. Познайомтеся з нами.' },
   { locale: 'uk', path: '/uslugi', metadata: ukServices, title: 'Бухгалтерські та кадрові послуги в Щецині – Бюро TEWU', description: 'Послуги бухгалтерського бюро TEWU у Щецині: повна бухгалтерія, KPiR, ryczałt, кадри та зарплата, KSeF, а також реєстрація Sp. z o.o. Безкоштовна оцінка.' },
@@ -73,7 +73,7 @@ const pages: PageCase[] = [
   { locale: 'uk', path: '/certyfikaty', metadata: ukCertificates, title: 'Бухгалтерські сертифікати – Бюро TEWU у Щецині' },
   { locale: 'uk', path: '/kontakt', metadata: ukContact, title: 'Контакти та як доїхати – Бюро TEWU у Щецині', description: 'Biuro Rachunkowe TEWU, Al. Powstańców Wielkopolskich 78A LU2, Щецин. Телефон 602 235 736, e-mail, години роботи (пн–пт 8–16) і карта доїзду.' },
   { locale: 'uk', path: '/faq', metadata: ukFaq, title: 'FAQ – питання про бухгалтерію, податки та ZUS | TEWU Щецин', description: 'Бухгалтерське бюро TEWU у Щецині відповідає на поширені запитання: JDG чи Sp. z o.o., форма оподаткування, звільнення від VAT, пільги ZUS, рахунок, KSeF.' },
-  { locale: 'uk', path: '/polityka-prywatnosci', metadata: ukPrivacy },
+  { locale: 'uk', path: '/polityka-prywatnosci', metadata: ukPrivacy, description: 'Як Biuro Rachunkowe TEWU у Щецині обробляє персональні дані: адміністратор, цілі, обсяг даних, одержувачі, строк зберігання, ваші права та файли cookie.' },
   ...(['pl', 'uk'] as const).flatMap((locale) => SERVICE_PAGE_SLUGS.map((slug) => servicePageCase(locale, slug))),
 ];
 
