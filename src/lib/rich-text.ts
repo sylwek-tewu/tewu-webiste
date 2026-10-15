@@ -27,14 +27,19 @@ export const isExternalHref = (href: string) => /^https?:\/\//.test(href);
 const escapeHtml = (text: string) =>
   text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+/** One link for JSON-LD answers: text and address escaped, a site path made absolute. */
+export function linkToHtml(text: string, href: string, origin: string): string {
+  const absolute = isExternalHref(href) ? href : `${origin}${href}`;
+  return `<a href="${escapeHtml(absolute)}">${escapeHtml(text)}</a>`;
+}
+
 /** HTML for JSON-LD answers: site paths become absolute, so the answer stands on its own. */
 export function richTextToHtml(text: string, origin: string): string {
   return parseRichText(text)
     .map((segment) => {
       if (segment.kind === 'text') return escapeHtml(segment.text);
       if (segment.kind === 'strong') return `<strong>${escapeHtml(segment.text)}</strong>`;
-      const href = isExternalHref(segment.href) ? segment.href : `${origin}${segment.href}`;
-      return `<a href="${escapeHtml(href)}">${escapeHtml(segment.text)}</a>`;
+      return linkToHtml(segment.text, segment.href, origin);
     })
     .join('');
 }

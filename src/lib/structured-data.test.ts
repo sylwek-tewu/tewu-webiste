@@ -215,6 +215,21 @@ describe.each(LOCALES)('buildFaqPageJsonLd (%s)', (locale) => {
     expect(zus.acceptedAnswer.text.startsWith('<p>')).toBe(true);
   });
 
+  it('escapes a source label as text, even with "]" or "&" in it', () => {
+    const withOddLabel = {
+      ...content,
+      categories: content.categories.map((category) => ({
+        ...category,
+        questions: category.questions.map((question) =>
+          question.id === 'wakacje-skladkowe' ? { ...question, sources: [{ label: 'ZUS ] RWS & de minimis', href: 'https://www.zus.pl/a?b=1&c=2' }] } : question
+        ),
+      })),
+    };
+    const entities = (buildFaqPageJsonLd(withOddLabel, FAQ_UPDATED_AT)['@graph'][0] as Node).mainEntity;
+    const answer = entities.find((q: Node) => q.url.endsWith('#wakacje-skladkowe')).acceptedAnswer.text;
+    expect(answer).toContain('<a href="https://www.zus.pl/a?b=1&amp;c=2">ZUS ] RWS &amp; de minimis</a>');
+  });
+
   it('places the page under the home page in the breadcrumbs', () => {
     const crumbs = byType(nodes, 'BreadcrumbList')!.itemListElement;
     expect(crumbs.map((c: Node) => [c.position, c.name, c.item])).toEqual([

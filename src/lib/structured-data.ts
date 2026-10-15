@@ -7,7 +7,7 @@ import { SERVICE_PAGES, servicePagePath, type ServicePageSlug } from '@/lib/serv
 import type { ServicePageContent } from '@/content/service-pages/types';
 import type { FaqPageContent, FaqQuestion } from '@/content/faq/types';
 import { OFFICE_PHOTOS } from '@/lib/office-photos';
-import { richTextToHtml } from '@/lib/rich-text';
+import { linkToHtml, richTextToHtml } from '@/lib/rich-text';
 
 /**
  * schema.org JSON-LD (Google structured data). Facts come from COMPANY only; no ratings,
@@ -146,7 +146,7 @@ function faqAnswerHtml({ answer, sources }: FaqQuestion, sourcesLabel: FaqPageCo
   const paragraphs = answer.map((paragraph) => `<p>${richTextToHtml(paragraph, SITE_URL)}</p>`);
   if (sources?.length) {
     const label = sources.length === 1 ? sourcesLabel.one : sourcesLabel.many;
-    const links = sources.map(({ label: text, href }) => richTextToHtml(`[${text}](${href})`, SITE_URL)).join(', ');
+    const links = sources.map(({ label: text, href }) => linkToHtml(text, href, SITE_URL)).join(', ');
     paragraphs.push(`<p>${label}: ${links}</p>`);
   }
   return paragraphs.join('');
