@@ -9,8 +9,12 @@ const PAGES = [
   '/uslugi/kpir', '/uk/uslugi/kpir',
   '/uslugi/inkubator-spolek', '/uk/uslugi/inkubator-spolek',
   '/o-nas', '/uk/o-nas',
+  '/outsourcing', '/uk/outsourcing',
+  '/certyfikaty', '/uk/certyfikaty',
   '/kontakt', '/uk/kontakt',
   '/faq', '/uk/faq',
+  '/polityka-prywatnosci', '/uk/polityka-prywatnosci',
+  '/nie-ma-takiej-strony', '/uk/nie-ma-takiej-strony',
 ];
 
 // Phones, the mobile bar's last width, the burger range, and the header's tight points
