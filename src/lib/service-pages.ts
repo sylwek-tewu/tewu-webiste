@@ -52,10 +52,11 @@ export function servicePagePath(locale: Locale, slug: ServicePageSlug): string {
   return localizePath(`${PATHS.services}/${slug}`, locale);
 }
 
-const SERVICE_PAGE_PATH = /^(?:\/uk)?\/uslugi\/([^/]+)\/?$/;
+// Matched against the Polish path, so it follows PATHS and localizePath like servicePagePath.
+const SERVICE_PAGE_PATH = new RegExp(`^${PATHS.services}/([^/]+)/?$`);
 
 export function servicePageSlugOfPath(pathname: string): ServicePageSlug | null {
-  const slug = SERVICE_PAGE_PATH.exec(pathname)?.[1];
+  const slug = SERVICE_PAGE_PATH.exec(localizePath(pathname, 'pl'))?.[1];
   return isServicePageSlug(slug) ? slug : null;
 }
 

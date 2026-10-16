@@ -41,7 +41,7 @@ const UK_SERVICE_TYPE: Record<ServicePageSlug, string> = {
 };
 
 const absolute = (path: string) => `${SITE_URL}${path}`;
-const homeUrl = (locale: Locale) => (locale === 'pl' ? `${SITE_URL}/` : absolute(localizePath(PATHS.home, locale)));
+const homeUrl = (locale: Locale) => absolute(localizePath(PATHS.home, locale));
 
 function companyNode() {
   const { address, phones, registry } = COMPANY;

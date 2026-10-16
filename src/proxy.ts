@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { detectLocaleFromAcceptLanguage } from './i18n/detect-locale';
-import { LOCALE_COOKIE_NAME, SITE_LOCALE_HEADER, isSupportedLocale, localeOfPath } from './i18n/config';
+import { LOCALE_COOKIE_NAME, SITE_LOCALE_HEADER, isSupportedLocale, localeOfPath, localizePath } from './i18n/config';
 import { rejectWithoutPreviewPassword } from './lib/preview-auth';
 
 /**
@@ -46,7 +46,7 @@ export function proxy(request: NextRequest) {
 
   if (detectedLocale === 'uk' && localeOfPath(pathname) !== 'uk') {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = pathname === '/' ? '/uk' : `/uk${pathname}`;
+    redirectUrl.pathname = localizePath(pathname, 'uk');
     const response = NextResponse.redirect(redirectUrl, { status: 307 });
     // The redirect depends on the visitor's languages, so no shared cache may store it.
     response.headers.set('Vary', 'Accept-Language, Cookie');

@@ -4,7 +4,7 @@ import { FAQ_UPDATED_AT } from '@/content/faq';
 import { COMPANY } from '@/lib/company';
 import { formatLongDate } from '@/lib/format-date';
 import { PATHS } from '@/lib/paths';
-import { SERVICE_PAGES, SERVICE_PAGE_SLUGS, servicePagePath } from '@/lib/service-pages';
+import { SERVICE_PAGES, servicePageSlugOfPath } from '@/lib/service-pages';
 import { PAGE_PATHS } from '@/lib/site-pages';
 
 /**
@@ -13,7 +13,7 @@ import { PAGE_PATHS } from '@/lib/site-pages';
  * descriptions are here because server code may not read the dictionaries (ADR 0002).
  */
 
-const url = (path: string) => (path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}`);
+const url = (path: string) => `${SITE_URL}${path}`;
 
 // One entry per Polish page other than the service pages, which take their registry label.
 const PAGES: Record<string, { name: string; description: string }> = {
@@ -33,7 +33,7 @@ const PAGES: Record<string, { name: string; description: string }> = {
 
 /** Throws for a page without an entry above, so a new page cannot slip out of llms.txt. */
 function pageLine(path: string): string {
-  const slug = SERVICE_PAGE_SLUGS.find((s) => path === servicePagePath('pl', s));
+  const slug = servicePageSlugOfPath(path);
   if (slug) return `- [${SERVICE_PAGES[slug].label}](${url(path)}): usługa biura rachunkowego w Szczecinie`;
   const page = PAGES[path];
   if (!page) throw new Error(`llms.txt: no description for ${path}`);
