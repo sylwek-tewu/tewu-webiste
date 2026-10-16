@@ -28,6 +28,8 @@ export const slate: MantineColorsTuple = [
     "#0F172A", // slate-900 - Dark backgrounds (Updated to match prototype)
 ];
 
+// Components take colours and heading sizes from here: brandBlue/slate, never Mantine's default
+// "blue" palette (mantine_cr_results_v2.md MANTINE-002), and no clamp(), fz or fw on a Title (MANTINE-003).
 export const theme = createTheme({
     primaryColor: "brandBlue",
     colors: {
