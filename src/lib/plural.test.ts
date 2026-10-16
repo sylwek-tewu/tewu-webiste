@@ -24,6 +24,22 @@ describe('formatCount', () => {
     expect(formatCount('pl', 3, PYTANIE)).toBe('3 pytania');
     expect(formatCount('uk', 5, ZAPYTANNIA)).toBe('5 запитань');
   });
+
+  // The buffer retention in the privacy policy (pl.ts)
+  it.each([
+    [1, '1 godzina'],
+    [2, '2 godziny'],
+    [4, '4 godziny'],
+    [5, '5 godzin'],
+    [12, '12 godzin'],
+    [14, '14 godzin'],
+    [22, '22 godziny'],
+    [48, '48 godzin'],
+    [72, '72 godziny'],
+    [112, '112 godzin'],
+  ])('pl %i hours → %s', (n, expected) => {
+    expect(formatCount('pl', n, { one: 'godzina', few: 'godziny', many: 'godzin' })).toBe(expected);
+  });
 });
 
 describe('singularOrPlural', () => {

@@ -1,7 +1,9 @@
 import { Translations } from './types';
-import { formatHoursPl } from '@/lib/polish-plural';
 import { COMPANY_FULL_NAME } from '@/constants';
 import { COMPANY } from '@/lib/company';
+import { formatCount } from '@/lib/plural';
+
+const HOURS = { one: 'godzina', few: 'godziny', many: 'godzin' };
 
 export const plTranslations: Translations = {
   locale: 'pl',
@@ -434,13 +436,13 @@ export const plTranslations: Translations = {
     s4HostingTitle: 'Hosting i infrastruktura serwera (OVHcloud)',
     s4HostingDesc: 'Serwis utrzymywany jest na serwerze wirtualnym (VPS) dostarczanym przez OVH Sp. z o.o. z siedzibą we Wrocławiu (ul. Powstańców Śląskich 9, 53-332 Wrocław). Infrastruktura serwerowa zlokalizowana jest w centrum danych na terenie Europejskiego Obszaru Gospodarczego (EOG). Dostawca infrastruktury przetwarza żądania serwerowe jako podmiot przetwarzający na podstawie umowy powierzenia przetwarzania danych (Data Processing Agreement – DPA).',
     s4BufferTitle: 'Bufor awaryjny (baza danych serwera)',
-    s4BufferDesc: (hours) => `W przypadku chwilowej awarii poczty e-mail zgłoszenie jest tymczasowo zapisywane w lokalnej bazie danych na serwerze, a numer telefonu – w postaci zaszyfrowanej algorytmem AES-256-GCM. Bufor służy wyłącznie automatycznemu ponowieniu wysyłki. Zgłoszenie jest bezpowrotnie usuwane niezwłocznie po doręczeniu. Maksymalny czas przechowywania w buforze wynosi ${formatHoursPl(hours)}; po jego upływie zgłoszenie jest usuwane automatycznie w ciągu kilkunastu minut.`,
+    s4BufferDesc: (hours) => `W przypadku chwilowej awarii poczty e-mail zgłoszenie jest tymczasowo zapisywane w lokalnej bazie danych na serwerze, a numer telefonu – w postaci zaszyfrowanej algorytmem AES-256-GCM. Bufor służy wyłącznie automatycznemu ponowieniu wysyłki. Zgłoszenie jest bezpowrotnie usuwane niezwłocznie po doręczeniu. Maksymalny czas przechowywania w buforze wynosi ${formatCount('pl', hours, HOURS)}; po jego upływie zgłoszenie jest usuwane automatycznie w ciągu kilkunastu minut.`,
     s4TransferTitle: 'Lokalizacja serwera i bufora awaryjnego',
     s4TransferDesc: `Serwer, na którym działa serwis i który obsługuje formularz kontaktowy, oraz baza danych bufora awaryjnego znajdują się na terenie Europejskiego Obszaru Gospodarczego (EOG). Dane podane w formularzu (w tym numer telefonu) nie są w ramach hostingu ani bufora awaryjnego przekazywane do państw trzecich (poza EOG) ani do organizacji międzynarodowych.`,
     s5Title: '5. Okres przechowywania danych',
     s5Content: 'Zgłoszenia (wiadomości e-mail z numerem telefonu), po których nie nawiązaliśmy współpracy, przechowujemy do upływu terminu przedawnienia ewentualnych roszczeń związanych z kontaktem, określonego w Kodeksie cywilnym (co do zasady 3 lub 6 lat), a następnie je usuwamy. Jeżeli nawiążemy współpracę, dane przetwarzamy przez czas trwania umowy o świadczenie usług księgowych, a po jej zakończeniu – przez okres wymagany przepisami prawa (m.in. podatkowymi i rachunkowymi) lub do upływu terminu przedawnienia roszczeń.',
     s5Logs: 'Logi serwera i aplikacji są przechowywane przez 7 dni w celach bezpieczeństwa oraz diagnostyki technicznej, a po tym czasie są automatycznie usuwane.',
-    s5Retention: (hours) => `Maksymalny okres przechowywania zgłoszeń oczekujących w buforze awaryjnym wynosi **${formatHoursPl(hours)}**.`,
+    s5Retention: (hours) => `Maksymalny okres przechowywania zgłoszeń oczekujących w buforze awaryjnym wynosi **${formatCount('pl', hours, HOURS)}**.`,
     s6Title: '6. Prawa osoby, której dane dotyczą',
     s6Intro: 'Zgodnie z przepisami Rozporządzenia (UE) 2016/679 (RODO), każdej osobie przysługują następujące uprawnienia:',
     s6Bullets: [
