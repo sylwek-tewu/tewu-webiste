@@ -21,6 +21,7 @@ const Navbar: React.FC = () => {
 
   const homePath = localizePath(PATHS.home, locale);
   const contactPath = localizePath(PATHS.contact, locale);
+  const links = t.nav.links.map((link) => ({ label: link.label, href: localizePath(link.path, locale) }));
 
   return (
     <Paper component="nav" pos="sticky" top={0} bg="white" shadow="sm" withBorder radius={0} style={{ zIndex: 50 }}>
@@ -48,15 +49,15 @@ const Navbar: React.FC = () => {
 
           {/* Desktop Menu – from lg, because the Ukrainian row does not fit narrower (ADR 0004 §4) */}
           <Group gap="md" visibleFrom="lg">
-            {t.nav.links.map((link) => (
+            {links.map((link) => (
               <Anchor
-                key={link.path}
+                key={link.href}
                 component={Link}
-                href={link.path}
+                href={link.href}
                 underline="never"
                 fw={600}
                 size="sm"
-                className={`${classes.navLink} ${pathname === link.path ? classes.navLinkActive : ''}`}
+                className={`${classes.navLink} ${pathname === link.href ? classes.navLinkActive : ''}`}
               >
                 {link.label}
               </Anchor>
@@ -103,11 +104,11 @@ const Navbar: React.FC = () => {
             <LanguageSwitcher fullWidth size="md" />
           </Box>
 
-          {t.nav.links.map((link) => (
+          {links.map((link) => (
             <Anchor
-              key={link.path}
+              key={link.href}
               component={Link}
-              href={link.path}
+              href={link.href}
               onClick={close}
               underline="never"
               fw={500}
@@ -116,8 +117,8 @@ const Navbar: React.FC = () => {
               px="xs"
               display="block"
               style={{ borderRadius: 'var(--mantine-radius-md)' }}
-              bg={pathname === link.path ? 'brandBlue.0' : 'transparent'}
-              c={pathname === link.path ? 'brandBlue.6' : 'slate.6'}
+              bg={pathname === link.href ? 'brandBlue.0' : 'transparent'}
+              c={pathname === link.href ? 'brandBlue.6' : 'slate.6'}
             >
               {link.label}
             </Anchor>

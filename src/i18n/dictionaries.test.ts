@@ -64,16 +64,16 @@ describe('dictionaries', () => {
     expect(plTranslations.privacyPolicy.s4BufferDesc(72)).toContain('72 godziny');
   });
 
+  // Polish paths in both dictionaries: Navbar and Footer localize them, so the Ukrainian menu cannot link a Polish page.
   it.each([plTranslations, ukTranslations])('put the incubator right after services in the menu ($locale)', (t) => {
-    const prefix = t.locale === 'uk' ? '/uk' : '';
     expect(t.nav.links.map((link) => link.path)).toEqual([
-      prefix || '/',
-      `${prefix}/o-nas`,
-      `${prefix}/uslugi`,
-      `${prefix}/uslugi/inkubator-spolek`,
-      `${prefix}/outsourcing`,
-      `${prefix}/certyfikaty`,
-      `${prefix}/kontakt`,
+      '/',
+      '/o-nas',
+      '/uslugi',
+      '/uslugi/inkubator-spolek',
+      '/outsourcing',
+      '/certyfikaty',
+      '/kontakt',
     ]);
   });
 

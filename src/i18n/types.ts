@@ -5,6 +5,7 @@ export type Locale = 'pl' | 'uk';
 
 export interface NavItemTranslation {
   label: string;
+  /** Polish path, the same in both dictionaries; Navbar and Footer link localizePath(path, locale). */
   path: string;
 }
 

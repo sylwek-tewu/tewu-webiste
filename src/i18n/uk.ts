@@ -4,7 +4,6 @@ import { COMPANY } from '@/lib/company';
 import { PATHS } from '@/lib/paths';
 import { formatCount } from '@/lib/plural';
 import { servicePagePath } from '@/lib/service-pages';
-import { localizePath } from './config';
 
 const HOUR_FORMS = { one: 'година', few: 'години', many: 'годин' };
 
@@ -17,13 +16,13 @@ export const ukTranslations: Translations = {
   },
   nav: {
     links: [
-      { label: 'Головна', path: localizePath(PATHS.home, 'uk') },
-      { label: 'Про нас', path: localizePath(PATHS.about, 'uk') },
-      { label: 'Послуги', path: localizePath(PATHS.services, 'uk') },
-      { label: 'Інкубатор', path: servicePagePath('uk', 'inkubator-spolek') },
-      { label: 'Аутсорсинг', path: localizePath(PATHS.outsourcing, 'uk') },
-      { label: 'Сертифікати', path: localizePath(PATHS.certificates, 'uk') },
-      { label: 'Контакти', path: localizePath(PATHS.contact, 'uk') },
+      { label: 'Головна', path: PATHS.home },
+      { label: 'Про нас', path: PATHS.about },
+      { label: 'Послуги', path: PATHS.services },
+      { label: 'Інкубатор', path: servicePagePath('pl', 'inkubator-spolek') },
+      { label: 'Аутсорсинг', path: PATHS.outsourcing },
+      { label: 'Сертифікати', path: PATHS.certificates },
+      { label: 'Контакти', path: PATHS.contact },
     ],
     freeQuote: 'Безкоштовна оцінка',
     menu: 'Меню',
