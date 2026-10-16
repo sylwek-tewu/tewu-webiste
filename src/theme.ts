@@ -39,8 +39,9 @@ export const theme = createTheme({
         fontFamily: "Inter, sans-serif",
         fontWeight: "900",
         sizes: {
-            // Hero/Page titles - large responsive
-            h1: { fontSize: "clamp(2.25rem, 5vw, 3.75rem)", lineHeight: "1.1" },
+            // Hero/Page titles - large responsive. 2rem floor: at 320 px a 2.25rem title overflows on
+            // long words („ewidencjonowany”, „відповідальністю”; e2e/layout.spec.ts)
+            h1: { fontSize: "clamp(2rem, 5vw, 3.75rem)", lineHeight: "1.1" },
             // Section headers - medium responsive
             h2: { fontSize: "clamp(1.875rem, 4vw, 2.25rem)", lineHeight: "1.2" },
             h3: { fontSize: "30px", lineHeight: "1.25" },
