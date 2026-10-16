@@ -42,9 +42,11 @@ export default function AboutClient() {
                                     {t.about.intro.p2}
                                 </Text>
                             </Stack>
-                            <SimpleGrid cols={2} spacing="md" mt="sm">
+                            {/* One column on phones: two are too narrow for „Bezpieczeństwo” beside its icon.
+                                nowrap keeps each label beside its icon. */}
+                            <SimpleGrid cols={{ base: 1, xs: 2 }} spacing="md" mt="sm">
                                 {t.about.intro.bullets.map((item, i) => (
-                                    <Group key={i} gap="xs" align="center">
+                                    <Group key={i} gap="xs" align="center" wrap="nowrap">
                                         <ThemeIcon radius="xl" size="lg" bg="brandBlue.0" c="brandBlue.6">
                                             <CheckCircle2 size={20} />
                                         </ThemeIcon>
