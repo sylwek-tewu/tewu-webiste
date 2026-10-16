@@ -3,6 +3,7 @@
 import React from 'react';
 import { ShieldCheck } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, Group, Paper, ThemeIcon, Badge } from '@mantine/core';
+import { PageHero } from '@/components/PageHero';
 import CertificatesList from '@/components/certificates/CertificatesList';
 import { useLocale } from '@/i18n/LocaleContext';
 
@@ -12,16 +13,7 @@ const CertificatesClient: React.FC = () => {
     return (
         <Stack gap={0} bg="white">
             {/* Header */}
-            <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
-                <Container size="md" px="md">
-                    <Title order={1} c="white" mb="md">
-                        {t.certificates.header.title}
-                    </Title>
-                    <Text size="xl" c="slate.4">
-                        {t.certificates.header.subtitle}
-                    </Text>
-                </Container>
-            </Box>
+            <PageHero title={t.certificates.header.title} lead={t.certificates.header.subtitle} />
 
             {/* Main Content */}
             <Box component="section" py={96}>

@@ -3,6 +3,7 @@
 import React from 'react';
 import { ShieldCheck, Clock, Award, CheckCircle2 } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, ThemeIcon, Paper, Group } from '@mantine/core';
+import { PageHero } from '@/components/PageHero';
 import { useLocale } from '@/i18n/LocaleContext';
 import { OfficePicture } from '@/components/OfficePicture';
 import { OFFICE_PHOTOS } from '@/lib/office-photos';
@@ -19,16 +20,7 @@ export default function AboutClient() {
     return (
         <Stack gap={0} bg="white">
             {/* Header Section */}
-            <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
-                <Container size="md" px="md">
-                    <Title order={1} c="white" mb="md">
-                        {t.about.header.title}
-                    </Title>
-                    <Text size="xl" c="slate.4">
-                        {t.about.header.subtitle}
-                    </Text>
-                </Container>
-            </Box>
+            <PageHero title={t.about.header.title} lead={t.about.header.subtitle} />
 
             {/* Main Intro Section */}
             <Box component="section" py={96}>

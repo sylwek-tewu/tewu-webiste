@@ -3,6 +3,7 @@
 import React from 'react';
 import { ArrowRight, CheckCircle2, Building2, Calculator, FileDigit, Users, ClipboardCheck, FileText, Scale, Receipt, Rocket } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, Button, ThemeIcon, Group, Paper } from '@mantine/core';
+import { PageHero } from '@/components/PageHero';
 import Link from 'next/link';
 import classes from './ServicesClient.module.css';
 import { localizePath, useLocale } from '@/i18n/LocaleContext';
@@ -29,16 +30,7 @@ export default function ServicesClient() {
     return (
         <Stack gap={0} bg="white">
             {/* Hero Section */}
-            <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
-                <Container size="md" px="md">
-                    <Title order={1} c="white" mb="md">
-                        {t.servicesPage.header.title}
-                    </Title>
-                    <Text size="xl" c="slate.4">
-                        {t.servicesPage.header.subtitle}
-                    </Text>
-                </Container>
-            </Box>
+            <PageHero title={t.servicesPage.header.title} lead={t.servicesPage.header.subtitle} />
 
             {/* Services Grid */}
             <Box component="section" py={96} bg="white">

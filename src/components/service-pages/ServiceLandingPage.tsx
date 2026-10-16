@@ -8,6 +8,7 @@ import { RELATED_SERVICE_PAGES, SERVICE_PAGES, servicePagePath, type ServicePage
 import { localizePath, useLocale } from '@/i18n/LocaleContext';
 import { PATHS } from '@/lib/paths';
 import { FaqList } from '@/components/faq/FaqList';
+import { PageHero } from '@/components/PageHero';
 import { QuoteActions } from '@/components/QuoteActions';
 import { ReceptionCta } from '@/components/ReceptionCta';
 import type { ServicePageContent } from '@/content/service-pages/types';
@@ -97,17 +98,9 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
 
   return (
     <Stack gap={0} bg="white">
-      <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
-        <Container size="md" px="md">
-          <Title order={1} c="white" mb="md">
-            {content.hero.title}
-          </Title>
-          <Text size="xl" c="slate.4" mb="xl">
-            {content.hero.lead}
-          </Text>
-          <QuoteActions variant="primary" source="service" />
-        </Container>
-      </Box>
+      <PageHero title={content.hero.title} lead={content.hero.lead}>
+        <QuoteActions variant="primary" source="service" />
+      </PageHero>
 
       <Box component="section" py="xl" bg="slate.0">
         <Container size="xl" px="md">

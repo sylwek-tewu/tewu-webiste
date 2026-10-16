@@ -3,6 +3,7 @@
 import React from 'react';
 import { ShieldCheck, Zap, Crosshair, Lock } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, ThemeIcon, Paper, Group } from '@mantine/core';
+import { PageHero } from '@/components/PageHero';
 import classes from './OutsourcingClient.module.css';
 import { useLocale } from '@/i18n/LocaleContext';
 
@@ -19,16 +20,7 @@ export default function OutsourcingClient() {
     return (
         <Stack gap={0} bg="white">
             {/* Header */}
-            <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
-                <Container size="md" px="md">
-                    <Title order={1} c="white" mb="md">
-                        {t.outsourcing.header.title}
-                    </Title>
-                    <Text size="xl" c="slate.4">
-                        {t.outsourcing.header.subtitle}
-                    </Text>
-                </Container>
-            </Box>
+            <PageHero title={t.outsourcing.header.title} lead={t.outsourcing.header.subtitle} />
 
             {/* Main Content */}
             <Box component="section" py={96}>
