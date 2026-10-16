@@ -68,7 +68,9 @@ export const PL_FAQ: FaqPageContent = {
           id: 'przekazywanie-dokumentow',
           question: 'Jak przekazuję dokumenty do biura?',
           answer: [
-            'Faktury pobieramy bezpośrednio z KSeF, więc nie musisz ich nam wysyłać – wystarczy, że nadasz biuru uprawnienia w systemie. Pozostałe dokumenty możesz przesyłać e-mailem albo przez WhatsApp.',
+            'W dobie KSeF oryginały faktur pobierane są do systemu księgowego bezpośrednio z KSeF.',
+            'Dodatkowo dostarczenie faktur do biura (papier, pdf) daje nam pewność, że są one zweryfikowane, opisane i zaakceptowane przez przedsiębiorcę. Unikniemy wówczas zaksięgowania dokumentu wystawionego na błędne dane odbiorcy faktury.',
+            'Pozostałe dokumenty możesz przesyłać e-mailem albo przez WhatsApp.',
           ],
         },
         {
