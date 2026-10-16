@@ -55,7 +55,7 @@ export function buildLlmsTxt(): string {
     '',
     '## Wersja ukraińska',
     '',
-    `- [Головна](${url('/uk')}): бухгалтерське бюро в Щецині, обслуговування українською`,
+    `- [Головна](${url(localizePath('/', 'uk'))}): бухгалтерське бюро в Щецині, обслуговування українською`,
     `- [Поширені запитання (FAQ)](${url(localizePath(FAQ_PATH, 'uk'))}): JDG чи Sp. z o.o., форма оподаткування, VAT, ZUS, рахунок, KSeF`,
     '',
     '## Optional',
