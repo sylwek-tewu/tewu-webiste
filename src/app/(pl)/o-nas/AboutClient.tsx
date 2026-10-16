@@ -5,6 +5,7 @@ import { ShieldCheck, Clock, Award, CheckCircle2 } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, ThemeIcon, Paper, Group } from '@mantine/core';
 import { Eyebrow } from '@/components/Eyebrow';
 import { PageHero } from '@/components/PageHero';
+import { StatNumber } from '@/components/StatNumber';
 import { useLocale } from '@/i18n/LocaleContext';
 import { OfficePicture } from '@/components/OfficePicture';
 import { OFFICE_PHOTOS } from '@/lib/office-photos';
@@ -67,9 +68,9 @@ export default function AboutClient() {
                                 maw={280}
                                 style={{ borderColor: 'var(--mantine-color-slate-1)' }}
                             >
-                                <Text c="brandBlue.6" fw={900} fz="2.25rem" lh={1} mb={4}>
+                                <StatNumber c="brandBlue.6" lh={1} mb={4}>
                                     {t.about.intro.expNumber}
-                                </Text>
+                                </StatNumber>
                                 <Text c="slate.9" fw={700} size="lg" mb="xs">
                                     {t.about.intro.expTitle}
                                 </Text>

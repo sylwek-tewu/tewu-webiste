@@ -8,6 +8,7 @@ import classes from '@/components/layout/Layout.module.css';
 import { localizePath, useLocale } from '@/i18n/LocaleContext';
 import { PATHS } from '@/lib/paths';
 import { Emphasis } from '@/i18n/Emphasis';
+import { StatNumber } from '@/components/StatNumber';
 
 export function Hero() {
     const { t, locale } = useLocale();
@@ -133,19 +134,19 @@ export function Hero() {
                 <Container>
                     <SimpleGrid cols={{ base: 2, md: 4 }} spacing="lg">
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} fz="2.25rem">{t.home.hero.stats.companiesCount}</Text>
+                            <StatNumber c="slate.9">{t.home.hero.stats.companiesCount}</StatNumber>
                             <Text c="slate.5" fw={500}>{t.home.hero.stats.companiesLabel}</Text>
                         </Box>
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} fz="2.25rem">{t.home.hero.stats.yearsCount}</Text>
+                            <StatNumber c="slate.9">{t.home.hero.stats.yearsCount}</StatNumber>
                             <Text c="slate.5" fw={500}>{t.home.hero.stats.yearsLabel}</Text>
                         </Box>
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} fz="2.25rem">{t.home.hero.stats.securityCount}</Text>
+                            <StatNumber c="slate.9">{t.home.hero.stats.securityCount}</StatNumber>
                             <Text c="slate.5" fw={500}>{t.home.hero.stats.securityLabel}</Text>
                         </Box>
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} fz="2.25rem">{t.home.hero.stats.reactionCount}</Text>
+                            <StatNumber c="slate.9">{t.home.hero.stats.reactionCount}</StatNumber>
                             <Text c="slate.5" fw={500}>{t.home.hero.stats.reactionLabel}</Text>
                         </Box>
                     </SimpleGrid>
