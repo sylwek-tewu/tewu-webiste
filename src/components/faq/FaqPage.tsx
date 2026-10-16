@@ -90,7 +90,7 @@ export default function FaqPage({ content, updatedAt }: { content: FaqPageConten
   useOpenQuestionFromHash();
 
   return (
-    <Stack gap={0} bg="white">
+    <Stack gap={0} bg="white" className={classes.page}>
       <Box component="section" bg="slate.9" py={{ base: 56, md: 88 }} className={classes.hero}>
         <MessageCircleQuestionMark aria-hidden="true" className={classes.heroMotif} />
         <Container size="xl" px="md" pos="relative">

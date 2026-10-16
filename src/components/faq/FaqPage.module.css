@@ -1,3 +1,11 @@
+/* Glide to a category or the contact section instead of jumping. Scoped to this page so that
+   route changes elsewhere keep their instant scroll to the top. */
+@media (prefers-reduced-motion: no-preference) {
+  :global(html):has(.page) {
+    scroll-behavior: smooth;
+  }
+}
+
 .hero {
   position: relative;
   overflow: hidden;
