@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { NavItem } from './types';
 import {
   Users,
   Briefcase,
@@ -16,15 +15,6 @@ export const COMPANY_FULL_NAME = "Biuro Rachunkowe TEWU Sp. z o.o.";
 
 /** Production origin; makes canonical and hreflang URLs absolute (metadataBase). */
 export const SITE_URL = "https://tewu.szczecin.pl";
-
-export const NAV_LINKS: NavItem[] = [
-  { label: 'Start', path: '/' },
-  { label: 'O nas', path: '/o-nas' },
-  { label: 'Usługi', path: '/uslugi' },
-  { label: 'Outsourcing', path: '/outsourcing' },
-  { label: 'Certyfikaty', path: '/certyfikaty' },
-  { label: 'Kontakt', path: '/kontakt' }
-];
 
 export const REASONS_TO_TRUST = [
   {

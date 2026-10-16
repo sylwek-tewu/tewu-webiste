@@ -8,16 +8,16 @@ import { Box, Container, SimpleGrid, Stack, Text, Group, Anchor } from '@mantine
 import classes from './layout/Layout.module.css';
 import { TewuLogo } from './icons';
 import { localizePath, useLocale } from '@/i18n/LocaleContext';
+import { PATHS } from '@/lib/paths';
 import { SERVICE_PAGE_SLUGS, servicePagePath } from '@/lib/service-pages';
-import { FAQ_PATH } from '@/lib/site-pages';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
 const Footer: React.FC = () => {
   const { t, locale } = useLocale();
-  const privacyPath = localizePath('/polityka-prywatnosci', locale);
-  const outsourcingPath = localizePath('/outsourcing', locale);
-  const faqPath = localizePath(FAQ_PATH, locale);
+  const privacyPath = localizePath(PATHS.privacy, locale);
+  const outsourcingPath = localizePath(PATHS.outsourcing, locale);
+  const faqPath = localizePath(PATHS.faq, locale);
 
   return (
     <Box component="footer" bg="slate.9" c="slate.3">

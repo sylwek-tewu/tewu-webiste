@@ -5,8 +5,9 @@ import { Box, Container, SimpleGrid, Paper, ThemeIcon, Text, Title, VisuallyHidd
 import { ArrowRight, Building2, Calculator, FileDigit, Users, ClipboardCheck, FileText, Scale } from 'lucide-react';
 import Link from 'next/link';
 import classes from '@/components/layout/Layout.module.css';
-import { useLocale } from '@/i18n/LocaleContext';
+import { localizePath, useLocale } from '@/i18n/LocaleContext';
 import type { Locale } from '@/i18n/types';
+import { PATHS } from '@/lib/paths';
 import { servicePagePath, servicePageSlugForServiceItem } from '@/lib/service-pages';
 
 const SERVICE_ICONS: Record<string, React.ReactNode> = {
@@ -26,7 +27,7 @@ function cardPath(serviceId: string, locale: Locale, fallback: string): string {
 
 export function Services() {
     const { t, locale } = useLocale();
-    const servicesPath = locale === 'uk' ? '/uk/uslugi' : '/uslugi';
+    const servicesPath = localizePath(PATHS.services, locale);
     const items = t.servicesPage.items;
 
     return (

@@ -6,6 +6,7 @@ import { Award, Briefcase, Building2, CheckCircle2, Handshake, ShieldCheck } fro
 import { Anchor, Box, Container, Flex, List, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { RELATED_SERVICE_PAGES, SERVICE_PAGES, servicePagePath, type ServicePageSlug } from '@/lib/service-pages';
 import { localizePath, useLocale } from '@/i18n/LocaleContext';
+import { PATHS } from '@/lib/paths';
 import { FaqList } from '@/components/faq/FaqList';
 import { QuoteActions } from '@/components/QuoteActions';
 import { ReceptionCta } from '@/components/ReceptionCta';
@@ -92,7 +93,7 @@ function TrustItem({ icon, value, label }: { icon: React.ReactNode; value?: stri
 export default function ServiceLandingPage({ content }: { content: ServicePageContent }) {
   const { t, locale } = useLocale();
   const stats = t.home.hero.stats;
-  const certificatesPath = localizePath('/certyfikaty', locale);
+  const certificatesPath = localizePath(PATHS.certificates, locale);
 
   return (
     <Stack gap={0} bg="white">

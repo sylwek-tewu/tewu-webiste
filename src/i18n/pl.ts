@@ -1,7 +1,9 @@
 import { Translations } from './types';
 import { COMPANY_FULL_NAME } from '@/constants';
 import { COMPANY } from '@/lib/company';
+import { PATHS } from '@/lib/paths';
 import { formatCount } from '@/lib/plural';
+import { servicePagePath } from '@/lib/service-pages';
 
 const HOURS = { one: 'godzina', few: 'godziny', many: 'godzin' };
 
@@ -14,13 +16,13 @@ export const plTranslations: Translations = {
   },
   nav: {
     links: [
-      { label: 'Start', path: '/' },
-      { label: 'O nas', path: '/o-nas' },
-      { label: 'Usługi', path: '/uslugi' },
-      { label: 'Inkubator', path: '/uslugi/inkubator-spolek' },
-      { label: 'Outsourcing', path: '/outsourcing' },
-      { label: 'Certyfikaty', path: '/certyfikaty' },
-      { label: 'Kontakt', path: '/kontakt' },
+      { label: 'Start', path: PATHS.home },
+      { label: 'O nas', path: PATHS.about },
+      { label: 'Usługi', path: PATHS.services },
+      { label: 'Inkubator', path: servicePagePath('pl', 'inkubator-spolek') },
+      { label: 'Outsourcing', path: PATHS.outsourcing },
+      { label: 'Certyfikaty', path: PATHS.certificates },
+      { label: 'Kontakt', path: PATHS.contact },
     ],
     freeQuote: 'Bezpłatna wycena',
     menu: 'Menu',

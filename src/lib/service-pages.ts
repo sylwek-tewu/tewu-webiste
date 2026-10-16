@@ -1,5 +1,7 @@
+import { localizePath } from '@/i18n/config';
 import type { Locale } from '@/i18n/types';
 import type { CallbackTopic } from '@/lib/callback/types';
+import { PATHS } from '@/lib/paths';
 
 /**
  * Service landing pages: the ad targets under /uslugi/<slug> and /uk/uslugi/<slug> (ADR 0004).
@@ -47,7 +49,7 @@ export function isServicePageSlug(value: unknown): value is ServicePageSlug {
 }
 
 export function servicePagePath(locale: Locale, slug: ServicePageSlug): string {
-  return `${locale === 'uk' ? '/uk' : ''}/uslugi/${slug}`;
+  return localizePath(`${PATHS.services}/${slug}`, locale);
 }
 
 const SERVICE_PAGE_PATH = /^(?:\/uk)?\/uslugi\/([^/]+)\/?$/;

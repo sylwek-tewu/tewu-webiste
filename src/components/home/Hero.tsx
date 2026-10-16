@@ -5,13 +5,14 @@ import Link from 'next/link';
 import { Container, Title, Text, Button, Group, Badge, Grid, GridCol, Box, Stack, Image, SimpleGrid, ThemeIcon } from '@mantine/core';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
 import classes from '@/components/layout/Layout.module.css';
-import { useLocale } from '@/i18n/LocaleContext';
+import { localizePath, useLocale } from '@/i18n/LocaleContext';
+import { PATHS } from '@/lib/paths';
 import { Emphasis } from '@/i18n/Emphasis';
 
 export function Hero() {
     const { t, locale } = useLocale();
-    const contactPath = locale === 'uk' ? '/uk/kontakt' : '/kontakt';
-    const servicesPath = locale === 'uk' ? '/uk/uslugi' : '/uslugi';
+    const contactPath = localizePath(PATHS.contact, locale);
+    const servicesPath = localizePath(PATHS.services, locale);
 
     return (
         <>

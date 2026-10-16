@@ -8,7 +8,8 @@ import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import classes from './layout/Layout.module.css';
 import { TewuLogo } from './icons';
 import { useCallbackWidget } from './callback-widget';
-import { useLocale } from '@/i18n/LocaleContext';
+import { localizePath, useLocale } from '@/i18n/LocaleContext';
+import { PATHS } from '@/lib/paths';
 import { LanguageSwitcher } from './layout/LanguageSwitcher';
 
 const Navbar: React.FC = () => {
@@ -18,8 +19,8 @@ const Navbar: React.FC = () => {
   const { openWidget } = useCallbackWidget();
   const { t, locale } = useLocale();
 
-  const homePath = locale === 'uk' ? '/uk' : '/';
-  const contactPath = locale === 'uk' ? '/uk/kontakt' : '/kontakt';
+  const homePath = localizePath(PATHS.home, locale);
+  const contactPath = localizePath(PATHS.contact, locale);
 
   return (
     <Paper component="nav" pos="sticky" top={0} bg="white" shadow="sm" withBorder radius={0} style={{ zIndex: 50 }}>

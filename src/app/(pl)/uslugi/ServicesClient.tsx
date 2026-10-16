@@ -5,7 +5,8 @@ import { ArrowRight, CheckCircle2, Building2, Calculator, FileDigit, Users, Clip
 import { Box, Container, SimpleGrid, Stack, Title, Text, Button, ThemeIcon, Group, Paper } from '@mantine/core';
 import Link from 'next/link';
 import classes from './ServicesClient.module.css';
-import { useLocale } from '@/i18n/LocaleContext';
+import { localizePath, useLocale } from '@/i18n/LocaleContext';
+import { PATHS } from '@/lib/paths';
 import { servicePagePath, servicePageSlugForServiceItem } from '@/lib/service-pages';
 import { wrappingButtonStyles } from '@/components/layout/wrappingButtonStyles';
 
@@ -23,7 +24,7 @@ const SERVICE_ICONS: Record<string, React.ReactNode> = {
 
 export default function ServicesClient() {
     const { t, locale } = useLocale();
-    const contactPath = locale === 'uk' ? '/uk/kontakt' : '/kontakt';
+    const contactPath = localizePath(PATHS.contact, locale);
 
     return (
         <Stack gap={0} bg="white">
