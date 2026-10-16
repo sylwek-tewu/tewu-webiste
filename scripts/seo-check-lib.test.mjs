@@ -165,6 +165,14 @@ describe('evaluatePage', () => {
     }
   });
 
+  it('requires FAQPage and BreadcrumbList on the FAQ page, PL and UK', () => {
+    for (const path of ['/faq', '/uk/faq']) {
+      expect(errors(evaluatePage(page({ path })))).toEqual(['json-ld']);
+      const full = [firmJsonLd, { '@context': 'https://schema.org', '@graph': [{ '@type': 'FAQPage' }, { '@type': 'BreadcrumbList' }] }];
+      expect(errors(evaluatePage(page({ path, head: { jsonLd: full } })))).toEqual([]);
+    }
+  });
+
   it('errors on "doradztwa podatkowego" in an H2', () => {
     const p = page({ body: { html: '<h1>A</h1><h2>Pomoc w zakresie doradztwa podatkowego</h2>' } });
     expect(errors(evaluatePage(p))).toEqual(['forbidden-phrase']);
@@ -227,10 +235,20 @@ describe('evaluateSite', () => {
     wwwRedirect: { status: 308, headers: { location: `${ORIGIN}/uslugi/kpir?utm_source=check` } },
     notFound: { status: 404, html: '<head><title>404</title><meta name="robots" content="noindex"/></head><body></body>' },
     ogImage: { status: 200, headers: { 'content-type': 'image/png' } },
+    llms: { status: 200, headers: { 'content-type': 'text/plain; charset=utf-8' }, body: `# Biuro Rachunkowe TEWU\n\n- [FAQ](${ORIGIN}/faq)\n` },
   };
 
   it('accepts a correct site', () => {
     expect(evaluateSite(ok)).toEqual([]);
+  });
+
+  it('errors when /llms.txt is missing, not plain text or does not link the FAQ page', () => {
+    const missing = { ...ok, llms: { status: 404, headers: {}, body: '' } };
+    expect(errors(evaluateSite(missing))).toEqual(['llms.txt']);
+    const html = { ...ok, llms: { ...ok.llms, headers: { 'content-type': 'text/html' } } };
+    expect(errors(evaluateSite(html))).toEqual(['llms.txt']);
+    const noFaq = { ...ok, llms: { ...ok.llms, body: '# Biuro Rachunkowe TEWU\n' } };
+    expect(errors(evaluateSite(noFaq))).toEqual(['llms.txt']);
   });
 
   it('errors on a robots.txt without the Sitemap line', () => {

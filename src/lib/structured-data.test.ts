@@ -5,7 +5,8 @@ import { COMPANY } from '@/lib/company';
 import { OG_IMAGE_PATH } from '@/lib/og-image-meta';
 import { SERVICE_PAGE_SLUGS, SERVICE_PAGES, servicePagePath } from '@/lib/service-pages';
 import { getServicePageContent } from '@/content/service-pages';
-import { buildServicePageJsonLd, buildSiteJsonLd } from './structured-data';
+import { FAQ_UPDATED_AT, getFaqContent } from '@/content/faq';
+import { buildFaqPageJsonLd, buildServicePageJsonLd, buildSiteJsonLd } from './structured-data';
 
 const LOCALES: Locale[] = ['pl', 'uk'];
 const FIRMA_ID = 'https://tewu.szczecin.pl/#firma';
@@ -45,7 +46,7 @@ describe.each(LOCALES)('buildSiteJsonLd (%s)', (locale) => {
       legalName: 'Biuro Rachunkowe TEWU Sp. z o.o.',
       url: 'https://tewu.szczecin.pl/',
       logo: `${SITE_URL}/apple-icon.png`,
-      image: `${SITE_URL}${OG_IMAGE_PATH.pl}`,
+      image: [`${SITE_URL}/img/biuro/budynek.jpg`, `${SITE_URL}${OG_IMAGE_PATH.pl}`],
       telephone: '+48602235736',
       email: 'biuro@tewu.szczecin.pl',
       taxID: '9552249417',
@@ -175,5 +176,71 @@ describe('all structured data', () => {
       ...LOCALES.flatMap((locale) => SERVICE_PAGE_SLUGS.map((slug) => JSON.stringify(buildServicePageJsonLd(getServicePageContent(locale, slug))))),
     ].join('\n');
     for (const phrase of FORBIDDEN_PHRASES) expect(serialized).not.toMatch(phrase);
+  });
+});
+
+describe.each(LOCALES)('buildFaqPageJsonLd (%s)', (locale) => {
+  const content = getFaqContent(locale);
+  const doc = buildFaqPageJsonLd(content, FAQ_UPDATED_AT);
+  const nodes = doc['@graph'] as Node[];
+  const page = byType(nodes, 'FAQPage')!;
+  const url = locale === 'pl' ? `${SITE_URL}/faq` : `${SITE_URL}/uk/faq`;
+  const questions = content.categories.flatMap((category) => category.questions);
+
+  it('describes the page: address, language, date, website and company', () => {
+    expect(nodes.map((n) => n['@type'])).toEqual(['FAQPage', 'BreadcrumbList']);
+    expect(page).toMatchObject({
+      url,
+      name: content.hero.title,
+      description: content.meta.description,
+      inLanguage: locale === 'pl' ? 'pl-PL' : 'uk-UA',
+      dateModified: FAQ_UPDATED_AT,
+      isPartOf: { '@id': 'https://tewu.szczecin.pl/#strona' },
+      about: { '@id': FIRMA_ID },
+    });
+  });
+
+  it('lists every question in page order, each with its anchor', () => {
+    expect(page.mainEntity.map((q: Node) => q.name)).toEqual(questions.map((q) => q.question));
+    expect(page.mainEntity.map((q: Node) => q.url)).toEqual(questions.map((q) => `${url}#${q.id}`));
+  });
+
+  it('gives answers as HTML with absolute links and the sources', () => {
+    const certificate = page.mainEntity.find((q: Node) => q.url.endsWith('#certyfikat-ksiegowy'));
+    const certificatesUrl = locale === 'pl' ? `${SITE_URL}/certyfikaty` : `${SITE_URL}/uk/certyfikaty`;
+    expect(certificate.acceptedAnswer['@type']).toBe('Answer');
+    expect(certificate.acceptedAnswer.text).toContain(`<a href="${certificatesUrl}">`);
+    const zus = page.mainEntity.find((q: Node) => q.url.endsWith('#ulga-na-start'));
+    expect(zus.acceptedAnswer.text).toContain('<a href="https://www.biznes.gov.pl/pl/portal/00285">');
+    expect(zus.acceptedAnswer.text.startsWith('<p>')).toBe(true);
+  });
+
+  it('escapes a source label as text, even with "]" or "&" in it', () => {
+    const withOddLabel = {
+      ...content,
+      categories: content.categories.map((category) => ({
+        ...category,
+        questions: category.questions.map((question) =>
+          question.id === 'wakacje-skladkowe' ? { ...question, sources: [{ label: 'ZUS ] RWS & de minimis', href: 'https://www.zus.pl/a?b=1&c=2' }] } : question
+        ),
+      })),
+    };
+    const entities = (buildFaqPageJsonLd(withOddLabel, FAQ_UPDATED_AT)['@graph'][0] as Node).mainEntity;
+    const answer = entities.find((q: Node) => q.url.endsWith('#wakacje-skladkowe')).acceptedAnswer.text;
+    expect(answer).toContain('<a href="https://www.zus.pl/a?b=1&amp;c=2">ZUS ] RWS &amp; de minimis</a>');
+  });
+
+  it('places the page under the home page in the breadcrumbs', () => {
+    const crumbs = byType(nodes, 'BreadcrumbList')!.itemListElement;
+    expect(crumbs.map((c: Node) => [c.position, c.name, c.item])).toEqual([
+      [1, locale === 'pl' ? 'Strona główna' : 'Головна', locale === 'pl' ? `${SITE_URL}/` : `${SITE_URL}/uk`],
+      [2, content.breadcrumb, url],
+    ]);
+  });
+
+  it('has no forbidden keys or phrases', () => {
+    for (const key of FORBIDDEN_KEYS) expect(keysDeep(doc)).not.toContain(key);
+    const json = JSON.stringify(doc);
+    for (const phrase of FORBIDDEN_PHRASES) expect(json).not.toMatch(phrase);
   });
 });

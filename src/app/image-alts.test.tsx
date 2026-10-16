@@ -7,6 +7,9 @@ import { Hero } from '@/components/home/Hero';
 import { WhyUs } from '@/components/home/WhyUs';
 import AboutClient from './(pl)/o-nas/AboutClient';
 import CertificatesClient from './(pl)/certyfikaty/CertificatesClient';
+import { CallbackProvider } from '@/components/callback-widget';
+import FaqPage from '@/components/faq/FaqPage';
+import { FAQ_UPDATED_AT, getFaqContent } from '@/content/faq';
 
 function altsOf(container: HTMLElement): Record<string, string | null> {
   return Object.fromEntries(
@@ -20,11 +23,15 @@ const ALTS = {
     hero: 'Dokumenty podatkowe, telefon z kalkulatorem i długopis',
     team: 'Zespół przy pracy w biurze',
     meeting: 'Troje uśmiechniętych osób przy stole z laptopami',
+    faqBuilding: 'Wejście do Biura Rachunkowego TEWU przy Al. Powstańców Wielkopolskich 78A w Szczecinie',
+    faqReception: 'Sylwester Wrzeszcz, Prezes Biura Rachunkowego TEWU, w recepcji biura',
   },
   uk: {
     hero: 'Податкові документи, телефон із калькулятором і ручка',
     team: 'Команда за роботою в офісі',
     meeting: 'Троє усміхнених людей за столом із ноутбуками',
+    faqBuilding: 'Вхід до бюро TEWU на Al. Powstańców Wielkopolskich 78A у Щецині',
+    faqReception: 'Голова бюро (Prezes) Sylwester Wrzeszcz у приймальні бюро TEWU',
   },
 };
 
@@ -41,6 +48,19 @@ describe.each(['pl', 'uk'] as Locale[])('image alt texts (%s)', (locale) => {
     expect(altsOf(container)).toEqual({
       '/img/stock/team-at-work.jpg': expected.team,
       '/img/stock/business-meeting.jpg': expected.meeting,
+    });
+  });
+
+  it('describes the office photos on the FAQ page', () => {
+    const { container } = renderWithMantine(
+      <CallbackProvider>
+        <FaqPage content={getFaqContent(locale)} updatedAt={FAQ_UPDATED_AT} />
+      </CallbackProvider>,
+      { locale }
+    );
+    expect(altsOf(container)).toEqual({
+      '/img/biuro/budynek.jpg': expected.faqBuilding,
+      '/img/biuro/recepcja.jpg': expected.faqReception,
     });
   });
 

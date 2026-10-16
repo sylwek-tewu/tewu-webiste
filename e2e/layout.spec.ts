@@ -10,6 +10,7 @@ const PAGES = [
   '/uslugi/inkubator-spolek', '/uk/uslugi/inkubator-spolek',
   '/o-nas', '/uk/o-nas',
   '/kontakt', '/uk/kontakt',
+  '/faq', '/uk/faq',
 ];
 
 // Phones, the mobile bar's last width, the burger range, and the header's tight points
@@ -28,8 +29,11 @@ async function measure(page: Page) {
       .filter((el) => el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1)
       .map((el) => el.textContent?.trim());
     // The header row has a fixed height, so a menu that wraps spills out of it instead of growing it.
-    const nav = document.querySelector('nav')!.getBoundingClientRect();
-    const outsideHeader = [...document.querySelectorAll('nav a, nav button')]
+    // Only the header's own items: the header row is the sticky <nav>; other <nav>s on a page
+    // (the FAQ category tiles) are not the menu.
+    const header = [...document.querySelectorAll('nav')].find((el) => getComputedStyle(el).position === 'sticky')!;
+    const nav = header.getBoundingClientRect();
+    const outsideHeader = [...header.querySelectorAll('a, button')]
       .filter(visible)
       .filter((el) => {
         const r = el.getBoundingClientRect();

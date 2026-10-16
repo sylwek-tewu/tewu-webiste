@@ -22,7 +22,7 @@ Reklamy Google Ads mają kierować na podstronę odpowiadającą wyszukiwanej fr
 - Treść opiera się na odpowiedziach TEWU z tego pliku. Wspólne fragmenty (czynniki ceny A2, przebieg wyceny A3, zmiana biura A4, przekazywanie dokumentów A8, odpowiedź o cenie) są w `{pl,uk}/shared.ts`, żeby każda podstrona mówiła to samo, co klient usłyszy przez telefon.
 - Numer telefonu na podstronach to numer komórkowy 501 482 555 (A6, `CONTACT_DETAILS.mobilePhone`); pod numerem jest informacja, że odbiera Prezes biura, Sylwester Wrzeszcz (uzupełnienie z 6.10.2026). Przycisk „Zadzwoń” w pasku widżetu na telefonach używa numeru z `NEXT_PUBLIC_CALLBACK_CALL_NUMBER` (domyślnie stacjonarny).
 - Pasek zaufania zaczyna się od „Bezpośredni kontakt z szefostwem biura” – wyróżnika wskazanego przez TEWU (A9). Pod paskiem jedno zdanie o klientach: duże spółki i jednoosobowe firmy z wielu branż (uzupełnienie A9).
-- FAQ jest w natywnych elementach `<details>`, żeby odpowiedzi były w HTML także po zwinięciu. Bez danych strukturalnych `FAQPage` – Google pokazuje dziś FAQ rich results prawie wyłącznie stronom rządowym i medycznym.
+- FAQ jest w natywnych elementach `<details>`, żeby odpowiedzi były w HTML także po zwinięciu. ~~Bez danych strukturalnych `FAQPage`~~ – zmienione w audycie SEO (`docs/seo/AUDYT_SEO.md`, pkt 2): podstrony mają `FAQPage`, choć Google pokazuje dziś FAQ rich results prawie wyłącznie stronom rządowym i medycznym. Akordeon jest od ADR 0005 wspólnym komponentem `FaqList`.
 
 ### 3. Atrybucja leadów
 - Każde otwarcie widżetu call-back na podstronie usługowej (dowolnym przyciskiem) dostaje `landingPage` wyliczone ze ścieżki w `CallbackProvider`. `source` dalej mówi, który przycisk kliknięto (CTA podstrony to `service`).

@@ -1,4 +1,9 @@
-.faqItem summary {
+/* Clear of the sticky 80 px header when /faq#id scrolls to a question */
+.item {
+  scroll-margin-top: 96px;
+}
+
+.item summary {
   cursor: pointer;
   list-style: none;
   display: flex;
@@ -8,16 +13,16 @@
   color: var(--mantine-color-slate-9);
 }
 
-.faqItem summary::-webkit-details-marker {
+.item summary::-webkit-details-marker {
   display: none;
 }
 
-.faqItem summary::after {
+.item summary::after {
   content: '+';
   font-weight: 400;
   color: var(--mantine-color-brandBlue-6);
 }
 
-.faqItem[open] summary::after {
+.item[open] summary::after {
   content: '−';
 }

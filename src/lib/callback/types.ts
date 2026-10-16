@@ -45,7 +45,7 @@ export const CALLBACK_TOPICS: { id: CallbackTopic; label: string }[] = [
 ];
 
 /** Where the widget was opened from. Anything else is recorded as 'unknown'. */
-export const CALLBACK_SOURCES = ['header', 'floating', 'contact', 'hero', 'service', 'link'] as const;
+export const CALLBACK_SOURCES = ['header', 'floating', 'contact', 'hero', 'service', 'link', 'faq'] as const;
 
 export type CallbackSource = (typeof CALLBACK_SOURCES)[number];
 
@@ -61,6 +61,7 @@ export const CALLBACK_SOURCE_LABELS: Record<CallbackSource | 'unknown', string> 
   contact: 'Przycisk na stronie Kontakt',
   hero: 'Przycisk na górze strony głównej',
   link: 'Udostępniony link (klient wszedł z adresu otwierającego formularz, np. z reklamy, maila lub QR)',
+  faq: 'Przycisk „Bezpłatna wycena – oddzwonimy” na stronie FAQ',
   unknown: 'Nieznane',
 };
 

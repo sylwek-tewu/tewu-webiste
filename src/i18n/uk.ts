@@ -37,6 +37,7 @@ export const ukTranslations: Translations = {
     servicesTitle: 'Послуги',
     contactTitle: 'Контакти',
     bpoOutsourcing: 'Аутсорсинг BPO',
+    faq: 'Поширені запитання (FAQ)',
     privacyPolicy: 'Політика конфіденційності',
     allRightsReserved: 'Усі права захищені.',
   },
@@ -405,7 +406,7 @@ export const ukTranslations: Translations = {
   },
   privacyPolicy: {
     metaTitle: 'Політика конфіденційності | Biuro Rachunkowe TEWU',
-    metaDescription: 'Правила обробки та захисту персональних даних в Biuro Rachunkowe TEWU Sp. z o.o. у Щецині (Польща).',
+    metaDescription: 'Як Biuro Rachunkowe TEWU у Щецині обробляє персональні дані: адміністратор, цілі, обсяг даних, одержувачі, строк зберігання, ваші права та файли cookie.',
     headerTitle: 'Політика конфіденційності',
     headerSubtitle: 'Biuro Rachunkowe TEWU Sp. z o.o. • Останнє оновлення: 3 жовтня 2026 р.',
     legalNoteUk: 'Зверніть увагу: цей текст є перекладом для вашої зручності. У разі розбіжностей між версіями або спорів щодо тлумачення переважну силу має оригінальна версія польською мовою.',

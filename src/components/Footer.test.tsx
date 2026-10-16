@@ -31,6 +31,25 @@ describe.each(['pl', 'uk'] as Locale[])('Footer (%s)', (locale) => {
     expect(screen.getByRole('link', { name: incubator.label })).toHaveAttribute('href', incubator.path);
   });
 
+  it('links the FAQ page in the navigation column, right before the privacy policy', () => {
+    const { container } = renderWithMantine(<Footer />, { locale });
+    const faqPath = locale === 'uk' ? '/uk/faq' : '/faq';
+    const faq = screen.getByRole('link', { name: t.footer.faq });
+    expect(faq).toHaveAttribute('href', faqPath);
+    const column = faq.parentElement!;
+    const links = [...column.querySelectorAll('a')].map((a) => a.getAttribute('href'));
+    expect(links.indexOf(faqPath)).toBe(links.indexOf(locale === 'uk' ? '/uk/polityka-prywatnosci' : '/polityka-prywatnosci') - 1);
+    expect(container.querySelectorAll(`a[href="${faqPath}"]`)).toHaveLength(1);
+  });
+
+  it('keeps the FAQ page out of the main menu', () => {
+    expect(t.nav.links.map((link) => link.path)).not.toContain(locale === 'uk' ? '/uk/faq' : '/faq');
+  });
+
+  it('names the FAQ link as agreed', () => {
+    expect(t.footer.faq).toBe(locale === 'uk' ? 'Поширені запитання (FAQ)' : 'Częste pytania (FAQ)');
+  });
+
   it('lists the office phones before the mobile one, each as a tel: link', () => {
     const { container } = renderWithMantine(<Footer />, { locale });
     const links = [...container.querySelectorAll('a[href^="tel:"]')];

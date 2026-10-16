@@ -21,6 +21,10 @@ beforeAll(async () => {
       res.writeHead(200, { 'content-type': 'application/xml' });
       return res.end(`<urlset>${state.sitemap.map((u) => `<url><loc>${u}</loc></url>`).join('')}</urlset>`);
     }
+    if (path === '/llms.txt') {
+      res.writeHead(200, { 'content-type': 'text/plain; charset=utf-8' });
+      return res.end(`# Biuro Rachunkowe TEWU\n\n- [FAQ](${ORIGIN}/faq)\n`);
+    }
     if (path === '/robots.txt') return res.end(`User-Agent: *\nAllow: /\n\nSitemap: ${ORIGIN}/sitemap.xml\n`);
     if (path === WWW_REDIRECT_PATH) {
       res.writeHead(host === `www.${PROD_HOST}` ? 308 : 200, { location: `${ORIGIN}${WWW_REDIRECT_PATH}` });
@@ -75,6 +79,7 @@ describe('runSeoCheck', () => {
 
     expect(hostsOf('/sitemap.xml')).toEqual([PROD_HOST]);
     expect(hostsOf('/robots.txt')).toEqual([PROD_HOST]);
+    expect(hostsOf('/llms.txt')).toEqual([PROD_HOST]);
     expect(hostsOf('/nie-istnieje-seo-check')).toEqual([PROD_HOST]);
     expect(hostsOf('/o-nas')).toEqual([PROD_HOST]);
     expect(hostsOf('/opengraph-image-35ziip')).toEqual([PROD_HOST]);

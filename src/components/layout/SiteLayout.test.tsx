@@ -40,4 +40,12 @@ describe('SiteLayout', () => {
 
     expect(document.documentElement).toHaveAttribute('data-mantine-color-scheme', 'light');
   });
+
+  // The FAQ page scrolls smoothly to its sections; without the attribute, opening it from a link
+  // would also glide to the top instead of starting there.
+  it('lets Next turn smooth scrolling off on route changes', () => {
+    const layout = SiteLayout({ lang: 'pl', LocaleProvider: Passthrough, children: null }) as React.ReactElement<Record<string, unknown>>;
+    expect(layout.type).toBe('html');
+    expect(layout.props['data-scroll-behavior']).toBe('smooth');
+  });
 });

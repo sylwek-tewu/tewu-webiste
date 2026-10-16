@@ -152,6 +152,15 @@ pnpm lint
 pnpm build
 ```
 
+### Aktualizacja FAQ (kwoty i terminy)
+
+Strona `/faq` podaje kwoty i terminy z przepisów (składki ZUS, limit zwolnienia z VAT, próg 15 000 zł, termin zgłoszenia rachunku) i pokazuje datę ich sprawdzenia. **Sprawdzaj je przy każdej aktualizacji zależności w `package.json`**, a obowiązkowo w styczniu (nowa płaca minimalna i składki ZUS):
+
+1. Otwórz źródła przy pytaniach w `src/content/faq/pl.ts` (pole `sources`): biznes.gov.pl, podatki.gov.pl, zus.pl.
+2. Popraw kwoty w `src/content/faq/pl.ts` i `src/content/faq/uk.ts`.
+3. Zmień `FAQ_UPDATED_AT` w `src/content/faq/index.ts` na dzień sprawdzenia (także gdy nic się nie zmieniło – data mówi czytelnikowi, że treść jest aktualna).
+4. `pnpm test` – test treści pilnuje, żeby każda kwota miała źródło.
+
 ### Testy układu w przeglądarce (Playwright):
 Sprawdzają na zbudowanej aplikacji, że nagłówek mieści się w jednym wierszu, żadna strona nie przewija się w bok i żaden przycisk nie ma uciętego napisu (ADR 0004 §4). Wymagają wcześniejszego `pnpm build`; serwer uruchamiają same.
 ```bash

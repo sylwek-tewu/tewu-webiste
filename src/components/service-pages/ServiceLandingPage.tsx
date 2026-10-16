@@ -2,61 +2,19 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Award, Briefcase, Building2, CheckCircle2, Handshake, Phone, ShieldCheck } from 'lucide-react';
-import { Anchor, Box, Button, Container, Flex, Group, List, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
-import { COMPANY, telHref } from '@/lib/company';
+import { Award, Briefcase, Building2, CheckCircle2, Handshake, ShieldCheck } from 'lucide-react';
+import { Anchor, Box, Container, Flex, List, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { RELATED_SERVICE_PAGES, SERVICE_PAGES, servicePagePath, type ServicePageSlug } from '@/lib/service-pages';
-import { useLocale } from '@/i18n/LocaleContext';
-import { useCallbackWidget } from '@/components/callback-widget';
-import { wrappingButtonStyles } from '@/components/layout/wrappingButtonStyles';
+import { localizePath, useLocale } from '@/i18n/LocaleContext';
+import { FaqList } from '@/components/faq/FaqList';
+import { QuoteActions } from '@/components/QuoteActions';
 import type { ServicePageContent } from '@/content/service-pages/types';
-import classes from './ServiceLandingPage.module.css';
-
-/** The quote button (opens the callback widget) and the office's mobile number, shown on dark backgrounds. */
-function QuoteActions({ variant }: { variant: 'primary' | 'white' }) {
-  const { t, locale } = useLocale();
-  const { openWidget } = useCallbackWidget();
-  const contactPath = locale === 'uk' ? '/uk/kontakt' : '/kontakt';
-
-  return (
-    <Group justify="center" gap="lg" wrap="wrap">
-      <Button
-        component={Link}
-        href={contactPath}
-        onClick={(e) => {
-          e.preventDefault();
-          openWidget('service');
-        }}
-        size="lg"
-        radius="md"
-        fw={800}
-        // An explicit variant overrides the theme's default slate-9: `filled` gives the primary blue
-        // with its hover colour (a `bg` prop would set the background inline and kill the hover).
-        variant={variant === 'white' ? 'white' : 'filled'}
-        py={10}
-        styles={wrappingButtonStyles}
-        rightSection={<ArrowRight size={18} />}
-      >
-        {t.servicePages.ctaButton}
-      </Button>
-      <Stack gap={4} align="center">
-        <Group gap={8} justify="center" c="white">
-          <Phone size={20} aria-hidden="true" />
-          <Text span c="blue.0" style={{ whiteSpace: 'nowrap' }}>{t.servicePages.phonePrompt}</Text>
-          <Anchor href={telHref(COMPANY.phones.mobile[0])} c="white" fw={800} fz="lg" underline="hover" style={{ whiteSpace: 'nowrap' }}>
-            {COMPANY.phones.mobile[0].display}
-          </Anchor>
-        </Group>
-        <Text size="sm" c="blue.0" ta="center">{t.servicePages.phoneAnswer}</Text>
-      </Stack>
-    </Group>
-  );
-}
 
 function CheckList({ title, items }: { title: string; items: string[] }) {
   return (
     <Box>
-      <Title order={2} fw={900} c="slate.9" mb="lg" fz={{ base: 'xl', md: '1.75rem' }}>
+      {/* Two lists side by side, so smaller than the section titles (h2 never goes below 30 px, h4 is 24 px) */}
+      <Title order={2} size="h4" c="slate.9" mb="lg">
         {title}
       </Title>
       <List
@@ -83,7 +41,7 @@ function SeeAlso({ slug }: { slug: ServicePageSlug }) {
   return (
     <Box component="section" py={{ base: 64, md: 96 }}>
       <Container size="lg" px="md">
-        <Title order={2} fw={900} c="slate.9" mb="xl" ta="center" fz={{ base: 'xl', md: '2rem' }}>
+        <Title order={2} c="slate.9" mb="xl" ta="center">
           {t.servicePages.seeAlsoTitle}
         </Title>
         <SimpleGrid cols={{ base: 1, md: RELATED_SERVICE_PAGES[slug].length }} spacing="lg">
@@ -133,19 +91,19 @@ function TrustItem({ icon, value, label }: { icon: React.ReactNode; value?: stri
 export default function ServiceLandingPage({ content }: { content: ServicePageContent }) {
   const { t, locale } = useLocale();
   const stats = t.home.hero.stats;
-  const certificatesPath = locale === 'uk' ? '/uk/certyfikaty' : '/certyfikaty';
+  const certificatesPath = localizePath('/certyfikaty', locale);
 
   return (
     <Stack gap={0} bg="white">
       <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
         <Container size="md" px="md">
-          <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2rem, 5vw, 3.25rem)', letterSpacing: '-0.025em' }}>
+          <Title order={1} c="white" mb="md" lts="-0.025em">
             {content.hero.title}
           </Title>
           <Text size="xl" c="slate.4" mb="xl">
             {content.hero.lead}
           </Text>
-          <QuoteActions variant="primary" />
+          <QuoteActions variant="primary" source="service" />
         </Container>
       </Box>
 
@@ -184,7 +142,7 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
 
       <Box component="section" py={{ base: 64, md: 96 }} bg="slate.0">
         <Container size="lg" px="md">
-          <Title order={2} fw={900} c="slate.9" mb="xl" ta="center" fz={{ base: 'xl', md: '2rem' }}>
+          <Title order={2} c="slate.9" mb="xl" ta="center">
             {content.pricing.title}
           </Title>
           <SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl">
@@ -231,7 +189,7 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
 
       <Box component="section" py={{ base: 64, md: 96 }}>
         <Container size="xl" px="md">
-          <Title order={2} fw={900} c="slate.9" mb="xl" ta="center" fz={{ base: 'xl', md: '2rem' }}>
+          <Title order={2} c="slate.9" mb="xl" ta="center">
             {content.steps.title}
           </Title>
           <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
@@ -252,20 +210,10 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
 
       <Box component="section" py={{ base: 64, md: 96 }} bg="slate.0">
         <Container size="md" px="md">
-          <Title order={2} fw={900} c="slate.9" mb="xl" ta="center" fz={{ base: 'xl', md: '2rem' }}>
+          <Title order={2} c="slate.9" mb="xl" ta="center">
             {content.faq.title}
           </Title>
-          <Stack gap="sm">
-            {/* Native <details>: answers stay in the HTML for search engines and work without JavaScript */}
-            {content.faq.items.map(({ question, answer }) => (
-              <Paper key={question} component="details" p="lg" radius="md" withBorder className={classes.faqItem}>
-                <summary>{question}</summary>
-                <Text mt="sm" c="slate.7">
-                  {answer}
-                </Text>
-              </Paper>
-            ))}
-          </Stack>
+          <FaqList items={content.faq.items} />
         </Container>
       </Box>
 
@@ -273,13 +221,13 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
 
       <Box component="section" py={{ base: 64, md: 96 }} bg="brandBlue.6" ta="center">
         <Container size="md" px="md">
-          <Title order={2} c="white" fw={900} mb="md" fz={{ base: 'xl', md: '2.25rem' }}>
+          <Title order={2} c="white" mb="md">
             {t.servicePages.finalCta.title}
           </Title>
-          <Text c="blue.0" size="lg" mb="xl">
+          <Text c="brandBlue.0" size="lg" mb="xl">
             {t.servicePages.finalCta.description}
           </Text>
-          <QuoteActions variant="white" />
+          <QuoteActions variant="white" source="service" />
         </Container>
       </Box>
     </Stack>
