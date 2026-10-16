@@ -13,7 +13,7 @@ TEWU przekazało szkic strony z odpowiedziami na częste pytania o księgowość
 - Link tylko w stopce, w kolumnie „Nawigacja”, przed „Polityką prywatności”: „Częste pytania (FAQ)” / „Поширені запитання (FAQ)”. Nie ma go w menu ani na stronie głównej, więc nagłówek (ADR 0004 §4) się nie zmienia. Strona jest w `sitemap.xml` i w `/llms.txt`.
 
 ### 2. Model treści
-- Treść w typowanych modułach `src/content/faq/{pl,uk}.ts`, nie w słownikach (ten sam powód co w ADR 0004 §2). Czytają je tylko serwerowe `page.tsx`; klienckie `FaqPage` dostaje treść przez props.
+- Treść w typowanych modułach `src/content/faq/{pl,uk}.ts`, nie w słownikach (ten sam powód co w ADR 0004 §2). Czytają je tylko serwerowe `page.tsx` i przekazują przez props do `FaqPage`. `FaqPage` też renderuje się na serwerze; po stronie klienta działa tylko `OpenQuestionFromHash` (otwiera pytanie z `#hash`) oraz przyciski i linki, które same są komponentami klienckimi.
 - 5 kategorii, każda z H2 i ikoną. Pytanie ma stały, polski identyfikator (np. `ulga-na-start`), taki sam w obu językach. `/faq#ulga-na-start` otwiera i przewija do odpowiedzi. Kolejność pytań może się różnić między językami: w UK pytanie o rozmowę po ukraińsku jest pierwsze w kategorii „O Biurze TEWU”.
 - Odpowiedzi używają dwóch znaczników: `[tekst](/ścieżka)` (link) i `**tekst**` (pogrubienie). Jeden parser (`src/lib/rich-text.ts`) zasila stronę i HTML odpowiedzi w JSON-LD.
 - Kwoty i terminy (ZUS, VAT, rachunki) zostają w treści, bo strona pokazuje datę aktualizacji (`FAQ_UPDATED_AT`, z niej także `dateModified`). Odpowiedź z kwotą lub terminem musi mieć źródło urzędowe (biznes.gov.pl, podatki.gov.pl, zus.pl) – pilnuje tego test. Procedura aktualizacji jest w README („Aktualizacja FAQ”).

@@ -22,3 +22,8 @@ export function pluralForm(locale: Locale, n: number): keyof PluralForms {
 export function formatCount(locale: Locale, n: number, forms: PluralForms): string {
   return `${n} ${forms[pluralForm(locale, n)]}`;
 }
+
+/** A label with only a singular and a plural, such as „Źródło” / „Źródła” before a list of links. */
+export function singularOrPlural(n: number, forms: { one: string; many: string }): string {
+  return n === 1 ? forms.one : forms.many;
+}

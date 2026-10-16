@@ -26,7 +26,9 @@ export default function SiteLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang={lang} {...mantineHtmlProps}>
+        // data-scroll-behavior: the FAQ page scrolls smoothly to its sections, so Next turns smooth
+        // scrolling off while it moves to the top of a newly opened page.
+        <html lang={lang} {...mantineHtmlProps} data-scroll-behavior="smooth">
             <head>
                 <ColorSchemeScript forceColorScheme="light" />
             </head>

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { PAGE_PATHS } from '@/app/sitemap';
+import { PAGE_PATHS } from '@/lib/site-pages';
 import { localizePath } from '@/i18n/config';
 import type { Locale } from '@/i18n/types';
 import { isExternalHref, parseRichText } from '@/lib/rich-text';

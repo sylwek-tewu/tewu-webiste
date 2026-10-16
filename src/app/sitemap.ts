@@ -1,20 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/constants';
-import { SERVICE_PAGE_SLUGS } from '@/lib/service-pages';
-
-// Polish paths; each page also exists under /uk with the same slug (ADR 0002).
-// sitemap.test.ts compares this list with the page routes in src/app.
-export const PAGE_PATHS = [
-  '/',
-  '/o-nas',
-  '/uslugi',
-  ...SERVICE_PAGE_SLUGS.map((slug) => `/uslugi/${slug}`),
-  '/outsourcing',
-  '/certyfikaty',
-  '/kontakt',
-  '/faq',
-  '/polityka-prywatnosci',
-];
+import { PAGE_PATHS } from '@/lib/site-pages';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return PAGE_PATHS.flatMap((path) => {

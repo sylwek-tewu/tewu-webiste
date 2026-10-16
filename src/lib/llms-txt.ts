@@ -1,9 +1,10 @@
-import { PAGE_PATHS } from '@/app/sitemap';
 import { SITE_URL } from '@/constants';
+import { localizePath } from '@/i18n/config';
 import { FAQ_UPDATED_AT } from '@/content/faq';
 import { COMPANY } from '@/lib/company';
 import { formatLongDate } from '@/lib/format-date';
 import { SERVICE_PAGES, SERVICE_PAGE_SLUGS } from '@/lib/service-pages';
+import { FAQ_PATH, PAGE_PATHS } from '@/lib/site-pages';
 
 /**
  * /llms.txt (llmstxt.org): what the office is and which pages answer what, for AI assistants.
@@ -21,7 +22,7 @@ const PAGES: Record<string, { name: string; description: string }> = {
   '/outsourcing': { name: 'Outsourcing', description: 'outsourcing księgowości i procesów back-office' },
   '/certyfikaty': { name: 'Certyfikaty', description: 'Certyfikat Księgowy Ministerstwa Finansów i świadectwo kwalifikacyjne' },
   '/kontakt': { name: 'Kontakt', description: 'adres, telefony, e-mail, godziny otwarcia i mapa dojazdu' },
-  '/faq': {
+  [FAQ_PATH]: {
     name: 'Częste pytania (FAQ)',
     // The date the amounts were checked, not "this year": the line stays true if nobody updates them
     description: `JDG czy spółka, forma opodatkowania, zwolnienie z VAT, ulgi w ZUS, rachunek firmowy, KSeF – kwoty i terminy ze źródłami urzędowymi, stan na ${formatLongDate('pl', FAQ_UPDATED_AT)}`,
@@ -55,7 +56,7 @@ export function buildLlmsTxt(): string {
     '## Wersja ukraińska',
     '',
     `- [Головна](${url('/uk')}): бухгалтерське бюро в Щецині, обслуговування українською`,
-    `- [Поширені запитання (FAQ)](${url('/uk/faq')}): JDG чи Sp. z o.o., форма оподаткування, VAT, ZUS, рахунок, KSeF`,
+    `- [Поширені запитання (FAQ)](${url(localizePath(FAQ_PATH, 'uk'))}): JDG чи Sp. z o.o., форма оподаткування, VAT, ZUS, рахунок, KSeF`,
     '',
     '## Optional',
     '',

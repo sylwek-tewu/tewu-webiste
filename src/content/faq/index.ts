@@ -1,14 +1,12 @@
 import type { Metadata } from 'next';
 import type { Locale } from '@/i18n/types';
 import { buildPageMetadata } from '@/lib/metadata';
+import { FAQ_PATH } from '@/lib/site-pages';
 import type { FaqPageContent } from './types';
 import { PL_FAQ } from './pl';
 import { UK_FAQ } from './uk';
 
 // Server-only: imported by the /faq pages, which pass the copy to FaqPage.
-
-/** Polish path of the FAQ page; the Ukrainian one is /uk/faq (ADR 0002). */
-export const FAQ_PATH = '/faq';
 
 /**
  * The day the answers were last checked against the law: shown under the H1 and sent as

@@ -6,9 +6,10 @@ import { ArrowRight, Phone } from 'lucide-react';
 import { Anchor, Button, Group, Stack, Text } from '@mantine/core';
 import { COMPANY, telHref } from '@/lib/company';
 import type { CallbackSource } from '@/lib/callback/types';
-import { useLocale } from '@/i18n/LocaleContext';
+import { localizePath, useLocale } from '@/i18n/LocaleContext';
 import { useCallbackWidget } from '@/components/callback-widget';
 import { wrappingButtonStyles } from '@/components/layout/wrappingButtonStyles';
+import classes from './QuoteActions.module.css';
 
 interface QuoteActionsProps {
   variant: 'primary' | 'white';
@@ -21,8 +22,7 @@ interface QuoteActionsProps {
 export function QuoteActions({ variant, source, justify = 'center' }: QuoteActionsProps) {
   const { t, locale } = useLocale();
   const { openWidget } = useCallbackWidget();
-  const contactPath = locale === 'uk' ? '/uk/kontakt' : '/kontakt';
-  const align = justify === 'center' ? 'center' : 'flex-start';
+  const contactPath = localizePath('/kontakt', locale);
 
   return (
     <Group justify={justify} gap="lg" wrap="wrap">
@@ -45,15 +45,15 @@ export function QuoteActions({ variant, source, justify = 'center' }: QuoteActio
       >
         {t.servicePages.ctaButton}
       </Button>
-      <Stack gap={4} align={align}>
+      <Stack gap={4} align={justify}>
         <Group gap={8} justify={justify} c="white">
           <Phone size={20} aria-hidden="true" />
-          <Text span c="blue.0" style={{ whiteSpace: 'nowrap' }}>{t.servicePages.phonePrompt}</Text>
-          <Anchor href={telHref(COMPANY.phones.mobile[0])} c="white" fw={800} fz="lg" underline="hover" style={{ whiteSpace: 'nowrap' }}>
+          <Text span c="brandBlue.0" className={classes.nowrap}>{t.servicePages.phonePrompt}</Text>
+          <Anchor href={telHref(COMPANY.phones.mobile[0])} c="white" fw={800} fz="lg" underline="hover" className={classes.nowrap}>
             {COMPANY.phones.mobile[0].display}
           </Anchor>
         </Group>
-        <Text size="sm" c="blue.0" ta={justify === 'center' ? 'center' : 'left'}>{t.servicePages.phoneAnswer}</Text>
+        <Text size="sm" c="brandBlue.0" ta={justify === 'center' ? 'center' : 'left'}>{t.servicePages.phoneAnswer}</Text>
       </Stack>
     </Group>
   );

@@ -1,5 +1,3 @@
-"use client";
-
 import React from 'react';
 import { Box, Paper, Stack } from '@mantine/core';
 import classes from './FaqList.module.css';

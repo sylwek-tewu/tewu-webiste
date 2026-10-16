@@ -7,16 +7,17 @@ import { COMPANY, telHref } from '@/lib/company';
 import { Box, Container, SimpleGrid, Stack, Text, Group, Anchor } from '@mantine/core';
 import classes from './layout/Layout.module.css';
 import { TewuLogo } from './icons';
-import { useLocale } from '@/i18n/LocaleContext';
+import { localizePath, useLocale } from '@/i18n/LocaleContext';
 import { SERVICE_PAGE_SLUGS, servicePagePath } from '@/lib/service-pages';
+import { FAQ_PATH } from '@/lib/site-pages';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
 const Footer: React.FC = () => {
   const { t, locale } = useLocale();
-  const privacyPath = locale === 'uk' ? '/uk/polityka-prywatnosci' : '/polityka-prywatnosci';
-  const outsourcingPath = locale === 'uk' ? '/uk/outsourcing' : '/outsourcing';
-  const faqPath = locale === 'uk' ? '/uk/faq' : '/faq';
+  const privacyPath = localizePath('/polityka-prywatnosci', locale);
+  const outsourcingPath = localizePath('/outsourcing', locale);
+  const faqPath = localizePath(FAQ_PATH, locale);
 
   return (
     <Box component="footer" bg="slate.9" c="slate.3">

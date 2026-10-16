@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { PAGE_PATHS } from '@/app/sitemap';
+import { PAGE_PATHS } from '@/lib/site-pages';
 import { SITE_URL } from '@/constants';
 import { COMPANY } from '@/lib/company';
 import { FAQ_UPDATED_AT } from '@/content/faq';

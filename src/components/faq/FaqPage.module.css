@@ -23,8 +23,8 @@
   pointer-events: none;
 }
 
-/* Same grey as the disclaimer around it, white on hover. Anchor with `inherit` sets an inline
-   `color: var(--anchor-text-color, inherit)`, so only that variable can change its colour. */
+/* Same grey as the disclaimer around it, white on hover. The theme gives every Anchor the inline
+   `color: var(--anchor-text-color, inherit)` (theme.ts), so only that variable can change its colour. */
 .disclaimerLink {
   transition: color 150ms ease;
 }
@@ -32,6 +32,10 @@
 .disclaimerLink:hover,
 .disclaimerLink:focus-visible {
   --anchor-text-color: var(--mantine-color-white);
+}
+
+.besidePhoto {
+  align-items: center;
 }
 
 .photo {

@@ -4,9 +4,11 @@ import type { Locale } from '@/i18n/types';
 import { COMPANY } from '@/lib/company';
 import { OG_IMAGE_PATH } from '@/lib/og-image-meta';
 import { SERVICE_PAGES, servicePagePath, type ServicePageSlug } from '@/lib/service-pages';
+import { FAQ_PATH } from '@/lib/site-pages';
 import type { ServicePageContent } from '@/content/service-pages/types';
 import type { FaqPageContent, FaqQuestion } from '@/content/faq/types';
 import { OFFICE_PHOTOS } from '@/lib/office-photos';
+import { singularOrPlural } from '@/lib/plural';
 import { linkToHtml, richTextToHtml } from '@/lib/rich-text';
 
 /**
@@ -145,7 +147,7 @@ export function buildServicePageJsonLd({ locale, slug, meta, hero, faq }: Servic
 function faqAnswerHtml({ answer, sources }: FaqQuestion, sourcesLabel: FaqPageContent['sourcesLabel']): string {
   const paragraphs = answer.map((paragraph) => `<p>${richTextToHtml(paragraph, SITE_URL)}</p>`);
   if (sources?.length) {
-    const label = sources.length === 1 ? sourcesLabel.one : sourcesLabel.many;
+    const label = singularOrPlural(sources.length, sourcesLabel);
     const links = sources.map(({ label: text, href }) => linkToHtml(text, href, SITE_URL)).join(', ');
     paragraphs.push(`<p>${label}: ${links}</p>`);
   }
@@ -158,7 +160,7 @@ function faqAnswerHtml({ answer, sources }: FaqQuestion, sourcesLabel: FaqPageCo
  */
 export function buildFaqPageJsonLd(content: FaqPageContent, updatedAt: string) {
   const { locale } = content;
-  const url = absolute(localizePath('/faq', locale));
+  const url = absolute(localizePath(FAQ_PATH, locale));
   const questions = content.categories.flatMap((category) => category.questions);
   return {
     '@context': 'https://schema.org',

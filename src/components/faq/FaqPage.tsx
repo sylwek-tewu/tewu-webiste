@@ -1,15 +1,15 @@
-"use client";
-
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Anchor, Badge, Box, Container, Group, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { Building2, HandCoins, Landmark, MessageCircleQuestionMark, ReceiptText, Rocket, type LucideIcon } from 'lucide-react';
 import { FaqList } from '@/components/faq/FaqList';
+import { OpenQuestionFromHash } from '@/components/faq/OpenQuestionFromHash';
 import { QuoteActions } from '@/components/QuoteActions';
 import { RichText } from '@/components/RichText';
+import { TextLink } from '@/components/TextLink';
 import type { FaqCategoryId, FaqPageContent, FaqQuestion } from '@/content/faq/types';
 import { formatLongDate } from '@/lib/format-date';
 import { OFFICE_PHOTOS, type OfficePhoto } from '@/lib/office-photos';
-import { formatCount } from '@/lib/plural';
+import { formatCount, singularOrPlural } from '@/lib/plural';
 import classes from './FaqPage.module.css';
 
 /** Anchor of the closing contact section; outside the question and category id namespace. */
@@ -22,24 +22,6 @@ const CATEGORY_ICONS: Record<FaqCategoryId, LucideIcon> = {
   zus: HandCoins,
   'rachunek-firmowy': Landmark,
 };
-
-/** Opens the question named in the URL hash (/faq#ulga-na-start), on load and on later hash changes. */
-function useOpenQuestionFromHash() {
-  useEffect(() => {
-    const openFromHash = () => {
-      // No decodeURIComponent: question ids are ASCII kebab-case (content test), and decoding a
-      // stray "%" (/faq#100%) would throw and take the whole page down.
-      const id = window.location.hash.slice(1);
-      const target = id ? document.getElementById(id) : null;
-      if (!(target instanceof HTMLDetailsElement)) return;
-      target.open = true;
-      target.scrollIntoView?.({ block: 'start' });
-    };
-    openFromHash();
-    window.addEventListener('hashchange', openFromHash);
-    return () => window.removeEventListener('hashchange', openFromHash);
-  }, []);
-}
 
 function Photo({ photo, alt, priority = false }: { photo: OfficePhoto; alt: string; priority?: boolean }) {
   return (
@@ -60,6 +42,15 @@ function Photo({ photo, alt, priority = false }: { photo: OfficePhoto; alt: stri
   );
 }
 
+/** Text beside an office photo, stacked on phones: the hero and the closing contact section. */
+function BesidePhoto({ children }: { children: React.ReactNode }) {
+  return (
+    <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: 40, md: 64 }} className={classes.besidePhoto}>
+      {children}
+    </SimpleGrid>
+  );
+}
+
 function Answer({ question, sourcesLabel }: { question: FaqQuestion; sourcesLabel: FaqPageContent['sourcesLabel'] }) {
   return (
     <Stack gap="xs">
@@ -70,13 +61,11 @@ function Answer({ question, sourcesLabel }: { question: FaqQuestion; sourcesLabe
       ))}
       {question.sources && (
         <Text size="sm" c="slate.6">
-          {question.sources.length === 1 ? sourcesLabel.one : sourcesLabel.many}:{' '}
+          {singularOrPlural(question.sources.length, sourcesLabel)}:{' '}
           {question.sources.map((source, i) => (
             <React.Fragment key={source.href}>
               {i > 0 && ', '}
-              <Anchor href={source.href} target="_blank" rel="noopener noreferrer" c="brandBlue.7" underline="always">
-                {source.label}
-              </Anchor>
+              <TextLink href={source.href}>{source.label}</TextLink>
             </React.Fragment>
           ))}
         </Text>
@@ -87,19 +76,18 @@ function Answer({ question, sourcesLabel }: { question: FaqQuestion; sourcesLabe
 
 export default function FaqPage({ content, updatedAt }: { content: FaqPageContent; updatedAt: string }) {
   const { locale, hero, categories, cta } = content;
-  useOpenQuestionFromHash();
-
   return (
     <Stack gap={0} bg="white" className={classes.page}>
+      <OpenQuestionFromHash />
       <Box component="section" bg="slate.9" py={{ base: 56, md: 88 }} className={classes.hero}>
         <MessageCircleQuestionMark aria-hidden="true" className={classes.heroMotif} />
         <Container size="xl" px="md" pos="relative">
-          <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: 40, md: 64 }} style={{ alignItems: 'center' }}>
+          <BesidePhoto>
             <Box>
-              <Badge size="lg" variant="filled" color="blue.0" c="blue.7" radius="lg" mb="md">
+              <Badge variant="filled" color="brandBlue.0" c="brandBlue.7" radius="lg" mb="md">
                 {hero.badge}
               </Badge>
-              <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2rem, 5vw, 3.25rem)', letterSpacing: '-0.025em' }}>
+              <Title order={1} c="white" mb="md" lts="-0.025em">
                 {hero.title}
               </Title>
               <Text size="xl" c="slate.4" mb="lg">
@@ -116,7 +104,7 @@ export default function FaqPage({ content, updatedAt }: { content: FaqPageConten
               </Text>
             </Box>
             <Photo photo={OFFICE_PHOTOS.exterior} alt={hero.imageAlt} priority />
-          </SimpleGrid>
+          </BesidePhoto>
         </Container>
       </Box>
 
@@ -181,18 +169,18 @@ export default function FaqPage({ content, updatedAt }: { content: FaqPageConten
 
       <Box component="section" id={CONTACT_ID} py={{ base: 64, md: 96 }} bg="brandBlue.6" className={classes.category}>
         <Container size="xl" px="md">
-          <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: 40, md: 64 }} style={{ alignItems: 'center' }}>
+          <BesidePhoto>
             <Box>
               <Title order={2} c="white" fw={900} mb="md" fz={{ base: 'xl', md: '2.25rem' }}>
                 {cta.title}
               </Title>
-              <Text c="blue.0" size="lg" mb="xl">
+              <Text c="brandBlue.0" size="lg" mb="xl">
                 {cta.description}
               </Text>
               <QuoteActions variant="white" source="faq" justify="flex-start" />
             </Box>
             <Photo photo={OFFICE_PHOTOS.reception} alt={cta.imageAlt} />
-          </SimpleGrid>
+          </BesidePhoto>
         </Container>
       </Box>
     </Stack>

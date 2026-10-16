@@ -223,7 +223,7 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
           <Title order={2} c="white" fw={900} mb="md" fz={{ base: 'xl', md: '2.25rem' }}>
             {t.servicePages.finalCta.title}
           </Title>
-          <Text c="blue.0" size="lg" mb="xl">
+          <Text c="brandBlue.0" size="lg" mb="xl">
             {t.servicePages.finalCta.description}
           </Text>
           <QuoteActions variant="white" source="service" />
