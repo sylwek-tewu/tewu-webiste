@@ -252,7 +252,8 @@ export const PL_FAQ: FaqPageContent = {
             { label: 'biznes.gov.pl – zmiana danych w CEIDG', href: 'https://www.biznes.gov.pl/pl/portal/ou737' },
             { label: 'biznes.gov.pl – aktualizacja NIP-8', href: 'https://www.biznes.gov.pl/pl/portal/ou349' },
             // The forms have fields for foreign accounts and the account currency; CEIDG-RB asks for the bank's country and SWIFT
-            { label: 'biznes.gov.pl – formularz CEIDG-RB', href: 'https://www.biznes.gov.pl/pl/portal/ou1478' },
+            { label: 'biznes.gov.pl – zgłoszenie NIP-8 (dane uzupełniające KRS)', href: 'https://www.biznes.gov.pl/pl/portal/ou1478' },
+            { label: 'biznes.gov.pl – formularz CEIDG-RB (PDF)', href: 'https://pliki.biznes.gov.pl/biznes-pl/20251021/Zalacznik_CEIDG-RB_v6.4_01012026.pdf' },
             { label: 'Ministerstwo Finansów – formularz NIP-2 (PDF)', href: 'https://podatki-arch.mf.gov.pl/media/10332/form-nip-2.pdf' },
             { label: 'Ministerstwo Finansów – formularz NIP-8 (PDF)', href: 'https://podatki-arch.mf.gov.pl/media/10330/form-nip-8.pdf' },
           ],

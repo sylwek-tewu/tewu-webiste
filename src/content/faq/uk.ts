@@ -252,7 +252,8 @@ export const UK_FAQ: FaqPageContent = {
           sources: [
             { label: 'biznes.gov.pl – зміна даних у CEIDG (польською)', href: 'https://www.biznes.gov.pl/pl/portal/ou737' },
             { label: 'biznes.gov.pl – оновлення NIP-8 (польською)', href: 'https://www.biznes.gov.pl/pl/portal/ou349' },
-            { label: 'biznes.gov.pl – форма CEIDG-RB (польською)', href: 'https://www.biznes.gov.pl/pl/portal/ou1478' },
+            { label: 'biznes.gov.pl – заява NIP-8 (додаткові дані KRS, польською)', href: 'https://www.biznes.gov.pl/pl/portal/ou1478' },
+            { label: 'biznes.gov.pl – форма CEIDG-RB (PDF, польською)', href: 'https://pliki.biznes.gov.pl/biznes-pl/20251021/Zalacznik_CEIDG-RB_v6.4_01012026.pdf' },
             { label: 'Міністерство фінансів – форма NIP-2 (PDF, польською)', href: 'https://podatki-arch.mf.gov.pl/media/10332/form-nip-2.pdf' },
             { label: 'Міністерство фінансів – форма NIP-8 (PDF, польською)', href: 'https://podatki-arch.mf.gov.pl/media/10330/form-nip-8.pdf' },
           ],
