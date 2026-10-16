@@ -15,7 +15,7 @@ import type { ServicePageContent } from '@/content/service-pages/types';
 function CheckList({ title, items }: { title: string; items: string[] }) {
   return (
     <Box>
-      {/* Two lists side by side, so smaller than the section titles (h2 never goes below 30 px, h4 is 24 px, at a card title's weight) */}
+      {/* Two lists side by side, so smaller than the section titles (h2 never goes below 30 px, h4 is 24 px) */}
       <Title order={2} size="h4" c="slate.9" mb="lg">
         {title}
       </Title>

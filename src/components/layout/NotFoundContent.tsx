@@ -22,7 +22,7 @@ export default function NotFoundContent() {
         <Text c="slate.6" mb="xl">
           {t.notFound.description}
         </Text>
-        <Button component={Link} href={localizePath(PATHS.home, locale)} radius="md" bg="brandBlue.6">
+        <Button component={Link} href={localizePath(PATHS.home, locale)} bg="brandBlue.6">
           {t.notFound.backHome}
         </Button>
       </Container>

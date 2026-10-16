@@ -1,21 +1,13 @@
 import { test, expect, type Page } from '@playwright/test';
+import { localizePath } from '../src/i18n/config';
+import { PAGE_PATHS } from '../src/lib/site-pages';
 
 // Layout guards from ADR 0004 §4: the header must stay on one row, no page may scroll sideways,
 // and no button label may be cut off. jsdom cannot check any of this, so it runs in a browser.
 
-const PAGES = [
-  '/', '/uk',
-  '/uslugi', '/uk/uslugi',
-  '/uslugi/kpir', '/uk/uslugi/kpir',
-  '/uslugi/inkubator-spolek', '/uk/uslugi/inkubator-spolek',
-  '/o-nas', '/uk/o-nas',
-  '/outsourcing', '/uk/outsourcing',
-  '/certyfikaty', '/uk/certyfikaty',
-  '/kontakt', '/uk/kontakt',
-  '/faq', '/uk/faq',
-  '/polityka-prywatnosci', '/uk/polityka-prywatnosci',
-  '/nie-ma-takiej-strony', '/uk/nie-ma-takiej-strony',
-];
+// Every page of the sitemap (sitemap.test.ts keeps PAGE_PATHS in step with the routes) and the 404
+// page, in both languages: a new page is checked without anyone adding it here.
+const PAGES = [...PAGE_PATHS, '/nie-ma-takiej-strony'].flatMap((path) => [path, localizePath(path, 'uk')]);
 
 // Phones, the mobile bar's last width, the burger range, and the header's tight points
 // (1200: full menu appears; 1408: the office name returns next to the logo).
