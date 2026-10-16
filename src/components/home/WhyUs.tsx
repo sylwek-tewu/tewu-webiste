@@ -31,7 +31,7 @@ export function WhyUs() {
                         <Stack gap={48}>
                             {/* Header */}
                             <Box>
-                                <Title order={2} c="slate.9" mb="md">
+                                <Title order={2} size="display" c="slate.9" mb="md">
                                     {t.home.whyUs.title}
                                 </Title>
                                 <Text size="lg" c="slate.6" lh={1.6}>

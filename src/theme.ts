@@ -1,4 +1,4 @@
-import { createTheme, MantineColorsTuple, CSSVariablesResolver, type BadgeProps, type MantineTheme } from "@mantine/core";
+import { createTheme, MantineColorsTuple, CSSVariablesResolver, type BadgeProps, type MantineTheme, type TitleProps } from "@mantine/core";
 
 // Tailwind blue-600 #2563eb
 export const brandBlue: MantineColorsTuple = [
@@ -104,6 +104,12 @@ export const theme = createTheme({
             },
         },
         Title: {
+            // size="display": a section heading set larger than h2 (up to 48 px, below the 60 px h1),
+            // e.g. „Dlaczego warto nam zaufać?” on the home page. It stays an <h2> in the outline;
+            // the line height and weight still come from its order. theme.headings only has h1–h6.
+            vars: (_theme: MantineTheme, props: TitleProps) => ({
+                root: props.size === "display" ? { "--title-fz": "clamp(2rem, 4vw, 3rem)" } : {},
+            }),
             styles: {
                 root: {
                     // Tight tracking on every heading; theme.headings has no field for letter-spacing
