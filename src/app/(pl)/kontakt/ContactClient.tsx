@@ -121,10 +121,10 @@ export default function ContactClient() {
                                     }}
                                 >
                                     <Box>
-                                        <Text c="white" size="sm" fw={700} tt="uppercase" style={{ letterSpacing: '0.05em' }} mb={8}>
+                                        <Text c="white" size="sm" fw={700} tt="uppercase" lts="0.05em" mb={8}>
                                             {t.contact.hoursLabel}
                                         </Text>
-                                        <Text size="xl" fw={900} style={{ fontSize: '1.5rem' }}>{t.contact.hoursValue}</Text>
+                                        <Text fz="1.5rem" fw={900}>{t.contact.hoursValue}</Text>
                                     </Box>
                                     <Clock size={48} color="var(--mantine-color-brandBlue-4)" style={{ opacity: 0.5 }} />
                                 </Paper>
@@ -176,7 +176,7 @@ export default function ContactClient() {
                                 <Paper mt="auto" pt="md" p="lg" radius="lg" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-brandBlue-0)' }}>
                                     <Group gap="xs" mb="xs" c="brandBlue.6">
                                         <Landmark size={20} />
-                                        <Text size="xs" fw={700} tt="uppercase" style={{ letterSpacing: '0.1em' }}>
+                                        <Text size="xs" fw={700} tt="uppercase" lts="0.1em">
                                             {t.contact.bankAccountLabel}
                                         </Text>
                                     </Group>

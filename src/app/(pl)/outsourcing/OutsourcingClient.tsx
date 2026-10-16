@@ -97,10 +97,7 @@ export default function OutsourcingClient() {
                                 withBorder
                                 style={{ borderColor: 'var(--mantine-color-slate-1)', position: 'relative' }}
                             >
-                                <Text
-                                    fw={900}
-                                    style={{ fontSize: '3.75rem', position: 'absolute', top: '1rem', right: '2rem', color: 'var(--mantine-color-brandBlue-6)', opacity: 0.1 }}
-                                >
+                                <Text fw={900} fz="3.75rem" c="brandBlue.6" opacity={0.1} pos="absolute" top="1rem" right="2rem">
                                     {step.step}
                                 </Text>
                                 <Title order={3} size="h4" c="slate.9" mb="md">{step.title}</Title>

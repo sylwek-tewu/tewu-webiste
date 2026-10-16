@@ -132,19 +132,19 @@ export function Hero() {
                 <Container>
                     <SimpleGrid cols={{ base: 2, md: 4 }} spacing="lg">
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>{t.home.hero.stats.companiesCount}</Text>
+                            <Text c="slate.9" fw={900} fz="2.25rem">{t.home.hero.stats.companiesCount}</Text>
                             <Text c="slate.5" fw={500}>{t.home.hero.stats.companiesLabel}</Text>
                         </Box>
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>{t.home.hero.stats.yearsCount}</Text>
+                            <Text c="slate.9" fw={900} fz="2.25rem">{t.home.hero.stats.yearsCount}</Text>
                             <Text c="slate.5" fw={500}>{t.home.hero.stats.yearsLabel}</Text>
                         </Box>
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>{t.home.hero.stats.securityCount}</Text>
+                            <Text c="slate.9" fw={900} fz="2.25rem">{t.home.hero.stats.securityCount}</Text>
                             <Text c="slate.5" fw={500}>{t.home.hero.stats.securityLabel}</Text>
                         </Box>
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>{t.home.hero.stats.reactionCount}</Text>
+                            <Text c="slate.9" fw={900} fz="2.25rem">{t.home.hero.stats.reactionCount}</Text>
                             <Text c="slate.5" fw={500}>{t.home.hero.stats.reactionLabel}</Text>
                         </Box>
                     </SimpleGrid>

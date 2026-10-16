@@ -32,7 +32,7 @@ export function Services() {
     return (
         <Box component="section" py={96} bg="slate.0">
             <Container ta="center" mb={64}>
-                <Text fw={900} c="brandBlue" tt="uppercase" style={{ letterSpacing: '0.1em' }} size="sm" mb="xs">
+                <Text fw={900} c="brandBlue" tt="uppercase" lts="0.1em" size="sm" mb="xs">
                     {t.home.services.sectionLabel}
                 </Text>
                 <Title order={2} c="slate.9">

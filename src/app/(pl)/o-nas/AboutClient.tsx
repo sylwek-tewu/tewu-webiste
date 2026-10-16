@@ -74,7 +74,7 @@ export default function AboutClient() {
                                 maw={280}
                                 style={{ borderColor: 'var(--mantine-color-slate-1)' }}
                             >
-                                <Text c="brandBlue.6" fw={900} style={{ fontSize: '2.25rem' }} lh={1} mb={4}>
+                                <Text c="brandBlue.6" fw={900} fz="2.25rem" lh={1} mb={4}>
                                     {t.about.intro.expNumber}
                                 </Text>
                                 <Text c="slate.9" fw={700} size="lg" mb="xs">
@@ -93,7 +93,7 @@ export default function AboutClient() {
             <Box component="section" py={96} bg="slate.0">
                 <Container size="xl" px="md">
                     <Box ta="center" mb={64}>
-                        <Text fw={900} c="brandBlue.6" tt="uppercase" style={{ letterSpacing: '0.1em' }} size="sm" mb="xs">
+                        <Text fw={900} c="brandBlue.6" tt="uppercase" lts="0.1em" size="sm" mb="xs">
                             {t.about.values.label}
                         </Text>
                         <Title order={2} c="slate.9">
@@ -120,7 +120,7 @@ export default function AboutClient() {
                     <Title order={2} c="slate.9" mb="xl">
                         {t.about.mission.title}
                     </Title>
-                    <Text size="xl" c="slate.6" fs="italic" lh={1.6} style={{ fontSize: '1.5rem' }}>
+                    <Text fz="1.5rem" c="slate.6" fs="italic" lh={1.6}>
                         {t.about.mission.quote}
                     </Text>
                 </Container>
