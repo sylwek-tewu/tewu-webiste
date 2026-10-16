@@ -246,12 +246,15 @@ export const UK_FAQ: FaqPageContent = {
           id: 'zglaszanie-rachunkow',
           question: 'Якщо в мене кілька рахунків фірми, чи треба повідомляти про всі?',
           answer: [
-            'Так, платник має повідомити про всі рахунки фірми – як у Польщі, так і в інших країнах. Це стосується й рахунків в іноземній валюті.',
+            'Так, платник має повідомити про всі банківські рахунки фірми – як у Польщі, так і в інших країнах. Це стосується й банківських рахунків в іноземній валюті.',
             'Про новий або змінений рахунок треба повідомити протягом 7 днів: ФОП (JDG) – у заяві про зміну даних у CEIDG (CEIDG передасть їх до податкової служби та ZUS), а компанія, внесена до KRS, – у податковій службі на формі NIP-8. За запізнення загрожує штраф, як за фіскальне правопорушення.',
           ],
           sources: [
             { label: 'biznes.gov.pl – зміна даних у CEIDG (польською)', href: 'https://www.biznes.gov.pl/pl/portal/ou737' },
             { label: 'biznes.gov.pl – оновлення NIP-8 (польською)', href: 'https://www.biznes.gov.pl/pl/portal/ou349' },
+            { label: 'biznes.gov.pl – форма CEIDG-RB (польською)', href: 'https://www.biznes.gov.pl/pl/portal/ou1478' },
+            { label: 'Міністерство фінансів – форма NIP-2 (PDF, польською)', href: 'https://podatki-arch.mf.gov.pl/media/10332/form-nip-2.pdf' },
+            { label: 'Міністерство фінансів – форма NIP-8 (PDF, польською)', href: 'https://podatki-arch.mf.gov.pl/media/10330/form-nip-8.pdf' },
           ],
         },
       ],

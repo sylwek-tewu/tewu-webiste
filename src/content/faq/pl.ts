@@ -245,12 +245,16 @@ export const PL_FAQ: FaqPageContent = {
           id: 'zglaszanie-rachunkow',
           question: 'Czy jeśli mam kilka rachunków firmowych, muszę je wszystkie zgłaszać?',
           answer: [
-            'Tak, podatnik musi zgłosić wszystkie rachunki firmowe, prowadzone zarówno w Polsce, jak i w innych krajach. Zgłoszeniem objęte są również rachunki prowadzone w walutach obcych.',
+            'Tak, podatnik musi zgłosić wszystkie firmowe rachunki bankowe, prowadzone zarówno w Polsce, jak i w innych krajach. Zgłoszeniem objęte są również rachunki bankowe prowadzone w walutach obcych.',
             'Nowy lub zmieniony rachunek zgłaszasz w ciągu 7 dni: przy jednoosobowej działalności we wniosku o zmianę danych w CEIDG (CEIDG przekaże je do urzędu skarbowego i ZUS), a spółka wpisana do KRS – w urzędzie skarbowym na formularzu NIP-8. Za spóźnienie grozi grzywna jak za wykroczenie skarbowe.',
           ],
           sources: [
             { label: 'biznes.gov.pl – zmiana danych w CEIDG', href: 'https://www.biznes.gov.pl/pl/portal/ou737' },
             { label: 'biznes.gov.pl – aktualizacja NIP-8', href: 'https://www.biznes.gov.pl/pl/portal/ou349' },
+            // The forms have fields for foreign accounts and the account currency; CEIDG-RB asks for the bank's country and SWIFT
+            { label: 'biznes.gov.pl – formularz CEIDG-RB', href: 'https://www.biznes.gov.pl/pl/portal/ou1478' },
+            { label: 'Ministerstwo Finansów – formularz NIP-2 (PDF)', href: 'https://podatki-arch.mf.gov.pl/media/10332/form-nip-2.pdf' },
+            { label: 'Ministerstwo Finansów – formularz NIP-8 (PDF)', href: 'https://podatki-arch.mf.gov.pl/media/10330/form-nip-8.pdf' },
           ],
         },
       ],
