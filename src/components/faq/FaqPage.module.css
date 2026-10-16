@@ -34,20 +34,6 @@
   --anchor-text-color: var(--mantine-color-white);
 }
 
-.besidePhoto {
-  align-items: center;
-}
-
-.photo {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  border-radius: var(--mantine-radius-xl);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
-}
-
 .tile {
   display: block;
   height: 100%;

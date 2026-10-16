@@ -3,12 +3,13 @@ import { Anchor, Badge, Box, Container, Group, Paper, SimpleGrid, Stack, Text, T
 import { Building2, HandCoins, Landmark, MessageCircleQuestionMark, ReceiptText, Rocket, type LucideIcon } from 'lucide-react';
 import { FaqList } from '@/components/faq/FaqList';
 import { OpenQuestionFromHash } from '@/components/faq/OpenQuestionFromHash';
-import { QuoteActions } from '@/components/QuoteActions';
+import { BesidePhoto, OfficePicture } from '@/components/OfficePicture';
+import { ReceptionCta } from '@/components/ReceptionCta';
 import { RichText } from '@/components/RichText';
 import { TextLink } from '@/components/TextLink';
 import type { FaqCategoryId, FaqPageContent, FaqQuestion } from '@/content/faq/types';
 import { formatLongDate } from '@/lib/format-date';
-import { OFFICE_PHOTOS, type OfficePhoto } from '@/lib/office-photos';
+import { OFFICE_PHOTOS } from '@/lib/office-photos';
 import { formatCount, singularOrPlural } from '@/lib/plural';
 import classes from './FaqPage.module.css';
 
@@ -22,34 +23,6 @@ const CATEGORY_ICONS: Record<FaqCategoryId, LucideIcon> = {
   zus: HandCoins,
   'rachunek-firmowy': Landmark,
 };
-
-function Photo({ photo, alt, priority = false }: { photo: OfficePhoto; alt: string; priority?: boolean }) {
-  return (
-    <picture>
-      <source type="image/avif" srcSet={photo.avif} />
-      <img
-        src={photo.jpg}
-        alt={alt}
-        width={photo.width}
-        height={photo.height}
-        decoding="async"
-        // The building photo is the hero's largest element (LCP on desktop), so it loads first.
-        loading={priority ? 'eager' : 'lazy'}
-        fetchPriority={priority ? 'high' : undefined}
-        className={classes.photo}
-      />
-    </picture>
-  );
-}
-
-/** Text beside an office photo, stacked on phones: the hero and the closing contact section. */
-function BesidePhoto({ children }: { children: React.ReactNode }) {
-  return (
-    <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: 40, md: 64 }} className={classes.besidePhoto}>
-      {children}
-    </SimpleGrid>
-  );
-}
 
 function Answer({ question, sourcesLabel }: { question: FaqQuestion; sourcesLabel: FaqPageContent['sourcesLabel'] }) {
   return (
@@ -103,7 +76,8 @@ export default function FaqPage({ content, updatedAt }: { content: FaqPageConten
                 </Anchor>
               </Text>
             </Box>
-            <Photo photo={OFFICE_PHOTOS.exterior} alt={hero.imageAlt} priority />
+            {/* The hero's largest element (LCP on desktop), so it loads first. */}
+            <OfficePicture photo={OFFICE_PHOTOS.exterior} alt={hero.imageAlt} priority />
           </BesidePhoto>
         </Container>
       </Box>
@@ -167,22 +141,7 @@ export default function FaqPage({ content, updatedAt }: { content: FaqPageConten
         );
       })}
 
-      <Box component="section" id={CONTACT_ID} py={{ base: 64, md: 96 }} bg="brandBlue.6" className={classes.category}>
-        <Container size="xl" px="md">
-          <BesidePhoto>
-            <Box>
-              <Title order={2} c="white" mb="md">
-                {cta.title}
-              </Title>
-              <Text c="brandBlue.0" size="lg" mb="xl">
-                {cta.description}
-              </Text>
-              <QuoteActions variant="white" source="faq" align="start" />
-            </Box>
-            <Photo photo={OFFICE_PHOTOS.reception} alt={cta.imageAlt} />
-          </BesidePhoto>
-        </Container>
-      </Box>
+      <ReceptionCta id={CONTACT_ID} title={cta.title} description={cta.description} imageAlt={cta.imageAlt} source="faq" />
     </Stack>
   );
 }

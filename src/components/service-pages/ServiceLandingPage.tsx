@@ -8,6 +8,7 @@ import { RELATED_SERVICE_PAGES, SERVICE_PAGES, servicePagePath, type ServicePage
 import { localizePath, useLocale } from '@/i18n/LocaleContext';
 import { FaqList } from '@/components/faq/FaqList';
 import { QuoteActions } from '@/components/QuoteActions';
+import { ReceptionCta } from '@/components/ReceptionCta';
 import type { ServicePageContent } from '@/content/service-pages/types';
 
 function CheckList({ title, items }: { title: string; items: string[] }) {
@@ -219,17 +220,12 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
 
       <SeeAlso slug={content.slug} />
 
-      <Box component="section" py={{ base: 64, md: 96 }} bg="brandBlue.6" ta="center">
-        <Container size="md" px="md">
-          <Title order={2} c="white" mb="md">
-            {t.servicePages.finalCta.title}
-          </Title>
-          <Text c="brandBlue.0" size="lg" mb="xl">
-            {t.servicePages.finalCta.description}
-          </Text>
-          <QuoteActions variant="white" source="service" />
-        </Container>
-      </Box>
+      <ReceptionCta
+        title={t.servicePages.finalCta.title}
+        description={t.servicePages.finalCta.description}
+        imageAlt={t.servicePages.finalCta.imageAlt}
+        source="service"
+      />
     </Stack>
   );
 }

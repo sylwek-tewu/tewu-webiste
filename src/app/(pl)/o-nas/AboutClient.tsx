@@ -2,8 +2,10 @@
 
 import React from 'react';
 import { ShieldCheck, Clock, Award, CheckCircle2 } from 'lucide-react';
-import { Box, Container, SimpleGrid, Stack, Title, Text, ThemeIcon, Paper, Image, Group } from '@mantine/core';
+import { Box, Container, SimpleGrid, Stack, Title, Text, ThemeIcon, Paper, Group } from '@mantine/core';
 import { useLocale } from '@/i18n/LocaleContext';
+import { OfficePicture } from '@/components/OfficePicture';
+import { OFFICE_PHOTOS } from '@/lib/office-photos';
 
 const VALUE_ICONS = [
   <ShieldCheck key="0" size={32} />,
@@ -31,7 +33,8 @@ export default function AboutClient() {
             {/* Main Intro Section */}
             <Box component="section" py={96}>
                 <Container size="xl" px="md">
-                    <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={80}>
+                    {/* Centred: the 4:3 photo is shorter than the text next to it */}
+                    <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={80} style={{ alignItems: 'center' }}>
                         <Stack gap="xl">
                             <Title order={2} fw={900} c="slate.9" lh={1.2} style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)' }}>
                                 {t.about.intro.title}
@@ -57,23 +60,12 @@ export default function AboutClient() {
                             </SimpleGrid>
                         </Stack>
                         <Box pos="relative">
-                            <Box style={{ aspectRatio: '4/5', borderRadius: 'var(--mantine-radius-xl)', overflow: 'hidden', boxShadow: 'var(--mantine-shadow-2xl)' }}>
-                                <Image
-                                    src="/img/stock/team.jpg"
-                                    alt={t.about.intro.imageAlt}
-                                    width={1200}
-                                    height={800}
-                                    loading="lazy"
-                                    decoding="async"
-                                    w="100%"
-                                    h="100%"
-                                    fit="cover"
-                                />
-                            </Box>
+                            <OfficePicture photo={OFFICE_PHOTOS.team} alt={t.about.intro.imageAlt} />
+                            {/* On the right: the Prezes sits on the left of the photo. Inside the photo's width, so it never overflows the page. */}
                             <Paper
                                 pos="absolute"
                                 bottom={-40}
-                                left={-40}
+                                right={32}
                                 visibleFrom="md"
                                 p="xl"
                                 radius="lg"
