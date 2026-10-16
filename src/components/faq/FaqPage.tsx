@@ -12,6 +12,9 @@ import { OFFICE_PHOTOS, type OfficePhoto } from '@/lib/office-photos';
 import { formatCount } from '@/lib/plural';
 import classes from './FaqPage.module.css';
 
+/** Anchor of the closing contact section; outside the question and category id namespace. */
+const CONTACT_ID = 'kontakt';
+
 const CATEGORY_ICONS: Record<FaqCategoryId, LucideIcon> = {
   'o-biurze': Building2,
   'zakladanie-firmy': Rocket,
@@ -106,7 +109,10 @@ export default function FaqPage({ content, updatedAt }: { content: FaqPageConten
                 {hero.updatedPrefix} <time dateTime={updatedAt}>{formatLongDate(locale, updatedAt)}</time>
               </Text>
               <Text size="sm" c="slate.4" mt={4}>
-                {hero.disclaimer}
+                {hero.disclaimer}{' '}
+                <Anchor href={`#${CONTACT_ID}`} c="white" underline="always" inherit>
+                  {hero.disclaimerLink}
+                </Anchor>
               </Text>
             </Box>
             <Photo photo={OFFICE_PHOTOS.exterior} alt={hero.imageAlt} priority />
@@ -173,7 +179,7 @@ export default function FaqPage({ content, updatedAt }: { content: FaqPageConten
         );
       })}
 
-      <Box component="section" py={{ base: 64, md: 96 }} bg="brandBlue.6">
+      <Box component="section" id={CONTACT_ID} py={{ base: 64, md: 96 }} bg="brandBlue.6" className={classes.category}>
         <Container size="xl" px="md">
           <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: 40, md: 64 }} style={{ alignItems: 'center' }}>
             <Box>

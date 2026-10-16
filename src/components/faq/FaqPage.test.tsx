@@ -59,6 +59,15 @@ describe.each(['pl', 'uk'] as Locale[])('FaqPage (%s)', (locale) => {
     }
   });
 
+  it('links the end of the disclaimer to the contact section', () => {
+    renderFaq(locale);
+    const link = screen.getByRole('link', { name: content.hero.disclaimerLink });
+    expect(link).toHaveAttribute('href', '#kontakt');
+    const section = document.getElementById('kontakt');
+    expect(section?.tagName).toBe('SECTION');
+    expect(section).toHaveTextContent(content.cta.title);
+  });
+
   it('keeps every question and answer in the page, also while collapsed', () => {
     const { container } = renderFaq(locale);
     expect(container.querySelectorAll('details')).toHaveLength(questions.length);

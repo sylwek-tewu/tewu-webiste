@@ -30,7 +30,16 @@ export interface FaqCategory {
 export interface FaqPageContent {
   locale: Locale;
   meta: { title: string; description: string };
-  hero: { badge: string; title: string; lead: string; updatedPrefix: string; disclaimer: string; imageAlt: string };
+  hero: {
+    badge: string;
+    title: string;
+    lead: string;
+    updatedPrefix: string;
+    disclaimer: string;
+    /** End of the disclaimer, linked to the contact section at the bottom of the page. */
+    disclaimerLink: string;
+    imageAlt: string;
+  };
   /** Name of the page in the JSON-LD breadcrumbs. */
   breadcrumb: string;
   /** Accessible name of the category tiles. */
