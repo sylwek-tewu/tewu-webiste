@@ -21,7 +21,7 @@ const CertificatesClient: React.FC = () => {
                     <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={64}>
                         <Stack gap="xl">
                             <Box>
-                                <Badge variant="filled" color="brandBlue.0" c="brandBlue.7" mb="sm">
+                                <Badge variant="pale" mb="sm">
                                     {t.certificates.badge}
                                 </Badge>
                                 <Title order={2} c="slate.9" mb="md">

@@ -1,4 +1,4 @@
-import { createTheme, MantineColorsTuple, CSSVariablesResolver } from "@mantine/core";
+import { createTheme, MantineColorsTuple, CSSVariablesResolver, type BadgeProps, type MantineTheme } from "@mantine/core";
 
 // Tailwind blue-600 #2563eb
 export const brandBlue: MantineColorsTuple = [
@@ -64,6 +64,15 @@ export const theme = createTheme({
                 tt: "uppercase",
                 fw: 700,
             },
+            // variant="pale": brandBlue.0 with brandBlue.7 text, light on any background
+            // (the FAQ hero on slate.9, /certyfikaty on white), unlike the translucent "light".
+            // A plain object, not Badge.extend: server code imports the theme, and there
+            // @mantine/core components are client references without .extend.
+            vars: (theme: MantineTheme, props: BadgeProps) => ({
+                root: props.variant === "pale"
+                    ? { "--badge-bg": theme.colors.brandBlue[0], "--badge-color": theme.colors.brandBlue[7] }
+                    : {},
+            }),
         },
         Button: {
             defaultProps: {
