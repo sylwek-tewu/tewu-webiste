@@ -7,6 +7,15 @@ import { COMPANY } from '@/lib/company';
 import { useLocale } from '@/i18n/LocaleContext';
 import { Emphasis } from '@/i18n/Emphasis';
 
+/** A numbered section of the policy: an H2 at h3 size, the page's H1 being the only larger heading. */
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <Title order={2} size="h3" c="slate.9" mb="sm">
+      {children}
+    </Title>
+  );
+}
+
 export default function PrivacyPolicyClient({ retentionHours }: { retentionHours: number }) {
   const { t, locale } = useLocale();
   const p = t.privacyPolicy;
@@ -46,9 +55,7 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
             <Stack gap="xl">
               {/* Section 1 */}
               <div>
-                <Title order={2} size="h3" c="slate.9" mb="sm">
-                  {p.s1Title}
-                </Title>
+                <SectionTitle>{p.s1Title}</SectionTitle>
                 <Text size="sm" c="slate.7" lh={1.7} mb="md">
                   <Emphasis text={p.s1Content} />
                 </Text>
@@ -75,9 +82,7 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
 
               {/* Section 2 */}
               <div>
-                <Title order={2} size="h3" c="slate.9" mb="sm">
-                  {p.s2Title}
-                </Title>
+                <SectionTitle>{p.s2Title}</SectionTitle>
                 <Text size="sm" c="slate.7" lh={1.7} mb="sm">
                   {p.s2Intro}
                 </Text>
@@ -94,9 +99,7 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
 
               {/* Section 3 */}
               <div>
-                <Title order={2} size="h3" c="slate.9" mb="sm">
-                  {p.s3Title}
-                </Title>
+                <SectionTitle>{p.s3Title}</SectionTitle>
                 <Text size="sm" c="slate.7" lh={1.7}>
                   {p.s3Intro}
                 </Text>
@@ -117,9 +120,7 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
 
               {/* Section 4 */}
               <div>
-                <Title order={2} size="h3" c="slate.9" mb="sm">
-                  {p.s4Title}
-                </Title>
+                <SectionTitle>{p.s4Title}</SectionTitle>
                 <Text size="sm" c="slate.7" lh={1.7} mb="sm">
                   {p.s4Intro}
                 </Text>
@@ -170,9 +171,7 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
 
               {/* Section 5 */}
               <div>
-                <Title order={2} size="h3" c="slate.9" mb="sm">
-                  {p.s5Title}
-                </Title>
+                <SectionTitle>{p.s5Title}</SectionTitle>
                 <Text size="sm" c="slate.7" lh={1.7}>
                   {p.s5Content}
                 </Text>
@@ -188,9 +187,7 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
 
               {/* Section 6 */}
               <div>
-                <Title order={2} size="h3" c="slate.9" mb="sm">
-                  {p.s6Title}
-                </Title>
+                <SectionTitle>{p.s6Title}</SectionTitle>
                 <Text size="sm" c="slate.7" lh={1.7} mb="sm">
                   {p.s6Intro}
                 </Text>
@@ -218,9 +215,7 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
 
               {/* Section 7 */}
               <div>
-                <Title order={2} size="h3" c="slate.9" mb="sm">
-                  {p.s7Title}
-                </Title>
+                <SectionTitle>{p.s7Title}</SectionTitle>
                 <Text size="sm" c="slate.7" lh={1.7} mb="xs">
                   {p.s7Content}
                 </Text>
