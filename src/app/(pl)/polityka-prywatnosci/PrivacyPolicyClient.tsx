@@ -18,7 +18,7 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
           {/* Header */}
           <Box ta="center" mb="lg">
             <Group justify="center" mb="sm">
-              <ThemeIcon size={52} radius="xl" bg="blue.0" c="brandBlue.6">
+              <ThemeIcon size={52} radius="xl" bg="brandBlue.0" c="brandBlue.6">
                 <Shield size={28} />
               </ThemeIcon>
             </Group>
@@ -33,7 +33,6 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
           {/* Legal Note for Ukrainian translation */}
           {locale === 'uk' && p.legalNoteUk && (
             <Alert
-              color="blue"
               icon={<AlertTriangle size={18} />}
               radius="lg"
               title="Юридична примітка / Informacja prawna"

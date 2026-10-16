@@ -51,7 +51,7 @@ export default function AboutClient() {
                             <SimpleGrid cols={2} spacing="md" mt="sm">
                                 {t.about.intro.bullets.map((item, i) => (
                                     <Group key={i} gap="xs" align="center">
-                                        <ThemeIcon radius="xl" size="lg" bg="blue.0" c="blue.6">
+                                        <ThemeIcon radius="xl" size="lg" bg="brandBlue.0" c="brandBlue.6">
                                             <CheckCircle2 size={20} />
                                         </ThemeIcon>
                                         <Text fw={700} c="slate.9">{item}</Text>
@@ -74,7 +74,7 @@ export default function AboutClient() {
                                 maw={280}
                                 style={{ borderColor: 'var(--mantine-color-slate-1)' }}
                             >
-                                <Text c="blue.6" fw={900} style={{ fontSize: '2.25rem' }} lh={1} mb={4}>
+                                <Text c="brandBlue.6" fw={900} style={{ fontSize: '2.25rem' }} lh={1} mb={4}>
                                     {t.about.intro.expNumber}
                                 </Text>
                                 <Text c="slate.9" fw={700} size="lg" mb="xs">
@@ -93,7 +93,7 @@ export default function AboutClient() {
             <Box component="section" py={96} bg="slate.0">
                 <Container size="xl" px="md">
                     <Box ta="center" mb={64}>
-                        <Text fw={900} c="blue.6" tt="uppercase" style={{ letterSpacing: '0.1em' }} size="sm" mb="xs">
+                        <Text fw={900} c="brandBlue.6" tt="uppercase" style={{ letterSpacing: '0.1em' }} size="sm" mb="xs">
                             {t.about.values.label}
                         </Text>
                         <Title order={2} c="slate.9">
@@ -103,7 +103,7 @@ export default function AboutClient() {
                     <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
                         {t.about.values.items.map((item, i) => (
                             <Paper key={i} p={40} radius="xl" shadow="sm" withBorder style={{ borderColor: 'var(--mantine-color-slate-1)' }}>
-                                <ThemeIcon size={56} radius="lg" bg="blue.0" c="blue.6" mb="lg">
+                                <ThemeIcon size={56} radius="lg" bg="brandBlue.0" c="brandBlue.6" mb="lg">
                                     {VALUE_ICONS[i]}
                                 </ThemeIcon>
                                 <Title order={3} size="h4" c="slate.9" mb="md">{item.title}</Title>

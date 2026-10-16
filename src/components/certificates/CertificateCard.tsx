@@ -58,7 +58,7 @@ export default function CertificateCard({ cert, onClick }: CertificateCardProps)
                     shadow="xl"
                     className={classes.icon}
                 >
-                    <FileText size={32} color="var(--mantine-color-blue-6)" />
+                    <FileText size={32} color="var(--mantine-color-brandBlue-6)" />
                 </Paper>
                 <Text
                     c="white"

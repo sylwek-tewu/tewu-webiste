@@ -30,7 +30,7 @@ export default function ContactClient() {
                         {/* Informacje Podstawowe (Lewa kolumna) */}
                         <Stack gap="xl">
                             <Group gap="sm">
-                                <Building2 color="var(--mantine-color-blue-6)" size={28} />
+                                <Building2 color="var(--mantine-color-brandBlue-6)" size={28} />
                                 <Title order={2} c="slate.9">
                                     {t.contact.contactDataTitle}
                                 </Title>
@@ -39,7 +39,7 @@ export default function ContactClient() {
                             <Stack gap="md" style={{ flex: 1 }}>
                                 <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
                                     <Paper p="lg" radius="lg" shadow="sm" withBorder style={{ borderColor: 'var(--mantine-color-slate-1)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                                        <ThemeIcon size={44} radius="md" bg="blue.0" c="blue.6">
+                                        <ThemeIcon size={44} radius="md" bg="brandBlue.0" c="brandBlue.6">
                                             <MapPin size={20} />
                                         </ThemeIcon>
                                         <Box>
@@ -58,7 +58,7 @@ export default function ContactClient() {
                                     </Paper>
 
                                     <Paper p="lg" radius="lg" shadow="sm" withBorder style={{ borderColor: 'var(--mantine-color-slate-1)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                                        <ThemeIcon size={44} radius="md" bg="blue.0" c="blue.6">
+                                        <ThemeIcon size={44} radius="md" bg="brandBlue.0" c="brandBlue.6">
                                             <Mail size={20} />
                                         </ThemeIcon>
                                         <Box>
@@ -74,7 +74,7 @@ export default function ContactClient() {
                                     </Paper>
 
                                     <Paper p="lg" radius="lg" shadow="sm" withBorder style={{ borderColor: 'var(--mantine-color-slate-1)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                                        <ThemeIcon size={44} radius="md" bg="blue.0" c="blue.6">
+                                        <ThemeIcon size={44} radius="md" bg="brandBlue.0" c="brandBlue.6">
                                             <Phone size={20} />
                                         </ThemeIcon>
                                         <Box>
@@ -90,7 +90,7 @@ export default function ContactClient() {
                                     </Paper>
 
                                     <Paper p="lg" radius="lg" shadow="sm" withBorder style={{ borderColor: 'var(--mantine-color-slate-1)', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                                        <ThemeIcon size={44} radius="md" bg="blue.0" c="blue.6">
+                                        <ThemeIcon size={44} radius="md" bg="brandBlue.0" c="brandBlue.6">
                                             <Smartphone size={20} />
                                         </ThemeIcon>
                                         <Box>
@@ -109,7 +109,7 @@ export default function ContactClient() {
                                 <Paper
                                     p={32}
                                     radius="xl"
-                                    bg="blue.6"
+                                    bg="brandBlue.6"
                                     c="white"
                                     shadow="xl"
                                     style={{
@@ -126,7 +126,7 @@ export default function ContactClient() {
                                         </Text>
                                         <Text size="xl" fw={900} style={{ fontSize: '1.5rem' }}>{t.contact.hoursValue}</Text>
                                     </Box>
-                                    <Clock size={48} color="var(--mantine-color-blue-4)" style={{ opacity: 0.5 }} />
+                                    <Clock size={48} color="var(--mantine-color-brandBlue-4)" style={{ opacity: 0.5 }} />
                                 </Paper>
                             </Stack>
                         </Stack>
@@ -134,7 +134,7 @@ export default function ContactClient() {
                         {/* Dane Rejestrowe i Bankowe (Prawa kolumna) */}
                         <Stack gap="xl">
                             <Group gap="sm">
-                                <FileText color="var(--mantine-color-blue-6)" size={28} />
+                                <FileText color="var(--mantine-color-brandBlue-6)" size={28} />
                                 <Title order={2} c="slate.9">
                                     {t.contact.regAndBankTitle}
                                 </Title>
@@ -173,8 +173,8 @@ export default function ContactClient() {
                                     <Text size="xs" fw={700} c="slate.4" tt="uppercase" mb={4}>{t.contact.courtLabel}</Text>
                                     <Text size="sm" fw={700} c="slate.9">{t.contact.courtValue}</Text>
                                 </Box>
-                                <Paper mt="auto" pt="md" p="lg" radius="lg" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-blue-0)' }}>
-                                    <Group gap="xs" mb="xs" c="blue.6">
+                                <Paper mt="auto" pt="md" p="lg" radius="lg" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-brandBlue-0)' }}>
+                                    <Group gap="xs" mb="xs" c="brandBlue.6">
                                         <Landmark size={20} />
                                         <Text size="xs" fw={700} tt="uppercase" style={{ letterSpacing: '0.1em' }}>
                                             {t.contact.bankAccountLabel}

@@ -93,7 +93,7 @@
 
 /* Icon that inverts on parent hover - includes base styles */
 .hoverIcon {
-    background-color: var(--mantine-color-blue-0);
+    background-color: var(--mantine-color-brandBlue-0);
     color: var(--mantine-primary-color-6);
     transition: all 0.3s ease;
 }
@@ -153,7 +153,7 @@
 
 /* WhyUs reason icon - includes base styles */
 .reasonIcon {
-    background-color: var(--mantine-color-blue-0);
+    background-color: var(--mantine-color-brandBlue-0);
     color: var(--mantine-primary-color-6);
     transition: all 0.3s ease;
 }

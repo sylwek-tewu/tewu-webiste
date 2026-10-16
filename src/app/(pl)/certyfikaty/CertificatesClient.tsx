@@ -29,7 +29,7 @@ const CertificatesClient: React.FC = () => {
                     <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={64}>
                         <Stack gap="xl">
                             <Box>
-                                <Badge size="lg" variant="filled" color="blue.0" c="blue.7" radius="lg" mb="sm">
+                                <Badge variant="filled" color="brandBlue.0" c="brandBlue.7" mb="sm">
                                     {t.certificates.badge}
                                 </Badge>
                                 <Title order={2} c="slate.9" mb="md">
@@ -49,7 +49,7 @@ const CertificatesClient: React.FC = () => {
 
                             <Paper p="xl" radius="xl" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-1)' }}>
                                 <Group align="flex-start">
-                                    <ThemeIcon variant="transparent" c="blue.6" size={32}>
+                                    <ThemeIcon variant="transparent" c="brandBlue.6" size={32}>
                                         <ShieldCheck size={32} />
                                     </ThemeIcon>
                                     <Box style={{ flex: 1 }}>

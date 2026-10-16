@@ -160,7 +160,7 @@ export function PDFViewer({
     if (loading || !pdfjsLib) {
         return (
             <Stack align="center" justify="center" h="100%" c="slate.5">
-                <Loader color="blue" size="lg" />
+                <Loader size="lg" />
                 <Text fw={700}>Wczytywanie dokumentu...</Text>
             </Stack>
         );

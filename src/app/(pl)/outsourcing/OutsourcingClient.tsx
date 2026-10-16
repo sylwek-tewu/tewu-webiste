@@ -8,7 +8,7 @@ import { useLocale } from '@/i18n/LocaleContext';
 
 const FEATURE_ICONS = [
   <Zap key="0" color="var(--mantine-color-yellow-5)" />,
-  <Crosshair key="1" color="var(--mantine-color-blue-5)" />,
+  <Crosshair key="1" color="var(--mantine-color-brandBlue-5)" />,
   <Lock key="2" color="var(--mantine-color-indigo-5)" />,
   <ShieldCheck key="3" color="var(--mantine-color-grape-5)" />,
 ];
@@ -99,7 +99,7 @@ export default function OutsourcingClient() {
                             >
                                 <Text
                                     fw={900}
-                                    style={{ fontSize: '3.75rem', position: 'absolute', top: '1rem', right: '2rem', color: 'var(--mantine-color-blue-6)', opacity: 0.1 }}
+                                    style={{ fontSize: '3.75rem', position: 'absolute', top: '1rem', right: '2rem', color: 'var(--mantine-color-brandBlue-6)', opacity: 0.1 }}
                                 >
                                     {step.step}
                                 </Text>
