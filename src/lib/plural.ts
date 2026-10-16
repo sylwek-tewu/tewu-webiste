@@ -23,7 +23,15 @@ export function formatCount(locale: Locale, n: number, forms: PluralForms): stri
   return `${n} ${forms[pluralForm(locale, n)]}`;
 }
 
-/** A label with only a singular and a plural, such as „Źródło” / „Źródła” before a list of links. */
-export function singularOrPlural(n: number, forms: { one: string; many: string }): string {
-  return n === 1 ? forms.one : forms.many;
+/**
+ * A label with only a singular and a plural, such as „Źródło” / „Źródła” before a list of links.
+ * `other` as in CLDR: every count but one, unlike `many` in PluralForms (5 and up).
+ */
+export interface SingularPlural {
+  one: string;
+  other: string;
+}
+
+export function singularOrPlural(n: number, forms: SingularPlural): string {
+  return n === 1 ? forms.one : forms.other;
 }

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Anchor } from '@mantine/core';
-import { isExternalHref } from '@/lib/rich-text';
+import { isExternalHref } from '@/lib/href';
 
 /**
  * An underlined link in body copy: official sites open in a new tab, our own pages go through

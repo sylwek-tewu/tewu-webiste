@@ -1,5 +1,5 @@
 import type { Locale } from '@/i18n/types';
-import type { PluralForms } from '@/lib/plural';
+import type { PluralForms, SingularPlural } from '@/lib/plural';
 
 /** Category order on the page; each id is also the section's anchor (/faq#zus). */
 export const FAQ_CATEGORY_IDS = ['o-biurze', 'zakladanie-firmy', 'podatki-vat-ksef', 'zus', 'rachunek-firmowy'] as const;
@@ -45,7 +45,7 @@ export interface FaqPageContent {
   /** Accessible name of the category tiles. */
   categoriesLabel: string;
   questionCount: PluralForms;
-  sourcesLabel: { one: string; many: string };
+  sourcesLabel: SingularPlural;
   categories: FaqCategory[];
   cta: { title: string; description: string; imageAlt: string };
 }

@@ -26,7 +26,7 @@ TEWU przekazało szkic strony z odpowiedziami na częste pytania o księgowość
 
 ### 4. SEO i AI
 - JSON-LD: węzeł `FAQPage` jest zarazem węzłem strony (`url`, `inLanguage`, `dateModified`, `isPartOf` → `#strona`, `about` → `#firma`), plus `BreadcrumbList`. Odpowiedzi to HTML z bezwzględnymi linkami. `AccountingService.image` dostaje zdjęcie budynku obok obrazu do udostępnień (Google zaleca zdjęcia firmy lokalnej).
-- `/llms.txt` (proponowany standard) opisuje biuro i wymienia kluczowe strony, w tym FAQ. Powstaje z rejestrów (`COMPANY`, `SERVICE_PAGES`, lista stron z `sitemap.ts`), żeby nie rozjeżdżał się z serwisem. Google go nie używa; koszt jest mały.
+- `/llms.txt` (proponowany standard) opisuje biuro i wymienia kluczowe strony, w tym FAQ. Powstaje z rejestrów (`COMPANY`, `SERVICE_PAGES`, lista stron `PAGE_PATHS` z `src/lib/site-pages.ts`, z której korzysta też `sitemap.ts`), żeby nie rozjeżdżał się z serwisem. Google go nie używa; koszt jest mały.
 - `pnpm seo:check` wymaga na `/faq` typów `FAQPage` i `BreadcrumbList` oraz sprawdza `/llms.txt`.
 
 ## Konsekwencje

@@ -13,7 +13,8 @@ import type { ServicePageContent } from '@/content/service-pages/types';
 function CheckList({ title, items }: { title: string; items: string[] }) {
   return (
     <Box>
-      <Title order={2} fw={900} c="slate.9" mb="lg" fz={{ base: 'xl', md: '1.75rem' }}>
+      {/* Two lists side by side, so a step smaller than the section titles */}
+      <Title order={2} size="h3" c="slate.9" mb="lg">
         {title}
       </Title>
       <List
@@ -40,7 +41,7 @@ function SeeAlso({ slug }: { slug: ServicePageSlug }) {
   return (
     <Box component="section" py={{ base: 64, md: 96 }}>
       <Container size="lg" px="md">
-        <Title order={2} fw={900} c="slate.9" mb="xl" ta="center" fz={{ base: 'xl', md: '2rem' }}>
+        <Title order={2} c="slate.9" mb="xl" ta="center">
           {t.servicePages.seeAlsoTitle}
         </Title>
         <SimpleGrid cols={{ base: 1, md: RELATED_SERVICE_PAGES[slug].length }} spacing="lg">
@@ -96,7 +97,7 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
     <Stack gap={0} bg="white">
       <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
         <Container size="md" px="md">
-          <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2rem, 5vw, 3.25rem)', letterSpacing: '-0.025em' }}>
+          <Title order={1} c="white" mb="md" lts="-0.025em">
             {content.hero.title}
           </Title>
           <Text size="xl" c="slate.4" mb="xl">
@@ -141,7 +142,7 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
 
       <Box component="section" py={{ base: 64, md: 96 }} bg="slate.0">
         <Container size="lg" px="md">
-          <Title order={2} fw={900} c="slate.9" mb="xl" ta="center" fz={{ base: 'xl', md: '2rem' }}>
+          <Title order={2} c="slate.9" mb="xl" ta="center">
             {content.pricing.title}
           </Title>
           <SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl">
@@ -188,7 +189,7 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
 
       <Box component="section" py={{ base: 64, md: 96 }}>
         <Container size="xl" px="md">
-          <Title order={2} fw={900} c="slate.9" mb="xl" ta="center" fz={{ base: 'xl', md: '2rem' }}>
+          <Title order={2} c="slate.9" mb="xl" ta="center">
             {content.steps.title}
           </Title>
           <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
@@ -209,7 +210,7 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
 
       <Box component="section" py={{ base: 64, md: 96 }} bg="slate.0">
         <Container size="md" px="md">
-          <Title order={2} fw={900} c="slate.9" mb="xl" ta="center" fz={{ base: 'xl', md: '2rem' }}>
+          <Title order={2} c="slate.9" mb="xl" ta="center">
             {content.faq.title}
           </Title>
           <FaqList items={content.faq.items} />
@@ -220,7 +221,7 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
 
       <Box component="section" py={{ base: 64, md: 96 }} bg="brandBlue.6" ta="center">
         <Container size="md" px="md">
-          <Title order={2} c="white" fw={900} mb="md" fz={{ base: 'xl', md: '2.25rem' }}>
+          <Title order={2} c="white" mb="md">
             {t.servicePages.finalCta.title}
           </Title>
           <Text c="brandBlue.0" size="lg" mb="xl">

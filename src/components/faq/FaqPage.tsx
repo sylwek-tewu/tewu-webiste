@@ -84,7 +84,7 @@ export default function FaqPage({ content, updatedAt }: { content: FaqPageConten
         <Container size="xl" px="md" pos="relative">
           <BesidePhoto>
             <Box>
-              <Badge variant="filled" color="brandBlue.0" c="brandBlue.7" radius="lg" mb="md">
+              <Badge variant="filled" color="brandBlue.0" c="brandBlue.7" mb="md">
                 {hero.badge}
               </Badge>
               <Title order={1} c="white" mb="md" lts="-0.025em">
@@ -151,7 +151,7 @@ export default function FaqPage({ content, updatedAt }: { content: FaqPageConten
                 <ThemeIcon size={44} radius="md" variant="light" aria-hidden="true">
                   <Icon size={22} />
                 </ThemeIcon>
-                <Title order={2} id={titleId} fw={900} c="slate.9" fz={{ base: 'xl', md: '2rem' }}>
+                <Title order={2} id={titleId} c="slate.9">
                   {category.title}
                 </Title>
               </Group>
@@ -171,13 +171,13 @@ export default function FaqPage({ content, updatedAt }: { content: FaqPageConten
         <Container size="xl" px="md">
           <BesidePhoto>
             <Box>
-              <Title order={2} c="white" fw={900} mb="md" fz={{ base: 'xl', md: '2.25rem' }}>
+              <Title order={2} c="white" mb="md">
                 {cta.title}
               </Title>
               <Text c="brandBlue.0" size="lg" mb="xl">
                 {cta.description}
               </Text>
-              <QuoteActions variant="white" source="faq" justify="flex-start" />
+              <QuoteActions variant="white" source="faq" align="start" />
             </Box>
             <Photo photo={OFFICE_PHOTOS.reception} alt={cta.imageAlt} />
           </BesidePhoto>

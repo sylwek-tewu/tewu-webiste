@@ -15,17 +15,18 @@ interface QuoteActionsProps {
   variant: 'primary' | 'white';
   /** Recorded with the callback lead: which button the visitor clicked. */
   source: CallbackSource;
-  justify?: 'center' | 'flex-start';
+  /** One value for the row, the column and the text: CSS `start` works for all three. */
+  align?: 'center' | 'start';
 }
 
 /** The quote button (opens the callback widget) and the office's mobile number, shown on dark backgrounds. */
-export function QuoteActions({ variant, source, justify = 'center' }: QuoteActionsProps) {
+export function QuoteActions({ variant, source, align = 'center' }: QuoteActionsProps) {
   const { t, locale } = useLocale();
   const { openWidget } = useCallbackWidget();
   const contactPath = localizePath('/kontakt', locale);
 
   return (
-    <Group justify={justify} gap="lg" wrap="wrap">
+    <Group justify={align} gap="lg" wrap="wrap">
       <Button
         component={Link}
         href={contactPath}
@@ -45,15 +46,15 @@ export function QuoteActions({ variant, source, justify = 'center' }: QuoteActio
       >
         {t.servicePages.ctaButton}
       </Button>
-      <Stack gap={4} align={justify}>
-        <Group gap={8} justify={justify} c="white">
+      <Stack gap={4} align={align}>
+        <Group gap={8} justify={align} c="white">
           <Phone size={20} aria-hidden="true" />
           <Text span c="brandBlue.0" className={classes.nowrap}>{t.servicePages.phonePrompt}</Text>
           <Anchor href={telHref(COMPANY.phones.mobile[0])} c="white" fw={800} fz="lg" underline="hover" className={classes.nowrap}>
             {COMPANY.phones.mobile[0].display}
           </Anchor>
         </Group>
-        <Text size="sm" c="brandBlue.0" ta={justify === 'center' ? 'center' : 'left'}>{t.servicePages.phoneAnswer}</Text>
+        <Text size="sm" c="brandBlue.0" ta={align}>{t.servicePages.phoneAnswer}</Text>
       </Stack>
     </Group>
   );

@@ -21,7 +21,7 @@ export const UK_FAQ: FaqPageContent = {
   breadcrumb: 'Поширені запитання (FAQ)',
   categoriesLabel: 'Категорії запитань',
   questionCount: { one: 'запитання', few: 'запитання', many: 'запитань' },
-  sourcesLabel: { one: 'Джерело', many: 'Джерела' },
+  sourcesLabel: { one: 'Джерело', other: 'Джерела' },
   categories: [
     {
       id: 'o-biurze',

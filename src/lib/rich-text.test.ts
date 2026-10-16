@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { isExternalHref, parseRichText, richTextToHtml } from './rich-text';
+import { parseRichText, richTextToHtml } from './rich-text';
 
 describe('parseRichText', () => {
   it('splits text, links and bold phrases in order', () => {
@@ -18,13 +18,6 @@ describe('parseRichText', () => {
 
   it('leaves broken markup as text, so a content test can find it', () => {
     expect(parseRichText('[KPiR](/uslugi/kpir')).toEqual([{ kind: 'text', text: '[KPiR](/uslugi/kpir' }]);
-  });
-});
-
-describe('isExternalHref', () => {
-  it('tells site paths from external addresses', () => {
-    expect(isExternalHref('https://www.biznes.gov.pl/pl/portal/00285')).toBe(true);
-    expect(isExternalHref('/uslugi/kpir')).toBe(false);
   });
 });
 

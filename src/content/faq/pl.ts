@@ -20,7 +20,7 @@ export const PL_FAQ: FaqPageContent = {
   breadcrumb: 'Częste pytania (FAQ)',
   categoriesLabel: 'Kategorie pytań',
   questionCount: { one: 'pytanie', few: 'pytania', many: 'pytań' },
-  sourcesLabel: { one: 'Źródło', many: 'Źródła' },
+  sourcesLabel: { one: 'Źródło', other: 'Źródła' },
   categories: [
     {
       id: 'o-biurze',

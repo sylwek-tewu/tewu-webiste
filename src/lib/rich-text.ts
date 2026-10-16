@@ -1,3 +1,5 @@
+import { isExternalHref } from '@/lib/href';
+
 /**
  * Rich text of the FAQ answers: `[label](href)` is a link and `**text**` is bold, nothing else.
  * One parser feeds the page (RichText), the JSON-LD answers and the content tests.
@@ -21,8 +23,6 @@ export function parseRichText(text: string): RichSegment[] {
   if (last < text.length) segments.push({ kind: 'text', text: text.slice(last) });
   return segments;
 }
-
-export const isExternalHref = (href: string) => /^https?:\/\//.test(href);
 
 const escapeHtml = (text: string) =>
   text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

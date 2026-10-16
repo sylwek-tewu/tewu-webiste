@@ -28,7 +28,7 @@ describe('formatCount', () => {
 
 describe('singularOrPlural', () => {
   it('takes the singular only for one', () => {
-    const forms = { one: 'Źródło', many: 'Źródła' };
+    const forms = { one: 'Źródło', other: 'Źródła' };
     expect(singularOrPlural(1, forms)).toBe('Źródło');
     expect(singularOrPlural(2, forms)).toBe('Źródła');
     expect(singularOrPlural(5, forms)).toBe('Źródła');
