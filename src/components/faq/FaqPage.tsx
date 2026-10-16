@@ -110,7 +110,7 @@ export default function FaqPage({ content, updatedAt }: { content: FaqPageConten
               </Text>
               <Text size="sm" c="slate.4" mt={4}>
                 {hero.disclaimer}{' '}
-                <Anchor href={`#${CONTACT_ID}`} c="white" underline="always" inherit>
+                <Anchor href={`#${CONTACT_ID}`} underline="always" inherit className={classes.disclaimerLink}>
                   {hero.disclaimerLink}
                 </Anchor>
               </Text>
