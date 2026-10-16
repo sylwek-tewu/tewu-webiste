@@ -62,7 +62,7 @@ export function Services() {
                             >
                                 {SERVICE_ICONS[service.id] || <Building2 size={24} />}
                             </ThemeIcon>
-                            <Title order={3} size="h4" fw={700} c="slate.9" mb="sm" lh={1.3}>
+                            <Title order={3} size="h4" c="slate.9" mb="sm">
                                 {service.title}
                             </Title>
                             <Text size="sm" c="slate.6" lh={1.6} mb="lg" lineClamp={2}>

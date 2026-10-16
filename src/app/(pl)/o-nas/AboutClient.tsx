@@ -106,7 +106,7 @@ export default function AboutClient() {
                                 <ThemeIcon size={56} radius="lg" bg="blue.0" c="blue.6" mb="lg">
                                     {VALUE_ICONS[i]}
                                 </ThemeIcon>
-                                <Title order={3} fw={700} c="slate.9" mb="md" size="h4">{item.title}</Title>
+                                <Title order={3} size="h4" c="slate.9" mb="md">{item.title}</Title>
                                 <Text c="slate.6" lh={1.6}>{item.desc}</Text>
                             </Paper>
                         ))}

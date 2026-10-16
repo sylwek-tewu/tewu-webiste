@@ -103,7 +103,7 @@ export default function OutsourcingClient() {
                                 >
                                     {step.step}
                                 </Text>
-                                <Title order={3} fw={700} c="slate.9" mb="md" size="h4">{step.title}</Title>
+                                <Title order={3} size="h4" c="slate.9" mb="md">{step.title}</Title>
                                 <Text c="slate.6" lh={1.6}>{step.desc}</Text>
                             </Paper>
                         ))}

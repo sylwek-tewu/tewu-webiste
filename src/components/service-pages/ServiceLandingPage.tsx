@@ -14,7 +14,7 @@ import type { ServicePageContent } from '@/content/service-pages/types';
 function CheckList({ title, items }: { title: string; items: string[] }) {
   return (
     <Box>
-      {/* Two lists side by side, so smaller than the section titles (h2 never goes below 30 px, h4 is 24 px) */}
+      {/* Two lists side by side, so smaller than the section titles (h2 never goes below 30 px, h4 is 24 px, at a card title's weight) */}
       <Title order={2} size="h4" c="slate.9" mb="lg">
         {title}
       </Title>
@@ -98,7 +98,7 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
     <Stack gap={0} bg="white">
       <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
         <Container size="md" px="md">
-          <Title order={1} c="white" mb="md" lts="-0.025em">
+          <Title order={1} c="white" mb="md">
             {content.hero.title}
           </Title>
           <Text size="xl" c="slate.4" mb="xl">
@@ -148,7 +148,7 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
           </Title>
           <SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl">
             <Paper p="xl" radius="lg" withBorder>
-              <Title order={3} fz="lg" c="slate.9" mb="md">
+              <Title order={3} size="h5" c="slate.9" mb="md">
                 {t.servicePages.pricing.factorsTitle}
               </Title>
               <List spacing="xs">
@@ -160,7 +160,7 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
               </List>
             </Paper>
             <Paper p="xl" radius="lg" withBorder>
-              <Title order={3} fz="lg" c="slate.9" mb="md">
+              <Title order={3} size="h5" c="slate.9" mb="md">
                 {t.servicePages.pricing.processTitle}
               </Title>
               <List type="ordered" spacing="xs">
@@ -174,7 +174,7 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
           </SimpleGrid>
           {content.pricing.range && (
             <Paper p="xl" radius="lg" withBorder mt="xl" ta="center">
-              <Title order={3} fz="lg" c="slate.9" mb="xs">
+              <Title order={3} size="h5" c="slate.9" mb="xs">
                 {t.servicePages.pricing.rangeTitle}
               </Title>
               <Text fw={900} fz="xl" c="brandBlue.7">
@@ -199,7 +199,7 @@ export default function ServiceLandingPage({ content }: { content: ServicePageCo
                 <ThemeIcon size={40} radius="xl" mb="md" fw={900}>
                   {index + 1}
                 </ThemeIcon>
-                <Title order={3} fz="lg" c="slate.9" mb="xs">
+                <Title order={3} size="h5" c="slate.9" mb="xs">
                   {step.title}
                 </Title>
                 <Text c="slate.6">{step.description}</Text>

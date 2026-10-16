@@ -45,8 +45,11 @@ export const theme = createTheme({
             // Section headers - medium responsive
             h2: { fontSize: "clamp(1.875rem, 4vw, 2.25rem)", lineHeight: "1.2" },
             h3: { fontSize: "30px", lineHeight: "1.25" },
-            h4: { fontSize: "24px", lineHeight: "1.3" },
-            h5: { fontSize: "20px", lineHeight: "1.4" },
+            // Card titles, lighter than the section headings: h4 for the large cards (home services,
+            // outsourcing steps, values on /o-nas), h5 for the small ones (/uslugi, service pages).
+            // h3 does not fit a card: 30 px is as large as an h2 on a phone.
+            h4: { fontSize: "24px", lineHeight: "1.3", fontWeight: "700" },
+            h5: { fontSize: "20px", lineHeight: "1.3", fontWeight: "700" },
             h6: { fontSize: "16px", lineHeight: "1.5" },
         },
     },
@@ -88,6 +91,14 @@ export const theme = createTheme({
         Container: {
             defaultProps: {
                 size: 1280, // 80rem = max-w-7xl
+            },
+        },
+        Title: {
+            styles: {
+                root: {
+                    // Tight tracking on every heading; theme.headings has no field for letter-spacing
+                    letterSpacing: '-0.025em',
+                },
             },
         },
     },
