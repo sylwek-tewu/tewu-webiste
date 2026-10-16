@@ -3,6 +3,7 @@
 import React from 'react';
 import { ShieldCheck, Clock, Award, CheckCircle2 } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, ThemeIcon, Paper, Group } from '@mantine/core';
+import { Eyebrow } from '@/components/Eyebrow';
 import { PageHero } from '@/components/PageHero';
 import { useLocale } from '@/i18n/LocaleContext';
 import { OfficePicture } from '@/components/OfficePicture';
@@ -85,9 +86,7 @@ export default function AboutClient() {
             <Box component="section" py={96} bg="slate.0">
                 <Container size="xl" px="md">
                     <Box ta="center" mb={64}>
-                        <Text fw={900} c="brandBlue.6" tt="uppercase" lts="0.1em" size="sm" mb="xs">
-                            {t.about.values.label}
-                        </Text>
+                        <Eyebrow>{t.about.values.label}</Eyebrow>
                         <Title order={2} c="slate.9">
                             {t.about.values.title}
                         </Title>

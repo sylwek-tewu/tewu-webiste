@@ -4,6 +4,7 @@ import React from 'react';
 import { Box, Container, SimpleGrid, Paper, ThemeIcon, Text, Title, VisuallyHidden } from '@mantine/core';
 import { ArrowRight, Building2, Calculator, FileDigit, Users, ClipboardCheck, FileText, Scale } from 'lucide-react';
 import Link from 'next/link';
+import { Eyebrow } from '@/components/Eyebrow';
 import classes from '@/components/layout/Layout.module.css';
 import { localizePath, useLocale } from '@/i18n/LocaleContext';
 import type { Locale } from '@/i18n/types';
@@ -33,9 +34,7 @@ export function Services() {
     return (
         <Box component="section" py={96} bg="slate.0">
             <Container ta="center" mb={64}>
-                <Text fw={900} c="brandBlue.6" tt="uppercase" lts="0.1em" size="sm" mb="xs">
-                    {t.home.services.sectionLabel}
-                </Text>
+                <Eyebrow>{t.home.services.sectionLabel}</Eyebrow>
                 <Title order={2} c="slate.9">
                     {t.home.services.title}
                 </Title>
