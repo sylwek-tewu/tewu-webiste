@@ -15,7 +15,7 @@ export default function NotFoundContent() {
         <Text fw={900} c="brandBlue.6" style={{ fontSize: '4rem', lineHeight: 1 }} mb="md">
           404
         </Text>
-        <Title order={1} fw={900} c="slate.9" mb="sm">
+        <Title order={1} c="slate.9" mb="sm">
           {t.notFound.title}
         </Title>
         <Text c="slate.6" mb="xl">

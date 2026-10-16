@@ -35,7 +35,7 @@ export function Services() {
                 <Text fw={900} c="brandBlue" tt="uppercase" style={{ letterSpacing: '0.1em' }} size="sm" mb="xs">
                     {t.home.services.sectionLabel}
                 </Text>
-                <Title order={2} fw={900} c="slate.9" style={{ letterSpacing: '-0.025em' }}>
+                <Title order={2} c="slate.9">
                     {t.home.services.title}
                 </Title>
             </Container>

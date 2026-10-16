@@ -21,7 +21,7 @@ export default function OutsourcingClient() {
             {/* Header */}
             <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
                 <Container size="md" px="md">
-                    <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', letterSpacing: '-0.025em' }}>
+                    <Title order={1} c="white" mb="md">
                         {t.outsourcing.header.title}
                     </Title>
                     <Text size="xl" c="slate.4">
@@ -36,7 +36,7 @@ export default function OutsourcingClient() {
                     <SimpleGrid cols={{ base: 1, md: 2 }} spacing={64} verticalSpacing={64}>
                         <Stack gap="xl">
                             <Box>
-                                <Title order={2} fw={900} c="slate.9" style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)', letterSpacing: '-0.025em' }} mb="md">
+                                <Title order={2} c="slate.9" mb="md">
                                     {t.outsourcing.intro.title}
                                 </Title>
                                 <Text size="lg" c="slate.6" lh={1.6}>
@@ -81,7 +81,7 @@ export default function OutsourcingClient() {
             <Box component="section" py={96} bg="slate.0">
                 <Container size="xl" px="md">
                     <Box ta="center" mb={64}>
-                        <Title order={2} fw={900} c="slate.9" style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)', letterSpacing: '-0.025em' }} mb="xs">
+                        <Title order={2} c="slate.9" mb="xs">
                             {t.outsourcing.steps.title}
                         </Title>
                         <Text c="slate.5">{t.outsourcing.steps.subtitle}</Text>

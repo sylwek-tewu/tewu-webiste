@@ -30,7 +30,7 @@ export default function ServicesClient() {
             {/* Hero Section */}
             <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
                 <Container size="md" px="md">
-                    <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', letterSpacing: '-0.025em' }}>
+                    <Title order={1} c="white" mb="md">
                         {t.servicesPage.header.title}
                     </Title>
                     <Text size="xl" c="slate.4">
@@ -89,7 +89,7 @@ export default function ServicesClient() {
             {/* CTA Section */}
             <Box component="section" py={96} bg="brandBlue.6">
                 <Container size="md" px="md" ta="center">
-                    <Title order={2} c="white" fw={900} mb="lg" fz={{ base: 'xl', md: '2.25rem' }}>
+                    <Title order={2} c="white" mb="lg">
                         {t.servicesPage.cta.title}
                     </Title>
                     <Text c="blue.0" size="lg" mb="xl" maw={600} mx="auto">

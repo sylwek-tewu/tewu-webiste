@@ -21,7 +21,7 @@ export default function AboutClient() {
             {/* Header Section */}
             <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
                 <Container size="md" px="md">
-                    <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', letterSpacing: '-0.025em' }}>
+                    <Title order={1} c="white" mb="md">
                         {t.about.header.title}
                     </Title>
                     <Text size="xl" c="slate.4">
@@ -36,7 +36,7 @@ export default function AboutClient() {
                     {/* Centred: the 4:3 photo is shorter than the text next to it */}
                     <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={80} style={{ alignItems: 'center' }}>
                         <Stack gap="xl">
-                            <Title order={2} fw={900} c="slate.9" lh={1.2} style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)' }}>
+                            <Title order={2} c="slate.9">
                                 {t.about.intro.title}
                             </Title>
                             <Stack gap="md" c="slate.6" lh={1.6}>
@@ -96,7 +96,7 @@ export default function AboutClient() {
                         <Text fw={900} c="blue.6" tt="uppercase" style={{ letterSpacing: '0.1em' }} size="sm" mb="xs">
                             {t.about.values.label}
                         </Text>
-                        <Title order={2} size="h3" fw={900} c="slate.9" style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)', letterSpacing: '-0.025em' }}>
+                        <Title order={2} c="slate.9">
                             {t.about.values.title}
                         </Title>
                     </Box>
@@ -117,7 +117,7 @@ export default function AboutClient() {
             {/* Mission Section */}
             <Box component="section" py={96}>
                 <Container size="md" px="md" ta="center">
-                    <Title order={2} fw={900} c="slate.9" mb="xl" size="h2">
+                    <Title order={2} c="slate.9" mb="xl">
                         {t.about.mission.title}
                     </Title>
                     <Text size="xl" c="slate.6" fs="italic" lh={1.6} style={{ fontSize: '1.5rem' }}>

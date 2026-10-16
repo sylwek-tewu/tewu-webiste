@@ -30,11 +30,10 @@ export function Hero() {
                                     order={1}
                                     c="slate.9"
                                     className={classes.heroTitle}
-                                    style={{ letterSpacing: '-0.025em', lineHeight: 1.1 }}
                                 >
                                     {/* The small line is part of the H1 so that the heading carries the offer's keyword;
                                         the slogan below keeps its size. The space keeps the text content from running together. */}
-                                    <Text span display="block" size="xl" fw={700} c="slate.6" lh={1.3} mb="xs" style={{ letterSpacing: 0 }}>
+                                    <Text span display="block" size="xl" fw={700} c="slate.6" lh={1.3} lts={0} mb="xs">
                                         {t.home.hero.titleKicker}
                                     </Text>{' '}
                                     {t.home.hero.titleNormal}<br />

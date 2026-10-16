@@ -18,7 +18,7 @@ export default function ContactClient() {
             <Box component="section" py={96} bg="slate.0">
                 <Container size="xl" px="md">
                     <Box ta="center" mb={64}>
-                        <Title order={1} fw={900} c="slate.9" mb="md" style={{ fontSize: 'clamp(2.25rem, 5vw, 3rem)', letterSpacing: '-0.025em' }}>
+                        <Title order={1} c="slate.9" mb="md">
                             {t.contact.header.title}
                         </Title>
                         <Text size="xl" c="slate.6" maw={700} mx="auto">
@@ -31,7 +31,7 @@ export default function ContactClient() {
                         <Stack gap="xl">
                             <Group gap="sm">
                                 <Building2 color="var(--mantine-color-blue-6)" size={28} />
-                                <Title order={2} fw={700} c="slate.9" size="h2">
+                                <Title order={2} c="slate.9">
                                     {t.contact.contactDataTitle}
                                 </Title>
                             </Group>
@@ -135,7 +135,7 @@ export default function ContactClient() {
                         <Stack gap="xl">
                             <Group gap="sm">
                                 <FileText color="var(--mantine-color-blue-6)" size={28} />
-                                <Title order={2} fw={700} c="slate.9" size="h2">
+                                <Title order={2} c="slate.9">
                                     {t.contact.regAndBankTitle}
                                 </Title>
                             </Group>
@@ -194,7 +194,7 @@ export default function ContactClient() {
             <Box component="section" py={96} bg="white">
                 <Container size="xl" px="md">
                     <Box ta="center" mb={48}>
-                        <Title order={2} fw={900} c="slate.9" style={{ fontSize: '1.875rem', letterSpacing: '-0.025em' }}>
+                        <Title order={2} c="slate.9">
                             {t.contact.mapTitle}
                         </Title>
                         <Text c="slate.5" mt="xs">{t.contact.mapSubtitle}</Text>

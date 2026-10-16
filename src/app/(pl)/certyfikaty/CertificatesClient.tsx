@@ -14,7 +14,7 @@ const CertificatesClient: React.FC = () => {
             {/* Header */}
             <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
                 <Container size="md" px="md">
-                    <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', letterSpacing: '-0.025em' }}>
+                    <Title order={1} c="white" mb="md">
                         {t.certificates.header.title}
                     </Title>
                     <Text size="xl" c="slate.4">
@@ -32,7 +32,7 @@ const CertificatesClient: React.FC = () => {
                                 <Badge size="lg" variant="filled" color="blue.0" c="blue.7" radius="lg" mb="sm">
                                     {t.certificates.badge}
                                 </Badge>
-                                <Title order={2} fw={900} c="slate.9" lh={1.2} style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)' }} mb="md">
+                                <Title order={2} c="slate.9" mb="md">
                                     {t.certificates.title}
                                 </Title>
                                 <Stack gap="md" c="slate.6" lh={1.6}>
