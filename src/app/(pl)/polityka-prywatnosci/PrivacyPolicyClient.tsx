@@ -126,8 +126,8 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                 </Text>
                 <Stack gap="sm">
                   <Paper p="md" radius="md" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
-                    <Group gap="xs" mb={4}>
-                      <Mail size={16} color="var(--mantine-color-brandBlue-6)" />
+                    <Group gap="xs" mb={4} wrap="nowrap">
+                      <Mail size={16} color="var(--mantine-color-brandBlue-6)" style={{ flexShrink: 0 }} />
                       <Text size="sm" fw={700} c="slate.9">{p.s4MailTitle}</Text>
                     </Group>
                     <Text size="xs" c="slate.6" lh={1.5}>
@@ -136,8 +136,8 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                   </Paper>
 
                   <Paper p="md" radius="md" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
-                    <Group gap="xs" mb={4}>
-                      <Building2 size={16} color="var(--mantine-color-brandBlue-6)" />
+                    <Group gap="xs" mb={4} wrap="nowrap">
+                      <Building2 size={16} color="var(--mantine-color-brandBlue-6)" style={{ flexShrink: 0 }} />
                       <Text size="sm" fw={700} c="slate.9">{p.s4HostingTitle}</Text>
                     </Group>
                     <Text size="xs" c="slate.6" lh={1.5}>
@@ -146,8 +146,8 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                   </Paper>
 
                   <Paper p="md" radius="md" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
-                    <Group gap="xs" mb={4}>
-                      <Lock size={16} color="var(--mantine-color-brandBlue-6)" />
+                    <Group gap="xs" mb={4} wrap="nowrap">
+                      <Lock size={16} color="var(--mantine-color-brandBlue-6)" style={{ flexShrink: 0 }} />
                       <Text size="sm" fw={700} c="slate.9">{p.s4BufferTitle}</Text>
                     </Group>
                     <Text size="xs" c="slate.6" lh={1.5}>
@@ -156,8 +156,8 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                   </Paper>
 
                   <Paper p="md" radius="md" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
-                    <Group gap="xs" mb={4}>
-                      <Globe size={16} color="var(--mantine-color-brandBlue-6)" />
+                    <Group gap="xs" mb={4} wrap="nowrap">
+                      <Globe size={16} color="var(--mantine-color-brandBlue-6)" style={{ flexShrink: 0 }} />
                       <Text size="sm" fw={700} c="slate.9">{p.s4TransferTitle}</Text>
                     </Group>
                     <Text size="xs" c="slate.6" lh={1.5}>

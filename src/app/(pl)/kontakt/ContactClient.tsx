@@ -29,8 +29,8 @@ export default function ContactClient() {
                     <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={48} style={{ alignItems: 'stretch' }}>
                         {/* Informacje Podstawowe (Lewa kolumna) */}
                         <Stack gap="xl">
-                            <Group gap="sm">
-                                <Building2 color="var(--mantine-color-brandBlue-6)" size={28} />
+                            <Group gap="sm" wrap="nowrap">
+                                <Building2 color="var(--mantine-color-brandBlue-6)" size={28} style={{ flexShrink: 0 }} />
                                 <Title order={2} c="slate.9">
                                     {t.contact.contactDataTitle}
                                 </Title>
@@ -133,8 +133,8 @@ export default function ContactClient() {
 
                         {/* Dane Rejestrowe i Bankowe (Prawa kolumna) */}
                         <Stack gap="xl">
-                            <Group gap="sm">
-                                <FileText color="var(--mantine-color-brandBlue-6)" size={28} />
+                            <Group gap="sm" wrap="nowrap">
+                                <FileText color="var(--mantine-color-brandBlue-6)" size={28} style={{ flexShrink: 0 }} />
                                 <Title order={2} c="slate.9">
                                     {t.contact.regAndBankTitle}
                                 </Title>
@@ -174,8 +174,8 @@ export default function ContactClient() {
                                     <Text size="sm" fw={700} c="slate.9">{t.contact.courtValue}</Text>
                                 </Box>
                                 <Paper mt="auto" pt="md" p="lg" radius="lg" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-brandBlue-0)' }}>
-                                    <Group gap="xs" mb="xs" c="brandBlue.6">
-                                        <Landmark size={20} />
+                                    <Group gap="xs" mb="xs" c="brandBlue.6" wrap="nowrap">
+                                        <Landmark size={20} style={{ flexShrink: 0 }} />
                                         <Text size="xs" fw={700} tt="uppercase" lts="0.1em">
                                             {t.contact.bankAccountLabel}
                                         </Text>
