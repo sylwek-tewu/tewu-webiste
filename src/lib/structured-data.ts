@@ -3,8 +3,8 @@ import { localizePath } from '@/i18n/config';
 import type { Locale } from '@/i18n/types';
 import { COMPANY } from '@/lib/company';
 import { OG_IMAGE_PATH } from '@/lib/og-image-meta';
+import { PATHS } from '@/lib/paths';
 import { SERVICE_PAGES, servicePagePath, type ServicePageSlug } from '@/lib/service-pages';
-import { FAQ_PATH } from '@/lib/site-pages';
 import type { ServicePageContent } from '@/content/service-pages/types';
 import type { FaqPageContent, FaqQuestion } from '@/content/faq/types';
 import { OFFICE_PHOTOS } from '@/lib/office-photos';
@@ -41,7 +41,7 @@ const UK_SERVICE_TYPE: Record<ServicePageSlug, string> = {
 };
 
 const absolute = (path: string) => `${SITE_URL}${path}`;
-const homeUrl = (locale: Locale) => (locale === 'pl' ? `${SITE_URL}/` : absolute(localizePath('/', locale)));
+const homeUrl = (locale: Locale) => absolute(localizePath(PATHS.home, locale));
 
 function companyNode() {
   const { address, phones, registry } = COMPANY;
@@ -128,7 +128,7 @@ export function buildServicePageJsonLd({ locale, slug, meta, hero, faq }: Servic
         '@type': 'BreadcrumbList',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: labels.home, item: homeUrl(locale) },
-          { '@type': 'ListItem', position: 2, name: labels.services, item: absolute(localizePath('/uslugi', locale)) },
+          { '@type': 'ListItem', position: 2, name: labels.services, item: absolute(localizePath(PATHS.services, locale)) },
           { '@type': 'ListItem', position: 3, name: hero.title, item: url },
         ],
       },
@@ -160,7 +160,7 @@ function faqAnswerHtml({ answer, sources }: FaqQuestion, sourcesLabel: FaqPageCo
  */
 export function buildFaqPageJsonLd(content: FaqPageContent, updatedAt: string) {
   const { locale } = content;
-  const url = absolute(localizePath(FAQ_PATH, locale));
+  const url = absolute(localizePath(PATHS.faq, locale));
   const questions = content.categories.flatMap((category) => category.questions);
   return {
     '@context': 'https://schema.org',

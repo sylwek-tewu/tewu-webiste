@@ -12,7 +12,7 @@ a.serviceCard {
 
 .serviceCard:hover {
     background-color: var(--mantine-color-white);
-    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, var(--mantine-color-blue-1) 0px 25px 50px -12px;
+    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, var(--mantine-color-brandBlue-1) 0px 25px 50px -12px;
 }
 
 .iconContainer {
@@ -22,7 +22,7 @@ a.serviceCard {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--mantine-color-blue-6);
+    color: var(--mantine-color-brandBlue-6);
     box-shadow: var(--mantine-shadow-sm);
 }
 

@@ -6,7 +6,8 @@ const ZAPYTANNIA = { one: 'запитання', few: 'запитання', many:
 
 describe('pluralForm', () => {
   it.each([
-    [1, 'one'], [2, 'few'], [4, 'few'], [5, 'many'], [11, 'many'], [12, 'many'], [21, 'many'], [22, 'few'],
+    [1, 'one'], [2, 'few'], [4, 'few'], [5, 'many'], [11, 'many'], [12, 'many'], [14, 'many'], [21, 'many'], [22, 'few'],
+    [48, 'many'], [72, 'few'], [112, 'many'],
   ] as const)('pl %i → %s', (n, form) => {
     expect(pluralForm('pl', n)).toBe(form);
   });

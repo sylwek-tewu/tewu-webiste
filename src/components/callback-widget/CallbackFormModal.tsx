@@ -19,7 +19,8 @@ import { Phone, Clock, CheckCircle2, PhoneCall, AlertCircle, Send } from 'lucide
 import { useCallbackWidget } from './CallbackContext';
 import { CALLBACK_SLOTS, CALLBACK_TOPICS, type CallbackSlot, type CallbackTopic } from '@/lib/callback/types';
 import type { ResolvedCallNumber } from '@/lib/callback/call-number';
-import { useLocale } from '@/i18n/LocaleContext';
+import { localizePath, useLocale } from '@/i18n/LocaleContext';
+import { PATHS } from '@/lib/paths';
 import { useCallbackForm } from './useCallbackForm';
 import classes from './CallbackWidget.module.css';
 
@@ -56,7 +57,7 @@ export default function CallbackFormModal({ callInfo }: { callInfo: ResolvedCall
     locale,
   });
 
-  const privacyPath = locale === 'uk' ? '/uk/polityka-prywatnosci' : '/polityka-prywatnosci';
+  const privacyPath = localizePath(PATHS.privacy, locale);
 
   return (
     <Modal

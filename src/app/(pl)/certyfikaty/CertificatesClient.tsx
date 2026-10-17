@@ -3,6 +3,7 @@
 import React from 'react';
 import { ShieldCheck } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, Group, Paper, ThemeIcon, Badge } from '@mantine/core';
+import { PageHero } from '@/components/PageHero';
 import CertificatesList from '@/components/certificates/CertificatesList';
 import { useLocale } from '@/i18n/LocaleContext';
 
@@ -12,16 +13,7 @@ const CertificatesClient: React.FC = () => {
     return (
         <Stack gap={0} bg="white">
             {/* Header */}
-            <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
-                <Container size="md" px="md">
-                    <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', letterSpacing: '-0.025em' }}>
-                        {t.certificates.header.title}
-                    </Title>
-                    <Text size="xl" c="slate.4">
-                        {t.certificates.header.subtitle}
-                    </Text>
-                </Container>
-            </Box>
+            <PageHero title={t.certificates.header.title} lead={t.certificates.header.subtitle} />
 
             {/* Main Content */}
             <Box component="section" py={96}>
@@ -29,10 +21,10 @@ const CertificatesClient: React.FC = () => {
                     <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={64}>
                         <Stack gap="xl">
                             <Box>
-                                <Badge size="lg" variant="filled" color="blue.0" c="blue.7" radius="lg" mb="sm">
+                                <Badge variant="pale" mb="sm">
                                     {t.certificates.badge}
                                 </Badge>
-                                <Title order={2} fw={900} c="slate.9" lh={1.2} style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)' }} mb="md">
+                                <Title order={2} c="slate.9" mb="md">
                                     {t.certificates.title}
                                 </Title>
                                 <Stack gap="md" c="slate.6" lh={1.6}>
@@ -49,7 +41,7 @@ const CertificatesClient: React.FC = () => {
 
                             <Paper p="xl" radius="xl" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-1)' }}>
                                 <Group align="flex-start">
-                                    <ThemeIcon variant="transparent" c="blue.6" size={32}>
+                                    <ThemeIcon variant="transparent" c="brandBlue.6" size={32}>
                                         <ShieldCheck size={32} />
                                     </ThemeIcon>
                                     <Box style={{ flex: 1 }}>

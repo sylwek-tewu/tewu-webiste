@@ -8,16 +8,17 @@ import { Box, Container, SimpleGrid, Stack, Text, Group, Anchor } from '@mantine
 import classes from './layout/Layout.module.css';
 import { TewuLogo } from './icons';
 import { localizePath, useLocale } from '@/i18n/LocaleContext';
+import { PATHS } from '@/lib/paths';
 import { SERVICE_PAGE_SLUGS, servicePagePath } from '@/lib/service-pages';
-import { FAQ_PATH } from '@/lib/site-pages';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
 const Footer: React.FC = () => {
   const { t, locale } = useLocale();
-  const privacyPath = localizePath('/polityka-prywatnosci', locale);
-  const outsourcingPath = localizePath('/outsourcing', locale);
-  const faqPath = localizePath(FAQ_PATH, locale);
+  const privacyPath = localizePath(PATHS.privacy, locale);
+  const outsourcingPath = localizePath(PATHS.outsourcing, locale);
+  const faqPath = localizePath(PATHS.faq, locale);
+  const links = t.nav.links.map((link) => ({ label: link.label, href: localizePath(link.path, locale) }));
 
   return (
     <Box component="footer" bg="slate.9" c="slate.3">
@@ -38,11 +39,11 @@ const Footer: React.FC = () => {
             </Text>
             <SimpleGrid cols={2} spacing={{ base: 'sm', sm: 'md' }}>
               <Stack gap="xs">
-                {t.nav.links.slice(0, 4).map((link) => (
+                {links.slice(0, 4).map((link) => (
                   <Anchor
-                    key={link.path}
+                    key={link.href}
                     component={Link}
-                    href={link.path}
+                    href={link.href}
                     size="sm"
                     underline="hover"
                     className={classes.footerLink}
@@ -53,11 +54,11 @@ const Footer: React.FC = () => {
                 ))}
               </Stack>
               <Stack gap="xs">
-                {t.nav.links.slice(4).map((link) => (
+                {links.slice(4).map((link) => (
                   <Anchor
-                    key={link.path}
+                    key={link.href}
                     component={Link}
-                    href={link.path}
+                    href={link.href}
                     size="sm"
                     underline="hover"
                     className={classes.footerLink}

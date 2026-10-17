@@ -7,6 +7,15 @@ import { COMPANY } from '@/lib/company';
 import { useLocale } from '@/i18n/LocaleContext';
 import { Emphasis } from '@/i18n/Emphasis';
 
+/** A numbered section of the policy: an H2 at h3 size, the page's H1 being the only larger heading. */
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <Title order={2} size="h3" c="slate.9" mb="sm">
+      {children}
+    </Title>
+  );
+}
+
 export default function PrivacyPolicyClient({ retentionHours }: { retentionHours: number }) {
   const { t, locale } = useLocale();
   const p = t.privacyPolicy;
@@ -18,11 +27,11 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
           {/* Header */}
           <Box ta="center" mb="lg">
             <Group justify="center" mb="sm">
-              <ThemeIcon size={52} radius="xl" bg="blue.0" c="brandBlue.6">
+              <ThemeIcon size={52} radius="xl" bg="brandBlue.0" c="brandBlue.6">
                 <Shield size={28} />
               </ThemeIcon>
             </Group>
-            <Title order={1} fw={900} c="slate.9" style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', letterSpacing: '-0.025em' }}>
+            <Title order={1} c="slate.9">
               {p.headerTitle}
             </Title>
             <Text c="slate.5" size="sm" mt="xs">
@@ -33,7 +42,6 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
           {/* Legal Note for Ukrainian translation */}
           {locale === 'uk' && p.legalNoteUk && (
             <Alert
-              color="blue"
               icon={<AlertTriangle size={18} />}
               radius="lg"
               title="Юридична примітка / Informacja prawna"
@@ -47,9 +55,7 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
             <Stack gap="xl">
               {/* Section 1 */}
               <div>
-                <Title order={2} size="h3" fw={800} c="slate.9" mb="sm">
-                  {p.s1Title}
-                </Title>
+                <SectionTitle>{p.s1Title}</SectionTitle>
                 <Text size="sm" c="slate.7" lh={1.7} mb="md">
                   <Emphasis text={p.s1Content} />
                 </Text>
@@ -76,9 +82,7 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
 
               {/* Section 2 */}
               <div>
-                <Title order={2} size="h3" fw={800} c="slate.9" mb="sm">
-                  {p.s2Title}
-                </Title>
+                <SectionTitle>{p.s2Title}</SectionTitle>
                 <Text size="sm" c="slate.7" lh={1.7} mb="sm">
                   {p.s2Intro}
                 </Text>
@@ -95,9 +99,7 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
 
               {/* Section 3 */}
               <div>
-                <Title order={2} size="h3" fw={800} c="slate.9" mb="sm">
-                  {p.s3Title}
-                </Title>
+                <SectionTitle>{p.s3Title}</SectionTitle>
                 <Text size="sm" c="slate.7" lh={1.7}>
                   {p.s3Intro}
                 </Text>
@@ -118,16 +120,14 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
 
               {/* Section 4 */}
               <div>
-                <Title order={2} size="h3" fw={800} c="slate.9" mb="sm">
-                  {p.s4Title}
-                </Title>
+                <SectionTitle>{p.s4Title}</SectionTitle>
                 <Text size="sm" c="slate.7" lh={1.7} mb="sm">
                   {p.s4Intro}
                 </Text>
                 <Stack gap="sm">
                   <Paper p="md" radius="md" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
-                    <Group gap="xs" mb={4}>
-                      <Mail size={16} color="var(--mantine-color-brandBlue-6)" />
+                    <Group gap="xs" mb={4} wrap="nowrap">
+                      <Mail size={16} color="var(--mantine-color-brandBlue-6)" style={{ flexShrink: 0 }} />
                       <Text size="sm" fw={700} c="slate.9">{p.s4MailTitle}</Text>
                     </Group>
                     <Text size="xs" c="slate.6" lh={1.5}>
@@ -136,8 +136,8 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                   </Paper>
 
                   <Paper p="md" radius="md" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
-                    <Group gap="xs" mb={4}>
-                      <Building2 size={16} color="var(--mantine-color-brandBlue-6)" />
+                    <Group gap="xs" mb={4} wrap="nowrap">
+                      <Building2 size={16} color="var(--mantine-color-brandBlue-6)" style={{ flexShrink: 0 }} />
                       <Text size="sm" fw={700} c="slate.9">{p.s4HostingTitle}</Text>
                     </Group>
                     <Text size="xs" c="slate.6" lh={1.5}>
@@ -146,8 +146,8 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                   </Paper>
 
                   <Paper p="md" radius="md" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
-                    <Group gap="xs" mb={4}>
-                      <Lock size={16} color="var(--mantine-color-brandBlue-6)" />
+                    <Group gap="xs" mb={4} wrap="nowrap">
+                      <Lock size={16} color="var(--mantine-color-brandBlue-6)" style={{ flexShrink: 0 }} />
                       <Text size="sm" fw={700} c="slate.9">{p.s4BufferTitle}</Text>
                     </Group>
                     <Text size="xs" c="slate.6" lh={1.5}>
@@ -156,8 +156,8 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
                   </Paper>
 
                   <Paper p="md" radius="md" withBorder bg="slate.0" style={{ borderColor: 'var(--mantine-color-slate-2)' }}>
-                    <Group gap="xs" mb={4}>
-                      <Globe size={16} color="var(--mantine-color-brandBlue-6)" />
+                    <Group gap="xs" mb={4} wrap="nowrap">
+                      <Globe size={16} color="var(--mantine-color-brandBlue-6)" style={{ flexShrink: 0 }} />
                       <Text size="sm" fw={700} c="slate.9">{p.s4TransferTitle}</Text>
                     </Group>
                     <Text size="xs" c="slate.6" lh={1.5}>
@@ -171,9 +171,7 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
 
               {/* Section 5 */}
               <div>
-                <Title order={2} size="h3" fw={800} c="slate.9" mb="sm">
-                  {p.s5Title}
-                </Title>
+                <SectionTitle>{p.s5Title}</SectionTitle>
                 <Text size="sm" c="slate.7" lh={1.7}>
                   {p.s5Content}
                 </Text>
@@ -189,9 +187,7 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
 
               {/* Section 6 */}
               <div>
-                <Title order={2} size="h3" fw={800} c="slate.9" mb="sm">
-                  {p.s6Title}
-                </Title>
+                <SectionTitle>{p.s6Title}</SectionTitle>
                 <Text size="sm" c="slate.7" lh={1.7} mb="sm">
                   {p.s6Intro}
                 </Text>
@@ -219,9 +215,7 @@ export default function PrivacyPolicyClient({ retentionHours }: { retentionHours
 
               {/* Section 7 */}
               <div>
-                <Title order={2} size="h3" fw={800} c="slate.9" mb="sm">
-                  {p.s7Title}
-                </Title>
+                <SectionTitle>{p.s7Title}</SectionTitle>
                 <Text size="sm" c="slate.7" lh={1.7} mb="xs">
                   {p.s7Content}
                 </Text>

@@ -1,4 +1,4 @@
-import { createTheme, MantineColorsTuple, CSSVariablesResolver } from "@mantine/core";
+import { createTheme, MantineColorsTuple, CSSVariablesResolver, type BadgeFactory, type PartialVarsResolver, type TitleFactory } from "@mantine/core";
 
 // Tailwind blue-600 #2563eb
 export const brandBlue: MantineColorsTuple = [
@@ -28,6 +28,8 @@ export const slate: MantineColorsTuple = [
     "#0F172A", // slate-900 - Dark backgrounds (Updated to match prototype)
 ];
 
+// Components take colours and heading sizes from here: brandBlue/slate, never Mantine's default
+// "blue" palette (mantine_cr_results_v2.md MANTINE-002), and no clamp(), fz or fw on a Title (MANTINE-003).
 export const theme = createTheme({
     primaryColor: "brandBlue",
     colors: {
@@ -42,11 +44,13 @@ export const theme = createTheme({
             // Hero/Page titles - large responsive. 2rem floor: at 320 px a 2.25rem title overflows on
             // long words („ewidencjonowany”, „відповідальністю”; e2e/layout.spec.ts)
             h1: { fontSize: "clamp(2rem, 5vw, 3.75rem)", lineHeight: "1.1" },
-            // Section headers - medium responsive
+            // Section headers - medium responsive. A larger section heading: Title size="display" (components.Title)
             h2: { fontSize: "clamp(1.875rem, 4vw, 2.25rem)", lineHeight: "1.2" },
             h3: { fontSize: "30px", lineHeight: "1.25" },
-            h4: { fontSize: "24px", lineHeight: "1.3" },
-            h5: { fontSize: "20px", lineHeight: "1.4" },
+            // Card and list titles, lighter than the section headings: h4 large, h5 small.
+            // h3 is too large for a card: on a phone it is as large as an h2.
+            h4: { fontSize: "24px", lineHeight: "1.3", fontWeight: "700" },
+            h5: { fontSize: "20px", lineHeight: "1.3", fontWeight: "700" },
             h6: { fontSize: "16px", lineHeight: "1.5" },
         },
     },
@@ -60,6 +64,16 @@ export const theme = createTheme({
                 tt: "uppercase",
                 fw: 700,
             },
+            // variant="pale": brandBlue.0 with brandBlue.7 text, light on any background
+            // (the FAQ hero on slate.9, /certyfikaty on white), unlike the translucent "light".
+            // A plain object, not Badge.extend: server code imports the theme, and there
+            // @mantine/core components are client references without .extend; satisfies keeps the
+            // CSS variable names type-checked, as .extend would.
+            vars: ((theme, props) => ({
+                root: props.variant === "pale"
+                    ? { "--badge-bg": theme.colors.brandBlue[0], "--badge-color": theme.colors.brandBlue[7] }
+                    : {},
+            })) satisfies PartialVarsResolver<BadgeFactory>,
         },
         Button: {
             defaultProps: {
@@ -90,6 +104,21 @@ export const theme = createTheme({
                 size: 1280, // 80rem = max-w-7xl
             },
         },
+        Title: {
+            // size="display": a section heading set larger than h2, 32–48 px (h2 30–36 px; h1 32–60 px,
+            // so on phones it matches the h1 floor), e.g. „Dlaczego warto nam zaufać?” on the home page.
+            // It stays an <h2> in the outline; the line height and weight still come from its order.
+            // theme.headings only has h1–h6. A plain object for the same reason as Badge above.
+            vars: ((_theme, props) => ({
+                root: props.size === "display" ? { "--title-fz": "clamp(2rem, 4vw, 3rem)" } : {},
+            })) satisfies PartialVarsResolver<TitleFactory>,
+            styles: {
+                root: {
+                    // Tight tracking on every heading; theme.headings has no field for letter-spacing
+                    letterSpacing: '-0.025em',
+                },
+            },
+        },
     },
 });
 
@@ -99,7 +128,6 @@ export const resolver: CSSVariablesResolver = (theme) => ({
         "--mantine-hero-padding-bottom": "128px",
         "--mantine-section-py": "96px",
         "--mantine-color-slate-900": theme.colors.slate[9],
-        "--mantine-color-brand-blue": theme.colors.brandBlue[6],
         "--cta-button-bg": theme.white,
     },
     light: {},

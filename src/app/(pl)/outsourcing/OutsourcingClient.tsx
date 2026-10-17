@@ -3,12 +3,13 @@
 import React from 'react';
 import { ShieldCheck, Zap, Crosshair, Lock } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, ThemeIcon, Paper, Group } from '@mantine/core';
+import { PageHero } from '@/components/PageHero';
 import classes from './OutsourcingClient.module.css';
 import { useLocale } from '@/i18n/LocaleContext';
 
 const FEATURE_ICONS = [
   <Zap key="0" color="var(--mantine-color-yellow-5)" />,
-  <Crosshair key="1" color="var(--mantine-color-blue-5)" />,
+  <Crosshair key="1" color="var(--mantine-color-brandBlue-5)" />,
   <Lock key="2" color="var(--mantine-color-indigo-5)" />,
   <ShieldCheck key="3" color="var(--mantine-color-grape-5)" />,
 ];
@@ -19,16 +20,7 @@ export default function OutsourcingClient() {
     return (
         <Stack gap={0} bg="white">
             {/* Header */}
-            <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
-                <Container size="md" px="md">
-                    <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', letterSpacing: '-0.025em' }}>
-                        {t.outsourcing.header.title}
-                    </Title>
-                    <Text size="xl" c="slate.4">
-                        {t.outsourcing.header.subtitle}
-                    </Text>
-                </Container>
-            </Box>
+            <PageHero title={t.outsourcing.header.title} lead={t.outsourcing.header.subtitle} />
 
             {/* Main Content */}
             <Box component="section" py={96}>
@@ -36,7 +28,7 @@ export default function OutsourcingClient() {
                     <SimpleGrid cols={{ base: 1, md: 2 }} spacing={64} verticalSpacing={64}>
                         <Stack gap="xl">
                             <Box>
-                                <Title order={2} fw={900} c="slate.9" style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)', letterSpacing: '-0.025em' }} mb="md">
+                                <Title order={2} c="slate.9" mb="md">
                                     {t.outsourcing.intro.title}
                                 </Title>
                                 <Text size="lg" c="slate.6" lh={1.6}>
@@ -81,7 +73,7 @@ export default function OutsourcingClient() {
             <Box component="section" py={96} bg="slate.0">
                 <Container size="xl" px="md">
                     <Box ta="center" mb={64}>
-                        <Title order={2} fw={900} c="slate.9" style={{ fontSize: 'clamp(1.875rem, 4vw, 2.25rem)', letterSpacing: '-0.025em' }} mb="xs">
+                        <Title order={2} c="slate.9" mb="xs">
                             {t.outsourcing.steps.title}
                         </Title>
                         <Text c="slate.5">{t.outsourcing.steps.subtitle}</Text>
@@ -97,13 +89,10 @@ export default function OutsourcingClient() {
                                 withBorder
                                 style={{ borderColor: 'var(--mantine-color-slate-1)', position: 'relative' }}
                             >
-                                <Text
-                                    fw={900}
-                                    style={{ fontSize: '3.75rem', position: 'absolute', top: '1rem', right: '2rem', color: 'var(--mantine-color-blue-6)', opacity: 0.1 }}
-                                >
+                                <Text fw={900} fz="3.75rem" c="brandBlue.6" opacity={0.1} pos="absolute" top="1rem" right="2rem">
                                     {step.step}
                                 </Text>
-                                <Title order={3} fw={700} c="slate.9" mb="md" size="h4">{step.title}</Title>
+                                <Title order={3} size="h4" c="slate.9" mb="md">{step.title}</Title>
                                 <Text c="slate.6" lh={1.6}>{step.desc}</Text>
                             </Paper>
                         ))}

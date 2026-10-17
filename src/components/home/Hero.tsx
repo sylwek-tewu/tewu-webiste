@@ -5,13 +5,15 @@ import Link from 'next/link';
 import { Container, Title, Text, Button, Group, Badge, Grid, GridCol, Box, Stack, Image, SimpleGrid, ThemeIcon } from '@mantine/core';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
 import classes from '@/components/layout/Layout.module.css';
-import { useLocale } from '@/i18n/LocaleContext';
+import { localizePath, useLocale } from '@/i18n/LocaleContext';
+import { PATHS } from '@/lib/paths';
 import { Emphasis } from '@/i18n/Emphasis';
+import { StatNumber } from '@/components/StatNumber';
 
 export function Hero() {
     const { t, locale } = useLocale();
-    const contactPath = locale === 'uk' ? '/uk/kontakt' : '/kontakt';
-    const servicesPath = locale === 'uk' ? '/uk/uslugi' : '/uslugi';
+    const contactPath = localizePath(PATHS.contact, locale);
+    const servicesPath = localizePath(PATHS.services, locale);
 
     return (
         <>
@@ -30,11 +32,10 @@ export function Hero() {
                                     order={1}
                                     c="slate.9"
                                     className={classes.heroTitle}
-                                    style={{ letterSpacing: '-0.025em', lineHeight: 1.1 }}
                                 >
                                     {/* The small line is part of the H1 so that the heading carries the offer's keyword;
                                         the slogan below keeps its size. The space keeps the text content from running together. */}
-                                    <Text span display="block" size="xl" fw={700} c="slate.6" lh={1.3} mb="xs" style={{ letterSpacing: 0 }}>
+                                    <Text span display="block" size="xl" fw={700} c="slate.6" lh={1.3} lts={0} mb="xs">
                                         {t.home.hero.titleKicker}
                                     </Text>{' '}
                                     {t.home.hero.titleNormal}<br />
@@ -133,19 +134,19 @@ export function Hero() {
                 <Container>
                     <SimpleGrid cols={{ base: 2, md: 4 }} spacing="lg">
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>{t.home.hero.stats.companiesCount}</Text>
+                            <StatNumber c="slate.9">{t.home.hero.stats.companiesCount}</StatNumber>
                             <Text c="slate.5" fw={500}>{t.home.hero.stats.companiesLabel}</Text>
                         </Box>
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>{t.home.hero.stats.yearsCount}</Text>
+                            <StatNumber c="slate.9">{t.home.hero.stats.yearsCount}</StatNumber>
                             <Text c="slate.5" fw={500}>{t.home.hero.stats.yearsLabel}</Text>
                         </Box>
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>{t.home.hero.stats.securityCount}</Text>
+                            <StatNumber c="slate.9">{t.home.hero.stats.securityCount}</StatNumber>
                             <Text c="slate.5" fw={500}>{t.home.hero.stats.securityLabel}</Text>
                         </Box>
                         <Box ta="center">
-                            <Text c="slate.9" fw={900} style={{ fontSize: '2.25rem' }}>{t.home.hero.stats.reactionCount}</Text>
+                            <StatNumber c="slate.9">{t.home.hero.stats.reactionCount}</StatNumber>
                             <Text c="slate.5" fw={500}>{t.home.hero.stats.reactionLabel}</Text>
                         </Box>
                     </SimpleGrid>

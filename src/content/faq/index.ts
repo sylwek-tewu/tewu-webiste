@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import type { Locale } from '@/i18n/types';
 import { buildPageMetadata } from '@/lib/metadata';
-import { FAQ_PATH } from '@/lib/site-pages';
+import { PATHS } from '@/lib/paths';
 import type { FaqPageContent } from './types';
 import { PL_FAQ } from './pl';
 import { UK_FAQ } from './uk';
@@ -22,5 +22,5 @@ export function getFaqContent(locale: Locale): FaqPageContent {
 
 export function buildFaqMetadata(locale: Locale): Metadata {
   const { meta } = getFaqContent(locale);
-  return buildPageMetadata({ locale, path: FAQ_PATH, title: meta.title, description: meta.description });
+  return buildPageMetadata({ locale, path: PATHS.faq, title: meta.title, description: meta.description });
 }

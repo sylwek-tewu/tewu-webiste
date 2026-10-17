@@ -85,7 +85,7 @@
 
 /* The ring sits inside the card, which clips anything outside its rounded corners. */
 .trigger:focus-visible {
-    outline: 3px solid var(--mantine-color-blue-6);
+    outline: 3px solid var(--mantine-color-brandBlue-6);
     outline-offset: -3px;
     border-radius: inherit;
 }

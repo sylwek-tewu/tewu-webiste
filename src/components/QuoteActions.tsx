@@ -7,6 +7,7 @@ import { Anchor, Button, Group, Stack, Text } from '@mantine/core';
 import { COMPANY, telHref } from '@/lib/company';
 import type { CallbackSource } from '@/lib/callback/types';
 import { localizePath, useLocale } from '@/i18n/LocaleContext';
+import { PATHS } from '@/lib/paths';
 import { useCallbackWidget } from '@/components/callback-widget';
 import { wrappingButtonStyles } from '@/components/layout/wrappingButtonStyles';
 import classes from './QuoteActions.module.css';
@@ -23,7 +24,7 @@ interface QuoteActionsProps {
 export function QuoteActions({ variant, source, align = 'center' }: QuoteActionsProps) {
   const { t, locale } = useLocale();
   const { openWidget } = useCallbackWidget();
-  const contactPath = localizePath('/kontakt', locale);
+  const contactPath = localizePath(PATHS.contact, locale);
 
   return (
     <Group justify={align} gap="lg" wrap="wrap">

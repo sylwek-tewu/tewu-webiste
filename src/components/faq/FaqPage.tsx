@@ -57,10 +57,10 @@ export default function FaqPage({ content, updatedAt }: { content: FaqPageConten
         <Container size="xl" px="md" pos="relative">
           <BesidePhoto>
             <Box>
-              <Badge variant="filled" color="brandBlue.0" c="brandBlue.7" mb="md">
+              <Badge variant="pale" mb="md">
                 {hero.badge}
               </Badge>
-              <Title order={1} c="white" mb="md" lts="-0.025em">
+              <Title order={1} c="white" mb="md">
                 {hero.title}
               </Title>
               <Text size="xl" c="slate.4" mb="lg">

@@ -4,6 +4,8 @@ import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
 import { renderWithMantine } from '@/test/render';
 import { getDictionary, type Locale } from '@/i18n';
+import { localizePath } from '@/i18n/config';
+import { PATHS } from '@/lib/paths';
 import { SERVICE_PAGE_SLUGS, servicePagePath } from '@/lib/service-pages';
 import { COMPANY } from '@/lib/company';
 import Footer from './Footer';
@@ -27,8 +29,15 @@ describe.each(['pl', 'uk'] as Locale[])('Footer (%s)', (locale) => {
 
   it('lists the incubator among the navigation links', () => {
     renderWithMantine(<Footer />, { locale });
-    const incubator = t.nav.links.find((link) => link.path.endsWith('/uslugi/inkubator-spolek'))!;
-    expect(screen.getByRole('link', { name: incubator.label })).toHaveAttribute('href', incubator.path);
+    const incubator = t.nav.links.find((link) => link.path === servicePagePath('pl', 'inkubator-spolek'))!;
+    expect(screen.getByRole('link', { name: incubator.label })).toHaveAttribute('href', servicePagePath(locale, 'inkubator-spolek'));
+  });
+
+  it('links the menu pages in the reader\'s language', () => {
+    const { container } = renderWithMantine(<Footer />, { locale });
+    for (const link of t.nav.links) {
+      expect(container.querySelector(`a[href="${localizePath(link.path, locale)}"]`), link.label).not.toBeNull();
+    }
   });
 
   it('links the FAQ page in the navigation column, right before the privacy policy', () => {
@@ -43,7 +52,7 @@ describe.each(['pl', 'uk'] as Locale[])('Footer (%s)', (locale) => {
   });
 
   it('keeps the FAQ page out of the main menu', () => {
-    expect(t.nav.links.map((link) => link.path)).not.toContain(locale === 'uk' ? '/uk/faq' : '/faq');
+    expect(t.nav.links.map((link) => link.path)).not.toContain(PATHS.faq);
   });
 
   it('names the FAQ link as agreed', () => {

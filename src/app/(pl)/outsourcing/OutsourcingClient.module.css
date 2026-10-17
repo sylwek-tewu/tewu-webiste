@@ -5,5 +5,5 @@
 
 .featureCard:hover,
 .featureCard:focus-within {
-    border-color: var(--mantine-color-blue-2);
+    border-color: var(--mantine-color-brandBlue-2);
 }
