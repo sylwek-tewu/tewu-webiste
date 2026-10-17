@@ -1,4 +1,4 @@
-import { createTheme, MantineColorsTuple, CSSVariablesResolver, type BadgeProps, type MantineTheme, type TitleProps } from "@mantine/core";
+import { createTheme, MantineColorsTuple, CSSVariablesResolver, type BadgeFactory, type PartialVarsResolver, type TitleFactory } from "@mantine/core";
 
 // Tailwind blue-600 #2563eb
 export const brandBlue: MantineColorsTuple = [
@@ -44,7 +44,7 @@ export const theme = createTheme({
             // Hero/Page titles - large responsive. 2rem floor: at 320 px a 2.25rem title overflows on
             // long words („ewidencjonowany”, „відповідальністю”; e2e/layout.spec.ts)
             h1: { fontSize: "clamp(2rem, 5vw, 3.75rem)", lineHeight: "1.1" },
-            // Section headers - medium responsive
+            // Section headers - medium responsive. A larger section heading: Title size="display" (components.Title)
             h2: { fontSize: "clamp(1.875rem, 4vw, 2.25rem)", lineHeight: "1.2" },
             h3: { fontSize: "30px", lineHeight: "1.25" },
             // Card and list titles, lighter than the section headings: h4 large, h5 small.
@@ -67,12 +67,13 @@ export const theme = createTheme({
             // variant="pale": brandBlue.0 with brandBlue.7 text, light on any background
             // (the FAQ hero on slate.9, /certyfikaty on white), unlike the translucent "light".
             // A plain object, not Badge.extend: server code imports the theme, and there
-            // @mantine/core components are client references without .extend.
-            vars: (theme: MantineTheme, props: BadgeProps) => ({
+            // @mantine/core components are client references without .extend; satisfies keeps the
+            // CSS variable names type-checked, as .extend would.
+            vars: ((theme, props) => ({
                 root: props.variant === "pale"
                     ? { "--badge-bg": theme.colors.brandBlue[0], "--badge-color": theme.colors.brandBlue[7] }
                     : {},
-            }),
+            })) satisfies PartialVarsResolver<BadgeFactory>,
         },
         Button: {
             defaultProps: {
@@ -104,12 +105,13 @@ export const theme = createTheme({
             },
         },
         Title: {
-            // size="display": a section heading set larger than h2 (up to 48 px, below the 60 px h1),
-            // e.g. „Dlaczego warto nam zaufać?” on the home page. It stays an <h2> in the outline;
-            // the line height and weight still come from its order. theme.headings only has h1–h6.
-            vars: (_theme: MantineTheme, props: TitleProps) => ({
+            // size="display": a section heading set larger than h2, 32–48 px (h2 30–36 px; h1 32–60 px,
+            // so on phones it matches the h1 floor), e.g. „Dlaczego warto nam zaufać?” on the home page.
+            // It stays an <h2> in the outline; the line height and weight still come from its order.
+            // theme.headings only has h1–h6. A plain object for the same reason as Badge above.
+            vars: ((_theme, props) => ({
                 root: props.size === "display" ? { "--title-fz": "clamp(2rem, 4vw, 3rem)" } : {},
-            }),
+            })) satisfies PartialVarsResolver<TitleFactory>,
             styles: {
                 root: {
                     // Tight tracking on every heading; theme.headings has no field for letter-spacing

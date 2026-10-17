@@ -42,7 +42,7 @@ export default function AboutClient() {
                                     {t.about.intro.p2}
                                 </Text>
                             </Stack>
-                            {/* One column on phones: two are too narrow for „Bezpieczeństwo” beside its icon.
+                            {/* One column on phones: two are too narrow for „Bezpieczeństwo” or „Професіоналізм” beside its icon.
                                 nowrap keeps each label beside its icon. */}
                             <SimpleGrid cols={{ base: 1, xs: 2 }} spacing="md" mt="sm">
                                 {t.about.intro.bullets.map((item, i) => (
