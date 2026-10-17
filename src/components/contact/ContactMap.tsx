@@ -10,7 +10,8 @@ export default function ContactMap() {
     const [isMapHovered, setIsMapHovered] = useState(false);
 
     return (
-        <Box h={500} bg="slate.1" pos="relative" style={{ overflow: 'hidden' }}
+        // Next to the entrance photo from md up, so it takes that column's height there
+        <Box h={{ base: 400, md: '100%' }} mih={400} bg="slate.1" pos="relative" style={{ overflow: 'hidden', borderRadius: 'var(--mantine-radius-xl)' }}
             onMouseEnter={() => setIsMapHovered(true)}
             onMouseLeave={() => setIsMapHovered(false)}
         >

@@ -1,5 +1,7 @@
+import { localizePath } from '@/i18n/config';
 import type { Locale } from '@/i18n/types';
 import type { CallbackTopic } from '@/lib/callback/types';
+import { PATHS } from '@/lib/paths';
 
 /**
  * Service landing pages: the ad targets under /uslugi/<slug> and /uk/uslugi/<slug> (ADR 0004).
@@ -47,13 +49,14 @@ export function isServicePageSlug(value: unknown): value is ServicePageSlug {
 }
 
 export function servicePagePath(locale: Locale, slug: ServicePageSlug): string {
-  return `${locale === 'uk' ? '/uk' : ''}/uslugi/${slug}`;
+  return localizePath(`${PATHS.services}/${slug}`, locale);
 }
 
-const SERVICE_PAGE_PATH = /^(?:\/uk)?\/uslugi\/([^/]+)\/?$/;
+// Matched against the Polish path, so it follows PATHS and localizePath like servicePagePath.
+const SERVICE_PAGE_PATH = new RegExp(`^${PATHS.services}/([^/]+)/?$`);
 
 export function servicePageSlugOfPath(pathname: string): ServicePageSlug | null {
-  const slug = SERVICE_PAGE_PATH.exec(pathname)?.[1];
+  const slug = SERVICE_PAGE_PATH.exec(localizePath(pathname, 'pl'))?.[1];
   return isServicePageSlug(slug) ? slug : null;
 }
 

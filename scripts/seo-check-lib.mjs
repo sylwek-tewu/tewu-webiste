@@ -17,6 +17,8 @@ export const FORBIDDEN_PHRASES = [
 const FORBIDDEN_JSON_LD_TYPES = ['AggregateRating', 'Review'];
 const SERVICE_PAGE = /^\/(?:uk\/)?uslugi\/[^/]+\/?$/;
 const SERVICE_PAGE_TYPES = ['Service', 'BreadcrumbList', 'FAQPage'];
+const FAQ_PAGE = /^\/(?:uk\/)?faq\/?$/;
+const FAQ_PAGE_TYPES = ['FAQPage', 'BreadcrumbList'];
 
 const NAMED_ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
 
@@ -183,6 +185,10 @@ export function evaluatePage({ url, status, headers, html }) {
     const missing = SERVICE_PAGE_TYPES.filter((t) => !types.has(t));
     if (missing.length) findings.push(error('json-ld', `service page lacks JSON-LD types: ${missing.join(', ')}`));
   }
+  if (FAQ_PAGE.test(pathname)) {
+    const missing = FAQ_PAGE_TYPES.filter((t) => !types.has(t));
+    if (missing.length) findings.push(error('json-ld', `FAQ page lacks JSON-LD types: ${missing.join(', ')}`));
+  }
   for (const type of FORBIDDEN_JSON_LD_TYPES) {
     if (types.has(type)) findings.push(error('json-ld', `JSON-LD contains forbidden type ${type}`));
   }
@@ -221,9 +227,10 @@ export function evaluatePage({ url, status, headers, html }) {
  *   wwwRedirect: { status: number, headers: Record<string, string> },
  *   notFound: { status: number, html: string },
  *   ogImage: { status: number, headers: Record<string, string> },
+ *   llms: { status: number, headers: Record<string, string>, body: string },
  * }} responses
  */
-export function evaluateSite({ robots, previewHost, wwwRedirect, notFound, ogImage }) {
+export function evaluateSite({ robots, previewHost, wwwRedirect, notFound, ogImage, llms }) {
   const findings = [];
 
   if (robots.status !== 200) findings.push(error('robots.txt', `/robots.txt returned HTTP ${robots.status}`));
@@ -249,6 +256,11 @@ export function evaluateSite({ robots, previewHost, wwwRedirect, notFound, ogIma
   if (!/^image\/png\b/i.test(ogImage.headers['content-type'] ?? '')) {
     findings.push(error('og:image-file', `og:image Content-Type is "${ogImage.headers['content-type'] ?? ''}", expected image/png`));
   }
+
+  if (llms.status !== 200) findings.push(error('llms.txt', `/llms.txt returned HTTP ${llms.status}`));
+  else if (!(llms.headers['content-type'] ?? '').startsWith('text/plain')) {
+    findings.push(error('llms.txt', `/llms.txt is "${llms.headers['content-type'] ?? ''}", expected text/plain`));
+  } else if (!llms.body.includes(`](${SITE_ORIGIN}/faq)`)) findings.push(error('llms.txt', '/llms.txt does not link the FAQ page'));
 
   return findings;
 }

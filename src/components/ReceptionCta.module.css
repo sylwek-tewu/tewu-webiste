@@ -1,0 +1,4 @@
+/* Clear of the sticky 80 px header when a link scrolls to the section by its id */
+.section {
+  scroll-margin-top: 96px;
+}

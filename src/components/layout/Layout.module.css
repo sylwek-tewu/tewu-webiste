@@ -91,9 +91,10 @@
     transform: translateY(-2px);
 }
 
-/* Icon that inverts on parent hover - includes base styles */
-.hoverIcon {
-    background-color: var(--mantine-color-blue-0);
+/* Icons that invert on hover: on the home service cards and the WhyUs reason rows */
+.hoverIcon,
+.reasonIcon {
+    background-color: var(--mantine-color-brandBlue-0);
     color: var(--mantine-primary-color-6);
     transition: all 0.3s ease;
 }
@@ -150,13 +151,6 @@
 
 /* WhyUs reason row - purely visual, not interactive */
 /* .reasonRow has no styles needed, hover effect triggers icon change */
-
-/* WhyUs reason icon - includes base styles */
-.reasonIcon {
-    background-color: var(--mantine-color-blue-0);
-    color: var(--mantine-primary-color-6);
-    transition: all 0.3s ease;
-}
 
 .reasonRow:hover .reasonIcon,
 .reasonIcon:hover {

@@ -1,15 +1,11 @@
 import { Translations } from './types';
 import { COMPANY_FULL_NAME } from '@/constants';
 import { COMPANY } from '@/lib/company';
+import { PATHS } from '@/lib/paths';
+import { formatCount } from '@/lib/plural';
+import { servicePagePath } from '@/lib/service-pages';
 
-/** "1 година", "2 години", "5 годин", "22 години" (nominative). */
-function formatHoursUk(n: number): string {
-  const lastDigit = n % 10;
-  const lastTwo = n % 100;
-  if (lastDigit === 1 && lastTwo !== 11) return `${n} година`;
-  const few = lastDigit >= 2 && lastDigit <= 4 && (lastTwo < 12 || lastTwo > 14);
-  return `${n} ${few ? 'години' : 'годин'}`;
-}
+const HOUR_FORMS = { one: 'година', few: 'години', many: 'годин' };
 
 export const ukTranslations: Translations = {
   locale: 'uk',
@@ -20,13 +16,13 @@ export const ukTranslations: Translations = {
   },
   nav: {
     links: [
-      { label: 'Головна', path: '/uk' },
-      { label: 'Про нас', path: '/uk/o-nas' },
-      { label: 'Послуги', path: '/uk/uslugi' },
-      { label: 'Інкубатор', path: '/uk/uslugi/inkubator-spolek' },
-      { label: 'Аутсорсинг', path: '/uk/outsourcing' },
-      { label: 'Сертифікати', path: '/uk/certyfikaty' },
-      { label: 'Контакти', path: '/uk/kontakt' },
+      { label: 'Головна', path: PATHS.home },
+      { label: 'Про нас', path: PATHS.about },
+      { label: 'Послуги', path: PATHS.services },
+      { label: 'Інкубатор', path: servicePagePath('pl', 'inkubator-spolek') },
+      { label: 'Аутсорсинг', path: PATHS.outsourcing },
+      { label: 'Сертифікати', path: PATHS.certificates },
+      { label: 'Контакти', path: PATHS.contact },
     ],
     freeQuote: 'Безкоштовна оцінка',
     menu: 'Меню',
@@ -37,6 +33,7 @@ export const ukTranslations: Translations = {
     servicesTitle: 'Послуги',
     contactTitle: 'Контакти',
     bpoOutsourcing: 'Аутсорсинг BPO',
+    faq: 'Поширені запитання (FAQ)',
     privacyPolicy: 'Політика конфіденційності',
     allRightsReserved: 'Усі права захищені.',
   },
@@ -120,7 +117,7 @@ export const ukTranslations: Translations = {
       expNumber: '25+',
       expTitle: 'Років на ринку',
       expDesc: 'Знаємо польські закони до дрібниць та вміємо надійно захистити ваш бізнес.',
-      imageAlt: 'Команда за роботою в офісі',
+      imageAlt: 'Голова бюро (Prezes) Sylwester Wrzeszcz за роботою в бюро TEWU, позаду команда',
     },
     values: {
       label: 'Наші цінності',
@@ -307,6 +304,7 @@ export const ukTranslations: Translations = {
     finalCta: {
       title: 'Поговорімо про вашу компанію',
       description: 'Залиште номер телефону – ми передзвонимо у зручний для вас час і підготуємо безкоштовну оцінку вартості.',
+      imageAlt: 'Голова бюро (Prezes) Sylwester Wrzeszcz у приймальні бюро TEWU',
     },
   },
   outsourcing: {
@@ -402,10 +400,12 @@ export const ukTranslations: Translations = {
     mapTitle: 'Наш офіс у Щецині',
     mapSubtitle: 'Al. Powstańców Wielkopolskich 78A LU2, Szczecin',
     mapIframeTitle: 'Карта проїзду до бюро TEWU у Щецині',
+    entrancePhotoAlt: 'Вхід до бюро TEWU на Al. Powstańców Wielkopolskich 78A у Щецині',
+    entranceCaption: 'Вхід до бюро: скляні двері з логотипом TEWU між вітринами з написом «Biuro Rachunkowe», на першому поверсі будинку 78A.',
   },
   privacyPolicy: {
     metaTitle: 'Політика конфіденційності | Biuro Rachunkowe TEWU',
-    metaDescription: 'Правила обробки та захисту персональних даних в Biuro Rachunkowe TEWU Sp. z o.o. у Щецині (Польща).',
+    metaDescription: 'Як Biuro Rachunkowe TEWU у Щецині обробляє персональні дані: адміністратор, цілі, обсяг даних, одержувачі, строк зберігання, ваші права та файли cookie.',
     headerTitle: 'Політика конфіденційності',
     headerSubtitle: 'Biuro Rachunkowe TEWU Sp. z o.o. • Останнє оновлення: 3 жовтня 2026 р.',
     legalNoteUk: 'Зверніть увагу: цей текст є перекладом для вашої зручності. У разі розбіжностей між версіями або спорів щодо тлумачення переважну силу має оригінальна версія польською мовою.',
@@ -439,13 +439,13 @@ export const ukTranslations: Translations = {
     s4HostingTitle: 'Хостинг та інфраструктура сервера (OVHcloud)',
     s4HostingDesc: 'Сайт розміщений на віртуальному сервері (VPS), наданому компанією OVH Sp. z o.o. з місцезнаходженням у Вроцлаві (ul. Powstańców Śląskich 9, 53-332 Wrocław, Польща). Серверна інфраструктура розташована в дата-центрі на території Європейської економічної зони (ЄЕЗ). Постачальник інфраструктури обробляє серверні запити як оператор (розпорядник) даних на підставі договору про доручення обробки (Data Processing Agreement – DPA).',
     s4BufferTitle: 'Аварійний буфер (база даних сервера)',
-    s4BufferDesc: (hours) => `У разі тимчасової недоступності електронної пошти заявка тимчасово зберігається в локальній базі даних на сервері, а номер телефону – у зашифрованому вигляді (алгоритм AES-256-GCM). Буфер використовується виключно для автоматичного повторного надсилання. Заявка безповоротно видаляється невідкладно після доставки. Максимальний термін зберігання в буфері – ${formatHoursUk(hours)}; після його спливу заявка автоматично видаляється протягом кількох десятків хвилин.`,
+    s4BufferDesc: (hours) => `У разі тимчасової недоступності електронної пошти заявка тимчасово зберігається в локальній базі даних на сервері, а номер телефону – у зашифрованому вигляді (алгоритм AES-256-GCM). Буфер використовується виключно для автоматичного повторного надсилання. Заявка безповоротно видаляється невідкладно після доставки. Максимальний термін зберігання в буфері – ${formatCount('uk', hours, HOUR_FORMS)}; після його спливу заявка автоматично видаляється протягом кількох десятків хвилин.`,
     s4TransferTitle: 'Розташування сервера та аварійного буфера',
     s4TransferDesc: `Сервер, на якому працює сайт і який обробляє контактну форму, а також база даних аварійного буфера розташовані на території Європейської економічної зони (ЄЕЗ). Дані, надані у формі (зокрема номер телефону), у межах хостингу та аварійного буфера не передаються до третіх країн (за межі ЄЕЗ) або міжнародних організацій.`,
     s5Title: '5. Термін зберігання даних',
     s5Content: 'Заявки (електронні листи з номером телефону), після яких співпраця не розпочалася, зберігаються до закінчення строку позовної давності щодо можливих вимог, повʼязаних із контактом, визначеного Цивільним кодексом Польщі (як правило, 3 або 6 років), після чого видаляються. У разі початку співпраці дані обробляються протягом строку дії договору про надання бухгалтерських послуг, а після його закінчення – протягом строку, визначеного законодавством (зокрема податковим і бухгалтерським), або до закінчення строку позовної давності.',
     s5Logs: 'Журнали доступу до сервера та застосунку зберігаються протягом 7 днів з метою безпеки та технічної діагностики, після чого автоматично видаляються.',
-    s5Retention: (hours) => `Максимальний термін зберігання заявок, що очікують в аварійному буфері, становить **${formatHoursUk(hours)}**.`,
+    s5Retention: (hours) => `Максимальний термін зберігання заявок, що очікують в аварійному буфері, становить **${formatCount('uk', hours, HOUR_FORMS)}**.`,
     s6Title: '6. Права субʼєкта даних',
     s6Intro: 'Відповідно до Регламенту (ЄС) 2016/679 (Загальний регламент про захист даних, GDPR) кожна особа має право на:',
     s6Bullets: [

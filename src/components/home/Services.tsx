@@ -4,9 +4,11 @@ import React from 'react';
 import { Box, Container, SimpleGrid, Paper, ThemeIcon, Text, Title, VisuallyHidden } from '@mantine/core';
 import { ArrowRight, Building2, Calculator, FileDigit, Users, ClipboardCheck, FileText, Scale } from 'lucide-react';
 import Link from 'next/link';
+import { Eyebrow } from '@/components/Eyebrow';
 import classes from '@/components/layout/Layout.module.css';
-import { useLocale } from '@/i18n/LocaleContext';
+import { localizePath, useLocale } from '@/i18n/LocaleContext';
 import type { Locale } from '@/i18n/types';
+import { PATHS } from '@/lib/paths';
 import { servicePagePath, servicePageSlugForServiceItem } from '@/lib/service-pages';
 
 const SERVICE_ICONS: Record<string, React.ReactNode> = {
@@ -26,16 +28,14 @@ function cardPath(serviceId: string, locale: Locale, fallback: string): string {
 
 export function Services() {
     const { t, locale } = useLocale();
-    const servicesPath = locale === 'uk' ? '/uk/uslugi' : '/uslugi';
+    const servicesPath = localizePath(PATHS.services, locale);
     const items = t.servicesPage.items;
 
     return (
         <Box component="section" py={96} bg="slate.0">
             <Container ta="center" mb={64}>
-                <Text fw={900} c="brandBlue" tt="uppercase" style={{ letterSpacing: '0.1em' }} size="sm" mb="xs">
-                    {t.home.services.sectionLabel}
-                </Text>
-                <Title order={2} fw={900} c="slate.9" style={{ letterSpacing: '-0.025em' }}>
+                <Eyebrow>{t.home.services.sectionLabel}</Eyebrow>
+                <Title order={2} c="slate.9">
                     {t.home.services.title}
                 </Title>
             </Container>
@@ -62,7 +62,7 @@ export function Services() {
                             >
                                 {SERVICE_ICONS[service.id] || <Building2 size={24} />}
                             </ThemeIcon>
-                            <Title order={3} size="h4" fw={700} c="slate.9" mb="sm" lh={1.3}>
+                            <Title order={3} size="h4" c="slate.9" mb="sm">
                                 {service.title}
                             </Title>
                             <Text size="sm" c="slate.6" lh={1.6} mb="lg" lineClamp={2}>

@@ -7,6 +7,6 @@
 
 .contactLink:hover,
 .contactLink:focus {
-    --anchor-text-color: var(--mantine-color-blue-6);
-    color: var(--mantine-color-blue-6);
+    --anchor-text-color: var(--mantine-color-brandBlue-6);
+    color: var(--mantine-color-brandBlue-6);
 }

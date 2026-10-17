@@ -55,3 +55,7 @@ data/
 # Playwright
 /test-results/
 /playwright-report/
+
+# Claude Code
+.claude/worktrees/
+.claude/settings.local.json

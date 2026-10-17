@@ -1,0 +1,4 @@
+/* The prompt and the phone number never break mid-way; the group wraps between them instead */
+.nowrap {
+  white-space: nowrap;
+}

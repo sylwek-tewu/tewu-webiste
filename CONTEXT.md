@@ -21,7 +21,7 @@ Komponent przełącznika w nagłówku (oraz menu mobilnym) w formacie `🇵🇱 
 _Avoid_: Flagi narodowe, selektor państw
 
 **Callback Lead Locale**:
-Atrybut zgłoszenia z widżetu call-back (`pl` lub `uk`) przekazywany do powiadomień e-mail i Telegram, informujący konsultantów biura o preferowanym języku rozmowy klienta.
+Atrybut zgłoszenia z widżetu call-back (`pl` lub `uk`) przekazywany do powiadomień e-mail i Telegram, informujący konsultantów biura o preferowanym języku rozmowy klienta. Zgłoszenia złożone po ukraińsku obsługują pracownicy biura mówiący po ukraińsku.
 _Avoid_: Pochodzenie klienta, język przeglądarki leada
 
 ## Service Pages
@@ -37,6 +37,16 @@ _Avoid_: Akcelerator, start-up
 **Landing Page Attribution**:
 Przypisanie zgłoszenia call-back do podstrony usługowej, na której otwarto widżet (`landingPage`), niezależnie od przycisku, którym go otwarto (`source`).
 _Avoid_: Źródło zgłoszenia, UTM
+
+## FAQ
+
+**FAQ Page** (strona FAQ):
+Podstrona `/faq` (i `/uk/faq`) z odpowiedziami na częste pytania przedsiębiorców, w kategoriach, z datą aktualizacji i źródłami urzędowymi przy kwotach. Link do niej jest tylko w stopce.
+_Avoid_: Baza wiedzy, centrum pomocy, pomoc
+
+**FAQ Question Anchor** (kotwica pytania):
+Stały identyfikator pytania (np. `ulga-na-start`), taki sam w obu językach. Adres `/faq#<id>` otwiera to pytanie, więc biuro może go wysłać klientowi.
+_Avoid_: Hash, ID elementu
 
 ## Callback & Lead Intake
 

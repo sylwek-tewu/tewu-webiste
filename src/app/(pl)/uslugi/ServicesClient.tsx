@@ -3,9 +3,11 @@
 import React from 'react';
 import { ArrowRight, CheckCircle2, Building2, Calculator, FileDigit, Users, ClipboardCheck, FileText, Scale, Receipt, Rocket } from 'lucide-react';
 import { Box, Container, SimpleGrid, Stack, Title, Text, Button, ThemeIcon, Group, Paper } from '@mantine/core';
+import { PageHero } from '@/components/PageHero';
 import Link from 'next/link';
 import classes from './ServicesClient.module.css';
-import { useLocale } from '@/i18n/LocaleContext';
+import { localizePath, useLocale } from '@/i18n/LocaleContext';
+import { PATHS } from '@/lib/paths';
 import { servicePagePath, servicePageSlugForServiceItem } from '@/lib/service-pages';
 import { wrappingButtonStyles } from '@/components/layout/wrappingButtonStyles';
 
@@ -23,21 +25,12 @@ const SERVICE_ICONS: Record<string, React.ReactNode> = {
 
 export default function ServicesClient() {
     const { t, locale } = useLocale();
-    const contactPath = locale === 'uk' ? '/uk/kontakt' : '/kontakt';
+    const contactPath = localizePath(PATHS.contact, locale);
 
     return (
         <Stack gap={0} bg="white">
             {/* Hero Section */}
-            <Box component="section" bg="slate.9" py={{ base: 64, md: 96 }} ta="center">
-                <Container size="md" px="md">
-                    <Title order={1} c="white" fw={900} mb="md" style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)', letterSpacing: '-0.025em' }}>
-                        {t.servicesPage.header.title}
-                    </Title>
-                    <Text size="xl" c="slate.4">
-                        {t.servicesPage.header.subtitle}
-                    </Text>
-                </Container>
-            </Box>
+            <PageHero title={t.servicesPage.header.title} lead={t.servicesPage.header.subtitle} />
 
             {/* Services Grid */}
             <Box component="section" py={96} bg="white">
@@ -50,7 +43,7 @@ export default function ServicesClient() {
                                     <Box w={56} h={56} mb="lg" className={classes.iconContainer}>
                                         {SERVICE_ICONS[service.id] || <Building2 size={24} />}
                                     </Box>
-                                    <Title order={2} fw={700} c="slate.9" mb="sm" lh={1.3} fz="xl">
+                                    <Title order={2} size="h5" c="slate.9" mb="sm">
                                         {service.title}
                                     </Title>
                                     <Text size="sm" c="slate.6" lh={1.6}>
@@ -89,10 +82,10 @@ export default function ServicesClient() {
             {/* CTA Section */}
             <Box component="section" py={96} bg="brandBlue.6">
                 <Container size="md" px="md" ta="center">
-                    <Title order={2} c="white" fw={900} mb="lg" fz={{ base: 'xl', md: '2.25rem' }}>
+                    <Title order={2} c="white" mb="lg">
                         {t.servicesPage.cta.title}
                     </Title>
-                    <Text c="blue.0" size="lg" mb="xl" maw={600} mx="auto">
+                    <Text c="brandBlue.0" size="lg" mb="xl" maw={600} mx="auto">
                         {t.servicesPage.cta.description}
                     </Text>
                     <Link href={contactPath} style={{ textDecoration: 'none' }}>
@@ -122,7 +115,7 @@ export default function ServicesClient() {
                                 <CheckCircle2 size={32} />
                             </ThemeIcon>
                             <Box>
-                                <Title order={3} size="h4" fw={700} c="slate.9" mb="xs" fz="lg">
+                                <Title order={3} size="h5" c="slate.9" mb="xs">
                                     {t.servicesPage.values.securityTitle}
                                 </Title>
                                 <Text size="sm" c="slate.6">
@@ -135,7 +128,7 @@ export default function ServicesClient() {
                                 <CheckCircle2 size={32} />
                             </ThemeIcon>
                             <Box>
-                                <Title order={3} size="h4" fw={700} c="slate.9" mb="xs" fz="lg">
+                                <Title order={3} size="h5" c="slate.9" mb="xs">
                                     {t.servicesPage.values.timelinessTitle}
                                 </Title>
                                 <Text size="sm" c="slate.6">
@@ -148,7 +141,7 @@ export default function ServicesClient() {
                                 <CheckCircle2 size={32} />
                             </ThemeIcon>
                             <Box>
-                                <Title order={3} size="h4" fw={700} c="slate.9" mb="xs" fz="lg">
+                                <Title order={3} size="h5" c="slate.9" mb="xs">
                                     {t.servicesPage.values.modernityTitle}
                                 </Title>
                                 <Text size="sm" c="slate.6">

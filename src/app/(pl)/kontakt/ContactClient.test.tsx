@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 import React from 'react';
 import { describe, it, expect } from 'vitest';
+import { screen } from '@testing-library/react';
 import { renderWithMantine } from '@/test/render';
-import type { Locale } from '@/i18n';
+import { getDictionary, type Locale } from '@/i18n';
 import ContactClient from './ContactClient';
 
 describe.each(['pl', 'uk'] as Locale[])('ContactClient (%s)', (locale) => {
@@ -22,6 +23,17 @@ describe.each(['pl', 'uk'] as Locale[])('ContactClient (%s)', (locale) => {
     const { container } = renderWithMantine(<ContactClient />, { locale });
     const mails = [...container.querySelectorAll('a[href^="mailto:"]')].map((a) => a.getAttribute('href'));
     expect(mails).toEqual(['mailto:biuro@tewu.szczecin.pl', 'mailto:sw@tewu.szczecin.pl']);
+  });
+
+  it('shows the entrance photo with its caption in the map section', () => {
+    const { container } = renderWithMantine(<ContactClient />, { locale });
+    const { contact } = getDictionary(locale);
+    const figure = container.querySelector('figure');
+    expect(figure?.querySelector('img')).toHaveAttribute('src', '/img/biuro/budynek.jpg');
+    expect(figure?.querySelector('figcaption')).toHaveTextContent(contact.entranceCaption);
+    const mapSection = screen.getByRole('heading', { level: 2, name: contact.mapTitle }).closest('section');
+    expect(mapSection).toContainElement(figure as HTMLElement);
+    expect(mapSection?.querySelector('iframe')).toBeTruthy();
   });
 
   it('shows registry numbers and the bank account', () => {

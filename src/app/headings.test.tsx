@@ -5,6 +5,8 @@ import { renderWithMantine } from '@/test/render';
 import { headingOutlineProblems } from '@/test/headings';
 import { CallbackProvider } from '@/components/callback-widget';
 import ServiceLandingPage from '@/components/service-pages/ServiceLandingPage';
+import FaqPage from '@/components/faq/FaqPage';
+import { FAQ_UPDATED_AT, getFaqContent } from '@/content/faq';
 import { getServicePageContent } from '@/content/service-pages';
 import { SERVICE_PAGE_SLUGS } from '@/lib/service-pages';
 import type { Locale } from '@/i18n';
@@ -30,6 +32,16 @@ const PAGES: [string, () => React.ReactElement][] = [
 describe.each(['pl', 'uk'] as Locale[])('heading outline (%s)', (locale) => {
   it.each(PAGES)('%s has no skipped heading level', (_name, page) => {
     const { container } = renderWithMantine(<CallbackProvider>{page()}</CallbackProvider>, { locale });
+    expect(headingOutlineProblems(container)).toEqual([]);
+  });
+
+  it('the FAQ page has no skipped heading level', () => {
+    const { container } = renderWithMantine(
+      <CallbackProvider>
+        <FaqPage content={getFaqContent(locale)} updatedAt={FAQ_UPDATED_AT} />
+      </CallbackProvider>,
+      { locale }
+    );
     expect(headingOutlineProblems(container)).toEqual([]);
   });
 
